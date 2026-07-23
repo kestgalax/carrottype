@@ -8,13 +8,14 @@ Attach: `CarrotType-0.1.2.dmg` (Apple Silicon, macOS 14+, ~16 MB app bundle with
 
 Artifact path after `./macos/scripts/build-release-dmg.sh`: `dist/CarrotType-0.1.2.dmg`.
 
-SHA-256 (this build): `c8a8e6c5109f008762e57e9a63dfc9f67884784a530053f439c1c7cfca64dd76`
+SHA-256 (this build): `9772ceb7ec1337e11c1a8156b7db26e4f32fb9d930737abeb73bd0c64aabdb9a`
 
 ## What’s new
 
 - **Escape cancels recording** — while dictating, Escape discards the capture (no STT / no paste) and restores mic mute if unmute-on-dictation was used.
 - **Silent session soft-cancel** — finishing a too-short / silent recording returns to idle without a red error.
-- **Status shows app version** (`v0.1.2` from the bundle) and **Check for updates…** opens the private GitHub Releases page (manual download; no auto-updater yet).
+- **Status shows app version** beside the product name (`v0.1.2` from the bundle) and **Check for updates…** opens the private GitHub Releases page (manual download; no auto-updater yet).
+- **Settings polish (same tag, rebuilt DMG):** Permissions hints sit under their matching toggles; STT model blurbs clarify value (Light & quick / Clearer speech / Best Whisper / Optimized for Apple Silicon).
 
 ## Install (unsigned / not notarized yet)
 
