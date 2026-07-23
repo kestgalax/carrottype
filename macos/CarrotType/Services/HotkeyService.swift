@@ -115,9 +115,15 @@ private func carrottypeHotKeyEventHandler(
         nil,
         &hkID
     )
-    if hkID.signature == OSType(0x43525450), hkID.id == 1 { // 'CRTP'
-        DispatchQueue.main.async {
+    guard hkID.signature == OSType(0x43525450) else { return noErr } // 'CRTP'
+    DispatchQueue.main.async {
+        switch hkID.id {
+        case 1:
             service.handleCarbonHotkey()
+        case 2:
+            service.handleCarbonEscapeCancel()
+        default:
+            break
         }
     }
     return noErr
@@ -130,11 +136,14 @@ final class HotkeyService: ObservableObject {
 
     private let defaults: UserDefaults
     private var hotKeyRef: EventHotKeyRef?
+    private var escapeHotKeyRef: EventHotKeyRef?
     private var eventHandler: EventHandlerRef?
     private var localMonitor: Any?
     private var onHotkey: (() -> Void)?
+    private var onEscapeCancel: (() -> Void)?
 
     private let hotKeyID = EventHotKeyID(signature: OSType(0x43525450), id: 1) // 'CRTP'
+    private let escapeHotKeyID = EventHotKeyID(signature: OSType(0x43525450), id: 2)
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -153,8 +162,25 @@ final class HotkeyService: ObservableObject {
         onHotkey = handler
     }
 
+    func setOnEscapeCancel(_ handler: @escaping () -> Void) {
+        onEscapeCancel = handler
+    }
+
     func handleCarbonHotkey() {
         onHotkey?()
+    }
+
+    func handleCarbonEscapeCancel() {
+        onEscapeCancel?()
+    }
+
+    /// Global Esc only while dictation capture is active — do not steal Esc when idle.
+    func setEscapeCancelRegistered(_ enabled: Bool) {
+        if enabled {
+            registerEscapeCancelHotkey()
+        } else {
+            unregisterEscapeCancelHotkey()
+        }
     }
 
     func startRecording() {
@@ -213,6 +239,34 @@ final class HotkeyService: ObservableObject {
         if let hotKeyRef {
             UnregisterEventHotKey(hotKeyRef)
             self.hotKeyRef = nil
+        }
+    }
+
+    private func registerEscapeCancelHotkey() {
+        unregisterEscapeCancelHotkey()
+        installHandlerIfNeeded()
+
+        var ref: EventHotKeyRef?
+        // Bare Escape (keyCode 53), no modifiers.
+        let status = RegisterEventHotKey(
+            53,
+            0,
+            escapeHotKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &ref
+        )
+        if status == noErr {
+            escapeHotKeyRef = ref
+        } else {
+            NSLog("CarrotType: RegisterEventHotKey Escape failed status=%d", status)
+        }
+    }
+
+    private func unregisterEscapeCancelHotkey() {
+        if let escapeHotKeyRef {
+            UnregisterEventHotKey(escapeHotKeyRef)
+            self.escapeHotKeyRef = nil
         }
     }
 
