@@ -25,6 +25,6 @@ Not scheduled for implementation in the unsigned `v0.1.0` release. Tracked from 
 
 Do not start new STT/cleanup runtimes while the quality note (and notarization path) are still open.
 
-## Related (in progress on feature branch)
+## Related
 
-Temporary mic unmute during dictation (ADR-007): `docs/research-mic-unmute-spike.md` — not a new STT runtime; optional Settings behavior for muted hardware (Wave:3 / Core Audio).
+Temporary mic unmute during dictation (ADR-007) shipped experimental in **v0.1.1** — Elgato Wave Link only in Settings copy; see `docs/research-mic-unmute-spike.md`.

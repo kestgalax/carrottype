@@ -59,4 +59,4 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 
 ## Current product status (2026-07)
 
-**v0.1.0** ships as an unsigned DMG on a **private** GitHub Release (invite-only early access). Next: decide default STT via `docs/stt-ru-en-quality-note.md`, then notarization after Apple Developer ID before any public download.
+**v0.1.1** ships as an unsigned DMG on a **private** GitHub Release (invite-only early access). Next: decide default STT via `docs/stt-ru-en-quality-note.md`, then notarization after Apple Developer ID before any public download.

@@ -4,7 +4,7 @@ CarrotType ships as a **macOS `.dmg`** from GitHub Releases. Model weights are *
 
 ## Repository visibility
 
-The GitHub repository is **private**. Release assets (including `CarrotType-0.1.0.dmg`) are available only to users with access to the repo (owner / collaborators / invitees). Do not treat the Release URL as a public download page until visibility and notarization are intentionally opened.
+The GitHub repository is **private**. Release assets (including `CarrotType-0.1.1.dmg`) are available only to users with access to the repo (owner / collaborators / invitees). Do not treat the Release URL as a public download page until visibility and notarization are intentionally opened.
 
 ## v1 path (current): no Apple Developer notarization
 
@@ -18,12 +18,12 @@ chmod +x macos/scripts/build-release-dmg.sh
 ./macos/scripts/build-release-dmg.sh
 ```
 
-Output: `dist/CarrotType-<version>.dmg` (version from `macos/project.yml` → `CFBundleShortVersionString`, currently `0.1.0`).
+Output: `dist/CarrotType-<version>.dmg` (version from `macos/project.yml` → `CFBundleShortVersionString`, currently `0.1.1`).
 
 Optional:
 
 ```bash
-VERSION=0.1.0 SIGN_IDENTITY="CarrotType Development" ./macos/scripts/build-release-dmg.sh
+VERSION=0.1.1 SIGN_IDENTITY="CarrotType Development" ./macos/scripts/build-release-dmg.sh
 # or ad-hoc:
 SIGN_IDENTITY="-" ./macos/scripts/build-release-dmg.sh
 ```
@@ -34,9 +34,9 @@ Local self-signed identity (`macos/scripts/ensure-dev-codesign.sh`) helps **dev 
 
 ### Publish on GitHub
 
-1. Tag: `v0.1.0` (match version).
-2. Create a Release; attach `dist/CarrotType-0.1.0.dmg`.
-3. Paste install notes from [docs/github-release-notes-v0.1.0.md](../docs/github-release-notes-v0.1.0.md) (or the template below).
+1. Tag: `v0.1.1` (match version).
+2. Create a Release; attach `dist/CarrotType-0.1.1.dmg`.
+3. Paste install notes from [docs/github-release-notes-v0.1.1.md](../docs/github-release-notes-v0.1.1.md) (or the template below).
 
 ### Install UX without notarization (Gatekeeper)
 

@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped as **private GitHub Release `v0.1.0`** (unsigned DMG, invite-only): hotkey → on-device STT → optional formatting → caret paste, multi-engine catalog, RU/EN Settings.
+Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.1`** (unsigned DMG, invite-only): hotkey → on-device STT → optional formatting → caret paste, plus experimental Wave Link unmute during dictation (ADR-007).
 
-Latest artifact: `CarrotType-0.1.0.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.0.md`).
+Latest artifact: `CarrotType-0.1.1.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.1.md`).
 
 **Current focus:** fill the STT quality note before flipping `recommended`; notarization after Apple Developer ID; public distribution only after that.
 
@@ -58,10 +58,11 @@ Checklist:
 - [x] Reliable Whisper ggml download (stage temp file before URLSession cleanup) — fixes Small/Turbo move errors.
 - [x] Language switch no longer remounts Settings / kills the mic meter.
 - [x] Publish GitHub Release `v0.1.0` with DMG + `docs/github-release-notes-v0.1.0.md`.
+- [x] Publish GitHub Release `v0.1.1` — experimental Wave Link unmute during dictation (ADR-007) + `docs/github-release-notes-v0.1.1.md`.
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 - [ ] Flip `recommended` STT only after filling `docs/stt-ru-en-quality-note.md`.
 
-Status: **v0.1.0 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
+Status: **v0.1.1 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 
@@ -76,10 +77,8 @@ Small, user-visible fixes that do not expand scope:
 - Confirm Whisper Small / Turbo download end-to-end on a clean Application Support folder.
 - Menu-bar remaining-hints refresh after language change (if any stale copy remains).
 - First-run CTA clarity when Parakeet is already Ready but Whisper Base is still `recommended`.
-- **Temporary mic unmute (ADR-007):** implemented on branch `feature/mic-unmute-on-dictation` — Settings toggle + `MicMuteController` (Core Audio / Wave Link hybrid). Merge after Wave:3 checklist in `docs/research-mic-unmute-spike.md`.
 
 ## Post-v1 research spikes (no runtime yet)
 
 - **Cleanup:** Sotto LFM2.5-350M MLX (EN dictation cleanup, low rewrite) vs Qwen3 1.7B for RU.
 - **STT quality tier:** Qwen3-ASR 0.6B MLX beside Parakeet / Turbo.
-- Mic unmute hardware verification: see `docs/research-mic-unmute-spike.md` (feature branch).
