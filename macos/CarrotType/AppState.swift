@@ -36,6 +36,12 @@ final class AppState: ObservableObject {
             }
         }
     }
+    /// When true, clear input mute for the dictation capture window and restore afterward (ADR-007).
+    @Published var unmuteMicDuringDictation: Bool {
+        didSet {
+            UserDefaults.standard.set(unmuteMicDuringDictation, forKey: Keys.unmuteDuringDictation)
+        }
+    }
 
     var effectiveLocale: Locale { appLanguage.effectiveLocale }
 
@@ -47,6 +53,7 @@ final class AppState: ObservableObject {
     let pipeline: DictationPipeline
 
     private let recorder = AudioRecorder()
+    private let micMute = MicMuteController()
     private let notchOverlay = NotchRecordingOverlayController()
     private var cancellables = Set<AnyCancellable>()
     private var isProcessing = false
@@ -82,8 +89,18 @@ final class AppState: ObservableObject {
             self.appLanguage = .system
         }
         self.retainDictationInClipboard = defaults.bool(forKey: Keys.retainClipboard)
+        self.unmuteMicDuringDictation = defaults.bool(forKey: Keys.unmuteDuringDictation)
 
         notchOverlay.attach(appState: self)
+        NotificationCenter.default.addObserver(
+            forName: NSApplication.willTerminateNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.micMute.restoreSynchronouslyOnQuit()
+            }
+        }
         recorder.onLivePeak = { [weak self] peak in
             guard let self else { return }
             self.recorderLiveLevel = max(peak, self.recorderLiveLevel * 0.55)
@@ -276,14 +293,35 @@ final class AppState: ObservableObject {
             return
         }
 
+        Task { await startDictationSession() }
+    }
+
+    private func startDictationSession() async {
+        guard readiness == .ready else {
+            menuBarMode = .needsSetup
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+        guard menuBarMode != .recording, !isProcessing else { return }
+
+        lastSessionError = nil
+        cancelScheduledModelUnload()
+        audioLevel.stop()
+        recorderLiveLevel = 0
+
+        if unmuteMicDuringDictation {
+            let name = audioInput.selectedDevice?.name ?? ""
+            await micMute.beginDictationUnmute(
+                deviceUID: audioInput.selectedDeviceID,
+                deviceName: name
+            )
+        }
+
         do {
-            lastSessionError = nil
-            cancelScheduledModelUnload()
-            audioLevel.stop()
-            recorderLiveLevel = 0
             _ = try recorder.start(deviceUID: audioInput.selectedDeviceID)
             menuBarMode = .recording
         } catch {
+            await micMute.endDictationRestore()
             lastSessionError = error.localizedDescription
             menuBarMode = .error
             if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
@@ -308,10 +346,14 @@ final class AppState: ObservableObject {
         do {
             audioURL = try recorder.stop()
         } catch {
+            await micMute.endDictationRestore()
             lastSessionError = error.localizedDescription
             menuBarMode = .error
             return
         }
+
+        // Remute as soon as capture ends — do not wait for STT/cleanup.
+        await micMute.endDictationRestore()
 
         defer { try? FileManager.default.removeItem(at: audioURL) }
 
@@ -395,6 +437,7 @@ final class AppState: ObservableObject {
 
     private enum Keys {
         static let retainClipboard = "carrottype.retainDictationInClipboard"
+        static let unmuteDuringDictation = "carrottype.unmuteMicDuringDictation"
     }
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00B1C4A76592610484327897 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961E4156BC4745BD47659989 /* Network.framework */; };
 		0DF962C341D720B1AA2C28F8 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = A659DC3EC69FC4BAB2E97F21 /* FluidAudio */; };
 		1424691E8C5507CB87824295 /* AudioInputService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C308C7819FB980179CA944D /* AudioInputService.swift */; };
 		206887C3685474E0C569386D /* NotchRecordingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AEA7C2344265F10A49A4E2 /* NotchRecordingOverlay.swift */; };
@@ -16,6 +17,7 @@
 		3D2D48722554E73FB54D3CB6 /* HotkeySettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21049F0E68A2ADE0DA4314A4 /* HotkeySettingsRow.swift */; };
 		3D8CB060CF0448E9E6A14E45 /* QwenCleanupEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1F061639C3F7357F74D326 /* QwenCleanupEngine.swift */; };
 		40793D8C8B303AE52135AD97 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2F124EFF6A1ED662214AA79 /* Carbon.framework */; };
+		44CDE8B0154ED975ECD8BD42 /* MicMuteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A3B11B85E9BEB710CA6CB4 /* MicMuteController.swift */; };
 		4CD5D01CA1E2291B4136CDD6 /* ModelCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 483744F178A17C48BF392DE8 /* ModelCatalog.json */; };
 		5F988470236EE3D4A4179BAA /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE375B29BA9AD7B167B76BE /* ModelManager.swift */; };
 		6907436AC4B5CEB0186D6370 /* PermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F030E16C4E6640B30B01CCAF /* PermissionService.swift */; };
@@ -73,10 +75,12 @@
 		7EBB6DC297BE778E340C7DEE /* TextCleanup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCleanup.swift; sourceTree = "<group>"; };
 		89ED5A599D2EE48261B14B7A /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		956F2B01DE0B361D286C434D /* BundledModelCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledModelCatalog.swift; sourceTree = "<group>"; };
+		961E4156BC4745BD47659989 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		ABEAA3680522EFDCA855E969 /* CarrotTypeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarrotTypeSettingsView.swift; sourceTree = "<group>"; };
 		AD23B7D3784693FB5A2848F2 /* TextInsertionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInsertionService.swift; sourceTree = "<group>"; };
 		BC24539957AB2B6B9B8DAE91 /* MicrophoneLevelMeter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneLevelMeter.swift; sourceTree = "<group>"; };
 		CDFA98C4C936AA6524585F75 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D2A3B11B85E9BEB710CA6CB4 /* MicMuteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicMuteController.swift; sourceTree = "<group>"; };
 		DC5EC57D28158EECBBF40434 /* CarrotTypeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarrotTypeApp.swift; sourceTree = "<group>"; };
 		DFF4FFAEC733525AE390701F /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		E2F124EFF6A1ED662214AA79 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -100,6 +104,7 @@
 				DFD6AC2F006F5D4308FDCDD7 /* ApplicationServices.framework in Frameworks */,
 				851708932F5826834776BD5B /* CoreAudio.framework in Frameworks */,
 				6E76DB8D54356C0C0EA15F2F /* AVFoundation.framework in Frameworks */,
+				00B1C4A76592610484327897 /* Network.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,6 +143,7 @@
 				46B50E12D241D4FD62DF4339 /* AudioLevelMonitor.swift */,
 				2E4AB7FFAD8131E11A68A11E /* AudioRecorder.swift */,
 				0F09559BA130283076BCE198 /* HotkeyService.swift */,
+				D2A3B11B85E9BEB710CA6CB4 /* MicMuteController.swift */,
 				6FE375B29BA9AD7B167B76BE /* ModelManager.swift */,
 				31489D4E8B62609ECE3628AF /* ModelPackageLayout.swift */,
 				F030E16C4E6640B30B01CCAF /* PermissionService.swift */,
@@ -155,6 +161,7 @@
 				04ACFB5863E0E05AB1CB0B9D /* AVFoundation.framework */,
 				E2F124EFF6A1ED662214AA79 /* Carbon.framework */,
 				DFF4FFAEC733525AE390701F /* CoreAudio.framework */,
+				961E4156BC4745BD47659989 /* Network.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -308,6 +315,7 @@
 				3D2D48722554E73FB54D3CB6 /* HotkeySettingsRow.swift in Sources */,
 				83DF0B2B67BA48E7366DC9AE /* LightCleanupEngine.swift in Sources */,
 				D97B7D7EE849A0FC9D96EC99 /* MenuBarViews.swift in Sources */,
+				44CDE8B0154ED975ECD8BD42 /* MicMuteController.swift in Sources */,
 				AB6DA3EFA9A862AE132D2B43 /* MicrophoneLevelMeter.swift in Sources */,
 				5F988470236EE3D4A4179BAA /* ModelManager.swift in Sources */,
 				ECDA20ED2A7B864184CFCAD0 /* ModelPackageLayout.swift in Sources */,

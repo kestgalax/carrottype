@@ -50,7 +50,7 @@ Sections in order (one job each):
 
 1. **Welcome** (only while `showFirstRun`) — one privacy sentence + **Continue**
 2. **Status** — Ready / Almost / Blocked + remaining hints
-3. **Permissions** — Microphone, input device picker, Accessibility; optional **Show microphone meter** (off by default — avoids keeping the mic hardware awake); tip to remove/re-add the app if Accessibility status is stuck
+3. **Permissions** — Microphone, input device picker, Accessibility; optional **Show microphone meter** (off by default — avoids keeping the mic hardware awake); optional **Unmute mic during dictation (experimental)** (off by default — ADR-007: Elgato Wave Link only; temporarily clear mute for capture, restore after; Wave Link must be running); tip to remove/re-add the app if Accessibility status is stuck
 4. **Dictation model** — Picker for active (downloaded-only) model; per-package status; first-run CTA for recommended Whisper Base; on Ready-but-not-active rows show **Make active** (same pattern as formatting)
 5. **Post-dictation formatting** — Picker Off / Light / Smart / Smart+ (Smart* only when package Ready); Ready-but-not-active Smart packages show **Make active**
 6. **Hotkey** — capture UI + optional **Also keep the result on the clipboard**
@@ -86,6 +86,7 @@ When **Also keep the result on the clipboard** is on: paste at caret still runs,
 - Microphone TCC is requested only when status is `notDetermined`.
 - Accessibility must be enabled manually in System Settings; CarrotType polls while waiting and refreshes on app activation.
 - If System Settings already shows the app checked but CarrotType still shows denied: remove CarrotType from the Accessibility list, add it again, then refresh status or restart the app.
+- Optional **Unmute mic during dictation (experimental)** (default off, ADR-007): Elgato Wave Link only in product copy; for the capture window only; restores prior mute. Wave Link must be running.
 
 ## Out of scope for this UX
 

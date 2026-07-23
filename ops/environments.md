@@ -36,7 +36,7 @@ CarrotType polls TCC only while mic or Accessibility is still missing; once both
 |------|--------------------|
 | **Idle** (menu bar only, Settings closed, Ready) | Carbon hotkey + menu bar; **no** AVAudioEngine, **no** 30 Hz timers, **no** permission poll, STT/cleanup models unloaded right after each session |
 | **Settings open** | Optional mic level meter (`AudioLevelMonitor`) while the window is visible |
-| **Recording** | Session-scoped `AudioRecorder` + 30 Hz level decay for notch waveform |
+| **Recording** | Session-scoped `AudioRecorder` + 30 Hz level decay for notch waveform; optional temporary unmute (ADR-007) is HAL/Wave Link only — does not keep an idle engine |
 | **Peak (dictation)** | Load active STT (Whisper ggml or Parakeet CoreML) + optional Qwen3 MLX for Smart cleanup; unload immediately when the session ends |
 
 ### Build / run

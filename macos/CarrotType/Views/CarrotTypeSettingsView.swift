@@ -159,6 +159,14 @@ private struct CarrotTypeSettingsForm: View {
                         isOn: $appState.micMeterEnabled
                     )
 
+                    Toggle(
+                        L10n.t("permissions.unmute_during_dictation", locale: locale),
+                        isOn: $appState.unmuteMicDuringDictation
+                    )
+                    Text(L10n.t("permissions.unmute_during_dictation_hint", locale: locale))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
                     if appState.micMeterEnabled {
                         MicrophoneMeterSettingsRow(
                             audioLevel: appState.audioLevel,
