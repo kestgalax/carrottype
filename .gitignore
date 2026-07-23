@@ -1,0 +1,21 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+!.env*.example
+
+# Xcode / macOS
+macos/CarrotType.xcodeproj/xcuserdata/
+macos/CarrotType.xcodeproj/project.xcworkspace/xcuserdata/
+macos/.derivedData/
+**/DerivedData/
+*.xcuserstate
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Release artifacts
+dist/
+macos/.derivedData-release/

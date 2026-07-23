@@ -1,0 +1,9 @@
+{
+  "name": "carrottype",
+  "private": true,
+  "scripts": {
+    "aidos:validate": "node scripts/run-aidos.mjs validate",
+    "aidos:trace": "node scripts/run-aidos.mjs trace",
+    "aidos:review": "node scripts/run-aidos.mjs review"
+  }
+}
