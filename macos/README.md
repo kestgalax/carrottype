@@ -24,6 +24,7 @@ xcodebuild -project CarrotType.xcodeproj -scheme CarrotType \
 
 ```bash
 ../macos/scripts/build-release-dmg.sh   # from macos/: ./scripts/build-release-dmg.sh
+# tagged / clean rebuild: CLEAN=1 ./scripts/build-release-dmg.sh
 ```
 
 See `../ops/deploy.md`.

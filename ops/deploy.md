@@ -12,9 +12,17 @@ Chosen while the paid Apple Developer Program is not yet purchased.
 
 ### Build the DMG
 
+By default the script **reuses** `macos/.derivedData-release` for incremental Release builds. For a tagged GitHub Release (or when debugging stale/crashy frameworks), wipe the cache first:
+
 ```bash
 cd /path/to/carrottype
 chmod +x macos/scripts/build-release-dmg.sh
+CLEAN=1 ./macos/scripts/build-release-dmg.sh
+```
+
+Everyday local DMG iteration can omit `CLEAN` (faster):
+
+```bash
 ./macos/scripts/build-release-dmg.sh
 ```
 
@@ -26,6 +34,8 @@ Optional:
 VERSION=0.1.1 SIGN_IDENTITY="CarrotType Development" ./macos/scripts/build-release-dmg.sh
 # or ad-hoc:
 SIGN_IDENTITY="-" ./macos/scripts/build-release-dmg.sh
+# full rebuild:
+CLEAN=1 ./macos/scripts/build-release-dmg.sh
 ```
 
 Local self-signed identity (`macos/scripts/ensure-dev-codesign.sh`) helps **dev TCC**, not Gatekeeper for downloads from the internet.

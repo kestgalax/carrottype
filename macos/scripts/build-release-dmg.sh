@@ -9,6 +9,7 @@
 #   CONFIGURATION=Release
 #   SIGN_IDENTITY="CarrotType Development"  # or "-" for ad-hoc
 #   SKIP_CODESIGN=1
+#   CLEAN=1                # wipe macos/.derivedData-release before build (full rebuild)
 #
 set -euo pipefail
 
@@ -42,7 +43,12 @@ if command -v xcodegen >/dev/null 2>&1; then
 fi
 
 DERIVED="$MACOS/.derivedData-release"
-rm -rf "$DERIVED"
+if [[ "${CLEAN:-0}" == "1" ]]; then
+  echo "==> CLEAN=1 — wiping $DERIVED"
+  rm -rf "$DERIVED"
+else
+  echo "==> Reusing DerivedData at $DERIVED (set CLEAN=1 for a full rebuild)"
+fi
 mkdir -p "$DERIVED" "$DIST"
 
 echo "==> Building CarrotType $VERSION ($CONFIGURATION, arm64)"
