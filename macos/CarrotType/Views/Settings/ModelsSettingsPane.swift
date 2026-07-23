@@ -99,7 +99,18 @@ struct ModelsSettingsPane: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            if !status.isReady {
+            if status.isReady {
+                HStack {
+                    if models.activeSTTID != package.id {
+                        Button(L10n.t("format.make_active", locale: locale)) {
+                            models.selectSTT(package.id)
+                        }
+                    }
+                    Button(L10n.t("package.delete", locale: locale), role: .destructive) {
+                        appState.deleteModelPackage(package.id)
+                    }
+                }
+            } else {
                 SettingsPackageStatusControls(
                     appState: appState,
                     models: models,
@@ -109,10 +120,6 @@ struct ModelsSettingsPane: View {
                     prominentDownload: package.recommended,
                     prepareLabel: isAppleSpeech
                 )
-            } else if models.activeSTTID != package.id {
-                Button(L10n.t("format.make_active", locale: locale)) {
-                    models.selectSTT(package.id)
-                }
             }
         }
     }
@@ -133,7 +140,18 @@ struct ModelsSettingsPane: View {
                             Text(SettingsPackageStatusControls.statusLabel(status, locale: locale))
                                 .foregroundStyle(.secondary)
                         }
-                        if !status.isReady {
+                        if status.isReady {
+                            HStack {
+                                if models.cleanupMode != mode {
+                                    Button(L10n.t("format.make_active", locale: locale)) {
+                                        models.selectCleanup(mode)
+                                    }
+                                }
+                                Button(L10n.t("package.delete", locale: locale), role: .destructive) {
+                                    appState.deleteModelPackage(packageID)
+                                }
+                            }
+                        } else {
                             SettingsPackageStatusControls(
                                 appState: appState,
                                 models: models,
@@ -142,10 +160,6 @@ struct ModelsSettingsPane: View {
                                 locale: locale,
                                 prominentDownload: false
                             )
-                        } else if models.cleanupMode != mode {
-                            Button(L10n.t("format.make_active", locale: locale)) {
-                                models.selectCleanup(mode)
-                            }
                         }
                     }
                 } else if mode == .light {
