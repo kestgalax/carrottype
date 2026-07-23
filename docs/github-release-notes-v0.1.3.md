@@ -8,7 +8,7 @@ Attach: `CarrotType-0.1.3.dmg` (Apple Silicon, macOS 14+, ~16 MB app bundle with
 
 Artifact path after `./macos/scripts/build-release-dmg.sh`: `dist/CarrotType-0.1.3.dmg`.
 
-SHA-256 (this build): `PLACEHOLDER_AFTER_BUILD`
+SHA-256 (this build): `7dbce054b93c404ce75914dc9f4fb67148ab1e02e422f229590f8d0214182c1a`
 
 ## What’s new
 
