@@ -2,11 +2,11 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.3`** (unsigned DMG, invite-only): Settings sidebar panes + Status header; default hotkey ⌥/; Escape cancel + soft silent cancel; Check for updates; Wave Link unmute (ADR-007).
+Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.4`** (unsigned DMG, invite-only): Parakeet recommended STT; optional Apple SpeechAnalyzer (ADR-008); Models Delete + Storage per-package breakdown; Settings sidebar from v0.1.3.
 
-Latest artifact: `CarrotType-0.1.3.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.3.md`).
+Latest artifact: `CarrotType-0.1.4.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.4.md`).
 
-**Current focus:** recommended STT is **Parakeet TDT 0.6B v3** (`docs/stt-ru-en-quality-note.md`); optional Apple SpeechAnalyzer on `feature/apple-speechanalyzer-stt` (ADR-008); notarization after Apple Developer ID; public distribution only after that.
+**Current focus:** notarization after Apple Developer ID; public distribution only after that.
 
 Privacy / supply-chain agent governance lives in `.ai/constraints.md` (§ Privacy / network / dependencies). A full security pass / offline network audit is **deferred** — not current focus.
 
@@ -65,15 +65,15 @@ Checklist:
 - [x] Publish GitHub Release `v0.1.3` — Settings sidebar + default hotkey ⌥/ + window chrome polish + `docs/github-release-notes-v0.1.3.md`.
 - [x] Optional Apple SpeechAnalyzer STT (ADR-008) — catalog `stt.apple-speechanalyzer`, macOS 26+, Prepare assets (not recommended).
 - [x] Flip catalog `recommended` STT to Parakeet TDT 0.6B v3 (`docs/stt-ru-en-quality-note.md`).
+- [x] Publish GitHub Release `v0.1.4` — Parakeet recommended + Apple SpeechAnalyzer + Models/Storage polish + `docs/github-release-notes-v0.1.4.md`.
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 
-Status: **v0.1.3 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
+Status: **v0.1.4 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 
 1. **Trust:** after Apple Developer purchase — Developer ID sign + `notarytool` + staple (`ops/deploy.md`).
-2. Merge / ship SpeechAnalyzer polish (friendly Prepare errors) in the next private build if desired.
-3. **Only then** post-v1 spikes (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
+2. **Only then** post-v1 spikes (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 
 ## Near-term polish candidates (if release is blocked)
 
