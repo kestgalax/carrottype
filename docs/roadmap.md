@@ -6,7 +6,7 @@ Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.3`** (uns
 
 Latest artifact: `CarrotType-0.1.3.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.3.md`).
 
-**Current focus:** fill the STT quality note before flipping `recommended`; optional Apple SpeechAnalyzer STT landed on `feature/apple-speechanalyzer-stt` (ADR-008); notarization after Apple Developer ID; public distribution only after that.
+**Current focus:** recommended STT is **Parakeet TDT 0.6B v3** (`docs/stt-ru-en-quality-note.md`); optional Apple SpeechAnalyzer on `feature/apple-speechanalyzer-stt` (ADR-008); notarization after Apple Developer ID; public distribution only after that.
 
 Privacy / supply-chain agent governance lives in `.ai/constraints.md` (§ Privacy / network / dependencies). A full security pass / offline network audit is **deferred** — not current focus.
 
@@ -64,15 +64,15 @@ Checklist:
 - [x] Publish GitHub Release `v0.1.2` — Escape cancel / soft silent cancel + Status version + Check for updates + `docs/github-release-notes-v0.1.2.md`.
 - [x] Publish GitHub Release `v0.1.3` — Settings sidebar + default hotkey ⌥/ + window chrome polish + `docs/github-release-notes-v0.1.3.md`.
 - [x] Optional Apple SpeechAnalyzer STT (ADR-008) — catalog `stt.apple-speechanalyzer`, macOS 26+, Prepare assets (not recommended).
+- [x] Flip catalog `recommended` STT to Parakeet TDT 0.6B v3 (`docs/stt-ru-en-quality-note.md`).
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
-- [ ] Flip `recommended` STT only after filling `docs/stt-ru-en-quality-note.md`.
 
 Status: **v0.1.3 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 
-1. **Quality gate:** fill `docs/stt-ru-en-quality-note.md` (RU/EN Base vs Small vs Turbo vs Parakeet vs SpeechAnalyzer); then decide `recommended`.
-2. **Trust:** after Apple Developer purchase — Developer ID sign + `notarytool` + staple (`ops/deploy.md`).
+1. **Trust:** after Apple Developer purchase — Developer ID sign + `notarytool` + staple (`ops/deploy.md`).
+2. Merge / ship SpeechAnalyzer polish (friendly Prepare errors) in the next private build if desired.
 3. **Only then** post-v1 spikes (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 
 ## Near-term polish candidates (if release is blocked)
@@ -83,7 +83,7 @@ Small, user-visible fixes that do not expand scope:
 - [x] Default hotkey ⌥/ (shipped in v0.1.3; Reset in Settings if an old chord was saved).
 - Confirm Whisper Small / Turbo download end-to-end on a clean Application Support folder.
 - Menu-bar remaining-hints refresh after language change (if any stale copy remains).
-- First-run CTA clarity when Parakeet is already Ready but Whisper Base is still `recommended`.
+- [x] Recommended STT is Parakeet (first-run CTA targets Parakeet when not Ready).
 - Sparkle (or similar) auto-update after Developer ID / public or auth feed — Status currently only opens Releases.
 
 ## Post-v1 research spikes (no runtime yet)

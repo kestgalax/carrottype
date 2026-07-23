@@ -16,7 +16,7 @@ Raw NVIDIA NeMo checkpoints are not suitable for in-app conversion. We need a pr
 2. **Download:** `AsrModels.download(to:)` into Application Support under CarrotType `models/`. FluidAudio stores CoreML bundles in a **sibling folder** `parakeet-tdt-0.6b-v3` (repo `folderName`); the catalog package id dir holds only the `.ready` marker. Delete must remove both.
 3. **Adapter:** `ParakeetSTTEngine` behind `STTEngine`; Whisper remains the recommended default and fallback.
 4. **Resources:** only the active STT engine stays loaded; unload after idle timeout; switching STT packages reloads on next session.
-5. **Catalog:** `downloadable: true`, `runtimeHint: parakeet-fluidaudio`. Recommendation stays on Whisper Base until Parakeet proves better on internal RU samples (can flip `recommended` later without a new ADR).
+5. **Catalog:** `downloadable: true`, `runtimeHint: parakeet-fluidaudio`. Recommendation stayed on Whisper Base until the quality gate; **2026-07-24:** catalog `recommended` flipped to Parakeet (`docs/stt-ru-en-quality-note.md`), matching ADR-003.
 6. **Selection UX:** active STT / Smart cleanup may be chosen only when the package is Ready on disk (no auto-download on picker change).
 
 ## Consequences

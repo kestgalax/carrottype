@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "packages": [
     {
       "id": "stt.whisper-base-ggml",
@@ -8,7 +8,7 @@
       "approximateBytes": 148000000,
       "languagesBlurb": "catalog.blurb.stt.whisper-base-ggml",
       "license": "MIT",
-      "recommended": true,
+      "recommended": false,
       "downloadURL": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin",
       "runtimeHint": "whisper-cpp-ggml",
       "artifactFileName": "ggml-base.bin",
@@ -50,7 +50,7 @@
       "approximateBytes": 700000000,
       "languagesBlurb": "catalog.blurb.stt.parakeet-tdt-0.6b-v3",
       "license": "CC-BY-4.0",
-      "recommended": false,
+      "recommended": true,
       "downloadURL": "https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v3-coreml",
       "runtimeHint": "parakeet-fluidaudio",
       "hubRepoID": "FluidInference/parakeet-tdt-0.6b-v3-coreml",

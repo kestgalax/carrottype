@@ -11,7 +11,7 @@ CarrotType already ships Whisper ggml (ADR-004) and Parakeet FluidAudio CoreML (
 ## Decision
 
 1. **Runtime:** Speech framework `SpeechAnalyzer` + `SpeechTranscriber` (+ `AssetInventory` for locale assets). Catalog id: `stt.apple-speechanalyzer`, `runtimeHint: apple-speechanalyzer`.
-2. **Optional only:** `recommended: false`. Whisper Base stays recommended until the RU quality note says otherwise.
+2. **Optional only:** `recommended: false`. Catalog recommended STT is Parakeet (see `docs/stt-ru-en-quality-note.md`); SpeechAnalyzer stays opt-in.
 3. **No HF download:** “Prepare” installs system speech assets for the mapped locale. Ready = macOS 26+ and assets installed (marker under Application Support after Prepare).
 4. **Deployment target:** remains macOS 14; API calls gated with `#available(macOS 26, *)`. On older OS the catalog row is hidden.
 5. **Locale:** map in-app language (`ru` → `ru_RU`, else `en_US`) via `SpeechTranscriber.supportedLocale(equivalentTo:)`; refuse clearly if unsupported.

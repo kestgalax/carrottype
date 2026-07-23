@@ -1,7 +1,7 @@
 import Foundation
 
 enum BundledModelCatalog {
-    static let recommendedSTTID = "stt.whisper-base-ggml"
+    static let recommendedSTTID = "stt.parakeet-tdt-0.6b-v3"
     static let appleSpeechSTTID = "stt.apple-speechanalyzer"
     static let smartCleanupID = "cleanup.qwen3-0.6b-4bit"
     static let smartPlusCleanupID = "cleanup.qwen3-1.7b-4bit"
@@ -17,7 +17,7 @@ enum BundledModelCatalog {
     }
 
     static let fallback = ModelCatalogFile(
-        version: 5,
+        version: 6,
         packages: [
             CatalogPackage(
                 id: "stt.whisper-base-ggml",
@@ -26,7 +26,7 @@ enum BundledModelCatalog {
                 approximateBytes: 148_000_000,
                 languagesBlurb: "catalog.blurb.stt.whisper-base-ggml",
                 license: "MIT",
-                recommended: true,
+                recommended: false,
                 downloadURL: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin",
                 runtimeHint: "whisper-cpp-ggml",
                 artifactFileName: "ggml-base.bin",
@@ -68,7 +68,7 @@ enum BundledModelCatalog {
                 approximateBytes: 700_000_000,
                 languagesBlurb: "catalog.blurb.stt.parakeet-tdt-0.6b-v3",
                 license: "CC-BY-4.0",
-                recommended: false,
+                recommended: true,
                 downloadURL: "https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v3-coreml",
                 runtimeHint: "parakeet-fluidaudio",
                 hubRepoID: "FluidInference/parakeet-tdt-0.6b-v3-coreml",

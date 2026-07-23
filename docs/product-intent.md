@@ -59,4 +59,4 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 
 ## Current product status (2026-07)
 
-**v0.1.3** ships as an unsigned DMG on a **private** GitHub Release (invite-only early access). Next: decide default STT via `docs/stt-ru-en-quality-note.md`, then notarization after Apple Developer ID before any public download.
+**v0.1.3** ships as an unsigned DMG on a **private** GitHub Release (invite-only early access). Recommended STT is **Parakeet TDT 0.6B v3** (`docs/stt-ru-en-quality-note.md`). Next: notarization after Apple Developer ID before any public download.
