@@ -18,8 +18,8 @@ struct ModelsSettingsPane: View {
 
     private var sttSection: some View {
         Section {
-            // Prominent CTA while the recommended package is not Ready (covers post–first-run Models).
-            if !models.status(for: recommendedSTTID).isReady {
+            // Prominent CTA only when no STT is installed yet (avoids pushing Parakeet over an already-working model).
+            if models.selectableSTTPackages.isEmpty {
                 recommendedDownloadRow
             }
 
