@@ -42,6 +42,8 @@ Local self-signed identity (`macos/scripts/ensure-dev-codesign.sh`) helps **dev 
 
 **Launch crash note:** Hardened Runtime rejects embedded `whisper.framework` when Team IDs differ (typical with self-signed SPM builds). The release script resigns frameworks inside-out **without** `--options runtime`, and embeds `com.apple.security.cs.disable-library-validation`. `xattr -dr com.apple.quarantine` does **not** fix this crash — that only helps Gatekeeper “unidentified developer” prompts. If an old install still crash-loops, replace `/Applications/CarrotType.app` from a freshly built DMG (or re-run the resign path in `build-release-dmg.sh`).
 
+**Smart cleanup helper (ADR-009):** the DMG `.app` must include `Contents/MacOS/CarrotTypeCleanupHelper` and `Contents/Resources/mlx-swift_Cmlx.bundle`. The release script resigns the helper before the outer app and fails if either is missing.
+
 ### Publish on GitHub
 
 1. Tag: `v0.1.1` (match version).

@@ -34,10 +34,10 @@ CarrotType polls TCC only while mic or Accessibility is still missing; once both
 
 | Mode | Expected footprint |
 |------|--------------------|
-| **Idle** (menu bar only, Settings closed, Ready) | Carbon hotkey + menu bar; **no** AVAudioEngine, **no** 30 Hz timers, **no** permission poll; STT/cleanup unloaded right after each session; Smart also calls MLX `Memory.clearCache()` so Metal does not stay resident |
-| **Settings open** | Optional mic level meter (`AudioLevelMonitor`) while the window is visible; leaving Smart/Smart+ triggers engine unload + Metal cache clear |
+| **Idle** (menu bar only, Settings closed, Ready) | Carbon hotkey + menu bar; **no** AVAudioEngine, **no** 30 Hz timers, **no** permission poll; STT unloaded after each session; Smart MLX runs in `CarrotTypeCleanupHelper` which **exits** (ADR-009) — host should stay near cold start |
+| **Settings open** | Optional mic level meter (`AudioLevelMonitor`) while the window is visible |
 | **Recording** | Session-scoped `AudioRecorder` + 30 Hz level decay for notch waveform; optional temporary unmute (ADR-007) is HAL/Wave Link only — does not keep an idle engine |
-| **Peak (dictation)** | Load active STT (Whisper ggml or Parakeet CoreML) + optional Qwen3 MLX for Smart cleanup; unload immediately when the session ends (MLX Metal cache cleared) |
+| **Peak (dictation)** | Load active STT (Whisper ggml or Parakeet CoreML) in host; optional Qwen3 MLX peak (~1–2 GB) in helper only, then helper exit |
 
 ### Build / run
 

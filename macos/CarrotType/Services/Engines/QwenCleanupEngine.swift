@@ -1,28 +1,25 @@
 import Foundation
-import HuggingFace
-import MLX
-import MLXHuggingFace
-import MLXLLM
-import MLXLMCommon
-import Tokenizers
 
 enum CleanupEngineError: LocalizedError {
     case modelMissing
     case generationFailed
     case notAppleSilicon
+    case helperMissing
 
     var errorDescription: String? {
         switch self {
         case .modelMissing: return L10n.t("error.cleanup_model_missing")
         case .generationFailed: return L10n.t("error.cleanup_failed")
         case .notAppleSilicon: return L10n.t("error.cleanup_not_silicon")
+        case .helperMissing: return L10n.t("error.cleanup_failed")
         }
     }
 }
 
+/// Spawns `CarrotTypeCleanupHelper` for Smart/Smart+ (ADR-009). No in-process MLX.
 actor QwenCleanupEngine: CleanupEngine {
-    private var container: ModelContainer?
-    private var loadedDirectory: String?
+    /// Wall-clock budget for cold load + generate (helper is killed on timeout).
+    private static let timeoutNanoseconds: UInt64 = 120_000_000_000
 
     func cleanup(text: String, mode: CleanupMode, modelDirectory: URL?) async throws -> String {
         switch mode {
@@ -35,99 +32,117 @@ actor QwenCleanupEngine: CleanupEngine {
         }
 
         #if arch(arm64)
-        try await ensureLoaded(modelDirectory: modelDirectory)
-        guard let container else { throw CleanupEngineError.modelMissing }
+        guard let modelDirectory else { throw CleanupEngineError.modelMissing }
+        guard QwenCleanupPackage.isPackageReady(at: modelDirectory) else {
+            throw CleanupEngineError.modelMissing
+        }
+        guard let helperURL = Self.helperExecutableURL() else {
+            throw CleanupEngineError.helperMissing
+        }
 
-        // Qwen3 defaults to chain-of-thought (`<think>…</think>`). Disable it for cleanup.
-        let session = ChatSession(
-            container,
-            instructions: """
-            Ты редактор диктовки. Исправляй пунктуацию, капитализацию и слова-паразиты. \
-            Не меняй смысл и язык. Отвечай только исправленным текстом — без пояснений и рассуждений.
-            """,
-            generateParameters: GenerateParameters(maxTokens: 256, temperature: 0.1),
-            additionalContext: ["enable_thinking": false]
+        let request = CleanupHelperRequest(
+            text: text,
+            mode: mode.rawValue,
+            modelDirectory: modelDirectory.path
         )
-        let prompt = "Исправь текст диктовки:\n\(text)"
-        let raw = try await session.respond(to: prompt)
-        let result = Self.stripModelExtras(raw)
-        if result.isEmpty { throw CleanupEngineError.generationFailed }
-        return result
+        let requestData = try JSONEncoder().encode(request)
+        let response = try await Self.runHelper(
+            executable: helperURL,
+            requestData: requestData,
+            timeoutNanoseconds: Self.timeoutNanoseconds
+        )
+        if response.ok, let cleaned = response.text, !cleaned.isEmpty {
+            return cleaned
+        }
+        switch response.error {
+        case "modelMissing": throw CleanupEngineError.modelMissing
+        case "notAppleSilicon": throw CleanupEngineError.notAppleSilicon
+        default: throw CleanupEngineError.generationFailed
+        }
         #else
         throw CleanupEngineError.notAppleSilicon
         #endif
     }
 
     func unload() async {
-        container = nil
-        loadedDirectory = nil
-        // Drop MLX Metal working set; nil alone leaves IOAccelerator resident.
-        Memory.clearCache()
+        // Helper exits after each request; nothing resident in the host.
     }
 
-    /// Drop Qwen thinking blocks / wrappers if the template still emits them.
-    static func stripModelExtras(_ text: String) -> String {
-        var result = text
-        if let regex = try? NSRegularExpression(
-            pattern: #"(?s)<think>.*?</think>"#,
-            options: []
-        ) {
-            let range = NSRange(result.startIndex..<result.endIndex, in: result)
-            result = regex.stringByReplacingMatches(in: result, range: range, withTemplate: "")
+    private static func helperExecutableURL() -> URL? {
+        if let url = Bundle.main.url(forAuxiliaryExecutable: "CarrotTypeCleanupHelper") {
+            return url
         }
-        if let start = result.range(of: "<think>") {
-            result.removeSubrange(start.lowerBound...)
-        }
-        return result
-            .replacingOccurrences(of: "</think>", with: "")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let exec = Bundle.main.executableURL else { return nil }
+        let sibling = exec.deletingLastPathComponent()
+            .appendingPathComponent("CarrotTypeCleanupHelper", isDirectory: false)
+        return FileManager.default.isExecutableFile(atPath: sibling.path) ? sibling : nil
     }
 
-    /// Download MLX Qwen snapshot into `directory`.
-    /// - Parameter onProgress: fraction in `[0, 1]` from Hub snapshot download.
-    static func downloadPackage(
-        repoID: String,
-        to directory: URL,
-        onProgress: (@Sendable (Double) -> Void)? = nil
-    ) async throws {
-        #if arch(arm64)
-        guard let id = Repo.ID(rawValue: repoID) else {
-            throw CleanupEngineError.modelMissing
-        }
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        _ = try await HubClient.default.downloadSnapshot(
-            of: id,
-            to: directory,
-            progressHandler: { progress in
-                onProgress?(progress.fractionCompleted)
+    private static func runHelper(
+        executable: URL,
+        requestData: Data,
+        timeoutNanoseconds: UInt64
+    ) async throws -> CleanupHelperResponse {
+        let box = ProcessBox(executable: executable)
+        return try await withThrowingTaskGroup(of: CleanupHelperResponse.self) { group in
+            group.addTask {
+                try box.run(requestData: requestData)
             }
-        )
-        onProgress?(1)
-        let marker = ModelPackageLayout.readyMarker(in: directory)
-        try Data().write(to: marker, options: .atomic)
-        #else
-        throw CleanupEngineError.notAppleSilicon
-        #endif
+            group.addTask {
+                try await Task.sleep(nanoseconds: timeoutNanoseconds)
+                box.terminate()
+                throw CleanupEngineError.generationFailed
+            }
+            let first = try await group.next()!
+            group.cancelAll()
+            box.terminate()
+            return first
+        }
+    }
+}
+
+/// `Process` is not Sendable; isolate for timeout + wait tasks.
+private final class ProcessBox: @unchecked Sendable {
+    private let process = Process()
+    private let stdin = Pipe()
+    private let stdout = Pipe()
+    private let stderr = Pipe()
+    private let lock = NSLock()
+
+    init(executable: URL) {
+        process.executableURL = executable
+        process.standardInput = stdin
+        process.standardOutput = stdout
+        process.standardError = stderr
     }
 
-    static func isPackageReady(at directory: URL) -> Bool {
-        let config = directory.appendingPathComponent("config.json")
-        guard FileManager.default.fileExists(atPath: config.path) else { return false }
-        // Weights: either single safetensors or sharded index.
-        let contents = (try? FileManager.default.contentsOfDirectory(atPath: directory.path)) ?? []
-        let hasWeights = contents.contains { $0.hasSuffix(".safetensors") || $0 == "model.safetensors.index.json" }
-        return hasWeights
+    func run(requestData: Data) throws -> CleanupHelperResponse {
+        try process.run()
+        stdin.fileHandleForWriting.write(requestData)
+        try stdin.fileHandleForWriting.close()
+        process.waitUntilExit()
+        let outData = stdout.fileHandleForReading.readDataToEndOfFile()
+        _ = stderr.fileHandleForReading.readDataToEndOfFile()
+        if process.terminationStatus != 0, outData.isEmpty {
+            throw CleanupEngineError.generationFailed
+        }
+        let lineData: Data
+        if let newline = outData.firstIndex(of: UInt8(ascii: "\n")) {
+            lineData = outData.subdata(in: outData.startIndex..<newline)
+        } else {
+            lineData = outData
+        }
+        guard let response = try? JSONDecoder().decode(CleanupHelperResponse.self, from: lineData) else {
+            throw CleanupEngineError.generationFailed
+        }
+        return response
     }
 
-    private func ensureLoaded(modelDirectory: URL?) async throws {
-        guard let modelDirectory else { throw CleanupEngineError.modelMissing }
-        let path = modelDirectory.path
-        if loadedDirectory == path, container != nil { return }
-
-        await unload()
-
-        let configuration = ModelConfiguration(directory: modelDirectory)
-        container = try await #huggingFaceLoadModelContainer(configuration: configuration)
-        loadedDirectory = path
+    func terminate() {
+        lock.lock()
+        defer { lock.unlock() }
+        if process.isRunning {
+            process.terminate()
+        }
     }
 }

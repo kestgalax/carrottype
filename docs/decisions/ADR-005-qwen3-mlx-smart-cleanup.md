@@ -15,15 +15,15 @@ ADR-003 defined cleanup modes Off / Light / Smart / Smart+ with Qwen3 as the Sma
    - Smart → `mlx-community/Qwen3-0.6B-4bit` (`cleanup.qwen3-0.6b-4bit`)
    - Smart+ → `mlx-community/Qwen3-1.7B-4bit` (`cleanup.qwen3-1.7b-4bit`)
 3. **Platform:** Apple Silicon only for Smart/Smart+. Intel Macs keep Off/Light.
-4. **Lifecycle:** load on first Smart/Smart+ session; unload immediately when the dictation session ends (together with STT). Unload also runs when the user leaves Smart/Smart+ (cleanup mode change). After dropping the model container, call MLX `Memory.clearCache()` so Metal/`IOAccelerator` working sets are released — nil-ing Swift refs alone leaves GPU memory resident.
+4. **Lifecycle (superseded for process boundary by ADR-009):** Smart/Smart+ MLX inference runs in a session-scoped helper process that exits after each cleanup. Within the helper, load → generate → exit (optional `Memory.clearCache()` before exit is fine but exit is the host-footprint guarantee). Host does not keep an MLX model container. Leaving Smart/Smart+ no longer needs in-process unload of Qwen weights.
 5. **Failure policy:** if Smart generation fails or the package is not Ready, fall back to Light heuristics so the STT result is never discarded.
 6. **Catalog:** both packages are `downloadable: true`; UI offers download when Smart/Smart+ is selected before Ready. Settings copy frames Smart as optional (try Off/Light first).
 
 ## Consequences
 
 - Smart cleanup is a real MLX inference path, not an alias of Light.
-- App binary depends on MLX + Hub packages; first Smart download is hundreds of MB.
-- Memory peak during Smart sessions is higher; idle footprint stays low via unload **plus** Metal cache clear.
+- MLX inference links into the cleanup helper binary (ADR-009); host keeps Hub download deps. First Smart download is hundreds of MB.
+- Memory peak during Smart sessions is higher in the helper; host idle footprint stays near cold start because the helper exits.
 
 ## Alternatives considered
 

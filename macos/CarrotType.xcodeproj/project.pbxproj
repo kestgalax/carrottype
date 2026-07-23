@@ -8,9 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		00B1C4A76592610484327897 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961E4156BC4745BD47659989 /* Network.framework */; };
+		0D51C3CC0B095B313709D557 /* MLXHuggingFace in Frameworks */ = {isa = PBXBuildFile; productRef = FAC07B8955CEF75A5BD3E18C /* MLXHuggingFace */; };
 		0DF962C341D720B1AA2C28F8 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = A659DC3EC69FC4BAB2E97F21 /* FluidAudio */; };
+		109B1E3DBEBA27643DAAB586 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD109D911C2BE1F4C00F3038 /* main.swift */; };
 		1424691E8C5507CB87824295 /* AudioInputService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C308C7819FB980179CA944D /* AudioInputService.swift */; };
 		206887C3685474E0C569386D /* NotchRecordingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AEA7C2344265F10A49A4E2 /* NotchRecordingOverlay.swift */; };
+		2267ECB139580B1231C3D98E /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = C96851DE3927A9D883868D3E /* MLXLMCommon */; };
 		232FBC6B127516DFCDA2BF9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDFA98C4C936AA6524585F75 /* Assets.xcassets */; };
 		2E15B15907D6FB83AF3C5FF1 /* AudioLevelMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B50E12D241D4FD62DF4339 /* AudioLevelMonitor.swift */; };
 		348605D908FF4DB02EFE78C8 /* StatusDetailsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC8AF679C38E4E258DA8FEFB /* StatusDetailsPane.swift */; };
@@ -20,43 +23,71 @@
 		40793D8C8B303AE52135AD97 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2F124EFF6A1ED662214AA79 /* Carbon.framework */; };
 		44CDE8B0154ED975ECD8BD42 /* MicMuteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A3B11B85E9BEB710CA6CB4 /* MicMuteController.swift */; };
 		4CD5D01CA1E2291B4136CDD6 /* ModelCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 483744F178A17C48BF392DE8 /* ModelCatalog.json */; };
+		556FFCBB0314251DFFA2812F /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = 699639FF1FE81CD3DEAE7DD7 /* MLXLLM */; };
 		5F893F10B1E563C05A0F654B /* AppleSpeechSTTEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3F89D6C30F64A6A986A9F7 /* AppleSpeechSTTEngine.swift */; };
 		5F988470236EE3D4A4179BAA /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE375B29BA9AD7B167B76BE /* ModelManager.swift */; };
 		6907436AC4B5CEB0186D6370 /* PermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F030E16C4E6640B30B01CCAF /* PermissionService.swift */; };
 		6B8A6A54ACE564ACBFE92820 /* TextCleanup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB6DC297BE778E340C7DEE /* TextCleanup.swift */; };
 		6D7821FEFA32798EAC2B35F2 /* SettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = D769905C5F256B10EFB2C0FC /* SettingsPane.swift */; };
 		6E76DB8D54356C0C0EA15F2F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04ACFB5863E0E05AB1CB0B9D /* AVFoundation.framework */; };
-		746A656143C087189B33B987 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = 4E77B30C7DF81EDDBCC6D5D5 /* MLXLLM */; };
+		746A656143C087189B33B987 /* HuggingFace in Frameworks */ = {isa = PBXBuildFile; productRef = C3A13A3946B1DA246EEB8C55 /* HuggingFace */; };
 		750021AC0024C9A389B610AA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3E8E2BEBD0ADFF9762189AF3 /* Localizable.xcstrings */; };
 		787E4A9AEEB1E5ED06517F99 /* TextInsertionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD23B7D3784693FB5A2848F2 /* TextInsertionService.swift */; };
 		7A6EF5822C017178EC7948E7 /* ParakeetSTTEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ABEEF11225BBB00F82665C /* ParakeetSTTEngine.swift */; };
-		80952962BDCE86D4016D7FB1 /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 440F9D11DC9EDA5982C623A1 /* MLXLMCommon */; };
+		836F9BD52ABED7DD77D1DDB1 /* Tokenizers in Frameworks */ = {isa = PBXBuildFile; productRef = 6B5D5F507818E93DB0A7DBE4 /* Tokenizers */; };
 		83DF0B2B67BA48E7366DC9AE /* LightCleanupEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E12BFD1DB1A536385EE5619 /* LightCleanupEngine.swift */; };
 		851708932F5826834776BD5B /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFF4FFAEC733525AE390701F /* CoreAudio.framework */; };
-		85426F1B1FF80636F0E7C0B3 /* Tokenizers in Frameworks */ = {isa = PBXBuildFile; productRef = FA5443497C345A94E3B54042 /* Tokenizers */; };
+		8520736B38B948EC591EAD67 /* CleanupHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E32E8498292740FB1B758A /* CleanupHelperProtocol.swift */; };
+		8E8FF3437CC7B24CE31A9CD1 /* CleanupHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E32E8498292740FB1B758A /* CleanupHelperProtocol.swift */; };
 		92B387822AA0FEA69CA38335 /* BundledModelCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F2B01DE0B361D286C434D /* BundledModelCatalog.swift */; };
-		9C66892BB62C707892CF54BF /* MLXHuggingFace in Frameworks */ = {isa = PBXBuildFile; productRef = 208FDC78E2D344449674FD83 /* MLXHuggingFace */; };
+		9860C21774B4315986E7A353 /* CarrotTypeCleanupHelper in Embed Dependencies */ = {isa = PBXBuildFile; fileRef = 21F45A6C3B678F2FE61C979E /* CarrotTypeCleanupHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9E2DE914E6F7A1AE18CCEEB4 /* HotkeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F09559BA130283076BCE198 /* HotkeyService.swift */; };
+		9F80AB5D192A4FC13377B865 /* QwenCleanupCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1774E9ADED029C17FB90700E /* QwenCleanupCore.swift */; };
 		A940872297B84FD8CF132A8A /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797712955E7ADE3ABBD30757 /* AppLanguage.swift */; };
 		A9780D692F74E9ECD3C52F2E /* CarrotTypeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEAA3680522EFDCA855E969 /* CarrotTypeSettingsView.swift */; };
-		AAF6CF54559CFE3042625200 /* HuggingFace in Frameworks */ = {isa = PBXBuildFile; productRef = C3A13A3946B1DA246EEB8C55 /* HuggingFace */; };
 		AB6DA3EFA9A862AE132D2B43 /* MicrophoneLevelMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC24539957AB2B6B9B8DAE91 /* MicrophoneLevelMeter.swift */; };
 		AC59FC1DDE6059740FBEB131 /* GeneralSettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01F0C09CF14B2C2102D5E1E /* GeneralSettingsPane.swift */; };
 		ADCCEDC9F9D4D928D8317481 /* ModelTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B2484C6CDB9EA89F7724FB /* ModelTypes.swift */; };
 		B015FF65FC68F854F9F323D1 /* SettingsStatusHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F729C29AD2C7164B457EDC2B /* SettingsStatusHeader.swift */; };
 		BB7DAAD5EA8D6D77F3679459 /* ModelsSettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF630F116A29B033D376FDC6 /* ModelsSettingsPane.swift */; };
 		BC099652A4FFE95AEB6168BF /* DictationPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8A229A676ECD2FA3F5A5BC /* DictationPipeline.swift */; };
+		BD66BE379C1B6305035B26C2 /* HuggingFace in Frameworks */ = {isa = PBXBuildFile; productRef = F0B6A7E7E370A998CBD6878E /* HuggingFace */; };
 		C945E1A70B05DAC9FCF89757 /* WhisperSTTEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18044C65F61816B2F5864EBA /* WhisperSTTEngine.swift */; };
 		CD6BF2145BDF3A01437CE70B /* FirstRunWelcomePane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B00175B5CD179162D130703 /* FirstRunWelcomePane.swift */; };
 		CE2F8B07F6FFC87998BFB656 /* WhisperMetalKit in Frameworks */ = {isa = PBXBuildFile; productRef = 784F8DD83A03578ED7408383 /* WhisperMetalKit */; };
 		D8F6E8C1514F7BFFACCCCAFA /* CarrotTypeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5EC57D28158EECBBF40434 /* CarrotTypeApp.swift */; };
 		D97B7D7EE849A0FC9D96EC99 /* MenuBarViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D51F39387D51B7D74F72297 /* MenuBarViews.swift */; };
 		DFD6AC2F006F5D4308FDCDD7 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F11ED546758ABC44F1858768 /* ApplicationServices.framework */; };
+		E38EBE6358C955BB20B5DCB4 /* QwenCleanupPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D40E1D3CA1524781D9C600 /* QwenCleanupPackage.swift */; };
 		ECDA20ED2A7B864184CFCAD0 /* ModelPackageLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31489D4E8B62609ECE3628AF /* ModelPackageLayout.swift */; };
 		FAB43A0C193803BBB860B1A3 /* StorageSettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E5336DFE61B515F41AB2DCF /* StorageSettingsPane.swift */; };
 		FE1A7CCA62C8799042615C53 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4AB7FFAD8131E11A68A11E /* AudioRecorder.swift */; };
 		FF6920A2D443AAF028CDF617 /* SetupSettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C03ED580868653554F85816 /* SetupSettingsPane.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A03ED777F82C2120A812C1EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FB12614DE1BF6943075A51F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 344F8029325BC41124B6D77A;
+			remoteInfo = CarrotTypeCleanupHelper;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3E05E9837D46DC7F2F0D7D60 /* Embed Dependencies */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				9860C21774B4315986E7A353 /* CarrotTypeCleanupHelper in Embed Dependencies */,
+			);
+			name = "Embed Dependencies";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		04ACFB5863E0E05AB1CB0B9D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -65,14 +96,17 @@
 		0C03ED580868653554F85816 /* SetupSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupSettingsPane.swift; sourceTree = "<group>"; };
 		0F09559BA130283076BCE198 /* HotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyService.swift; sourceTree = "<group>"; };
 		16ABEEF11225BBB00F82665C /* ParakeetSTTEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParakeetSTTEngine.swift; sourceTree = "<group>"; };
+		1774E9ADED029C17FB90700E /* QwenCleanupCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QwenCleanupCore.swift; sourceTree = "<group>"; };
 		18044C65F61816B2F5864EBA /* WhisperSTTEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperSTTEngine.swift; sourceTree = "<group>"; };
 		1B1F061639C3F7357F74D326 /* QwenCleanupEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QwenCleanupEngine.swift; sourceTree = "<group>"; };
 		1C308C7819FB980179CA944D /* AudioInputService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputService.swift; sourceTree = "<group>"; };
 		1F76081AF5F3BDB59EC6A74D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		20B2484C6CDB9EA89F7724FB /* ModelTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTypes.swift; sourceTree = "<group>"; };
 		21049F0E68A2ADE0DA4314A4 /* HotkeySettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeySettingsRow.swift; sourceTree = "<group>"; };
+		21F45A6C3B678F2FE61C979E /* CarrotTypeCleanupHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = CarrotTypeCleanupHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E4AB7FFAD8131E11A68A11E /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		31489D4E8B62609ECE3628AF /* ModelPackageLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPackageLayout.swift; sourceTree = "<group>"; };
+		36E32E8498292740FB1B758A /* CleanupHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupHelperProtocol.swift; sourceTree = "<group>"; };
 		3C3F89D6C30F64A6A986A9F7 /* AppleSpeechSTTEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSpeechSTTEngine.swift; sourceTree = "<group>"; };
 		3E8E2BEBD0ADFF9762189AF3 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		46B50E12D241D4FD62DF4339 /* AudioLevelMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioLevelMonitor.swift; sourceTree = "<group>"; };
@@ -91,6 +125,7 @@
 		961E4156BC4745BD47659989 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		ABEAA3680522EFDCA855E969 /* CarrotTypeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarrotTypeSettingsView.swift; sourceTree = "<group>"; };
 		AD23B7D3784693FB5A2848F2 /* TextInsertionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInsertionService.swift; sourceTree = "<group>"; };
+		B0D40E1D3CA1524781D9C600 /* QwenCleanupPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QwenCleanupPackage.swift; sourceTree = "<group>"; };
 		BC24539957AB2B6B9B8DAE91 /* MicrophoneLevelMeter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneLevelMeter.swift; sourceTree = "<group>"; };
 		CDFA98C4C936AA6524585F75 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D2A3B11B85E9BEB710CA6CB4 /* MicMuteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicMuteController.swift; sourceTree = "<group>"; };
@@ -103,21 +138,30 @@
 		F11ED546758ABC44F1858768 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		F729C29AD2C7164B457EDC2B /* SettingsStatusHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStatusHeader.swift; sourceTree = "<group>"; };
 		FC8AF679C38E4E258DA8FEFB /* StatusDetailsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusDetailsPane.swift; sourceTree = "<group>"; };
+		FD109D911C2BE1F4C00F3038 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		FF630F116A29B033D376FDC6 /* ModelsSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsSettingsPane.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		143CF9A6DEC0B3D9A445D6D6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				556FFCBB0314251DFFA2812F /* MLXLLM in Frameworks */,
+				2267ECB139580B1231C3D98E /* MLXLMCommon in Frameworks */,
+				0D51C3CC0B095B313709D557 /* MLXHuggingFace in Frameworks */,
+				BD66BE379C1B6305035B26C2 /* HuggingFace in Frameworks */,
+				836F9BD52ABED7DD77D1DDB1 /* Tokenizers in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5EFACCE92E56FB45808A8923 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				CE2F8B07F6FFC87998BFB656 /* WhisperMetalKit in Frameworks */,
 				0DF962C341D720B1AA2C28F8 /* FluidAudio in Frameworks */,
-				746A656143C087189B33B987 /* MLXLLM in Frameworks */,
-				80952962BDCE86D4016D7FB1 /* MLXLMCommon in Frameworks */,
-				9C66892BB62C707892CF54BF /* MLXHuggingFace in Frameworks */,
-				AAF6CF54559CFE3042625200 /* HuggingFace in Frameworks */,
-				85426F1B1FF80636F0E7C0B3 /* Tokenizers in Frameworks */,
+				746A656143C087189B33B987 /* HuggingFace in Frameworks */,
 				40793D8C8B303AE52135AD97 /* Carbon.framework in Frameworks */,
 				DFD6AC2F006F5D4308FDCDD7 /* ApplicationServices.framework in Frameworks */,
 				851708932F5826834776BD5B /* CoreAudio.framework in Frameworks */,
@@ -188,6 +232,8 @@
 			isa = PBXGroup;
 			children = (
 				3C12B99E28E4CA9830AD6B99 /* CarrotType */,
+				AF0AAA4DE777FE2B0A663046 /* CarrotTypeCleanupHelper */,
+				D95423D118D963DE0F6B4774 /* Shared */,
 				87F8F853C00D403D290AC412 /* Frameworks */,
 				A8C1615277D1F46BB30D9D40 /* Products */,
 			);
@@ -197,8 +243,18 @@
 			isa = PBXGroup;
 			children = (
 				7E321ED881327A9305318B57 /* CarrotType.app */,
+				21F45A6C3B678F2FE61C979E /* CarrotTypeCleanupHelper */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AF0AAA4DE777FE2B0A663046 /* CarrotTypeCleanupHelper */ = {
+			isa = PBXGroup;
+			children = (
+				FD109D911C2BE1F4C00F3038 /* main.swift */,
+				1774E9ADED029C17FB90700E /* QwenCleanupCore.swift */,
+			);
+			path = CarrotTypeCleanupHelper;
 			sourceTree = "<group>";
 		};
 		C859322C266348CF5A31A25A /* Settings */ = {
@@ -224,9 +280,18 @@
 				7E12BFD1DB1A536385EE5619 /* LightCleanupEngine.swift */,
 				16ABEEF11225BBB00F82665C /* ParakeetSTTEngine.swift */,
 				1B1F061639C3F7357F74D326 /* QwenCleanupEngine.swift */,
+				B0D40E1D3CA1524781D9C600 /* QwenCleanupPackage.swift */,
 				18044C65F61816B2F5864EBA /* WhisperSTTEngine.swift */,
 			);
 			path = Engines;
+			sourceTree = "<group>";
+		};
+		D95423D118D963DE0F6B4774 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				36E32E8498292740FB1B758A /* CleanupHelperProtocol.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		EA84548A6EE325B70B27F449 /* Views */ = {
@@ -255,27 +320,49 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B6492D9ADC07D38F462D0397 /* CarrotType */ = {
+		344F8029325BC41124B6D77A /* CarrotTypeCleanupHelper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F8A1B08B657F131191F9AAB0 /* Build configuration list for PBXNativeTarget "CarrotType" */;
+			buildConfigurationList = 2D433B1D3653BF6318174CBE /* Build configuration list for PBXNativeTarget "CarrotTypeCleanupHelper" */;
 			buildPhases = (
-				09C2BF6F478983BF50E034B6 /* Sources */,
-				328272F8FB662D9BF0DED0AF /* Resources */,
-				5EFACCE92E56FB45808A8923 /* Frameworks */,
+				AE92CF037B3A97072BBF4B0F /* Sources */,
+				143CF9A6DEC0B3D9A445D6D6 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
+			name = CarrotTypeCleanupHelper;
+			packageProductDependencies = (
+				699639FF1FE81CD3DEAE7DD7 /* MLXLLM */,
+				C96851DE3927A9D883868D3E /* MLXLMCommon */,
+				FAC07B8955CEF75A5BD3E18C /* MLXHuggingFace */,
+				F0B6A7E7E370A998CBD6878E /* HuggingFace */,
+				6B5D5F507818E93DB0A7DBE4 /* Tokenizers */,
+			);
+			productName = CarrotTypeCleanupHelper;
+			productReference = 21F45A6C3B678F2FE61C979E /* CarrotTypeCleanupHelper */;
+			productType = "com.apple.product-type.tool";
+		};
+		B6492D9ADC07D38F462D0397 /* CarrotType */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F8A1B08B657F131191F9AAB0 /* Build configuration list for PBXNativeTarget "CarrotType" */;
+			buildPhases = (
+				09C2BF6F478983BF50E034B6 /* Sources */,
+				4B304BF2445F7AFC5F015D34 /* Embed MLX metallib for cleanup helper */,
+				328272F8FB662D9BF0DED0AF /* Resources */,
+				5EFACCE92E56FB45808A8923 /* Frameworks */,
+				3E05E9837D46DC7F2F0D7D60 /* Embed Dependencies */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				213F04D5C8A7F5B2FB437A00 /* PBXTargetDependency */,
+			);
 			name = CarrotType;
 			packageProductDependencies = (
 				784F8DD83A03578ED7408383 /* WhisperMetalKit */,
 				A659DC3EC69FC4BAB2E97F21 /* FluidAudio */,
-				4E77B30C7DF81EDDBCC6D5D5 /* MLXLLM */,
-				440F9D11DC9EDA5982C623A1 /* MLXLMCommon */,
-				208FDC78E2D344449674FD83 /* MLXHuggingFace */,
 				C3A13A3946B1DA246EEB8C55 /* HuggingFace */,
-				FA5443497C345A94E3B54042 /* Tokenizers */,
 			);
 			productName = CarrotType;
 			productReference = 7E321ED881327A9305318B57 /* CarrotType.app */;
@@ -314,6 +401,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				344F8029325BC41124B6D77A /* CarrotTypeCleanupHelper */,
 				B6492D9ADC07D38F462D0397 /* CarrotType */,
 			);
 		};
@@ -332,6 +420,28 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4B304BF2445F7AFC5F015D34 /* Embed MLX metallib for cleanup helper */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Embed MLX metallib for cleanup helper";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -euo pipefail\n# MLX loads shaders from mlx-swift_Cmlx.bundle via the app main bundle.\n# SPM puts the bundle in BUILT_PRODUCTS_DIR; the tool target does not embed it.\n# Do not place *.metallib under Contents/MacOS — codesign treats it as unsigned code.\nBUNDLE=\"${BUILT_PRODUCTS_DIR}/mlx-swift_Cmlx.bundle\"\nAPP_RES=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nif [[ ! -d \"$BUNDLE\" ]]; then\n  echo \"error: mlx-swift_Cmlx.bundle missing at $BUNDLE (MetalToolchain / Cmlx build?)\" >&2\n  exit 1\nfi\nmkdir -p \"$APP_RES\"\nrm -rf \"${APP_RES}/mlx-swift_Cmlx.bundle\"\ncp -R \"$BUNDLE\" \"$APP_RES/\"\necho \"Embedded mlx-swift_Cmlx.bundle into app Resources\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		09C2BF6F478983BF50E034B6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -346,6 +456,7 @@
 				92B387822AA0FEA69CA38335 /* BundledModelCatalog.swift in Sources */,
 				D8F6E8C1514F7BFFACCCCAFA /* CarrotTypeApp.swift in Sources */,
 				A9780D692F74E9ECD3C52F2E /* CarrotTypeSettingsView.swift in Sources */,
+				8520736B38B948EC591EAD67 /* CleanupHelperProtocol.swift in Sources */,
 				BC099652A4FFE95AEB6168BF /* DictationPipeline.swift in Sources */,
 				CD6BF2145BDF3A01437CE70B /* FirstRunWelcomePane.swift in Sources */,
 				AC59FC1DDE6059740FBEB131 /* GeneralSettingsPane.swift in Sources */,
@@ -363,6 +474,7 @@
 				7A6EF5822C017178EC7948E7 /* ParakeetSTTEngine.swift in Sources */,
 				6907436AC4B5CEB0186D6370 /* PermissionService.swift in Sources */,
 				3D8CB060CF0448E9E6A14E45 /* QwenCleanupEngine.swift in Sources */,
+				E38EBE6358C955BB20B5DCB4 /* QwenCleanupPackage.swift in Sources */,
 				6D7821FEFA32798EAC2B35F2 /* SettingsPane.swift in Sources */,
 				B015FF65FC68F854F9F323D1 /* SettingsStatusHeader.swift in Sources */,
 				FF6920A2D443AAF028CDF617 /* SetupSettingsPane.swift in Sources */,
@@ -374,9 +486,55 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AE92CF037B3A97072BBF4B0F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8E8FF3437CC7B24CE31A9CD1 /* CleanupHelperProtocol.swift in Sources */,
+				9F80AB5D192A4FC13377B865 /* QwenCleanupCore.swift in Sources */,
+				109B1E3DBEBA27643DAAB586 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		213F04D5C8A7F5B2FB437A00 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 344F8029325BC41124B6D77A /* CarrotTypeCleanupHelper */;
+			targetProxy = A03ED777F82C2120A812C1EA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		77CE54644CCE2E1C754D4A65 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "app.carrottype.macos.cleanup-helper";
+				PRODUCT_NAME = CarrotTypeCleanupHelper;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		AB62A0F166834A4AB79D3AFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "app.carrottype.macos.cleanup-helper";
+				PRODUCT_NAME = CarrotTypeCleanupHelper;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		AF248E5115FC3830837EBA21 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -533,6 +691,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2D433B1D3653BF6318174CBE /* Build configuration list for PBXNativeTarget "CarrotTypeCleanupHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77CE54644CCE2E1C754D4A65 /* Debug */,
+				AB62A0F166834A4AB79D3AFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		C8648B0963A9E2976AB8E9AE /* Build configuration list for PBXProject "CarrotType" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -597,20 +764,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		208FDC78E2D344449674FD83 /* MLXHuggingFace */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = EEB8AC4F1F9BBF5A97F5AB73 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
-			productName = MLXHuggingFace;
-		};
-		440F9D11DC9EDA5982C623A1 /* MLXLMCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = EEB8AC4F1F9BBF5A97F5AB73 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
-			productName = MLXLMCommon;
-		};
-		4E77B30C7DF81EDDBCC6D5D5 /* MLXLLM */ = {
+		699639FF1FE81CD3DEAE7DD7 /* MLXLLM */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EEB8AC4F1F9BBF5A97F5AB73 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
 			productName = MLXLLM;
+		};
+		6B5D5F507818E93DB0A7DBE4 /* Tokenizers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E0CB6E7D0DF81883708121F7 /* XCRemoteSwiftPackageReference "swift-transformers" */;
+			productName = Tokenizers;
 		};
 		784F8DD83A03578ED7408383 /* WhisperMetalKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -627,10 +789,20 @@
 			package = 1D4AAADCF5C8AC7E161E2BD7 /* XCRemoteSwiftPackageReference "swift-huggingface" */;
 			productName = HuggingFace;
 		};
-		FA5443497C345A94E3B54042 /* Tokenizers */ = {
+		C96851DE3927A9D883868D3E /* MLXLMCommon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E0CB6E7D0DF81883708121F7 /* XCRemoteSwiftPackageReference "swift-transformers" */;
-			productName = Tokenizers;
+			package = EEB8AC4F1F9BBF5A97F5AB73 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			productName = MLXLMCommon;
+		};
+		F0B6A7E7E370A998CBD6878E /* HuggingFace */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1D4AAADCF5C8AC7E161E2BD7 /* XCRemoteSwiftPackageReference "swift-huggingface" */;
+			productName = HuggingFace;
+		};
+		FAC07B8955CEF75A5BD3E18C /* MLXHuggingFace */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EEB8AC4F1F9BBF5A97F5AB73 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			productName = MLXHuggingFace;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

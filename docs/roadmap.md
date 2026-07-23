@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.5`** (unsigned DMG, invite-only): Smart idle Metal release + Storage Active/Unused markers + Smart+ RAM blurb; builds on v0.1.4 Parakeet/SpeechAnalyzer work.
+Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.6`** (unsigned DMG, invite-only): Smart/Smart+ MLX in session-scoped `CarrotTypeCleanupHelper` (ADR-009) so the host does not retain MLX/Metal heap across sessions.
 
-Latest artifact: `CarrotType-0.1.5.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.5.md`).
+Latest artifact: `CarrotType-0.1.6.dmg` (SHA-256 in `docs/github-release-notes-v0.1.6.md`).
 
 **Current focus:** notarization after Apple Developer ID; public distribution only after that.
 
@@ -69,13 +69,15 @@ Checklist:
 - [x] Flip catalog `recommended` STT to Parakeet TDT 0.6B v3 (`docs/stt-ru-en-quality-note.md`).
 - [x] Publish GitHub Release `v0.1.4` — Parakeet recommended + Apple SpeechAnalyzer + Models/Storage polish + `docs/github-release-notes-v0.1.4.md`.
 - [x] Publish GitHub Release `v0.1.5` — Smart idle MLX cache clear + Storage Active/Unused + Smart+ RAM blurb + `docs/github-release-notes-v0.1.5.md`.
+- [x] Out-of-process Smart cleanup helper (`CarrotTypeCleanupHelper`, ADR-009) — host no longer links MLX inference; helper exits after each Smart session.
+- [x] Publish GitHub Release `v0.1.6` — OOP Smart cleanup + `docs/github-release-notes-v0.1.6.md`.
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 
-Status: **v0.1.5 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
+Status: **v0.1.6 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 
-1. **Trust:** after Apple Developer purchase — Developer ID sign + `notarytool` + staple (`ops/deploy.md`).
+1. **Trust:** after Apple Developer purchase — Developer ID sign + `notarytool` + staple (`ops/deploy.md`); sign both host and helper.
 2. **Only then** post-v1 spikes (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 
 ## Near-term polish candidates (if release is blocked)

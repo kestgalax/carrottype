@@ -350,7 +350,7 @@ final class ModelManager: ObservableObject {
               case .ready = statuses[packageID]
         else { return nil }
         let dir = packageDirectory(for: package)
-        return QwenCleanupEngine.isPackageReady(at: dir) ? dir : nil
+        return QwenCleanupPackage.isPackageReady(at: dir) ? dir : nil
     }
 
     func isCleanupPackageReady(for mode: CleanupMode) -> Bool {
@@ -570,7 +570,7 @@ final class ModelManager: ObservableObject {
         let destination = packageDirectory(for: package)
         snapshotTasks[packageID] = Task { [weak self] in
             do {
-                try await QwenCleanupEngine.downloadPackage(repoID: repoID, to: destination) { fraction in
+                try await QwenCleanupPackage.downloadPackage(repoID: repoID, to: destination) { fraction in
                     Task { @MainActor in
                         guard let self, !Task.isCancelled else { return }
                         self.setStatus(packageID, .downloading(progress: fraction))
@@ -604,7 +604,7 @@ final class ModelManager: ObservableObject {
         case "apple-speechanalyzer":
             return AppleSpeechSTTEngine.isPackageReady(packageDirectory: dir)
         case "mlx-lm":
-            return QwenCleanupEngine.isPackageReady(at: dir)
+            return QwenCleanupPackage.isPackageReady(at: dir)
         default:
             guard let url = artifactURL(for: package),
                   fileManager.fileExists(atPath: url.path)

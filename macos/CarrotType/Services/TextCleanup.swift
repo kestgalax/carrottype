@@ -6,7 +6,7 @@ enum TextCleanup {
         case .off:
             return text
         case .light, .smart, .smartPlus:
-            // Smart/Smart+ use QwenCleanupEngine; heuristics only apply here for Light/fallback.
+            // Smart/Smart+ use out-of-process Qwen helper (ADR-009); heuristics here for Light/fallback.
             return light(text)
         }
     }

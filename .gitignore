@@ -20,6 +20,7 @@ macos/.derivedData/
 dist/
 macos/.derivedData-release/
 macos/.derivedData-speech/
+macos/.derivedData-oop/
 
 # Brainstorm / visual companion sessions
 .superpowers/

@@ -30,20 +30,13 @@ packages:
     url: https://github.com/huggingface/swift-transformers.git
     from: 1.3.0
 targets:
-  CarrotType:
-    type: application
+  CarrotTypeCleanupHelper:
+    type: tool
     platform: macOS
     sources:
-      - path: CarrotType
-        excludes:
-          - Resources
-      - path: CarrotType/Resources
-        buildPhase: resources
+      - path: CarrotTypeCleanupHelper
+      - path: Shared
     dependencies:
-      - package: WhisperMetalKit
-        product: WhisperMetalKit
-      - package: FluidAudio
-        product: FluidAudio
       - package: mlx-swift-lm
         product: MLXLLM
       - package: mlx-swift-lm
@@ -54,6 +47,36 @@ targets:
         product: HuggingFace
       - package: swift-transformers
         product: Tokenizers
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.carrottype.macos.cleanup-helper
+        PRODUCT_NAME: CarrotTypeCleanupHelper
+        SKIP_INSTALL: true
+        ENABLE_HARDENED_RUNTIME: true
+        LD_RUNPATH_SEARCH_PATHS: "@executable_path/../Frameworks"
+        OTHER_SWIFT_FLAGS: "$(inherited)"
+  CarrotType:
+    type: application
+    platform: macOS
+    sources:
+      - path: CarrotType
+        excludes:
+          - Resources
+      - path: CarrotType/Resources
+        buildPhase: resources
+      - path: Shared
+    dependencies:
+      - target: CarrotTypeCleanupHelper
+        embed: true
+        codeSign: true
+        copy:
+          destination: executables
+      - package: WhisperMetalKit
+        product: WhisperMetalKit
+      - package: FluidAudio
+        product: FluidAudio
+      - package: swift-huggingface
+        product: HuggingFace
       - sdk: Carbon.framework
       - sdk: ApplicationServices.framework
       - sdk: CoreAudio.framework
@@ -73,14 +96,33 @@ targets:
         OTHER_SWIFT_FLAGS: "$(inherited)"
     entitlements:
       path: CarrotType/CarrotType.entitlements
+    # After compile / embed helper, before final CodeSign — so metallib is inside the signed app.
+    postCompileScripts:
+      - name: Embed MLX metallib for cleanup helper
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          # MLX loads shaders from mlx-swift_Cmlx.bundle via the app main bundle.
+          # SPM puts the bundle in BUILT_PRODUCTS_DIR; the tool target does not embed it.
+          # Do not place *.metallib under Contents/MacOS — codesign treats it as unsigned code.
+          BUNDLE="${BUILT_PRODUCTS_DIR}/mlx-swift_Cmlx.bundle"
+          APP_RES="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
+          if [[ ! -d "$BUNDLE" ]]; then
+            echo "error: mlx-swift_Cmlx.bundle missing at $BUNDLE (MetalToolchain / Cmlx build?)" >&2
+            exit 1
+          fi
+          mkdir -p "$APP_RES"
+          rm -rf "${APP_RES}/mlx-swift_Cmlx.bundle"
+          cp -R "$BUNDLE" "$APP_RES/"
+          echo "Embedded mlx-swift_Cmlx.bundle into app Resources"
     info:
       path: CarrotType/Info.plist
       properties:
         CFBundleName: CarrotType
         CFBundleDisplayName: CarrotType
         CFBundleIconName: AppIcon
-        CFBundleShortVersionString: "0.1.5"
-        CFBundleVersion: "6"
+        CFBundleShortVersionString: "0.1.6"
+        CFBundleVersion: "7"
         LSMinimumSystemVersion: "14.0"
         LSUIElement: true
         NSMicrophoneUsageDescription: CarrotType записывает звук с микрофона только пока вы удерживаете или нажимаете горячую клавишу. Аудио обрабатывается локально и никуда не отправляется.

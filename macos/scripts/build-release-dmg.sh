@@ -82,8 +82,9 @@ resign_app_bundle() {
   local app_path="$1"
   local identity="$2"
   local frameworks="$app_path/Contents/Frameworks"
+  local macos_dir="$app_path/Contents/MacOS"
 
-  # Inside-out: dylibs → frameworks → app (same identity for all).
+  # Inside-out: dylibs → frameworks → helper tool → app (same identity for all).
   if [[ -d "$frameworks" ]]; then
     find "$frameworks" -name '*.dylib' -type f | while read -r dylib; do
       codesign --force --sign "$identity" --timestamp=none "$dylib"
@@ -91,6 +92,18 @@ resign_app_bundle() {
     find "$frameworks" -maxdepth 1 -name '*.framework' -type d | while read -r fw; do
       codesign --force --sign "$identity" --timestamp=none "$fw"
     done
+  fi
+
+  # ADR-009: Smart cleanup helper (signed before the outer .app) + MLX shader bundle in Resources.
+  if [[ -x "$macos_dir/CarrotTypeCleanupHelper" ]]; then
+    codesign --force --sign "$identity" --timestamp=none "$macos_dir/CarrotTypeCleanupHelper"
+  else
+    echo "ERROR: CarrotTypeCleanupHelper missing under $macos_dir" >&2
+    exit 1
+  fi
+  if [[ ! -d "$app_path/Contents/Resources/mlx-swift_Cmlx.bundle" ]]; then
+    echo "ERROR: mlx-swift_Cmlx.bundle missing under Contents/Resources (MLX shaders)" >&2
+    exit 1
   fi
 
   # Self-signed / ad-hoc: do NOT use --options runtime.
