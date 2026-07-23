@@ -1,52 +1,30 @@
 # CarrotType
 
-Локальная macOS-диктовка: **hotkey → запись → on-device STT → вставка у курсора**.
+Говорите — текст появляется у курсора. На Mac, локально, без облака.
 
-Проект ведётся через AIDOS (sibling `../AIDOS`).
+CarrotType живёт в строке меню: одно сочетание клавиш записывает речь, распознаёт её на устройстве и вставляет результат в любое приложение, где вы сейчас печатаете.
 
-## Start Here
+## Зачем
 
-1. `docs/product-intent.md`
-2. `docs/architecture.md`
-3. `docs/decisions/` (особенно ADR-002 … ADR-006)
-4. `docs/specs/ux-setup-status.md`
-5. `macos/README.md` — приложение
-6. `ops/deploy.md` — сборка `.dmg` и GitHub Release
+- **Быстрее набора** — диктовка вместо долгой печати.
+- **Приватно** — аудио не уходит на чужие серверы; модели работают на вашем Mac.
+- **Везде, где есть курсор** — почта, чаты, документы, браузер.
+- **Русский и английский** — интерфейс и распознавание под оба языка.
+- **Вы сами выбираете качество** — более лёгкая модель для скорости или более точная, когда важна каждая фраза.
 
-## Status
+## Как пользоваться
 
-**v0.1.0** опубликован как unsigned DMG (GitHub Releases). Дальше: заполнить `docs/stt-ru-en-quality-note.md` перед сменой `recommended` STT, затем нотаризация. Roadmap: `docs/roadmap.md`.
+1. Установите приложение из релиза и перетащите в **Программы**.
+2. Разрешите **Микрофон** и **Универсальный доступ**.
+3. В настройках скачайте модель диктовки и сделайте её активной.
+4. Поставьте курсор в поле ввода, нажмите горячую клавишу (по умолчанию **⌃⌥Space**), говорите, нажмите ещё раз — текст появится на месте.
 
-## Install from GitHub (unsigned DMG)
+Первый запуск с GitHub: если macOS предупредит о неизвестном разработчике — **ПКМ по приложению → Открыть**.
 
-1. Скачайте `CarrotType-*.dmg` из Releases (или соберите локально — ниже).
-2. Перетащите приложение в Applications.
-3. **ПКМ → Открыть** (Gatekeeper), либо `xattr -dr com.apple.quarantine /Applications/CarrotType.app`.
-4. Настройки → Микрофон + Accessibility → скачайте Whisper Base (или другой STT) → при необходимости **Сделать активным**.
+## Доступ
 
-Нотаризация появится после покупки Apple Developer — см. `ops/deploy.md`.
+Сейчас это **закрытый early build**: репозиторий и релизы private — DMG доступен приглашённым участникам. Публичная установка «в один клик» появится после нотаризации Apple.
 
-## Build DMG locally
+---
 
-```bash
-./macos/scripts/build-release-dmg.sh
-# → dist/CarrotType-0.1.0.dmg
-```
-
-## Dev
-
-```bash
-cd macos
-xcodegen generate
-open CarrotType.xcodeproj
-```
-
-Нужен **полный Xcode**, не только Command Line Tools. Подробности: `ops/environments.md`.
-
-## AIDOS checks
-
-```bash
-npm run aidos:validate
-npm run aidos:trace
-npm run aidos:review
-```
+Разработка, архитектура и решения: [`docs/`](docs/).

@@ -59,4 +59,4 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 
 ## Current product status (2026-07)
 
-Unsigned DMG path works locally (`dist/CarrotType-0.1.0.dmg`). Next product milestones: publish GitHub Release `v0.1.0`, then decide default STT via `docs/stt-ru-en-quality-note.md`. Notarization waits on Apple Developer ID.
+**v0.1.0** ships as an unsigned DMG on a **private** GitHub Release (invite-only early access). Next: decide default STT via `docs/stt-ru-en-quality-note.md`, then notarization after Apple Developer ID before any public download.

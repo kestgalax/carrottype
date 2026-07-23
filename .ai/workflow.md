@@ -1,30 +1,43 @@
 # Workflow
 
 ```text
-Idea -> Product Intent -> Stack ADR Gate -> Dev Environment -> Feature -> Tasks -> Implementation -> Review -> Release
+Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Phase Gates
+## Current phase (after v0.1.0)
 
-### 1. Idea
+Unsigned DMG exists on a **private** GitHub Release. Next ordered focus:
 
-- Fill `docs/product-intent.md`.
-- Keep `docs/roadmap.md` Milestone 0 current.
+1. Fill `docs/stt-ru-en-quality-note.md` (RU/EN quality pass).
+2. Decide whether to flip `recommended` STT.
+3. After Apple Developer purchase: Developer ID sign + notarize (`ops/deploy.md`).
+4. Only then post-v1 research spikes (`docs/research-post-v1-spikes.md`).
 
-### 2. Stack ADR Gate
+## Phase gates
 
-- Do not scaffold application runtime code before `docs/decisions/ADR-002-runtime-stack.md` is Accepted.
-- Update `docs/architecture.md` after the stack ADR is accepted.
+### Product intent
 
-### 3. Dev Environment
+- Changes to mission / non-goals update `docs/product-intent.md` and roadmap.
 
-- Choose local tooling for the accepted stack.
-- Document environments in `ops/environments.md`.
-- Record CI expectations in `ops/ci.md`.
+### ADR gate
 
-### 4. First Feature
+- New STT/cleanup engine, catalog policy, or distribution trust model → ADR before code.
+- Accepted ADRs: ADR-002 (stack), ADR-003 (catalog), ADR-004 (Whisper), ADR-005 (Qwen), ADR-006 (Parakeet).
 
-- Create linked artifacts with `aidos new flow "<feature name>"` from the AIDOS tooling root.
-- Run `npm run aidos:trace` and `npm run aidos:review` before merge.
+### Feature / Settings UX
 
-See the lifecycle guide in your AIDOS clone: `docs/onboarding-project-lifecycle.md`.
+- Setup UI follows `docs/specs/ux-setup-status.md` (Ready rules, Make active, L10n, mic meter).
+- Language changes must not remount Settings in a way that kills the mic meter.
+
+### Implementation
+
+- Use Developer role (`.ai/developer.md`); keep diffs small and traced to roadmap/spec/ADR.
+
+### Review
+
+- Use Reviewer role (`.ai/reviewer.md`) before calling work complete.
+
+### Release
+
+- Build via `macos/scripts/build-release-dmg.sh`; notes in `docs/github-release-notes-v0.1.0.md`.
+- Attach DMG to GitHub Release; do not commit `dist/` to git.

@@ -1,5 +1,7 @@
 # CarrotType v0.1.0 — GitHub Release notes
 
+**Distribution:** private repository — DMG is invite-only (collaborators with repo access). Not a public download.
+
 ## Download
 
 Attach: `CarrotType-0.1.0.dmg` (Apple Silicon, macOS 14+, ~16 MB app bundle without models).

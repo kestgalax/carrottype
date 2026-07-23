@@ -2,6 +2,10 @@
 
 CarrotType ships as a **macOS `.dmg`** from GitHub Releases. Model weights are **not** bundled (ADR-003); users download STT/cleanup packages in Settings.
 
+## Repository visibility
+
+The GitHub repository is **private**. Release assets (including `CarrotType-0.1.0.dmg`) are available only to users with access to the repo (owner / collaborators / invitees). Do not treat the Release URL as a public download page until visibility and notarization are intentionally opened.
+
 ## v1 path (current): no Apple Developer notarization
 
 Chosen while the paid Apple Developer Program is not yet purchased.
@@ -36,7 +40,7 @@ Local self-signed identity (`macos/scripts/ensure-dev-codesign.sh`) helps **dev 
 
 ### Install UX without notarization (Gatekeeper)
 
-Users who download from GitHub will see “Apple cannot check for malicious software”.
+Collaborators who download the DMG from the private Release will still see “Apple cannot check for malicious software”.
 
 **Recommended:**
 

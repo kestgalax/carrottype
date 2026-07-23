@@ -2,11 +2,11 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped as **GitHub Release `v0.1.0`** (unsigned DMG): hotkey → on-device STT → optional formatting → caret paste, multi-engine catalog, RU/EN Settings.
+Milestone 0–2 vertical slice shipped as **private GitHub Release `v0.1.0`** (unsigned DMG, invite-only): hotkey → on-device STT → optional formatting → caret paste, multi-engine catalog, RU/EN Settings.
 
-Latest artifact: `CarrotType-0.1.0.dmg` on the Release (SHA-256 in `docs/github-release-notes-v0.1.0.md`).
+Latest artifact: `CarrotType-0.1.0.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.0.md`).
 
-**Current focus:** fill the STT quality note before flipping `recommended`; notarization after Apple Developer ID.
+**Current focus:** fill the STT quality note before flipping `recommended`; notarization after Apple Developer ID; public distribution only after that.
 
 ## Milestone 0: Product Intent
 
@@ -61,7 +61,7 @@ Checklist:
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 - [ ] Flip `recommended` STT only after filling `docs/stt-ru-en-quality-note.md`.
 
-Status: **v0.1.0 released (unsigned DMG)** — install via Right-click → Open until notarization.
+Status: **v0.1.0 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 

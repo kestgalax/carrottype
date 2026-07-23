@@ -19,8 +19,8 @@ Not scheduled for implementation in the unsigned `v0.1.0` release. Tracked from 
 
 ## Gate
 
-1. Publish GitHub Release `v0.1.0` (unsigned DMG already buildable).
+1. Keep `v0.1.0` on the **private** Release (invite-only) until notarization / public ship is intentional.
 2. Fill `docs/stt-ru-en-quality-note.md` and only then flip `recommended` if needed.
 3. **Then** spend eng time on Sotto / Qwen3-ASR adapters.
 
-Do not start new STT/cleanup runtimes while Release + quality note are open.
+Do not start new STT/cleanup runtimes while the quality note (and notarization path) are still open.
