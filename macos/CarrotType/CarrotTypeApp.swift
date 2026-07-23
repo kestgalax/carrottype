@@ -23,7 +23,7 @@ struct CarrotTypeApp: App {
                 .environmentObject(appState)
                 .environment(\.locale, appState.effectiveLocale)
                 // Min size only — height/width may grow with zoom / user resize.
-                .frame(minWidth: 440, minHeight: 480)
+                .frame(minWidth: 640, minHeight: 480)
                 .background(SettingsWindowChromeFix())
                 // Avoid remounting Settings on language change: that races onDisappear
                 // (clears settingsVisible / mic meter) with onAppear and breaks the meter.
@@ -31,7 +31,7 @@ struct CarrotTypeApp: App {
         // Settings default to contentSize (non-zooming). contentMinSize matches
         // other macOS windows: grow freely above the minimum.
         .windowResizability(.contentMinSize)
-        .defaultSize(width: 560, height: 720)
+        .defaultSize(width: 700, height: 560)
     }
 }
 
@@ -43,6 +43,7 @@ private struct SettingsWindowChromeFix: NSViewRepresentable {
             super.viewDidMoveToWindow()
             guard let window else { return }
             window.styleMask.insert(.resizable)
+            window.title = "carrottype"
             // Allow Option-click / zoom to use the visible display height.
             window.setContentSize(window.frame.size)
         }
