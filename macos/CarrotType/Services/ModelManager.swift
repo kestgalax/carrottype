@@ -86,6 +86,21 @@ final class ModelManager: ObservableObject {
         }
     }
 
+    /// Ready packages with non-zero on-disk size, largest first (Storage pane).
+    var installedPackageFootprints: [InstalledPackageFootprint] {
+        catalog.packages.compactMap { package in
+            guard case .ready = status(for: package.id) else { return nil }
+            let bytes = installedBytes(for: package)
+            guard bytes > 0 else { return nil }
+            return InstalledPackageFootprint(
+                id: package.id,
+                displayName: package.displayName,
+                bytes: bytes
+            )
+        }
+        .sorted { $0.bytes > $1.bytes }
+    }
+
     var selectedSTTPackage: CatalogPackage? {
         catalog.packages.first { $0.id == selectedSTTPackageID }
     }

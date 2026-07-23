@@ -2261,6 +2261,40 @@
         }
       }
     },
+    "storage.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No downloaded packages on disk yet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пока нет скачанных пакетов на диске."
+          }
+        }
+      }
+    },
+    "storage.share" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d%% of total"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d%% от общего объёма"
+          }
+        }
+      }
+    },
     "storage.section" : {
       "extractionState" : "stale",
       "localizations" : {
