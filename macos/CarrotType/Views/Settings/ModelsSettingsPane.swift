@@ -59,8 +59,15 @@ struct ModelsSettingsPane: View {
     @ViewBuilder
     private var recommendedDownloadRow: some View {
         let status = models.status(for: recommendedSTTID)
+        let package = models.package(id: recommendedSTTID)
         VStack(alignment: .leading, spacing: 8) {
-            Text(L10n.t("stt.recommended", locale: locale))
+            Text(
+                String(
+                    format: L10n.t("stt.recommended", locale: locale),
+                    package?.displayName ?? recommendedSTTID,
+                    package?.approximateSizeLabel ?? ""
+                )
+            )
             SettingsPackageStatusControls(
                 appState: appState,
                 models: models,

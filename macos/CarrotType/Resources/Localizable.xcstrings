@@ -2381,18 +2381,18 @@
       }
     },
     "stt.recommended" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recommended download: Whisper Base (~148 MB)"
+            "value" : "Recommended download: %@ (%@)"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Рекомендуемая загрузка: Whisper Base (~148 МБ)"
+            "value" : "Рекомендуемая загрузка: %@ (%@)"
           }
         }
       }
