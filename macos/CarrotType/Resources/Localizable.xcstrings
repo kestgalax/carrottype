@@ -187,13 +187,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoreML · ~700 MB"
+            "value" : "Optimized for Apple Silicon · ~700 MB"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoreML · ~700 МБ"
+            "value" : "Под Apple Silicon · ~700 МБ"
           }
         }
       }
@@ -204,13 +204,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fast start · ~148 MB"
+            "value" : "Light & quick · ~148 MB"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Быстрый старт · ~148 МБ"
+            "value" : "Лёгкий и быстрый · ~148 МБ"
           }
         }
       }
@@ -221,13 +221,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Higher quality · ~574 MB"
+            "value" : "Best Whisper quality · ~574 MB"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Выше качество · ~574 МБ"
+            "value" : "Лучшее Whisper · ~574 МБ"
           }
         }
       }
@@ -238,13 +238,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Higher quality · ~466 MB"
+            "value" : "Clearer speech · ~466 MB"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Выше качество · ~466 МБ"
+            "value" : "Четче речь · ~466 МБ"
           }
         }
       }
