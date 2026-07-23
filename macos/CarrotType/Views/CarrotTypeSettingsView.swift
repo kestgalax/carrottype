@@ -80,11 +80,13 @@ private struct CarrotTypeSettingsForm: View {
 
     private var statusSection: some View {
         Section {
-            LabeledContent("CarrotType") {
-                VStack(alignment: .trailing, spacing: 2) {
-                    Text(appState.readiness.title(locale: locale))
-                        .foregroundStyle(readinessColor)
-                        .fontWeight(.semibold)
+            LabeledContent {
+                Text(appState.readiness.title(locale: locale))
+                    .foregroundStyle(readinessColor)
+                    .fontWeight(.semibold)
+            } label: {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    Text("CarrotType")
                     Text(appVersionLabel)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -175,15 +177,6 @@ private struct CarrotTypeSettingsForm: View {
                         L10n.t("permissions.meter_toggle", locale: locale),
                         isOn: $appState.micMeterEnabled
                     )
-
-                    Toggle(
-                        L10n.t("permissions.unmute_during_dictation", locale: locale),
-                        isOn: $appState.unmuteMicDuringDictation
-                    )
-                    Text(L10n.t("permissions.unmute_during_dictation_hint", locale: locale))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
                     if appState.micMeterEnabled {
                         MicrophoneMeterSettingsRow(
                             audioLevel: appState.audioLevel,
@@ -194,6 +187,14 @@ private struct CarrotTypeSettingsForm: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
+
+                    Toggle(
+                        L10n.t("permissions.unmute_during_dictation", locale: locale),
+                        isOn: $appState.unmuteMicDuringDictation
+                    )
+                    Text(L10n.t("permissions.unmute_during_dictation_hint", locale: locale))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
             }
 
