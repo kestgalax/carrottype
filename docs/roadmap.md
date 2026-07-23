@@ -6,7 +6,7 @@ Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.3`** (uns
 
 Latest artifact: `CarrotType-0.1.3.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.3.md`).
 
-**Current focus:** fill the STT quality note before flipping `recommended`; optional Apple SpeechAnalyzer STT (ADR-008); notarization after Apple Developer ID; public distribution only after that.
+**Current focus:** fill the STT quality note before flipping `recommended`; optional Apple SpeechAnalyzer STT landed on `feature/apple-speechanalyzer-stt` (ADR-008); notarization after Apple Developer ID; public distribution only after that.
 
 Privacy / supply-chain agent governance lives in `.ai/constraints.md` (§ Privacy / network / dependencies). A full security pass / offline network audit is **deferred** — not current focus.
 
@@ -63,6 +63,7 @@ Checklist:
 - [x] Publish GitHub Release `v0.1.1` — experimental Wave Link unmute during dictation (ADR-007) + `docs/github-release-notes-v0.1.1.md`.
 - [x] Publish GitHub Release `v0.1.2` — Escape cancel / soft silent cancel + Status version + Check for updates + `docs/github-release-notes-v0.1.2.md`.
 - [x] Publish GitHub Release `v0.1.3` — Settings sidebar + default hotkey ⌥/ + window chrome polish + `docs/github-release-notes-v0.1.3.md`.
+- [x] Optional Apple SpeechAnalyzer STT (ADR-008) — catalog `stt.apple-speechanalyzer`, macOS 26+, Prepare assets (not recommended).
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 - [ ] Flip `recommended` STT only after filling `docs/stt-ru-en-quality-note.md`.
 
@@ -70,7 +71,7 @@ Status: **v0.1.3 on private Release (unsigned DMG)** — invite-only download; i
 
 ## Next focus (ordered)
 
-1. **Quality gate:** fill `docs/stt-ru-en-quality-note.md` (RU/EN Base vs Small vs Turbo vs Parakeet); then decide `recommended`.
+1. **Quality gate:** fill `docs/stt-ru-en-quality-note.md` (RU/EN Base vs Small vs Turbo vs Parakeet vs SpeechAnalyzer); then decide `recommended`.
 2. **Trust:** after Apple Developer purchase — Developer ID sign + `notarytool` + staple (`ops/deploy.md`).
 3. **Only then** post-v1 spikes (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 

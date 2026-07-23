@@ -22,7 +22,8 @@ Unsigned DMG exists on a **private** GitHub Release. Next ordered focus:
 ### ADR gate
 
 - New STT/cleanup engine, catalog policy, or distribution trust model → ADR before code.
-- Accepted ADRs: ADR-002 (stack), ADR-003 (catalog), ADR-004 (Whisper), ADR-005 (Qwen), ADR-006 (Parakeet).
+- New outbound network sink, telemetry/analytics, or direct SPM product dependency → ADR before code (closed sinks in `.ai/constraints.md`).
+- Accepted ADRs: ADR-002 (stack), ADR-003 (catalog), ADR-004 (Whisper), ADR-005 (Qwen), ADR-006 (Parakeet), ADR-007 (Wave Link unmute), ADR-008 (Apple SpeechAnalyzer STT).
 
 ### Feature / Settings UX
 

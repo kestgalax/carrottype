@@ -47,7 +47,13 @@ final class ModelManager: ObservableObject {
     var activeSTTID: String { selectedSTTPackageID }
 
     var sttPackages: [CatalogPackage] {
-        catalog.packages.filter { $0.role == .stt }
+        catalog.packages.filter { package in
+            guard package.role == .stt else { return false }
+            if package.runtimeHint == "apple-speechanalyzer" {
+                return AppleSpeechSTTEngine.isPlatformSupported
+            }
+            return true
+        }
     }
 
     /// STT packages that are on disk and can be selected as active.
@@ -178,6 +184,8 @@ final class ModelManager: ObservableObject {
             downloadWhisperFile(package)
         case "parakeet-fluidaudio":
             downloadParakeetSnapshot(package)
+        case "apple-speechanalyzer":
+            prepareAppleSpeechAssets(package)
         case "mlx-lm":
             downloadMLXSnapshot(package)
         default:
@@ -215,6 +223,33 @@ final class ModelManager: ObservableObject {
                     modelsRoot: modelsRoot,
                     packageDirectory: packageDirectory(for: package)
                 )
+            } else if package.runtimeHint == "apple-speechanalyzer" {
+                let dir = packageDirectory(for: package)
+                let locale = AppleSpeechSTTEngine.preferredAppLocale()
+                snapshotTasks[packageID] = Task { [weak self] in
+                    do {
+                        try await AppleSpeechSTTEngine.removePrepared(packageDirectory: dir, locale: locale)
+                        await MainActor.run {
+                            guard let self else { return }
+                            self.snapshotTasks[packageID] = nil
+                            self.setStatus(packageID, .notDownloaded)
+                            self.reconcileSelectionAfterRemoval(of: package)
+                            self.lastError = nil
+                        }
+                    } catch {
+                        await MainActor.run {
+                            guard let self else { return }
+                            self.snapshotTasks[packageID] = nil
+                            self.lastError = String(
+                                format: L10n.t("error.delete_failed"),
+                                package.displayName,
+                                error.localizedDescription
+                            )
+                            self.refreshStatusesFromDisk()
+                        }
+                    }
+                }
+                return
             } else {
                 let dir = packageDirectory(for: package)
                 if fileManager.fileExists(atPath: dir.path) {
@@ -271,6 +306,9 @@ final class ModelManager: ObservableObject {
                 modelsRoot: modelsRoot,
                 packageDirectory: packageDirectory(for: package)
             ) ? cache.path : nil
+        case "apple-speechanalyzer":
+            // System assets; engine resolves locale itself.
+            return nil
         default:
             guard let url = artifactURL(for: package),
                   fileManager.fileExists(atPath: url.path)
@@ -452,6 +490,42 @@ final class ModelManager: ObservableObject {
         }
     }
 
+    private func prepareAppleSpeechAssets(_ package: CatalogPackage) {
+        let packageID = package.id
+        let destination = packageDirectory(for: package)
+        let locale = AppleSpeechSTTEngine.preferredAppLocale()
+        snapshotTasks[packageID] = Task { [weak self] in
+            do {
+                try await AppleSpeechSTTEngine.ensureAssets(
+                    packageDirectory: destination,
+                    locale: locale
+                ) { fraction in
+                    Task { @MainActor in
+                        guard let self, !Task.isCancelled else { return }
+                        self.setStatus(packageID, .downloading(progress: fraction))
+                    }
+                }
+                await MainActor.run {
+                    guard let self, !Task.isCancelled else { return }
+                    self.snapshotTasks[packageID] = nil
+                    self.setStatus(packageID, .ready)
+                    self.selectSTT(package.id)
+                }
+            } catch is CancellationError {
+                await MainActor.run {
+                    self?.snapshotTasks[packageID] = nil
+                    self?.setStatus(packageID, .notDownloaded)
+                }
+            } catch {
+                await MainActor.run {
+                    self?.snapshotTasks[packageID] = nil
+                    self?.setStatus(packageID, .failed(message: error.localizedDescription))
+                    self?.lastError = error.localizedDescription
+                }
+            }
+        }
+    }
+
     private func downloadMLXSnapshot(_ package: CatalogPackage) {
         let packageID = package.id
         let repoID = package.hubRepoID
@@ -495,6 +569,8 @@ final class ModelManager: ObservableObject {
         switch package.runtimeHint {
         case "parakeet-fluidaudio":
             return ParakeetSTTEngine.isPackageReady(modelsRoot: modelsRoot, packageDirectory: dir)
+        case "apple-speechanalyzer":
+            return AppleSpeechSTTEngine.isPackageReady(packageDirectory: dir)
         case "mlx-lm":
             return QwenCleanupEngine.isPackageReady(at: dir)
         default:

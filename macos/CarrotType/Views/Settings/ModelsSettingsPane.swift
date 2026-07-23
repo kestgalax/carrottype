@@ -93,7 +93,8 @@ struct ModelsSettingsPane: View {
                     id: package.id,
                     status: status,
                     locale: locale,
-                    prominentDownload: package.recommended
+                    prominentDownload: package.recommended,
+                    prepareLabel: package.runtimeHint == "apple-speechanalyzer"
                 )
             } else if models.activeSTTID != package.id {
                 Button(L10n.t("format.make_active", locale: locale)) {
@@ -165,11 +166,16 @@ struct SettingsPackageStatusControls: View {
     let status: PackageInstallStatus
     let locale: Locale
     let prominentDownload: Bool
+    var prepareLabel: Bool = false
+
+    private var downloadTitle: String {
+        L10n.t(prepareLabel ? "package.prepare" : "package.download", locale: locale)
+    }
 
     var body: some View {
         if let progress = status.downloadProgress {
             ProgressView(value: progress)
-            Text(String(format: L10n.t("package.downloading", locale: locale), Int(progress * 100)))
+            Text(String(format: L10n.t(prepareLabel ? "package.preparing" : "package.downloading", locale: locale), Int(progress * 100)))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -178,12 +184,12 @@ struct SettingsPackageStatusControls: View {
             switch status {
             case .notDownloaded:
                 if prominentDownload {
-                    Button(L10n.t("package.download", locale: locale)) {
+                    Button(downloadTitle) {
                         models.download(id)
                     }
                     .buttonStyle(.borderedProminent)
                 } else {
-                    Button(L10n.t("package.download", locale: locale)) {
+                    Button(downloadTitle) {
                         models.download(id)
                     }
                 }

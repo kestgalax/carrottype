@@ -201,6 +201,23 @@
         }
       }
     },
+    "catalog.blurb.stt.apple-speechanalyzer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System on-device STT · macOS 26+ · Prepare assets"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Системный on-device STT · macOS 26+ · Подготовить assets"
+          }
+        }
+      }
+    },
     "catalog.blurb.stt.whisper-base-ggml" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -700,13 +717,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This dictation runtime is not ready yet."
+            "value" : "This dictation runtime needs macOS 26+ with Apple speech assets prepared."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Этот runtime диктовки ещё не готов."
+            "value" : "Этому runtime диктовки нужен macOS 26+ и подготовленные speech assets Apple."
           }
         }
       }
@@ -1438,6 +1455,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Скачать"
+          }
+        }
+      }
+    },
+    "package.prepare" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prepare…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подготовить…"
+          }
+        }
+      }
+    },
+    "package.preparing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparing… %d%%"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подготовка… %d%%"
           }
         }
       }
