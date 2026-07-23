@@ -62,7 +62,7 @@ Collaborators who download the DMG from the private Release will still see “Ap
 xattr -dr com.apple.quarantine /Applications/CarrotType.app
 ```
 
-Then grant **Microphone** + **Accessibility**, download an STT model (Whisper Base recommended until the RU quality note is filled).
+Then grant **Microphone** + **Accessibility**, download an STT model (**Parakeet TDT 0.6B v3** recommended; Whisper packages remain optional).
 
 ### What not to ship in the DMG
 

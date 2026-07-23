@@ -201,6 +201,23 @@
         }
       }
     },
+    "catalog.blurb.stt.apple-speechanalyzer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System on-device STT · macOS 26+ · Prepare assets"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Системный on-device STT · macOS 26+ · Подготовить assets"
+          }
+        }
+      }
+    },
     "catalog.blurb.stt.whisper-base-ggml" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -700,13 +717,132 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This dictation runtime is not ready yet."
+            "value" : "This dictation runtime needs macOS 26+ with Apple speech assets prepared."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Этот runtime диктовки ещё не готов."
+            "value" : "Этому runtime диктовки нужен macOS 26+ и подготовленные speech assets Apple."
+          }
+        }
+      }
+    },
+    "error.apple_speech_os" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple SpeechAnalyzer needs macOS 26 or later."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple SpeechAnalyzer доступен только на macOS 26 и новее."
+          }
+        }
+      }
+    },
+    "error.apple_speech_locale" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple SpeechAnalyzer doesn’t list %@. Try English in Language, or use Whisper / Parakeet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple SpeechAnalyzer не предлагает язык «%@». Попробуй English в Language или Whisper / Parakeet."
+          }
+        }
+      }
+    },
+    "error.apple_speech_ru_unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple isn’t delivering the Russian speech pack on this Mac yet (English usually works). For Russian dictation use Whisper or Parakeet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple пока не отдаёт русский speech-пакет на этом Mac (английский обычно ставится). Для русской диктовки используй Whisper или Parakeet."
+          }
+        }
+      }
+    },
+    "error.apple_speech_asset_unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple couldn’t install the %@ speech pack right now. Try again later, switch Language, or use Whisper / Parakeet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Система не смогла установить speech-пакет Apple для языка «%@». Попробуй позже, смени Language или используй Whisper / Parakeet."
+          }
+        }
+      }
+    },
+    "error.apple_speech_prepare_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn’t prepare Apple speech assets. Check the network and try again, or use Whisper / Parakeet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось подготовить speech assets Apple. Проверь сеть и попробуй снова — или используй Whisper / Parakeet."
+          }
+        }
+      }
+    },
+    "package.apple_unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unavailable for this language"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Недоступно для этого языка"
+          }
+        }
+      }
+    },
+    "package.not_prepared" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not prepared"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не подготовлено"
           }
         }
       }
@@ -1442,6 +1578,40 @@
         }
       }
     },
+    "package.prepare" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prepare…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подготовить…"
+          }
+        }
+      }
+    },
+    "package.preparing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparing… %d%%"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подготовка… %d%%"
+          }
+        }
+      }
+    },
     "package.downloading" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2091,6 +2261,40 @@
         }
       }
     },
+    "storage.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No downloaded packages on disk yet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пока нет скачанных пакетов на диске."
+          }
+        }
+      }
+    },
+    "storage.share" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d%% of total"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d%% от общего объёма"
+          }
+        }
+      }
+    },
     "storage.section" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2177,18 +2381,18 @@
       }
     },
     "stt.recommended" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recommended download: Whisper Base (~148 MB)"
+            "value" : "Recommended download: %@ (%@)"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Рекомендуемая загрузка: Whisper Base (~148 МБ)"
+            "value" : "Рекомендуемая загрузка: %@ (%@)"
           }
         }
       }

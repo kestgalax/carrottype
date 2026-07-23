@@ -58,7 +58,7 @@ Window title: **carrottype**. Default size ~880×680 (min 720×520); window is r
   1. **General** (`info.square`) — hotkey, retain clipboard, language
   2. **Setup** (`gear`) — Microphone, input device, optional mic meter, optional unmute during dictation (ADR-007), Accessibility
   3. **Models** (`cpu`) — dictation STT + post-dictation formatting
-  4. **Storage** (`internaldrive`) — disk used + delete unused packages
+  4. **Storage** (`internaldrive`) — total disk used + per-package sizes (share of total) + delete unused packages
 
 Default pane after open (post first-run): **General** if Ready, else **Setup**.
 
@@ -68,8 +68,8 @@ Default pane after open (post first-run): **General** if Ready, else **Setup**.
 2. **Status Details** (via Details… only) — readiness, remaining hint buttons, last session / model error, **Check for updates…** (opens private GitHub Releases; no auto-install)
 3. **General** — hotkey capture + optional **Also keep the result on the clipboard**; while recording, **Escape** cancels (no STT/paste); silent/too-short finish is a soft cancel; Language System / Russian / English (must not remount Settings or stop the optional mic meter)
 4. **Setup** — Microphone, input device picker, Accessibility; optional **Show microphone meter** (off by default); optional **Unmute mic during dictation (experimental)** (off by default — ADR-007); tip to remove/re-add the app if Accessibility status is stuck
-5. **Models** — STT picker for active (downloaded-only) model; per-package status; prominent CTA while recommended STT is not Ready; **Make active** on Ready-but-not-active rows; formatting Off / Light / Smart / Smart+ with the same Make active pattern
-6. **Storage** — disk used + delete unused packages
+5. **Models** — STT picker for active (downloaded-only) model; per-package status; prominent recommended-download CTA only when **no** STT package is Ready yet; **Make active** on Ready-but-not-active rows; **Delete** on every Ready STT / Smart formatting package (not only Storage → delete unused); optional **Apple SpeechAnalyzer** (macOS 26+, ADR-008) uses **Prepare…** for system assets instead of HF download; formatting Off / Light / Smart / Smart+ with the same Make active + Delete pattern
+6. **Storage** — total used + per-package on-disk sizes with share of total; bulk delete unused packages
 
 No marketing cards, no stat strips. Progress belongs on the model row being downloaded.
 

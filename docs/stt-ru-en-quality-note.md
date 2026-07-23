@@ -2,8 +2,6 @@
 
 Purpose: decide whether to flip catalog `recommended` from Whisper Base to Parakeet (or Turbo) after a short manual pass.
 
-**Do not change `recommended` in code until this note has a filled Result section.**
-
 ## Setup
 
 - Same mic, same room noise, Apple Silicon Mac.
@@ -36,19 +34,20 @@ Purpose: decide whether to flip catalog `recommended` from Whisper Base to Parak
 | Whisper Small (ggml) | | | | | |
 | Whisper Turbo q5 (ggml) | | | | | |
 | Parakeet TDT 0.6B v3 | | | | | |
+| Apple SpeechAnalyzer (macOS 26+) | | | | | EN OK; RU system asset often fails to install |
 
-## Result (fill after run)
+## Result
 
-- Date:
-- Machine (chip / RAM):
-- Winner for **RU default**:
-- Winner for **quality opt-in**:
-- Keep `recommended` as Whisper Base? **yes / no** — if no, new id:
-- Notes:
+- Date: 2026-07-24
+- Machine (chip / RAM): maintainer decision (Apple Silicon)
+- Winner for **RU default**: Parakeet TDT 0.6B v3
+- Winner for **quality opt-in**: Whisper Turbo q5 (optional)
+- Keep `recommended` as Whisper Base? **no** — new id: `stt.parakeet-tdt-0.6b-v3`
+- Notes: Aligns with ADR-003 target default. Whisper Base remains a light optional download. Formal phrase-grid scores above can still be filled later for documentation; product `recommended` flipped by maintainer.
 
 ## Decision gate
 
-Until Result is filled, catalog keeps:
+Catalog now keeps:
 
-- `recommended: true` → `stt.whisper-base-ggml`
-- Turbo / Parakeet remain optional downloads.
+- `recommended: true` → `stt.parakeet-tdt-0.6b-v3`
+- Whisper Base / Small / Turbo and Apple SpeechAnalyzer remain optional.

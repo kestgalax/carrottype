@@ -42,9 +42,9 @@ Global hotkey
 - Distribution via GitHub Releases (`.dmg` / `.app`), notarization preferred
 - Models cached under Application Support; not bundled in the first release artifact by default
 
-## Model catalog (ADR-003 + ADR-004 + ADR-005 + ADR-006)
+## Model catalog (ADR-003 + ADR-004 + ADR-005 + ADR-006 + ADR-008)
 
-- **STT (runnable):** Whisper Base/Small/Turbo q5 ggml via WhisperMetalKit (ADR-004); Parakeet TDT 0.6B v3 via FluidAudio CoreML (ADR-006). ggml downloads stage the URLSession temp file synchronously, then verify SHA-256 from the catalog.
+- **STT (runnable):** Whisper Base/Small/Turbo q5 ggml via WhisperMetalKit (ADR-004); **recommended** Parakeet TDT 0.6B v3 via FluidAudio CoreML (ADR-006); optional Apple SpeechAnalyzer on macOS 26+ via system `AssetInventory` (ADR-008). ggml downloads stage the URLSession temp file synchronously, then verify SHA-256 from the catalog.
 - **Cleanup:** Off / Light heuristics; Smart / Smart+ via Qwen3 MLX (`mlx-swift-lm`, ADR-005).
 - Engines are selected through `STTEngine` / `CleanupEngine` adapters (`DictationPipeline`).
 - Settings selection UX: only Ready packages are selectable; Ready-but-inactive rows offer **Make active** for both STT and Smart formatting.

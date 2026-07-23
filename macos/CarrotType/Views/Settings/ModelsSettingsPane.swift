@@ -18,8 +18,8 @@ struct ModelsSettingsPane: View {
 
     private var sttSection: some View {
         Section {
-            // Prominent CTA while the recommended package is not Ready (covers post–first-run Models).
-            if !models.status(for: recommendedSTTID).isReady {
+            // Prominent CTA only when no STT is installed yet (avoids pushing Parakeet over an already-working model).
+            if models.selectableSTTPackages.isEmpty {
                 recommendedDownloadRow
             }
 
@@ -59,8 +59,15 @@ struct ModelsSettingsPane: View {
     @ViewBuilder
     private var recommendedDownloadRow: some View {
         let status = models.status(for: recommendedSTTID)
+        let package = models.package(id: recommendedSTTID)
         VStack(alignment: .leading, spacing: 8) {
-            Text(L10n.t("stt.recommended", locale: locale))
+            Text(
+                String(
+                    format: L10n.t("stt.recommended", locale: locale),
+                    package?.displayName ?? recommendedSTTID,
+                    package?.approximateSizeLabel ?? ""
+                )
+            )
             SettingsPackageStatusControls(
                 appState: appState,
                 models: models,
@@ -75,10 +82,17 @@ struct ModelsSettingsPane: View {
     @ViewBuilder
     private func sttPackageRows(_ package: CatalogPackage) -> some View {
         let status = models.status(for: package.id)
+        let isAppleSpeech = package.runtimeHint == "apple-speechanalyzer"
         VStack(alignment: .leading, spacing: 6) {
             LabeledContent(package.displayName) {
-                Text(SettingsPackageStatusControls.statusLabel(status, locale: locale))
-                    .foregroundStyle(.secondary)
+                Text(
+                    SettingsPackageStatusControls.statusLabel(
+                        status,
+                        locale: locale,
+                        prepareLabel: isAppleSpeech
+                    )
+                )
+                .foregroundStyle(.secondary)
             }
             Text("\(package.approximateSizeLabel) · \(package.license)")
                 .font(.caption)
@@ -86,19 +100,33 @@ struct ModelsSettingsPane: View {
             Text(package.localizedBlurb(locale: locale))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            if !status.isReady {
+            if case .failed(let message) = status, isAppleSpeech {
+                Text(message)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            if status.isReady {
+                HStack {
+                    if models.activeSTTID != package.id {
+                        Button(L10n.t("format.make_active", locale: locale)) {
+                            models.selectSTT(package.id)
+                        }
+                    }
+                    Button(L10n.t("package.delete", locale: locale), role: .destructive) {
+                        appState.deleteModelPackage(package.id)
+                    }
+                }
+            } else {
                 SettingsPackageStatusControls(
                     appState: appState,
                     models: models,
                     id: package.id,
                     status: status,
                     locale: locale,
-                    prominentDownload: package.recommended
+                    prominentDownload: package.recommended,
+                    prepareLabel: isAppleSpeech
                 )
-            } else if models.activeSTTID != package.id {
-                Button(L10n.t("format.make_active", locale: locale)) {
-                    models.selectSTT(package.id)
-                }
             }
         }
     }
@@ -119,7 +147,18 @@ struct ModelsSettingsPane: View {
                             Text(SettingsPackageStatusControls.statusLabel(status, locale: locale))
                                 .foregroundStyle(.secondary)
                         }
-                        if !status.isReady {
+                        if status.isReady {
+                            HStack {
+                                if models.cleanupMode != mode {
+                                    Button(L10n.t("format.make_active", locale: locale)) {
+                                        models.selectCleanup(mode)
+                                    }
+                                }
+                                Button(L10n.t("package.delete", locale: locale), role: .destructive) {
+                                    appState.deleteModelPackage(packageID)
+                                }
+                            }
+                        } else {
                             SettingsPackageStatusControls(
                                 appState: appState,
                                 models: models,
@@ -128,10 +167,6 @@ struct ModelsSettingsPane: View {
                                 locale: locale,
                                 prominentDownload: false
                             )
-                        } else if models.cleanupMode != mode {
-                            Button(L10n.t("format.make_active", locale: locale)) {
-                                models.selectCleanup(mode)
-                            }
                         }
                     }
                 } else if mode == .light {
@@ -165,11 +200,16 @@ struct SettingsPackageStatusControls: View {
     let status: PackageInstallStatus
     let locale: Locale
     let prominentDownload: Bool
+    var prepareLabel: Bool = false
+
+    private var downloadTitle: String {
+        L10n.t(prepareLabel ? "package.prepare" : "package.download", locale: locale)
+    }
 
     var body: some View {
         if let progress = status.downloadProgress {
             ProgressView(value: progress)
-            Text(String(format: L10n.t("package.downloading", locale: locale), Int(progress * 100)))
+            Text(String(format: L10n.t(prepareLabel ? "package.preparing" : "package.downloading", locale: locale), Int(progress * 100)))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -178,12 +218,12 @@ struct SettingsPackageStatusControls: View {
             switch status {
             case .notDownloaded:
                 if prominentDownload {
-                    Button(L10n.t("package.download", locale: locale)) {
+                    Button(downloadTitle) {
                         models.download(id)
                     }
                     .buttonStyle(.borderedProminent)
                 } else {
-                    Button(L10n.t("package.download", locale: locale)) {
+                    Button(downloadTitle) {
                         models.download(id)
                     }
                 }
@@ -210,15 +250,25 @@ struct SettingsPackageStatusControls: View {
         }
     }
 
-    static func statusLabel(_ status: PackageInstallStatus, locale: Locale) -> String {
+    static func statusLabel(
+        _ status: PackageInstallStatus,
+        locale: Locale,
+        prepareLabel: Bool = false
+    ) -> String {
         switch status {
         case .notDownloaded:
-            return L10n.t("package.not_downloaded", locale: locale)
+            return L10n.t(prepareLabel ? "package.not_prepared" : "package.not_downloaded", locale: locale)
         case .downloading(let progress):
-            return String(format: L10n.t("package.downloading", locale: locale), Int(progress * 100))
+            return String(
+                format: L10n.t(prepareLabel ? "package.preparing" : "package.downloading", locale: locale),
+                Int(progress * 100)
+            )
         case .ready:
             return L10n.t("package.status.ready", locale: locale)
         case .failed(let message):
+            if prepareLabel {
+                return L10n.t("package.apple_unavailable", locale: locale)
+            }
             return String(format: L10n.t("package.failed", locale: locale), message)
         case .unavailable:
             return L10n.t("package.soon", locale: locale)

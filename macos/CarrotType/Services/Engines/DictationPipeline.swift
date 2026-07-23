@@ -21,6 +21,7 @@ final class DictationPipeline {
     private let modelManager: ModelManager
     private let whisper = WhisperSTTEngine()
     private let parakeet = ParakeetSTTEngine()
+    private let appleSpeech = AppleSpeechSTTEngine()
     private let lightCleanup = LightCleanupEngine()
     private let qwenCleanup = QwenCleanupEngine()
 
@@ -56,11 +57,15 @@ final class DictationPipeline {
     func unloadAll() async {
         await whisper.unload()
         await parakeet.unload()
+        await appleSpeech.unload()
         await qwenCleanup.unload()
     }
 
     private func selectedSTTEngine() -> STTEngine {
         let id = modelManager.activeSTTID
+        if id == BundledModelCatalog.appleSpeechSTTID || id.hasPrefix("stt.apple-speechanalyzer") {
+            return appleSpeech
+        }
         if id.hasPrefix("stt.parakeet") {
             return parakeet
         }

@@ -28,6 +28,13 @@ enum PackageInstallStatus: Equatable {
     }
 }
 
+/// On-disk footprint for a Ready catalog package (Storage breakdown).
+struct InstalledPackageFootprint: Identifiable, Equatable {
+    let id: String
+    let displayName: String
+    let bytes: Int64
+}
+
 enum CleanupMode: String, CaseIterable, Identifiable, Hashable {
     case off
     case light

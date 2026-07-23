@@ -84,4 +84,5 @@ targets:
         LSMinimumSystemVersion: "14.0"
         LSUIElement: true
         NSMicrophoneUsageDescription: CarrotType записывает звук с микрофона только пока вы удерживаете или нажимаете горячую клавишу. Аудио обрабатывается локально и никуда не отправляется.
+        NSSpeechRecognitionUsageDescription: CarrotType может использовать системное распознавание речи Apple (SpeechAnalyzer) только на этом Mac, чтобы превратить вашу диктовку в текст. Аудио никуда не отправляется.
         NSPrincipalClass: NSApplication
