@@ -1,6 +1,8 @@
 import SwiftUI
 
 /// Native Settings: fixed sidebar + grouped Form detail panes.
+/// Uses a plain HStack (not NavigationSplitView) to avoid the blue column focus ring
+/// and the sidebar collapse control.
 struct CarrotTypeSettingsView: View {
     @EnvironmentObject private var appState: AppState
     @State private var selection: SettingsPane = .general
@@ -13,33 +15,18 @@ struct CarrotTypeSettingsView: View {
     }
 
     var body: some View {
-        NavigationSplitView(columnVisibility: .constant(.all)) {
-            VStack(alignment: .leading, spacing: 10) {
-                SettingsStatusHeader(
-                    appState: appState,
-                    showDetailsLink: needsStatusDetails,
-                    onDetails: {
-                        showStatusDetails = true
-                    }
-                )
-                .padding(.horizontal, 8)
-                .padding(.top, 8)
+        HStack(spacing: 0) {
+            sidebar
+                .frame(width: 200)
+                .frame(maxHeight: .infinity, alignment: .top)
 
-                List(selection: sidebarSelection) {
-                    ForEach(SettingsPane.allCases) { pane in
-                        Label(pane.title(locale: locale), systemImage: pane.systemImage)
-                            .tag(pane)
-                    }
-                }
-                .listStyle(.sidebar)
-            }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 240)
-        } detail: {
+            Divider()
+
             detailContent
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
-        .navigationSplitViewStyle(.balanced)
-        .navigationTitle("carrottype")
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(nsColor: .windowBackgroundColor))
         .environment(\.locale, locale)
         .onAppear {
             appState.settingsDidAppear()
@@ -55,16 +42,48 @@ struct CarrotTypeSettingsView: View {
         }
     }
 
-    /// Clears status-details mode when the user picks a sidebar pane.
-    private var sidebarSelection: Binding<SettingsPane?> {
-        Binding(
-            get: { showStatusDetails || appState.showFirstRun ? nil : selection },
-            set: { newValue in
-                guard let newValue else { return }
-                selection = newValue
-                showStatusDetails = false
+    private var sidebar: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SettingsStatusHeader(
+                appState: appState,
+                showDetailsLink: needsStatusDetails,
+                onDetails: {
+                    showStatusDetails = true
+                }
+            )
+            .padding(.horizontal, 10)
+            .padding(.top, 12)
+
+            VStack(alignment: .leading, spacing: 2) {
+                ForEach(SettingsPane.allCases) { pane in
+                    sidebarRow(pane)
+                }
             }
+            .padding(.horizontal, 8)
+
+            Spacer(minLength: 0)
+        }
+        .background(Color(nsColor: .controlBackgroundColor).opacity(0.35))
+    }
+
+    private func sidebarRow(_ pane: SettingsPane) -> some View {
+        let isSelected = !showStatusDetails && !appState.showFirstRun && selection == pane
+        return Button {
+            selection = pane
+            showStatusDetails = false
+        } label: {
+            Label(pane.title(locale: locale), systemImage: pane.systemImage)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .background(
+            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                .fill(isSelected ? Color.accentColor.opacity(0.18) : Color.clear)
         )
+        .foregroundStyle(isSelected ? Color.primary : Color.primary.opacity(0.85))
     }
 
     @ViewBuilder

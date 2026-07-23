@@ -39,17 +39,17 @@ Post-dictation formatting is **not** required for Ready. Hotkey must be set (shi
 
 ## Screen layout (Apple HIG / Tahoe)
 
-Use native **`Settings` scene** with a locked **`NavigationSplitView`** (sidebar always visible; not collapsible):
+Use native **`Settings` scene** with a fixed-width sidebar + detail (`HStack`, not `NavigationSplitView` — avoids the blue column focus ring and collapse control):
 
 ```text
-NavigationSplitView(columnVisibility: .constant(.all)) {
-  Status header + List of panes
-} detail: {
+HStack {
+  Status header + pane buttons (fixed ~200pt)
+  Divider
   Form { … }.formStyle(.grouped)
 }
 ```
 
-Window title: **carrottype**. No custom Liquid Glass / `NSVisualEffectView`. System controls pick up Tahoe appearance when built with a current Xcode SDK.
+Window title: **carrottype**. Default size ~880×680 (min 720×520); window is resizable and zoomable (AppKit chrome re-applies `.resizable`). No sidebar focus ring. No custom Liquid Glass / `NSVisualEffectView`. System controls pick up Tahoe appearance when built with a current Xcode SDK.
 
 ### Sidebar
 
