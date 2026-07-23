@@ -24,3 +24,7 @@ Not scheduled for implementation in the unsigned `v0.1.0` release. Tracked from 
 3. **Then** spend eng time on Sotto / Qwen3-ASR adapters.
 
 Do not start new STT/cleanup runtimes while the quality note (and notarization path) are still open.
+
+## Related (in progress on feature branch)
+
+Temporary mic unmute during dictation (ADR-007): `docs/research-mic-unmute-spike.md` — not a new STT runtime; optional Settings behavior for muted hardware (Wave:3 / Core Audio).

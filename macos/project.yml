@@ -58,6 +58,7 @@ targets:
       - sdk: ApplicationServices.framework
       - sdk: CoreAudio.framework
       - sdk: AVFoundation.framework
+      - sdk: Network.framework
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.carrottype.macos

@@ -19,7 +19,7 @@ Global hotkey
 |-----------|----------------|
 | App shell (Swift / SwiftUI) | Lifecycle, menu bar status, Setup/Status UI, permission prompts, RU/EN locale |
 | Hotkey service | Register and handle global start/stop recording |
-| Audio capture | Record microphone audio for the active session |
+| Audio capture | Record microphone audio for the active session; optional experimental temporary unmute via Wave Link (ADR-007) |
 | Model Manager | Catalog, download, verify, activate STT/cleanup packages (ADR-003) |
 | STT runtime | Run active STT package (Parakeet / Whisper paths) |
 | Cleanup runtime | `off` / `light` heuristics / Qwen3 MLX Smart modes (UI: post-dictation formatting) |
@@ -49,6 +49,7 @@ Global hotkey
 - Engines are selected through `STTEngine` / `CleanupEngine` adapters (`DictationPipeline`).
 - Settings selection UX: only Ready packages are selectable; Ready-but-inactive rows offer **Make active** for both STT and Smart formatting.
 - Idle resource policy: mic meter only when the user enables it in Settings (not on window open); language changes update copy via `L10n` without remounting Settings; permission poll stops when Ready; STT/cleanup models unload after each session.
+- Optional experimental temporary unmute during dictation (ADR-007): Settings toggle framed as Elgato Wave Link only; `MicMuteController` clears mute for the capture window (Wave Link primary; Core Audio silent fallback) and restores prior state when capture ends.
 - Distribution: GitHub Release `.dmg` (`ops/deploy.md`); notarization deferred until Developer ID.
 
 ## Constraints

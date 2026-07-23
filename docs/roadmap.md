@@ -76,8 +76,10 @@ Small, user-visible fixes that do not expand scope:
 - Confirm Whisper Small / Turbo download end-to-end on a clean Application Support folder.
 - Menu-bar remaining-hints refresh after language change (if any stale copy remains).
 - First-run CTA clarity when Parakeet is already Ready but Whisper Base is still `recommended`.
+- **Temporary mic unmute (ADR-007):** implemented on branch `feature/mic-unmute-on-dictation` — Settings toggle + `MicMuteController` (Core Audio / Wave Link hybrid). Merge after Wave:3 checklist in `docs/research-mic-unmute-spike.md`.
 
 ## Post-v1 research spikes (no runtime yet)
 
 - **Cleanup:** Sotto LFM2.5-350M MLX (EN dictation cleanup, low rewrite) vs Qwen3 1.7B for RU.
 - **STT quality tier:** Qwen3-ASR 0.6B MLX beside Parakeet / Turbo.
+- Mic unmute hardware verification: see `docs/research-mic-unmute-spike.md` (feature branch).
