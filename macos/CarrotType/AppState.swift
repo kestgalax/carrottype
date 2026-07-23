@@ -163,6 +163,9 @@ final class AppState: ObservableObject {
         hotkey.setOnHotkey { [weak self] in
             self?.handleHotkeyPressed()
         }
+        hotkey.setOnEscapeCancel { [weak self] in
+            Task { await self?.cancelDictationSession() }
+        }
         hotkey.registerGlobalHotkey()
 
         refreshMenuBarMode()
@@ -320,6 +323,7 @@ final class AppState: ObservableObject {
         do {
             _ = try recorder.start(deviceUID: audioInput.selectedDeviceID)
             menuBarMode = .recording
+            hotkey.setEscapeCancelRegistered(true)
         } catch {
             await micMute.endDictationRestore()
             lastSessionError = error.localizedDescription
@@ -329,9 +333,24 @@ final class AppState: ObservableObject {
         }
     }
 
+    /// Escape (or soft silent stop): discard capture, no STT/paste.
+    private func cancelDictationSession() async {
+        guard menuBarMode == .recording, !isProcessing else { return }
+
+        hotkey.setEscapeCancelRegistered(false)
+        recorder.cancel()
+        recorderLiveLevel = 0
+        lastSessionError = nil
+        await micMute.endDictationRestore()
+        menuBarMode = .idle
+        if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
+        refreshMenuBarMode()
+    }
+
     private func finishDictationSession() async {
         isProcessing = true
         recorderLiveLevel = 0
+        hotkey.setEscapeCancelRegistered(false)
         menuBarMode = .processing
         defer {
             isProcessing = false
@@ -347,6 +366,12 @@ final class AppState: ObservableObject {
             audioURL = try recorder.stop()
         } catch {
             await micMute.endDictationRestore()
+            if case AudioRecorderError.silentOrTooShort = error {
+                // Soft cancel: nothing useful was said — no red error, no paste.
+                lastSessionError = nil
+                menuBarMode = .idle
+                return
+            }
             lastSessionError = error.localizedDescription
             menuBarMode = .error
             return

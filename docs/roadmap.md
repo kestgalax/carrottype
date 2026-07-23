@@ -2,11 +2,13 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.1`** (unsigned DMG, invite-only): hotkey → on-device STT → optional formatting → caret paste, plus experimental Wave Link unmute during dictation (ADR-007).
+Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.2`** (unsigned DMG, invite-only): hotkey → on-device STT → optional formatting → caret paste; Escape cancel + soft silent cancel; Status version + Check for updates (manual Releases); Wave Link unmute (ADR-007).
 
-Latest artifact: `CarrotType-0.1.1.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.1.md`).
+Latest artifact: `CarrotType-0.1.2.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.2.md`).
 
 **Current focus:** fill the STT quality note before flipping `recommended`; notarization after Apple Developer ID; public distribution only after that.
+
+Privacy / supply-chain agent governance lives in `.ai/constraints.md` (§ Privacy / network / dependencies). A full security pass / offline network audit is **deferred** — not current focus.
 
 ## Milestone 0: Product Intent
 
@@ -59,10 +61,11 @@ Checklist:
 - [x] Language switch no longer remounts Settings / kills the mic meter.
 - [x] Publish GitHub Release `v0.1.0` with DMG + `docs/github-release-notes-v0.1.0.md`.
 - [x] Publish GitHub Release `v0.1.1` — experimental Wave Link unmute during dictation (ADR-007) + `docs/github-release-notes-v0.1.1.md`.
+- [x] Publish GitHub Release `v0.1.2` — Escape cancel / soft silent cancel + Status version + Check for updates + `docs/github-release-notes-v0.1.2.md`.
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 - [ ] Flip `recommended` STT only after filling `docs/stt-ru-en-quality-note.md`.
 
-Status: **v0.1.1 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
+Status: **v0.1.2 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 
@@ -77,6 +80,7 @@ Small, user-visible fixes that do not expand scope:
 - Confirm Whisper Small / Turbo download end-to-end on a clean Application Support folder.
 - Menu-bar remaining-hints refresh after language change (if any stale copy remains).
 - First-run CTA clarity when Parakeet is already Ready but Whisper Base is still `recommended`.
+- Sparkle (or similar) auto-update after Developer ID / public or auth feed — Status currently only opens Releases.
 
 ## Post-v1 research spikes (no runtime yet)
 

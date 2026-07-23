@@ -1088,13 +1088,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Text still pastes at the caret. If focus moves to another app, the result stays on the clipboard so you can paste with ⌘V."
+            "value" : "Text still pastes at the caret. If focus moves to another app, the result stays on the clipboard so you can paste with ⌘V. While recording, press Escape to cancel without pasting."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Текст вставляется у курсора как обычно. Если фокус уйдёт в другое приложение, результат останется в буфере — его можно вставить ⌘V."
+            "value" : "Текст вставляется у курсора как обычно. Если фокус уйдёт в другое приложение, результат останется в буфере — его можно вставить ⌘V. Во время записи Escape отменяет диктовку без вставки."
           }
         }
       }
@@ -1965,6 +1965,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Статус"
+          }
+        }
+      }
+    },
+    "status.check_updates" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check for updates…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проверить обновления…"
           }
         }
       }

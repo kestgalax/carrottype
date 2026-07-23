@@ -49,11 +49,11 @@ No custom Liquid Glass / `NSVisualEffectView`. System controls pick up Tahoe app
 Sections in order (one job each):
 
 1. **Welcome** (only while `showFirstRun`) — one privacy sentence + **Continue**
-2. **Status** — Ready / Almost / Blocked + remaining hints
+2. **Status** — Ready / Almost / Blocked + remaining hints; short version (`vX.Y.Z` from the app bundle); **Check for updates…** opens the private GitHub Releases page (no auto-install)
 3. **Permissions** — Microphone, input device picker, Accessibility; optional **Show microphone meter** (off by default — avoids keeping the mic hardware awake); optional **Unmute mic during dictation (experimental)** (off by default — ADR-007: Elgato Wave Link only; temporarily clear mute for capture, restore after; Wave Link must be running); tip to remove/re-add the app if Accessibility status is stuck
 4. **Dictation model** — Picker for active (downloaded-only) model; per-package status; first-run CTA for recommended Whisper Base; on Ready-but-not-active rows show **Make active** (same pattern as formatting)
 5. **Post-dictation formatting** — Picker Off / Light / Smart / Smart+ (Smart* only when package Ready); Ready-but-not-active Smart packages show **Make active**
-6. **Hotkey** — capture UI + optional **Also keep the result on the clipboard**
+6. **Hotkey** — capture UI + optional **Also keep the result on the clipboard**; while recording, **Escape** cancels (no STT/paste); a silent/too-short finish is a soft cancel (no red error)
 7. **Language** — System / Russian / English (changing language must not remount Settings or stop the optional mic meter)
 8. **Storage** — disk used + delete unused packages
 

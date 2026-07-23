@@ -81,9 +81,14 @@ private struct CarrotTypeSettingsForm: View {
     private var statusSection: some View {
         Section {
             LabeledContent("CarrotType") {
-                Text(appState.readiness.title(locale: locale))
-                    .foregroundStyle(readinessColor)
-                    .fontWeight(.semibold)
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(appState.readiness.title(locale: locale))
+                        .foregroundStyle(readinessColor)
+                        .fontWeight(.semibold)
+                    Text(appVersionLabel)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             if !appState.remainingHints.isEmpty {
@@ -100,9 +105,21 @@ private struct CarrotTypeSettingsForm: View {
                 Text(error)
                     .foregroundStyle(.red)
             }
+
+            Button(L10n.t("status.check_updates", locale: locale)) {
+                if let url = URL(string: "https://github.com/kestgalax/carrottype/releases") {
+                    NSWorkspace.shared.open(url)
+                }
+            }
         } header: {
             Text(L10n.t("status.section", locale: locale))
         }
+    }
+
+    private var appVersionLabel: String {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+            ?? "—"
+        return "v\(version)"
     }
 
     private var readinessColor: Color {
