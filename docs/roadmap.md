@@ -2,11 +2,11 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.2`** (unsigned DMG, invite-only): hotkey → on-device STT → optional formatting → caret paste; Escape cancel + soft silent cancel; Status version + Check for updates (manual Releases); Wave Link unmute (ADR-007).
+Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.3`** (unsigned DMG, invite-only): Settings sidebar panes + Status header; default hotkey ⌥/; Escape cancel + soft silent cancel; Check for updates; Wave Link unmute (ADR-007).
 
-Latest artifact: `CarrotType-0.1.2.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.2.md`).
+Latest artifact: `CarrotType-0.1.3.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.3.md`).
 
-**Current focus:** fill the STT quality note before flipping `recommended`; notarization after Apple Developer ID; public distribution only after that.
+**Current focus:** fill the STT quality note before flipping `recommended`; optional Apple SpeechAnalyzer STT (ADR-008); notarization after Apple Developer ID; public distribution only after that.
 
 Privacy / supply-chain agent governance lives in `.ai/constraints.md` (§ Privacy / network / dependencies). A full security pass / offline network audit is **deferred** — not current focus.
 
@@ -62,10 +62,11 @@ Checklist:
 - [x] Publish GitHub Release `v0.1.0` with DMG + `docs/github-release-notes-v0.1.0.md`.
 - [x] Publish GitHub Release `v0.1.1` — experimental Wave Link unmute during dictation (ADR-007) + `docs/github-release-notes-v0.1.1.md`.
 - [x] Publish GitHub Release `v0.1.2` — Escape cancel / soft silent cancel + Status version + Check for updates + `docs/github-release-notes-v0.1.2.md`.
+- [x] Publish GitHub Release `v0.1.3` — Settings sidebar + default hotkey ⌥/ + window chrome polish + `docs/github-release-notes-v0.1.3.md`.
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 - [ ] Flip `recommended` STT only after filling `docs/stt-ru-en-quality-note.md`.
 
-Status: **v0.1.2 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
+Status: **v0.1.3 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 
@@ -77,7 +78,8 @@ Status: **v0.1.2 on private Release (unsigned DMG)** — invite-only download; i
 
 Small, user-visible fixes that do not expand scope:
 
-- [x] Settings NavigationSplitView sidebar (General / Setup / Models / Storage) + Status header — `docs/superpowers/specs/2026-07-23-settings-sidebar-design.md`.
+- [x] Settings sidebar panes (General / Setup / Models / Storage) + Status header + chrome polish — `docs/superpowers/specs/2026-07-23-settings-sidebar-design.md` (shipped in v0.1.3).
+- [x] Default hotkey ⌥/ (shipped in v0.1.3; Reset in Settings if an old chord was saved).
 - Confirm Whisper Small / Turbo download end-to-end on a clean Application Support folder.
 - Menu-bar remaining-hints refresh after language change (if any stale copy remains).
 - First-run CTA clarity when Parakeet is already Ready but Whisper Base is still `recommended`.
