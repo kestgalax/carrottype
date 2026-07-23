@@ -160,6 +160,14 @@ final class AppState: ObservableObject {
             }
             .store(in: &cancellables)
 
+        modelManager.$cleanupMode
+            .dropFirst()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                Task { await self?.pipeline.unloadAll() }
+            }
+            .store(in: &cancellables)
+
         hotkey.setOnHotkey { [weak self] in
             self?.handleHotkeyPressed()
         }

@@ -1,5 +1,6 @@
 import Foundation
 import HuggingFace
+import MLX
 import MLXHuggingFace
 import MLXLLM
 import MLXLMCommon
@@ -60,6 +61,8 @@ actor QwenCleanupEngine: CleanupEngine {
     func unload() async {
         container = nil
         loadedDirectory = nil
+        // Drop MLX Metal working set; nil alone leaves IOAccelerator resident.
+        Memory.clearCache()
     }
 
     /// Drop Qwen thinking blocks / wrappers if the template still emits them.
@@ -120,6 +123,8 @@ actor QwenCleanupEngine: CleanupEngine {
         guard let modelDirectory else { throw CleanupEngineError.modelMissing }
         let path = modelDirectory.path
         if loadedDirectory == path, container != nil { return }
+
+        await unload()
 
         let configuration = ModelConfiguration(directory: modelDirectory)
         container = try await #huggingFaceLoadModelContainer(configuration: configuration)

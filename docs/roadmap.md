@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.4`** (unsigned DMG, invite-only): Parakeet recommended STT; optional Apple SpeechAnalyzer (ADR-008); Models Delete + Storage per-package breakdown; Settings sidebar from v0.1.3.
+Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.5`** (unsigned DMG, invite-only): Smart idle Metal release + Storage Active/Unused markers + Smart+ RAM blurb; builds on v0.1.4 Parakeet/SpeechAnalyzer work.
 
-Latest artifact: `CarrotType-0.1.4.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.4.md`).
+Latest artifact: `CarrotType-0.1.5.dmg` on the private Release (SHA-256 in `docs/github-release-notes-v0.1.5.md`).
 
 **Current focus:** notarization after Apple Developer ID; public distribution only after that.
 
@@ -52,6 +52,8 @@ Checklist:
 - [x] Hotkey toggle → record → transcribe → Light cleanup → caret paste (⌘V + Accessibility).
 - [x] Parakeet STT runtime via FluidAudio CoreML (ADR-006) + catalog download.
 - [x] Qwen3 Smart/Smart+ cleanup via MLX (ADR-005) + idle unload / Settings-scoped mic meter.
+- [x] Smart idle footprint: MLX `Memory.clearCache()` on unload + unload when leaving Smart; formatting footer marks Smart as optional.
+- [x] Storage: Active/Unused markers on installed packages (aligned with delete-unused).
 - [x] Optional Whisper Turbo q5 (ggml) + SHA-256 verify for ggml packages.
 - [x] Release `.dmg` build script (`macos/scripts/build-release-dmg.sh`) without notarization + Gatekeeper install docs (`ops/deploy.md`).
 - [x] Clean Parakeet/Whisper package delete (FluidAudio sibling layout) + select-only-when-ready UX.
@@ -66,9 +68,10 @@ Checklist:
 - [x] Optional Apple SpeechAnalyzer STT (ADR-008) — catalog `stt.apple-speechanalyzer`, macOS 26+, Prepare assets (not recommended).
 - [x] Flip catalog `recommended` STT to Parakeet TDT 0.6B v3 (`docs/stt-ru-en-quality-note.md`).
 - [x] Publish GitHub Release `v0.1.4` — Parakeet recommended + Apple SpeechAnalyzer + Models/Storage polish + `docs/github-release-notes-v0.1.4.md`.
+- [x] Publish GitHub Release `v0.1.5` — Smart idle MLX cache clear + Storage Active/Unused + Smart+ RAM blurb + `docs/github-release-notes-v0.1.5.md`.
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 
-Status: **v0.1.4 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
+Status: **v0.1.5 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 

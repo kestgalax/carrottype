@@ -48,7 +48,7 @@ Global hotkey
 - **Cleanup:** Off / Light heuristics; Smart / Smart+ via Qwen3 MLX (`mlx-swift-lm`, ADR-005).
 - Engines are selected through `STTEngine` / `CleanupEngine` adapters (`DictationPipeline`).
 - Settings selection UX: only Ready packages are selectable; Ready-but-inactive rows offer **Make active** for both STT and Smart formatting.
-- Idle resource policy: mic meter only when the user enables it in Settings (not on window open); language changes update copy via `L10n` without remounting Settings; permission poll stops when Ready; STT/cleanup models unload after each session.
+- Idle resource policy: mic meter only when the user enables it in Settings (not on window open); language changes update copy via `L10n` without remounting Settings; permission poll stops when Ready; STT/cleanup models unload after each session (Smart also clears MLX Metal cache); leaving Smart/Smart+ unloads engines without app restart.
 - Optional experimental temporary unmute during dictation (ADR-007): Settings toggle framed as Elgato Wave Link only; `MicMuteController` clears mute for the capture window (Wave Link primary; Core Audio silent fallback) and restores prior state when capture ends.
 - Distribution: GitHub Release `.dmg` (`ops/deploy.md`); notarization deferred until Developer ID.
 

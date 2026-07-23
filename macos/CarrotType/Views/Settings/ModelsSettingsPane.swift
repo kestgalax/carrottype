@@ -141,34 +141,7 @@ struct ModelsSettingsPane: View {
 
             ForEach(CleanupMode.allCases) { mode in
                 if let packageID = mode.requiredPackageID {
-                    let status = models.status(for: packageID)
-                    VStack(alignment: .leading, spacing: 6) {
-                        LabeledContent(mode.title(locale: locale)) {
-                            Text(SettingsPackageStatusControls.statusLabel(status, locale: locale))
-                                .foregroundStyle(.secondary)
-                        }
-                        if status.isReady {
-                            HStack {
-                                if models.cleanupMode != mode {
-                                    Button(L10n.t("format.make_active", locale: locale)) {
-                                        models.selectCleanup(mode)
-                                    }
-                                }
-                                Button(L10n.t("package.delete", locale: locale), role: .destructive) {
-                                    appState.deleteModelPackage(packageID)
-                                }
-                            }
-                        } else {
-                            SettingsPackageStatusControls(
-                                appState: appState,
-                                models: models,
-                                id: packageID,
-                                status: status,
-                                locale: locale,
-                                prominentDownload: false
-                            )
-                        }
-                    }
+                    cleanupPackageRow(mode: mode, packageID: packageID)
                 } else if mode == .light {
                     LabeledContent(mode.title(locale: locale)) {
                         Text(L10n.t("format.built_in", locale: locale))
@@ -190,6 +163,48 @@ struct ModelsSettingsPane: View {
                 models.selectCleanup(mode)
             }
         )
+    }
+
+    @ViewBuilder
+    private func cleanupPackageRow(mode: CleanupMode, packageID: String) -> some View {
+        let status = models.status(for: packageID)
+        let package = models.package(id: packageID)
+        VStack(alignment: .leading, spacing: 6) {
+            LabeledContent(mode.title(locale: locale)) {
+                Text(SettingsPackageStatusControls.statusLabel(status, locale: locale))
+                    .foregroundStyle(.secondary)
+            }
+            if let package {
+                Text("\(package.approximateSizeLabel) · \(package.license)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(package.localizedBlurb(locale: locale))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            if status.isReady {
+                HStack {
+                    if models.cleanupMode != mode {
+                        Button(L10n.t("format.make_active", locale: locale)) {
+                            models.selectCleanup(mode)
+                        }
+                    }
+                    Button(L10n.t("package.delete", locale: locale), role: .destructive) {
+                        appState.deleteModelPackage(packageID)
+                    }
+                }
+            } else {
+                SettingsPackageStatusControls(
+                    appState: appState,
+                    models: models,
+                    id: packageID,
+                    status: status,
+                    locale: locale,
+                    prominentDownload: false
+                )
+            }
+        }
     }
 }
 

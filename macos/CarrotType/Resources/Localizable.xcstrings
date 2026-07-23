@@ -173,13 +173,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MLX · Smart+ formatting · Apple Silicon"
+            "value" : "MLX · heavy · expect ~1–2 GB RAM while running · Apple Silicon"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MLX · Smart+-оформление · Apple Silicon"
+            "value" : "MLX · тяжёлая · учитывайте ~1–2 ГБ памяти во время работы · Apple Silicon"
           }
         }
       }
@@ -972,13 +972,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Smart/Smart+ appear in the mode picker only after the package is downloaded. This adds punctuation and light formatting after dictation."
+            "value" : "Smart/Smart+ appear after download. Optional: try without it first — formatting can improve or worsen the text."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Smart/Smart+ появляются в выборе режима только после скачивания пакета. Это пунктуация и лёгкое оформление текста после диктовки."
+            "value" : "Smart/Smart+ — после скачивания. Режим необязателен: сначала попробуйте без него — оформление может и улучшить, и ухудшить текст."
           }
         }
       }
@@ -2244,6 +2244,23 @@
         }
       }
     },
+    "storage.active" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Активна"
+          }
+        }
+      }
+    },
     "storage.delete_unused" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2278,6 +2295,23 @@
         }
       }
     },
+    "storage.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active packages are the current dictation model and Smart formatting (if selected). Delete unused removes the rest."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Активны текущая модель диктовки и Smart-оформление (если выбрано). «Удалить неиспользуемые» убирает остальные."
+          }
+        }
+      }
+    },
     "storage.share" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2308,6 +2342,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Хранилище"
+          }
+        }
+      }
+    },
+    "storage.unused" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unused"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не используется"
           }
         }
       }

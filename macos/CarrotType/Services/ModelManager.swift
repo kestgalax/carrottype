@@ -101,6 +101,17 @@ final class ModelManager: ObservableObject {
         .sorted { $0.bytes > $1.bytes }
     }
 
+    /// Matches `deleteUnusedPackages`: active STT selection or required Smart/Smart+ package.
+    func isActiveInstalledPackage(_ packageID: String) -> Bool {
+        guard let package = package(id: packageID) else { return false }
+        switch package.role {
+        case .stt:
+            return packageID == selectedSTTPackageID
+        case .cleanup:
+            return cleanupMode.requiredPackageID == packageID
+        }
+    }
+
     var selectedSTTPackage: CatalogPackage? {
         catalog.packages.first { $0.id == selectedSTTPackageID }
     }
