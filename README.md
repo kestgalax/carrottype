@@ -27,4 +27,6 @@ CarrotType живёт в строке меню: одно сочетание кл
 
 ---
 
-Разработка, архитектура и решения: [`docs/`](docs/).
+Разработка и архитектура: [`docs/`](docs/).
+
+CarrotType собран с помощью [AIDOS](https://github.com/kestgalax/AIDOS) — системы для AI-assisted разработки продуктов.
