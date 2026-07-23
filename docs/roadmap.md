@@ -77,6 +77,7 @@ Status: **v0.1.2 on private Release (unsigned DMG)** — invite-only download; i
 
 Small, user-visible fixes that do not expand scope:
 
+- [x] Settings NavigationSplitView sidebar (General / Setup / Models / Storage) + Status header — `docs/superpowers/specs/2026-07-23-settings-sidebar-design.md`.
 - Confirm Whisper Small / Turbo download end-to-end on a clean Application Support folder.
 - Menu-bar remaining-hints refresh after language change (if any stale copy remains).
 - First-run CTA clarity when Parakeet is already Ready but Whisper Base is still `recommended`.

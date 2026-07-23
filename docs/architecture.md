@@ -29,14 +29,14 @@ Global hotkey
 
 - Default path is fully local: audio is not uploaded.
 - Model weights download anonymously; no login required (ADR-003).
-- Settings/Setup UI is secondary to the hotkey loop but required for readiness transparency.
+- Settings/Setup UI is secondary to the hotkey loop but required for readiness transparency; shell is a locked `NavigationSplitView` sidebar (General / Setup / Models / Storage) with Status as a compact header (`docs/specs/ux-setup-status.md`).
 - Cloud STT/cleanup is out of MVP scope.
 - Non-macOS platforms are out of MVP scope.
 
 ## Stack (ADR-002)
 
 - Swift + Xcode, macOS 14+, Apple Silicon first
-- SwiftUI for Setup/Status and minimal chrome
+- SwiftUI for Setup/Status (`NavigationSplitView` + grouped Form panes) and minimal chrome
 - AVFoundation for capture
 - Accessibility-based caret insertion
 - Distribution via GitHub Releases (`.dmg` / `.app`), notarization preferred

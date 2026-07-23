@@ -6,7 +6,7 @@ struct KeyChord: Equatable, Codable {
     var keyCode: UInt16
     var carbonModifiers: UInt32
 
-    static let `default` = KeyChord(keyCode: 49, carbonModifiers: UInt32(controlKey | optionKey)) // ⌃⌥Space
+    static let `default` = KeyChord(keyCode: 44, carbonModifiers: UInt32(optionKey)) // ⌥/
 
     var displayString: String {
         var parts: [String] = []

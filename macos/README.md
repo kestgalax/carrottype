@@ -39,7 +39,7 @@ See `../ops/deploy.md`.
 ## Dictate
 
 1. Focus a text field in any app.
-2. Press the hotkey (default **⌃⌥Space**) — recording starts.
+2. Press the hotkey (default **⌥/**) — recording starts.
 3. Speak, then press the hotkey again — processing, then text is pasted at the caret.
 
 Models: `~/Library/Application Support/carrottype/models/`
