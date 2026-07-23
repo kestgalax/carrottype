@@ -2,6 +2,54 @@ import AVFoundation
 import Foundation
 import Speech
 
+/// User-facing Prepare failure for Apple SpeechAnalyzer (never show raw SFSpeechError text in Settings).
+enum AppleSpeechPrepareError: LocalizedError {
+    case unsupportedOS
+    case localeNotSupported(languageCode: String)
+    case assetUnavailable(languageCode: String)
+    case other
+
+    var errorDescription: String? {
+        switch self {
+        case .unsupportedOS:
+            return L10n.t("error.apple_speech_os")
+        case .localeNotSupported(let code):
+            return String(format: L10n.t("error.apple_speech_locale"), displayLanguage(code))
+        case .assetUnavailable(let code):
+            if code.hasPrefix("ru") {
+                return L10n.t("error.apple_speech_ru_unavailable")
+            }
+            return String(format: L10n.t("error.apple_speech_asset_unavailable"), displayLanguage(code))
+        case .other:
+            return L10n.t("error.apple_speech_prepare_failed")
+        }
+    }
+
+    private func displayLanguage(_ code: String) -> String {
+        code.hasPrefix("ru") ? L10n.t("language.russian") : L10n.t("language.english")
+    }
+
+    /// Map Apple / system errors into calm Settings copy.
+    static func from(systemError: Error, languageCode: String) -> AppleSpeechPrepareError {
+        let raw = [
+            systemError.localizedDescription,
+            (systemError as NSError).userInfo[NSLocalizedDescriptionKey] as? String,
+            String(describing: systemError),
+        ]
+        .compactMap { $0 }
+        .joined(separator: " ")
+        .lowercased()
+
+        if raw.contains("not installing")
+            || raw.contains("unavailable after attempted download")
+            || raw.contains("asset not found after attempted download")
+            || raw.contains("asset unavailable") {
+            return .assetUnavailable(languageCode: languageCode)
+        }
+        return .other
+    }
+}
+
 /// On-device STT via Apple SpeechAnalyzer (macOS 26+). Catalog: `stt.apple-speechanalyzer`.
 actor AppleSpeechSTTEngine: STTEngine {
     static var isPlatformSupported: Bool {
@@ -18,9 +66,13 @@ actor AppleSpeechSTTEngine: STTEngine {
         L10n.preferredLocale
     }
 
+    static func languageCode(for appLocale: Locale) -> String {
+        appLocale.language.languageCode?.identifier ?? "en"
+    }
+
     static func speechLocale(for appLocale: Locale) async -> Locale? {
         guard #available(macOS 26, *) else { return nil }
-        let code = appLocale.language.languageCode?.identifier ?? "en"
+        let code = languageCode(for: appLocale)
         let preferred = Locale(identifier: code.hasPrefix("ru") ? "ru_RU" : "en_US")
         return await SpeechTranscriber.supportedLocale(equivalentTo: preferred)
     }
@@ -39,25 +91,35 @@ actor AppleSpeechSTTEngine: STTEngine {
         locale: Locale,
         onProgress: (@Sendable (Double) -> Void)? = nil
     ) async throws {
+        let languageCode = languageCode(for: locale)
         guard #available(macOS 26, *) else {
-            throw STTEngineError.unsupported
+            throw AppleSpeechPrepareError.unsupportedOS
         }
         guard let speechLocale = await speechLocale(for: locale) else {
-            throw STTEngineError.unsupported
+            throw AppleSpeechPrepareError.localeNotSupported(languageCode: languageCode)
         }
 
         try FileManager.default.createDirectory(at: packageDirectory, withIntermediateDirectories: true)
         _ = try await AssetInventory.reserve(locale: speechLocale)
 
         let transcriber = SpeechTranscriber(locale: speechLocale, preset: .transcription)
-        if let request = try await AssetInventory.assetInstallationRequest(supporting: [transcriber]) {
-            let observation = request.progress.observe(\.fractionCompleted) { progress, _ in
-                onProgress?(progress.fractionCompleted)
+        do {
+            if let request = try await AssetInventory.assetInstallationRequest(supporting: [transcriber]) {
+                let observation = request.progress.observe(\.fractionCompleted) { progress, _ in
+                    onProgress?(progress.fractionCompleted)
+                }
+                defer { observation.invalidate() }
+                try await request.downloadAndInstall()
             }
-            defer { observation.invalidate() }
-            try await request.downloadAndInstall()
+        } catch {
+            throw AppleSpeechPrepareError.from(systemError: error, languageCode: languageCode)
         }
         onProgress?(1)
+
+        let status = await AssetInventory.status(forModules: [transcriber])
+        guard status == .installed else {
+            throw AppleSpeechPrepareError.assetUnavailable(languageCode: languageCode)
+        }
 
         let marker = ModelPackageLayout.readyMarker(in: packageDirectory)
         try Data().write(to: marker, options: .atomic)

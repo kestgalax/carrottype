@@ -517,10 +517,16 @@ final class ModelManager: ObservableObject {
                     self?.setStatus(packageID, .notDownloaded)
                 }
             } catch {
+                let message = (error as? LocalizedError)?.errorDescription
+                    ?? AppleSpeechPrepareError.from(
+                        systemError: error,
+                        languageCode: AppleSpeechSTTEngine.languageCode(for: locale)
+                    ).errorDescription
+                    ?? L10n.t("error.apple_speech_prepare_failed")
                 await MainActor.run {
                     self?.snapshotTasks[packageID] = nil
-                    self?.setStatus(packageID, .failed(message: error.localizedDescription))
-                    self?.lastError = error.localizedDescription
+                    self?.setStatus(packageID, .failed(message: message))
+                    self?.lastError = message
                 }
             }
         }

@@ -728,6 +728,125 @@
         }
       }
     },
+    "error.apple_speech_os" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple SpeechAnalyzer needs macOS 26 or later."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple SpeechAnalyzer доступен только на macOS 26 и новее."
+          }
+        }
+      }
+    },
+    "error.apple_speech_locale" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple SpeechAnalyzer doesn’t list %@. Try English in Language, or use Whisper / Parakeet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple SpeechAnalyzer не предлагает язык «%@». Попробуй English в Language или Whisper / Parakeet."
+          }
+        }
+      }
+    },
+    "error.apple_speech_ru_unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple isn’t delivering the Russian speech pack on this Mac yet (English usually works). For Russian dictation use Whisper or Parakeet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple пока не отдаёт русский speech-пакет на этом Mac (английский обычно ставится). Для русской диктовки используй Whisper или Parakeet."
+          }
+        }
+      }
+    },
+    "error.apple_speech_asset_unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple couldn’t install the %@ speech pack right now. Try again later, switch Language, or use Whisper / Parakeet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Система не смогла установить speech-пакет Apple для языка «%@». Попробуй позже, смени Language или используй Whisper / Parakeet."
+          }
+        }
+      }
+    },
+    "error.apple_speech_prepare_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn’t prepare Apple speech assets. Check the network and try again, or use Whisper / Parakeet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось подготовить speech assets Apple. Проверь сеть и попробуй снова — или используй Whisper / Parakeet."
+          }
+        }
+      }
+    },
+    "package.apple_unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unavailable for this language"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Недоступно для этого языка"
+          }
+        }
+      }
+    },
+    "package.not_prepared" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not prepared"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не подготовлено"
+          }
+        }
+      }
+    },
     "error.unknown_runtime" : {
       "extractionState" : "stale",
       "localizations" : {

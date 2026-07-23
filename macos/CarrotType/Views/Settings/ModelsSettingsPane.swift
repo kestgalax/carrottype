@@ -75,10 +75,17 @@ struct ModelsSettingsPane: View {
     @ViewBuilder
     private func sttPackageRows(_ package: CatalogPackage) -> some View {
         let status = models.status(for: package.id)
+        let isAppleSpeech = package.runtimeHint == "apple-speechanalyzer"
         VStack(alignment: .leading, spacing: 6) {
             LabeledContent(package.displayName) {
-                Text(SettingsPackageStatusControls.statusLabel(status, locale: locale))
-                    .foregroundStyle(.secondary)
+                Text(
+                    SettingsPackageStatusControls.statusLabel(
+                        status,
+                        locale: locale,
+                        prepareLabel: isAppleSpeech
+                    )
+                )
+                .foregroundStyle(.secondary)
             }
             Text("\(package.approximateSizeLabel) · \(package.license)")
                 .font(.caption)
@@ -86,6 +93,12 @@ struct ModelsSettingsPane: View {
             Text(package.localizedBlurb(locale: locale))
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            if case .failed(let message) = status, isAppleSpeech {
+                Text(message)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             if !status.isReady {
                 SettingsPackageStatusControls(
                     appState: appState,
@@ -94,7 +107,7 @@ struct ModelsSettingsPane: View {
                     status: status,
                     locale: locale,
                     prominentDownload: package.recommended,
-                    prepareLabel: package.runtimeHint == "apple-speechanalyzer"
+                    prepareLabel: isAppleSpeech
                 )
             } else if models.activeSTTID != package.id {
                 Button(L10n.t("format.make_active", locale: locale)) {
@@ -216,15 +229,25 @@ struct SettingsPackageStatusControls: View {
         }
     }
 
-    static func statusLabel(_ status: PackageInstallStatus, locale: Locale) -> String {
+    static func statusLabel(
+        _ status: PackageInstallStatus,
+        locale: Locale,
+        prepareLabel: Bool = false
+    ) -> String {
         switch status {
         case .notDownloaded:
-            return L10n.t("package.not_downloaded", locale: locale)
+            return L10n.t(prepareLabel ? "package.not_prepared" : "package.not_downloaded", locale: locale)
         case .downloading(let progress):
-            return String(format: L10n.t("package.downloading", locale: locale), Int(progress * 100))
+            return String(
+                format: L10n.t(prepareLabel ? "package.preparing" : "package.downloading", locale: locale),
+                Int(progress * 100)
+            )
         case .ready:
             return L10n.t("package.status.ready", locale: locale)
         case .failed(let message):
+            if prepareLabel {
+                return L10n.t("package.apple_unavailable", locale: locale)
+            }
             return String(format: L10n.t("package.failed", locale: locale), message)
         case .unavailable:
             return L10n.t("package.soon", locale: locale)
