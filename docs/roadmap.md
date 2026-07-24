@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.7`** (unsigned DMG, invite-only): Status Capsule session chrome (Listening → Understanding → Writing → Inserted) plus OOP Smart cleanup from v0.1.6 (ADR-009).
+Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.8`** (unsigned DMG, invite-only): idle menu bar icon `waveform.badge.microphone`; Status Capsule and OOP Smart cleanup from prior releases.
 
-Latest artifact: `CarrotType-0.1.7.dmg` (SHA-256 in `docs/github-release-notes-v0.1.7.md`).
+Latest artifact: `CarrotType-0.1.8.dmg` (SHA-256 in `docs/github-release-notes-v0.1.8.md`).
 
 **Current focus:** notarization after Apple Developer ID; public distribution only after that.
 
@@ -72,9 +72,10 @@ Checklist:
 - [x] Out-of-process Smart cleanup helper (`CarrotTypeCleanupHelper`, ADR-009) — host no longer links MLX inference; helper exits after each Smart session.
 - [x] Publish GitHub Release `v0.1.6` — OOP Smart cleanup + `docs/github-release-notes-v0.1.6.md`.
 - [x] Publish GitHub Release `v0.1.7` — Status Capsule session chrome + `docs/github-release-notes-v0.1.7.md`.
+- [x] Publish GitHub Release `v0.1.8` — idle menu bar icon `waveform.badge.microphone` + `docs/github-release-notes-v0.1.8.md`.
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 
-Status: **v0.1.7 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
+Status: **v0.1.8 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 
