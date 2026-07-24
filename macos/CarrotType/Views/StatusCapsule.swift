@@ -2,11 +2,18 @@ import AppKit
 import Combine
 import SwiftUI
 
-/// Floating island / pill for dictation status near the MacBook camera notch.
+/// Compact dictation process indicator near the camera notch (or under the menu bar).
+enum StatusCapsulePhase: Equatable {
+    case listening
+    case understanding
+    case writing
+    case inserted
+}
+
 @MainActor
-final class NotchRecordingOverlayController {
+final class StatusCapsuleController {
     private var panel: NSPanel?
-    private var hosting: NSHostingView<NotchRecordingIndicatorView>?
+    private var hosting: NSHostingView<StatusCapsuleView>?
     private weak var appState: AppState?
     private var cancellables = Set<AnyCancellable>()
     private var screenObserver: NSObjectProtocol?
@@ -15,14 +22,13 @@ final class NotchRecordingOverlayController {
         self.appState = appState
         cancellables.removeAll()
 
-        Publishers.CombineLatest(appState.$menuBarMode, appState.$recorderLiveLevel)
+        Publishers.CombineLatest(appState.$capsulePhase, appState.$appLanguage)
             .receive(on: RunLoop.main)
-            .sink { [weak self] mode, level in
+            .sink { [weak self] phase, _ in
                 guard let self else { return }
-                switch mode {
-                case .recording, .processing, .cleanup:
-                    self.show(mode: mode, level: level)
-                default:
+                if let phase {
+                    self.show(phase: phase)
+                } else {
                     self.hide()
                 }
             }
@@ -39,22 +45,21 @@ final class NotchRecordingOverlayController {
         }
     }
 
-    func sync(mode: MenuBarMode) {
-        guard let appState else { return }
-        switch mode {
-        case .recording, .processing, .cleanup:
-            show(mode: mode, level: appState.recorderLiveLevel)
-        default:
+    func sync(phase: StatusCapsulePhase?) {
+        if let phase {
+            show(phase: phase)
+        } else {
             hide()
         }
     }
 
-    private func show(mode: MenuBarMode, level: Float) {
-        let geometry = NotchGeometry.preferred()
-        let root = NotchRecordingIndicatorView(
-            mode: mode,
-            level: level,
-            topInset: geometry.contentTopInset
+    private func show(phase: StatusCapsulePhase) {
+        let geometry = StatusCapsuleGeometry.preferred()
+        let locale = appState?.effectiveLocale ?? Locale.current
+        let root = StatusCapsuleView(
+            phase: phase,
+            topInset: geometry.contentTopInset,
+            locale: locale
         )
         if let hosting {
             hosting.rootView = root
@@ -100,26 +105,26 @@ final class NotchRecordingOverlayController {
 
     private func positionPanel() {
         guard let panel else { return }
-        let geometry = NotchGeometry.preferred()
+        let geometry = StatusCapsuleGeometry.preferred()
         let size = geometry.panelSize
         panel.setContentSize(size)
         hosting?.frame = NSRect(origin: .zero, size: size)
         panel.setFrame(NSRect(origin: geometry.origin, size: size), display: true)
-        if let hosting {
-            hosting.rootView = NotchRecordingIndicatorView(
-                mode: hosting.rootView.mode,
-                level: hosting.rootView.level,
-                topInset: geometry.contentTopInset
+        if let hosting, let appState {
+            hosting.rootView = StatusCapsuleView(
+                phase: hosting.rootView.phase,
+                topInset: geometry.contentTopInset,
+                locale: appState.effectiveLocale
             )
         }
     }
 }
 
-/// Camera-notch geometry for an expanded-island panel.
+/// Camera-notch geometry for a compact status capsule panel.
 ///
-/// Hardware camera covers the top `notchHeight` of the panel; interactive content
-/// lives in the drop below (`visibleDrop`) so the brow never clips REC / waveform.
-struct NotchGeometry {
+/// Hardware camera covers the top `notchHeight` of the panel; content lives in the
+/// drop below (`visibleDrop`) so the brow never clips the label row.
+struct StatusCapsuleGeometry {
     let screen: NSScreen
     let hasNotch: Bool
     /// Physical notch width (between auxiliary menu-bar wings).
@@ -139,10 +144,10 @@ struct NotchGeometry {
     var panelSize: NSSize {
         if hasNotch {
             // Slightly wider than the housing so the black capsule reads as one island.
-            let width = max(notchWidth + 24, 200)
+            let width = max(notchWidth + 24, 148)
             return NSSize(width: width, height: notchHeight + visibleDrop)
         }
-        return NSSize(width: 196, height: 34)
+        return NSSize(width: 148, height: visibleDrop)
     }
 
     /// Top-left of the panel in Cocoa screen coords (origin bottom-left).
@@ -150,15 +155,13 @@ struct NotchGeometry {
         let size = panelSize
         let x = centerX - size.width / 2
         if hasNotch {
-            // Flush with the top of the screen: upper band merges with the camera housing.
             return NSPoint(x: x, y: screenTopY - size.height)
         }
-        // No notch: hang just under the menu bar.
         let menuBottom = screen.visibleFrame.maxY
         return NSPoint(x: x, y: menuBottom - size.height - 2)
     }
 
-    static func preferred() -> NotchGeometry {
+    static func preferred() -> StatusCapsuleGeometry {
         let notched = NSScreen.screens.first { screen in
             screen.safeAreaInsets.top > 0
                 && screen.auxiliaryTopLeftArea != nil
@@ -168,7 +171,7 @@ struct NotchGeometry {
             ?? NSScreen.screens.first(where: { $0 == NSScreen.main })
             ?? NSScreen.screens.first
             ?? NSScreen.main!
-        return NotchGeometry(screen: screen)
+        return StatusCapsuleGeometry(screen: screen)
     }
 
     init(screen: NSScreen) {
@@ -183,23 +186,22 @@ struct NotchGeometry {
             notchWidth = right.minX - left.maxX
             notchHeight = screen.safeAreaInsets.top
             centerX = (left.maxX + right.minX) / 2
-            // Enough room for waveform + label below the brow.
-            visibleDrop = 32
+            visibleDrop = 36
         } else {
             hasNotch = false
             notchWidth = 0
             notchHeight = 0
-            visibleDrop = 34
+            visibleDrop = 36
             centerX = screen.frame.midX
         }
     }
 }
 
-struct NotchRecordingIndicatorView: View {
-    let mode: MenuBarMode
-    var level: Float
+struct StatusCapsuleView: View {
+    let phase: StatusCapsulePhase
     /// Matches physical notch height so content sits below the camera brow.
     var topInset: CGFloat
+    var locale: Locale
 
     @State private var pulse = false
 
@@ -209,6 +211,7 @@ struct NotchRecordingIndicatorView: View {
                 .frame(height: max(0, topInset))
 
             contentRow
+                .frame(minWidth: 96, maxWidth: 148)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .background {
@@ -220,67 +223,57 @@ struct NotchRecordingIndicatorView: View {
                 pulse = true
             }
         }
+        .animation(.easeInOut(duration: 0.18), value: phase)
     }
 
     private var islandCornerRadius: CGFloat {
-        // Sharp top when merging with the camera housing; round the visible drop.
         topInset > 0 ? 18 : 16
     }
 
     @ViewBuilder
     private var contentRow: some View {
         HStack(spacing: 8) {
-            if mode == .recording {
+            switch phase {
+            case .listening:
                 Circle()
                     .fill(Color.red)
                     .frame(width: 7, height: 7)
-                    .shadow(color: .red.opacity(0.9), radius: pulse ? 5 : 1)
-                    .scaleEffect(pulse ? 1.2 : 0.95)
-
-                LiveWaveformBars(level: level)
-                    .frame(width: 84, height: 14)
-
-                Text("REC")
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .shadow(color: .red.opacity(0.85), radius: pulse ? 5 : 1)
+                    .scaleEffect(pulse ? 1.12 : 0.96)
+                label(L10n.t("capsule.listening", locale: locale))
+            case .understanding:
+                TimelineView(.animation(minimumInterval: 0.4, paused: false)) { context in
+                    let tick = Int(context.date.timeIntervalSinceReferenceDate / 0.4) % 3
+                    HStack(spacing: 3) {
+                        ForEach(0..<3, id: \.self) { index in
+                            Circle()
+                                .fill(Color.white.opacity(index == tick ? 1.0 : 0.28))
+                                .frame(width: 4, height: 4)
+                        }
+                    }
+                    .frame(width: 18)
+                }
+                label(L10n.t("capsule.understanding", locale: locale))
+            case .writing:
+                Text("✍")
+                    .font(.system(size: 12))
                     .foregroundStyle(.white.opacity(0.95))
-                    .tracking(1.0)
-            } else {
-                ProgressView()
-                    .controlSize(.mini)
-                    .tint(.white)
-
-                Text(mode == .cleanup ? "TXT" : "STT")
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.9))
-                    .tracking(0.8)
+                label(L10n.t("capsule.writing", locale: locale))
+            case .inserted:
+                Image(systemName: "checkmark")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.95))
+                label(L10n.t("capsule.inserted", locale: locale))
             }
         }
         .padding(.horizontal, 14)
-        .padding(.bottom, 6)
-    }
-}
-
-struct LiveWaveformBars: View {
-    var level: Float
-
-    private let barCount = 7
-
-    var body: some View {
-        HStack(alignment: .center, spacing: 2.5) {
-            ForEach(0..<barCount, id: \.self) { index in
-                Capsule()
-                    .fill(Color.red.opacity(0.9))
-                    .frame(width: 2.5, height: barHeight(for: index))
-            }
-        }
-        .animation(.easeOut(duration: 0.08), value: level)
+        .padding(.bottom, topInset > 0 ? 6 : 0)
     }
 
-    private func barHeight(for index: Int) -> CGFloat {
-        let center = CGFloat(barCount - 1) / 2
-        let distance = abs(CGFloat(index) - center)
-        let shape = 1.0 - (distance / center) * 0.45
-        let boosted = CGFloat(min(1, max(0.05, level))) * shape
-        return 3 + boosted * 11
+    private func label(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 12, weight: .semibold, design: .rounded))
+            .foregroundStyle(.white.opacity(0.95))
+            .lineLimit(1)
     }
 }

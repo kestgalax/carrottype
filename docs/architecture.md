@@ -17,7 +17,7 @@ Global hotkey
 
 | Component | Responsibility |
 |-----------|----------------|
-| App shell (Swift / SwiftUI) | Lifecycle, menu bar status, Setup/Status UI, permission prompts, RU/EN locale |
+| App shell (Swift / SwiftUI) | Lifecycle, menu bar status, Status Capsule (session chrome near notch), Setup/Status UI, permission prompts, RU/EN locale |
 | Hotkey service | Register and handle global start/stop recording |
 | Audio capture | Record microphone audio for the active session; optional experimental temporary unmute via Wave Link (ADR-007) |
 | Model Manager | Catalog, download, verify, activate STT/cleanup packages (ADR-003) |
@@ -36,7 +36,7 @@ Global hotkey
 ## Stack (ADR-002)
 
 - Swift + Xcode, macOS 14+, Apple Silicon first
-- SwiftUI for Setup/Status (`NavigationSplitView` + grouped Form panes) and minimal chrome
+- SwiftUI for Setup/Status (`NavigationSplitView` + grouped Form panes) and minimal chrome; session Status Capsule via borderless `NSPanel` (`StatusCapsule*`, click-through)
 - AVFoundation for capture
 - Accessibility-based caret insertion
 - Distribution via GitHub Releases (`.dmg` / `.app`), notarization preferred

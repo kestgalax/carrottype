@@ -86,6 +86,7 @@ Small, user-visible fixes that do not expand scope:
 
 - [x] Settings sidebar panes (General / Setup / Models / Storage) + Status header + chrome polish — `docs/superpowers/specs/2026-07-23-settings-sidebar-design.md` (shipped in v0.1.3).
 - [x] Default hotkey ⌥/ (shipped in v0.1.3; Reset in Settings if an old chord was saved).
+- [x] Status Capsule session chrome (Listening → Understanding → Writing → Inserted) — `docs/superpowers/specs/2026-07-24-status-capsule-design.md` (replaces notch REC/waveform island).
 - Confirm Whisper Small / Turbo download end-to-end on a clean Application Support folder.
 - Menu-bar remaining-hints refresh after language change (if any stale copy remains).
 - [x] Recommended STT is Parakeet (first-run CTA targets Parakeet when not Ready).

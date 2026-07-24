@@ -77,11 +77,24 @@ No marketing cards, no stat strips. Progress belongs on the model row being down
 
 - Idle (Ready)
 - Needs setup (Almost/Blocked)
-- Recording
-- Processing (STT / formatting)
+- Recording (Listening)
+- Processing / cleanup (Understanding — STT + formatting share one label)
 - Error (transient)
 
 Menu content: readiness summary, **Settings…**, Quit.
+
+## Status Capsule (session chrome)
+
+During an active dictation session a compact floating **Status Capsule** appears near the camera notch (or under the menu bar on non-notch displays). It reports process state only (no hover/click actions):
+
+| Phase | Capsule |
+|-------|---------|
+| Listening | `● Listening` / `● Слушаю` |
+| Understanding | `⋯ Understanding` / `⋯ Распознаю` (STT **and** cleanup) |
+| Writing | `✍ Writing` / `✍ Печатаю` (~0.35s after successful paste) |
+| Inserted | `✓ Inserted` / `✓ Вставлено` (~1s, then hide) |
+
+Escape cancel, soft silent cancel, and pipeline errors hide the capsule immediately (no Writing/Inserted). Design: `docs/superpowers/specs/2026-07-24-status-capsule-design.md`.
 
 ## First-run behavior
 

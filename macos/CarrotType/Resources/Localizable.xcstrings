@@ -337,6 +337,74 @@
         }
       }
     },
+    "capsule.inserted" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inserted"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вставлено"
+          }
+        }
+      }
+    },
+    "capsule.listening" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listening"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Слушаю"
+          }
+        }
+      }
+    },
+    "capsule.understanding" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Understanding"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Распознаю"
+          }
+        }
+      }
+    },
+    "capsule.writing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Writing"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Печатаю"
+          }
+        }
+      }
+    },
     "error.accessibility_denied" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1465,13 +1533,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Formatting…"
+            "value" : "Understanding…"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Обработка…"
+            "value" : "Распознаю…"
           }
         }
       }
@@ -1499,13 +1567,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Transcribing…"
+            "value" : "Understanding…"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Распознавание…"
+            "value" : "Распознаю…"
           }
         }
       }
@@ -1516,13 +1584,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recording…"
+            "value" : "Listening…"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Запись…"
+            "value" : "Слушаю…"
           }
         }
       }

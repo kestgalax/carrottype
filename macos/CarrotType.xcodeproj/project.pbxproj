@@ -12,7 +12,6 @@
 		0DF962C341D720B1AA2C28F8 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = A659DC3EC69FC4BAB2E97F21 /* FluidAudio */; };
 		109B1E3DBEBA27643DAAB586 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD109D911C2BE1F4C00F3038 /* main.swift */; };
 		1424691E8C5507CB87824295 /* AudioInputService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C308C7819FB980179CA944D /* AudioInputService.swift */; };
-		206887C3685474E0C569386D /* NotchRecordingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AEA7C2344265F10A49A4E2 /* NotchRecordingOverlay.swift */; };
 		2267ECB139580B1231C3D98E /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = C96851DE3927A9D883868D3E /* MLXLMCommon */; };
 		232FBC6B127516DFCDA2BF9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDFA98C4C936AA6524585F75 /* Assets.xcassets */; };
 		2E15B15907D6FB83AF3C5FF1 /* AudioLevelMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B50E12D241D4FD62DF4339 /* AudioLevelMonitor.swift */; };
@@ -45,6 +44,7 @@
 		9F80AB5D192A4FC13377B865 /* QwenCleanupCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1774E9ADED029C17FB90700E /* QwenCleanupCore.swift */; };
 		A940872297B84FD8CF132A8A /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797712955E7ADE3ABBD30757 /* AppLanguage.swift */; };
 		A9780D692F74E9ECD3C52F2E /* CarrotTypeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEAA3680522EFDCA855E969 /* CarrotTypeSettingsView.swift */; };
+		AB17897939522F6E5465DE6A /* StatusCapsule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD39F4DF8724A20747C5ABE /* StatusCapsule.swift */; };
 		AB6DA3EFA9A862AE132D2B43 /* MicrophoneLevelMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC24539957AB2B6B9B8DAE91 /* MicrophoneLevelMeter.swift */; };
 		AC59FC1DDE6059740FBEB131 /* GeneralSettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01F0C09CF14B2C2102D5E1E /* GeneralSettingsPane.swift */; };
 		ADCCEDC9F9D4D928D8317481 /* ModelTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B2484C6CDB9EA89F7724FB /* ModelTypes.swift */; };
@@ -91,7 +91,6 @@
 
 /* Begin PBXFileReference section */
 		04ACFB5863E0E05AB1CB0B9D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		07AEA7C2344265F10A49A4E2 /* NotchRecordingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchRecordingOverlay.swift; sourceTree = "<group>"; };
 		0A8A229A676ECD2FA3F5A5BC /* DictationPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationPipeline.swift; sourceTree = "<group>"; };
 		0C03ED580868653554F85816 /* SetupSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupSettingsPane.swift; sourceTree = "<group>"; };
 		0F09559BA130283076BCE198 /* HotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyService.swift; sourceTree = "<group>"; };
@@ -134,6 +133,7 @@
 		DFF4FFAEC733525AE390701F /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		E01F0C09CF14B2C2102D5E1E /* GeneralSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsPane.swift; sourceTree = "<group>"; };
 		E2F124EFF6A1ED662214AA79 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		EBD39F4DF8724A20747C5ABE /* StatusCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCapsule.swift; sourceTree = "<group>"; };
 		F030E16C4E6640B30B01CCAF /* PermissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionService.swift; sourceTree = "<group>"; };
 		F11ED546758ABC44F1858768 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		F729C29AD2C7164B457EDC2B /* SettingsStatusHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStatusHeader.swift; sourceTree = "<group>"; };
@@ -301,7 +301,7 @@
 				21049F0E68A2ADE0DA4314A4 /* HotkeySettingsRow.swift */,
 				5D51F39387D51B7D74F72297 /* MenuBarViews.swift */,
 				BC24539957AB2B6B9B8DAE91 /* MicrophoneLevelMeter.swift */,
-				07AEA7C2344265F10A49A4E2 /* NotchRecordingOverlay.swift */,
+				EBD39F4DF8724A20747C5ABE /* StatusCapsule.swift */,
 				C859322C266348CF5A31A25A /* Settings */,
 			);
 			path = Views;
@@ -470,7 +470,6 @@
 				ECDA20ED2A7B864184CFCAD0 /* ModelPackageLayout.swift in Sources */,
 				ADCCEDC9F9D4D928D8317481 /* ModelTypes.swift in Sources */,
 				BB7DAAD5EA8D6D77F3679459 /* ModelsSettingsPane.swift in Sources */,
-				206887C3685474E0C569386D /* NotchRecordingOverlay.swift in Sources */,
 				7A6EF5822C017178EC7948E7 /* ParakeetSTTEngine.swift in Sources */,
 				6907436AC4B5CEB0186D6370 /* PermissionService.swift in Sources */,
 				3D8CB060CF0448E9E6A14E45 /* QwenCleanupEngine.swift in Sources */,
@@ -478,6 +477,7 @@
 				6D7821FEFA32798EAC2B35F2 /* SettingsPane.swift in Sources */,
 				B015FF65FC68F854F9F323D1 /* SettingsStatusHeader.swift in Sources */,
 				FF6920A2D443AAF028CDF617 /* SetupSettingsPane.swift in Sources */,
+				AB17897939522F6E5465DE6A /* StatusCapsule.swift in Sources */,
 				348605D908FF4DB02EFE78C8 /* StatusDetailsPane.swift in Sources */,
 				FAB43A0C193803BBB860B1A3 /* StorageSettingsPane.swift in Sources */,
 				6B8A6A54ACE564ACBFE92820 /* TextCleanup.swift in Sources */,

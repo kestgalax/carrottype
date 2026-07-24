@@ -6,13 +6,14 @@ import Foundation
 final class AppState: ObservableObject {
     @Published var menuBarMode: MenuBarMode = .needsSetup {
         didSet {
-            notchOverlay.sync(mode: menuBarMode)
             updateLevelDecayTimer()
         }
     }
+    /// Session chrome phase for Status Capsule (nil = hidden).
+    @Published private(set) var capsulePhase: StatusCapsulePhase?
     @Published var showFirstRun: Bool
     @Published var lastSessionError: String?
-    /// Live mic level while recording (drives notch waveform).
+    /// Live mic level while recording (level decay / future meters).
     @Published private(set) var recorderLiveLevel: Float = 0
     @Published private(set) var settingsVisible = false
     @Published var appLanguage: AppLanguage {
@@ -54,11 +55,13 @@ final class AppState: ObservableObject {
 
     private let recorder = AudioRecorder()
     private let micMute = MicMuteController()
-    private let notchOverlay = NotchRecordingOverlayController()
+    private let statusCapsule = StatusCapsuleController()
     private var cancellables = Set<AnyCancellable>()
     private var isProcessing = false
     private var levelDecayTimer: Timer?
     private var modelUnloadTask: Task<Void, Never>?
+    /// Invalidates in-flight Writing → Inserted sleeps when a new session starts or cancels.
+    private var capsuleSequenceToken = UUID()
     /// Counts nested Settings appearances so SwiftUI remounts do not clear the mic meter.
     private var settingsAppearanceCount = 0
 
@@ -91,7 +94,7 @@ final class AppState: ObservableObject {
         self.retainDictationInClipboard = defaults.bool(forKey: Keys.retainClipboard)
         self.unmuteMicDuringDictation = defaults.bool(forKey: Keys.unmuteDuringDictation)
 
-        notchOverlay.attach(appState: self)
+        statusCapsule.attach(appState: self)
         NotificationCenter.default.addObserver(
             forName: NSApplication.willTerminateNotification,
             object: nil,
@@ -330,11 +333,14 @@ final class AppState: ObservableObject {
 
         do {
             _ = try recorder.start(deviceUID: audioInput.selectedDeviceID)
+            invalidateCapsuleSequence()
             menuBarMode = .recording
+            capsulePhase = .listening
             hotkey.setEscapeCancelRegistered(true)
         } catch {
             await micMute.endDictationRestore()
             lastSessionError = error.localizedDescription
+            clearCapsulePhase()
             menuBarMode = .error
             if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
             refreshMenuBarMode()
@@ -350,6 +356,7 @@ final class AppState: ObservableObject {
         recorderLiveLevel = 0
         lastSessionError = nil
         await micMute.endDictationRestore()
+        clearCapsulePhase()
         menuBarMode = .idle
         if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
         refreshMenuBarMode()
@@ -360,6 +367,7 @@ final class AppState: ObservableObject {
         recorderLiveLevel = 0
         hotkey.setEscapeCancelRegistered(false)
         menuBarMode = .processing
+        capsulePhase = .understanding
         defer {
             isProcessing = false
             recorderLiveLevel = 0
@@ -377,10 +385,12 @@ final class AppState: ObservableObject {
             if case AudioRecorderError.silentOrTooShort = error {
                 // Soft cancel: nothing useful was said — no red error, no paste.
                 lastSessionError = nil
+                clearCapsulePhase()
                 menuBarMode = .idle
                 return
             }
             lastSessionError = error.localizedDescription
+            clearCapsulePhase()
             menuBarMode = .error
             return
         }
@@ -395,9 +405,14 @@ final class AppState: ObservableObject {
                 audioURL: audioURL,
                 onPhase: { [weak self] phase in
                     Task { @MainActor in
+                        guard let self else { return }
                         switch phase {
-                        case .transcribing: self?.menuBarMode = .processing
-                        case .cleaning: self?.menuBarMode = .cleanup
+                        case .transcribing:
+                            self.menuBarMode = .processing
+                            self.capsulePhase = .understanding
+                        case .cleaning:
+                            self.menuBarMode = .cleanup
+                            self.capsulePhase = .understanding
                         }
                     }
                 }
@@ -408,10 +423,35 @@ final class AppState: ObservableObject {
             )
             lastSessionError = nil
             menuBarMode = .idle
+            await presentSuccessCapsuleSequence()
         } catch {
             lastSessionError = error.localizedDescription
+            clearCapsulePhase()
             menuBarMode = .error
         }
+    }
+
+    private func clearCapsulePhase() {
+        invalidateCapsuleSequence()
+        capsulePhase = nil
+        statusCapsule.sync(phase: nil)
+    }
+
+    private func invalidateCapsuleSequence() {
+        capsuleSequenceToken = UUID()
+    }
+
+    /// Always Writing (~0.35s) → Inserted (~1s) → hide after a successful paste.
+    private func presentSuccessCapsuleSequence() async {
+        let token = UUID()
+        capsuleSequenceToken = token
+        capsulePhase = .writing
+        try? await Task.sleep(nanoseconds: 350_000_000)
+        guard capsuleSequenceToken == token else { return }
+        capsulePhase = .inserted
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        guard capsuleSequenceToken == token else { return }
+        capsulePhase = nil
     }
 
     private func updateLevelDecayTimer() {
