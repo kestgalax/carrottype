@@ -24,7 +24,7 @@ struct MenuBarLabelView: View {
 
     private var symbolName: String {
         switch appState.menuBarMode {
-        case .idle: return "waveform"
+        case .idle: return "waveform.badge.microphone"
         case .needsSetup: return "waveform.badge.exclamationmark"
         case .recording: return "record.circle.fill"
         case .processing: return "ellipsis.circle.fill"
