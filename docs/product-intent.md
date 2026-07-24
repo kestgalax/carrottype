@@ -59,4 +59,4 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 
 ## Current product status (2026-07)
 
-**v0.1.6** ships as an unsigned DMG on a **private** GitHub Release (invite-only early access): Smart/Smart+ cleanup runs out-of-process (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Next: notarization after Apple Developer ID before any public download.
+**v0.1.7** ships as an unsigned DMG on a **private** GitHub Release (invite-only early access): Status Capsule session chrome; Smart/Smart+ cleanup remains out-of-process (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Next: notarization after Apple Developer ID before any public download.

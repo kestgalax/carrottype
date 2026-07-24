@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.6`** (unsigned DMG, invite-only): Smart/Smart+ MLX in session-scoped `CarrotTypeCleanupHelper` (ADR-009) so the host does not retain MLX/Metal heap across sessions.
+Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.7`** (unsigned DMG, invite-only): Status Capsule session chrome (Listening → Understanding → Writing → Inserted) plus OOP Smart cleanup from v0.1.6 (ADR-009).
 
-Latest artifact: `CarrotType-0.1.6.dmg` (SHA-256 in `docs/github-release-notes-v0.1.6.md`).
+Latest artifact: `CarrotType-0.1.7.dmg` (SHA-256 in `docs/github-release-notes-v0.1.7.md`).
 
 **Current focus:** notarization after Apple Developer ID; public distribution only after that.
 
@@ -71,9 +71,10 @@ Checklist:
 - [x] Publish GitHub Release `v0.1.5` — Smart idle MLX cache clear + Storage Active/Unused + Smart+ RAM blurb + `docs/github-release-notes-v0.1.5.md`.
 - [x] Out-of-process Smart cleanup helper (`CarrotTypeCleanupHelper`, ADR-009) — host no longer links MLX inference; helper exits after each Smart session.
 - [x] Publish GitHub Release `v0.1.6` — OOP Smart cleanup + `docs/github-release-notes-v0.1.6.md`.
+- [x] Publish GitHub Release `v0.1.7` — Status Capsule session chrome + `docs/github-release-notes-v0.1.7.md`.
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 
-Status: **v0.1.6 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
+Status: **v0.1.7 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 
