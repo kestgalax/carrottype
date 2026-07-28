@@ -5,6 +5,7 @@ enum BundledModelCatalog {
     static let appleSpeechSTTID = "stt.apple-speechanalyzer"
     static let smartCleanupID = "cleanup.qwen3-0.6b-4bit"
     static let smartPlusCleanupID = "cleanup.qwen3-1.7b-4bit"
+    static let gemmaCleanupID = "cleanup.gemma4-e2b-4bit"
 
     static func load(from bundle: Bundle = .main) -> ModelCatalogFile {
         if let url = bundle.url(forResource: "ModelCatalog", withExtension: "json"),
@@ -17,7 +18,7 @@ enum BundledModelCatalog {
     }
 
     static let fallback = ModelCatalogFile(
-        version: 6,
+        version: 7,
         packages: [
             CatalogPackage(
                 id: "stt.whisper-base-ggml",
@@ -110,6 +111,19 @@ enum BundledModelCatalog {
                 downloadURL: "https://huggingface.co/mlx-community/Qwen3-1.7B-4bit",
                 runtimeHint: "mlx-lm",
                 hubRepoID: "mlx-community/Qwen3-1.7B-4bit",
+                downloadable: true
+            ),
+            CatalogPackage(
+                id: "cleanup.gemma4-e2b-4bit",
+                role: .cleanup,
+                displayName: "Gemma 4 E2B",
+                approximateBytes: 3_550_000_000,
+                languagesBlurb: "catalog.blurb.cleanup.gemma4-e2b-4bit",
+                license: "Apache-2.0",
+                recommended: false,
+                downloadURL: "https://huggingface.co/mlx-community/gemma-4-e2b-it-4bit",
+                runtimeHint: "mlx-lm",
+                hubRepoID: "mlx-community/gemma-4-e2b-it-4bit",
                 downloadable: true
             ),
         ]

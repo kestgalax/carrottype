@@ -42,12 +42,12 @@ Global hotkey
 - Distribution via GitHub Releases (`.dmg` / `.app`), notarization preferred
 - Models cached under Application Support; not bundled in the first release artifact by default
 
-## Model catalog (ADR-003 + ADR-004 + ADR-005 + ADR-006 + ADR-008)
+## Model catalog (ADR-003 + ADR-004 + ADR-005 + ADR-006 + ADR-008 + ADR-010)
 
 - **STT (runnable):** Whisper Base/Small/Turbo q5 ggml via WhisperMetalKit (ADR-004); **recommended** Parakeet TDT 0.6B v3 via FluidAudio CoreML (ADR-006); optional Apple SpeechAnalyzer on macOS 26+ via system `AssetInventory` (ADR-008). ggml downloads stage the URLSession temp file synchronously, then verify SHA-256 from the catalog.
-- **Cleanup:** Off / Light heuristics; Smart / Smart+ via Qwen3 MLX in `CarrotTypeCleanupHelper` (`mlx-swift-lm`, ADR-005 + ADR-009). Host downloads packages; inference is out-of-process (stdin/stdout JSON, helper exits).
+- **Cleanup:** Off / Light heuristics; Smart / Smart+ via Qwen3 MLX; optional **Gemma 4 E2B** MLX (`cleanup.gemma4-e2b-4bit`, ADR-010) — all LLM cleanup in `CarrotTypeCleanupHelper` (`mlx-swift-lm`, ADR-005 + ADR-009). Host downloads packages; inference is out-of-process (stdin/stdout JSON, helper exits).
 - Engines are selected through `STTEngine` / `CleanupEngine` adapters (`DictationPipeline`).
-- Settings selection UX: only Ready packages are selectable; Ready-but-inactive rows offer **Make active** for both STT and Smart formatting.
+- Settings selection UX: only Ready packages are selectable; Ready-but-inactive rows offer **Make active** for both STT and post-dictation formatting packages (Qwen Smart/Smart+ and optional Gemma).
 - Idle resource policy: mic meter only when the user enables it in Settings (not on window open); language changes update copy via `L10n` without remounting Settings; permission poll stops when Ready; STT unloads after each session; Smart MLX lives only in the helper process (ADR-009) so host idle stays near cold start.
 - Optional experimental temporary unmute during dictation (ADR-007): Settings toggle framed as Elgato Wave Link only; `MicMuteController` clears mute for the capture window (Wave Link primary; Core Audio silent fallback) and restores prior state when capture ends.
 - Distribution: GitHub Release `.dmg` (`ops/deploy.md`); notarization deferred until Developer ID.

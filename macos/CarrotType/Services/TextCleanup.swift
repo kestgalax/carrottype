@@ -5,8 +5,8 @@ enum TextCleanup {
         switch mode {
         case .off:
             return text
-        case .light, .smart, .smartPlus:
-            // Smart/Smart+ use out-of-process Qwen helper (ADR-009); heuristics here for Light/fallback.
+        case .light, .smart, .smartPlus, .gemma:
+            // MLX modes use out-of-process helper (ADR-009); heuristics here for Light/fallback.
             return light(text)
         }
     }

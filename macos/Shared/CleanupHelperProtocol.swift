@@ -8,7 +8,7 @@ enum CleanupHelperProtocol {
 struct CleanupHelperRequest: Codable, Sendable {
     var v: Int
     var text: String
-    /// `smart` or `smartPlus` (matches `CleanupMode.rawValue`).
+    /// `smart`, `smartPlus`, or `gemma` (matches `CleanupMode.rawValue`).
     var mode: String
     var modelDirectory: String
 

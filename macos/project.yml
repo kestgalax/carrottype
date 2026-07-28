@@ -121,8 +121,8 @@ targets:
         CFBundleName: CarrotType
         CFBundleDisplayName: CarrotType
         CFBundleIconName: AppIcon
-        CFBundleShortVersionString: "0.1.8"
-        CFBundleVersion: "9"
+        CFBundleShortVersionString: "0.1.9"
+        CFBundleVersion: "10"
         LSMinimumSystemVersion: "14.0"
         LSUIElement: true
         NSMicrophoneUsageDescription: CarrotType записывает звук с микрофона только пока вы удерживаете или нажимаете горячую клавишу. Аудио обрабатывается локально и никуда не отправляется.

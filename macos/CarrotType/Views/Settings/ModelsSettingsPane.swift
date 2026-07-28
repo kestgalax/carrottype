@@ -72,7 +72,6 @@ struct ModelsSettingsPane: View {
                 appState: appState,
                 models: models,
                 id: recommendedSTTID,
-                status: status,
                 locale: locale,
                 prominentDownload: true
             )
@@ -87,7 +86,7 @@ struct ModelsSettingsPane: View {
             LabeledContent(package.displayName) {
                 Text(
                     SettingsPackageStatusControls.statusLabel(
-                        status,
+                        models.status(for: package.id),
                         locale: locale,
                         prepareLabel: isAppleSpeech
                     )
@@ -122,7 +121,6 @@ struct ModelsSettingsPane: View {
                     appState: appState,
                     models: models,
                     id: package.id,
-                    status: status,
                     locale: locale,
                     prominentDownload: package.recommended,
                     prepareLabel: isAppleSpeech
@@ -142,6 +140,8 @@ struct ModelsSettingsPane: View {
             ForEach(CleanupMode.allCases) { mode in
                 if let packageID = mode.requiredPackageID {
                     cleanupPackageRow(mode: mode, packageID: packageID)
+                        // Force refresh on progress ticks (same visual path as STT ProgressView).
+                        .id("\(packageID)-\(progressTick(for: packageID))")
                 } else if mode == .light {
                     LabeledContent(mode.title(locale: locale)) {
                         Text(L10n.t("format.built_in", locale: locale))
@@ -165,12 +165,20 @@ struct ModelsSettingsPane: View {
         )
     }
 
+    /// Discrete progress key so cleanup rows redraw like STT while downloading.
+    private func progressTick(for packageID: String) -> Int {
+        if let progress = models.status(for: packageID).downloadProgress {
+            return Int(progress * 100)
+        }
+        return models.status(for: packageID).isReady ? 1000 : -1
+    }
+
     @ViewBuilder
     private func cleanupPackageRow(mode: CleanupMode, packageID: String) -> some View {
         let status = models.status(for: packageID)
         let package = models.package(id: packageID)
         VStack(alignment: .leading, spacing: 6) {
-            LabeledContent(mode.title(locale: locale)) {
+            LabeledContent(package?.displayName ?? mode.title(locale: locale)) {
                 Text(SettingsPackageStatusControls.statusLabel(status, locale: locale))
                     .foregroundStyle(.secondary)
             }
@@ -199,7 +207,6 @@ struct ModelsSettingsPane: View {
                     appState: appState,
                     models: models,
                     id: packageID,
-                    status: status,
                     locale: locale,
                     prominentDownload: false
                 )
@@ -212,10 +219,12 @@ struct SettingsPackageStatusControls: View {
     @ObservedObject var appState: AppState
     @ObservedObject var models: ModelManager
     let id: String
-    let status: PackageInstallStatus
     let locale: Locale
     let prominentDownload: Bool
     var prepareLabel: Bool = false
+
+    /// Live status from ModelManager — do not pass a stale snapshot (progress would freeze).
+    private var status: PackageInstallStatus { models.status(for: id) }
 
     private var downloadTitle: String {
         L10n.t(prepareLabel ? "package.prepare" : "package.download", locale: locale)
@@ -223,6 +232,7 @@ struct SettingsPackageStatusControls: View {
 
     var body: some View {
         if let progress = status.downloadProgress {
+            // Same control as STT rows (Whisper / Parakeet).
             ProgressView(value: progress)
             Text(String(format: L10n.t(prepareLabel ? "package.preparing" : "package.downloading", locale: locale), Int(progress * 100)))
                 .font(.caption)
