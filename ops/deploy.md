@@ -4,11 +4,17 @@ CarrotType ships as a **macOS `.dmg`** from GitHub Releases. Model weights are *
 
 ## Repository visibility
 
-The GitHub repository is **private**. Release assets (including `CarrotType-0.1.1.dmg`) are available only to users with access to the repo (owner / collaborators / invitees). Do not treat the Release URL as a public download page until visibility and notarization are intentionally opened.
+The GitHub repository **may be public** (MIT, [ADR-011](../docs/decisions/ADR-011-public-mit-distribution.md)). GitHub Releases are a valid public download channel for unsigned `.dmg` builds. Notarization is **not** required to open the repo or attach Release assets.
+
+To flip visibility after documentation is merged:
+
+```bash
+gh repo edit kestgalax/carrottype --visibility public
+```
 
 ## v1 path (current): no Apple Developer notarization
 
-Chosen while the paid Apple Developer Program is not yet purchased.
+Unsigned Release builds are intentional for personal / portfolio distribution until (optionally) a Developer ID certificate is used.
 
 ### Build the DMG
 
@@ -52,7 +58,7 @@ Local self-signed identity (`macos/scripts/ensure-dev-codesign.sh`) helps **dev 
 
 ### Install UX without notarization (Gatekeeper)
 
-Collaborators who download the DMG from the private Release will still see “Apple cannot check for malicious software”.
+Anyone who downloads the DMG from GitHub Releases will still see “Apple cannot check for malicious software” until the app is notarized.
 
 **Recommended:**
 

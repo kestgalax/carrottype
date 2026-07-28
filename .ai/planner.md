@@ -30,4 +30,4 @@ Every task must include: linked intent/roadmap item; scope; likely files; accept
 - Do not plan around an unapproved stack or engine.
 - Prefer a small working increment over a broad speculative design.
 - Do not plan flipping `recommended` STT until the quality note Result is filled.
-- Do not schedule public notarized distribution before Developer ID is available.
+- Public source / unsigned Release does not require Developer ID (ADR-011); do not claim notarized install without evidence.

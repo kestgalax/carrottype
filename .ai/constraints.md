@@ -62,4 +62,6 @@ Dictation runtime (`DictationPipeline` and engines) must not upload audio or tra
 ## Trust / distribution
 
 - Do not claim notarized / Gatekeeper-clean install until Developer ID signing + notarization are done.
-- Current distribution is a **private** GitHub repo + invite-only Release until explicitly opened.
+- The GitHub repository **may be public** (MIT, ADR-011). Unsigned DMG via GitHub Releases is an allowed distribute path; Gatekeeper install is Right-click → Open.
+- Notarization / Apple Developer ID is **optional later**, not a blocker for public source or unsigned Release downloads.
+- Soft brand ask (README): forks should attribute CarrotType and not reuse the name/icon — no dual-commercial or registered-trademark requirement.

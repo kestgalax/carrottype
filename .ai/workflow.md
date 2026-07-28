@@ -4,14 +4,15 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (after v0.1.0)
+## Current phase (after v0.1.9)
 
-Unsigned DMG exists on a **private** GitHub Release. Next ordered focus:
+Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Public repo visibility is allowed without notarization.
 
-1. Fill `docs/stt-ru-en-quality-note.md` (RU/EN quality pass).
-2. Decide whether to flip `recommended` STT.
-3. After Apple Developer purchase: Developer ID sign + notarize (`ops/deploy.md`).
-4. Only then post-v1 research spikes (`docs/research-post-v1-spikes.md`).
+Next ordered focus:
+
+1. After docs land: flip GitHub visibility to **public** when ready (`gh repo edit … --visibility public`).
+2. Optional later: Developer ID sign + notarize (`ops/deploy.md`) for one-click Gatekeeper UX.
+3. Post-v1 research spikes when useful (`docs/research-post-v1-spikes.md`).
 
 ## Phase gates
 
@@ -23,7 +24,7 @@ Unsigned DMG exists on a **private** GitHub Release. Next ordered focus:
 
 - New STT/cleanup engine, catalog policy, or distribution trust model → ADR before code.
 - New outbound network sink, telemetry/analytics, or direct SPM product dependency → ADR before code (closed sinks in `.ai/constraints.md`).
-- Accepted ADRs: ADR-002 (stack), ADR-003 (catalog), ADR-004 (Whisper), ADR-005 (Qwen), ADR-006 (Parakeet), ADR-007 (Wave Link unmute), ADR-008 (Apple SpeechAnalyzer STT).
+- Accepted ADRs: ADR-002 (stack), ADR-003 (catalog), ADR-004 (Whisper), ADR-005 (Qwen), ADR-006 (Parakeet), ADR-007 (Wave Link unmute), ADR-008 (Apple SpeechAnalyzer STT), ADR-009 (OOP cleanup), ADR-010 (Gemma cleanup), ADR-011 (public MIT distribution).
 
 ### Feature / Settings UX
 

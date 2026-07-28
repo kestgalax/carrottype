@@ -2,11 +2,11 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.9`** (unsigned DMG, invite-only): optional Gemma 4 E2B cleanup (ADR-010) + hardened literal cleanup prompt; Status Capsule and OOP Smart cleanup from prior releases.
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.1.9`** (unsigned DMG): optional Gemma 4 E2B cleanup (ADR-010) + hardened literal cleanup prompt; Status Capsule and OOP Smart cleanup from prior releases.
 
 Latest artifact: `CarrotType-0.1.9.dmg` (SHA-256 in `docs/github-release-notes-v0.1.9.md`).
 
-**Current focus:** notarization after Apple Developer ID; public distribution only after that.
+**Current focus:** public-repo readiness (MIT + ADR-011 docs). **Next manual step after merge:** flip GitHub visibility to public (`gh repo edit kestgalax/carrottype --visibility public`). Notarization / Apple Developer ID remains **optional later**, not a publish blocker.
 
 Privacy / supply-chain agent governance lives in `.ai/constraints.md` (§ Privacy / network / dependencies). A full security pass / offline network audit is **deferred** — not current focus.
 
@@ -75,14 +75,16 @@ Checklist:
 - [x] Publish GitHub Release `v0.1.8` — idle menu bar icon `waveform.badge.microphone` + `docs/github-release-notes-v0.1.8.md`.
 - [x] Optional Gemma 4 E2B cleanup package beside Qwen Smart/Smart+ (ADR-010).
 - [x] Publish GitHub Release `v0.1.9` — optional Gemma cleanup + literal prompt + `docs/github-release-notes-v0.1.9.md`.
-- [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
+- [x] Public MIT distribution posture (ADR-011) — `LICENSE`, README branding/install notes; notarization not required for visibility.
+- [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 
-Status: **v0.1.9 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
+Status: **v0.1.9 unsigned DMG** — install via Right-click → Open; repo ready to open public after ADR-011 docs land.
 
 ## Next focus (ordered)
 
-1. **Trust:** after Apple Developer purchase — Developer ID sign + `notarytool` + staple (`ops/deploy.md`); sign both host and helper.
-2. **Only then** post-v1 spikes (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
+1. **Publish:** after this documentation merges — flip repo visibility to public (`ops/deploy.md`).
+2. **Optional trust:** Developer ID sign + `notarytool` + staple (`ops/deploy.md`); sign both host and helper.
+3. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 
 ## Near-term polish candidates (if release is blocked)
 

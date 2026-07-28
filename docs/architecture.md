@@ -39,7 +39,7 @@ Global hotkey
 - SwiftUI for Setup/Status (`NavigationSplitView` + grouped Form panes) and minimal chrome; session Status Capsule via borderless `NSPanel` (`StatusCapsule*`, click-through)
 - AVFoundation for capture
 - Accessibility-based caret insertion
-- Distribution via GitHub Releases (`.dmg` / `.app`), notarization preferred
+- Distribution via GitHub Releases (`.dmg` / `.app`); public MIT source allowed (ADR-011); notarization optional
 - Models cached under Application Support; not bundled in the first release artifact by default
 
 ## Model catalog (ADR-003 + ADR-004 + ADR-005 + ADR-006 + ADR-008 + ADR-010)
@@ -50,7 +50,7 @@ Global hotkey
 - Settings selection UX: only Ready packages are selectable; Ready-but-inactive rows offer **Make active** for both STT and post-dictation formatting packages (Qwen Smart/Smart+ and optional Gemma).
 - Idle resource policy: mic meter only when the user enables it in Settings (not on window open); language changes update copy via `L10n` without remounting Settings; permission poll stops when Ready; STT unloads after each session; Smart MLX lives only in the helper process (ADR-009) so host idle stays near cold start.
 - Optional experimental temporary unmute during dictation (ADR-007): Settings toggle framed as Elgato Wave Link only; `MicMuteController` clears mute for the capture window (Wave Link primary; Core Audio silent fallback) and restores prior state when capture ends.
-- Distribution: GitHub Release `.dmg` (`ops/deploy.md`); notarization deferred until Developer ID.
+- Distribution: GitHub Release `.dmg` (`ops/deploy.md`); public repo + MIT (ADR-011); notarization optional later.
 
 ## Constraints
 

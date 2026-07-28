@@ -59,4 +59,4 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 
 ## Current product status (2026-07)
 
-**v0.1.9** ships as an unsigned DMG on a **private** GitHub Release (invite-only early access): optional Gemma 4 E2B cleanup beside Smart/Smart+ (ADR-010); hardened literal cleanup prompt; Status Capsule; OOP cleanup helper (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Next: notarization after Apple Developer ID before any public download.
+**v0.1.9** ships as an unsigned DMG (Right-click → Open): optional Gemma 4 E2B cleanup beside Smart/Smart+ (ADR-010); hardened literal cleanup prompt; Status Capsule; OOP cleanup helper (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public** for portfolio/open use; notarization is optional later, not required for visibility.
