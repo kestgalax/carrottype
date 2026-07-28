@@ -8,7 +8,7 @@ Attach: `CarrotType-0.1.9.dmg` (Apple Silicon, macOS 14+, app bundle without mod
 
 Artifact path after `CLEAN=1 ./macos/scripts/build-release-dmg.sh`: `dist/CarrotType-0.1.9.dmg`.
 
-SHA-256 (this build): _pending — filled after DMG build_
+SHA-256 (this build): `4ab2fb7df541395be5efceec748985dcd996a46d296d7ecb4de386d41842a8bc`
 
 ## What’s new
 
