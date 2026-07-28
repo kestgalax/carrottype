@@ -63,8 +63,12 @@ Anyone who downloads the DMG from GitHub Releases will still see “Apple cannot
 **Recommended:**
 
 1. Open the `.dmg`, drag **CarrotType** to **Applications**.
-2. In Finder → Applications: **Right-click CarrotType → Open** → Open.
-3. Or clear quarantine:
+2. First launch is usually **blocked** by Gatekeeper (double “Open” alone is often not enough on current macOS):
+   1. In Finder → **Applications**, open CarrotType (or **Right-click → Open**).
+   2. Dismiss / acknowledge the blocked-app warning if shown.
+   3. Open **System Settings → Privacy & Security** and under the blocked-app notice choose **Open Anyway**.
+   4. Confirm the final Open prompt for CarrotType.
+3. Alternatively clear quarantine (still may need Privacy & Security on some macOS versions):
 
 ```bash
 xattr -dr com.apple.quarantine /Applications/CarrotType.app

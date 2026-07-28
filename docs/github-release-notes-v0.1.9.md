@@ -1,6 +1,6 @@
 # CarrotType v0.1.9 — GitHub Release notes
 
-**Distribution:** public repository ([MIT](../LICENSE), ADR-011). Unsigned DMG — not notarized; first launch may need **Right-click → Open**.
+**Distribution:** public repository ([MIT](../LICENSE), ADR-011). Unsigned DMG — not notarized; first launch usually needs **System Settings → Privacy & Security → Open Anyway** (not only Right-click → Open).
 
 ## Download
 
@@ -17,17 +17,22 @@ SHA-256 (this build): `4ab2fb7df541395be5efceec748985dcd996a46d296d7ecb4de386d41
 ## Install (unsigned / not notarized)
 
 1. Open the DMG and drag **CarrotType** into **Applications** (replace the previous build if present).
-2. First launch: **Right-click → Open** (Gatekeeper), or:
+2. First launch is usually **blocked** by Gatekeeper — on current macOS, Right-click → Open alone is often not enough:
+   1. In Finder → **Applications**, open CarrotType (or **Right-click → Open**).
+   2. Acknowledge / dismiss the blocked-app warning if shown.
+   3. Open **System Settings → Privacy & Security** and choose **Open Anyway** for CarrotType.
+   4. Confirm the final Open prompt.
+3. Optional shortcut (may still need Privacy & Security on some versions):
 
 ```bash
 xattr -dr com.apple.quarantine /Applications/CarrotType.app
 ```
 
-3. Menu bar icon → **Settings…** / **Настройки…**
-4. Grant **Microphone** and **Accessibility** if needed.
-5. Download an STT model (**Parakeet** recommended for new installs) and Make active if needed.
-6. Optional: Models → post-dictation formatting → download **Gemma 4 E2B** (or Smart / Smart+) and Make active.
-7. Optional (Elgato Wave + Wave Link): Setup → **Unmute mic during dictation (experimental)** — hotkey temporarily clears mic mute for capture and restores it afterward so you do not need a separate physical mute toggle. Wave Link must be running; off by default (ADR-007).
+4. Menu bar icon → **Settings…** / **Настройки…**
+5. Grant **Microphone** and **Accessibility** if needed.
+6. Download an STT model (**Parakeet** recommended for new installs) and Make active if needed.
+7. Optional: Models → post-dictation formatting → download **Gemma 4 E2B** (or Smart / Smart+) and Make active.
+8. Optional (Elgato Wave + Wave Link): Setup → **Unmute mic during dictation (experimental)** — hotkey temporarily clears mic mute for capture and restores it afterward so you do not need a separate physical mute toggle. Wave Link must be running; off by default (ADR-007).
 
 Default hotkey: **⌥/**. While recording: **Escape** cancels; the dictation hotkey again commits.
 
@@ -45,5 +50,5 @@ Models download on demand into `~/Library/Application Support/carrottype/models/
 ## Not yet
 
 - In-app auto-update (Sparkle)
-- Apple Developer ID notarization (optional; unsigned + Right-click → Open is the supported install path)
+- Apple Developer ID notarization (optional; unsigned + Privacy & Security → Open Anyway is the supported install path)
 - Reliable Russian Apple SpeechAnalyzer assets (system-side; EN Prepare works)
