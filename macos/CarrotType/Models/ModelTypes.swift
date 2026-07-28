@@ -40,6 +40,7 @@ enum CleanupMode: String, CaseIterable, Identifiable, Hashable {
     case light
     case smart
     case smartPlus
+    case gemma
 
     var id: String { rawValue }
 
@@ -53,6 +54,7 @@ enum CleanupMode: String, CaseIterable, Identifiable, Hashable {
         case .light: return L10n.t("cleanup.mode.light", locale: locale)
         case .smart: return L10n.t("cleanup.mode.smart", locale: locale)
         case .smartPlus: return L10n.t("cleanup.mode.smart_plus", locale: locale)
+        case .gemma: return L10n.t("cleanup.mode.gemma", locale: locale)
         }
     }
 
@@ -61,6 +63,15 @@ enum CleanupMode: String, CaseIterable, Identifiable, Hashable {
         case .off, .light: return nil
         case .smart: return "cleanup.qwen3-0.6b-4bit"
         case .smartPlus: return "cleanup.qwen3-1.7b-4bit"
+        case .gemma: return BundledModelCatalog.gemmaCleanupID
+        }
+    }
+
+    /// MLX helper modes (Qwen Smart/Smart+ and optional Gemma).
+    var usesMLXHelper: Bool {
+        switch self {
+        case .smart, .smartPlus, .gemma: return true
+        case .off, .light: return false
         }
     }
 }

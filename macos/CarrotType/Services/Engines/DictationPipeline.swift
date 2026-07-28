@@ -40,7 +40,7 @@ final class DictationPipeline {
 
         onPhase(.cleaning)
         let mode = modelManager.cleanupMode
-        if (mode == .smart || mode == .smartPlus), modelManager.cleanupModelDirectory() == nil {
+        if mode.usesMLXHelper, modelManager.cleanupModelDirectory() == nil {
             // Package still downloading / missing — keep STT result via Light (download offered on select).
             return try await lightCleanup.cleanup(text: raw, mode: .light, modelDirectory: nil)
         }
@@ -49,7 +49,7 @@ final class DictationPipeline {
             return try await selectedCleanupEngine(for: mode)
                 .cleanup(text: raw, mode: mode, modelDirectory: directory)
         } catch {
-            // Never lose the STT result if Smart cleanup fails.
+            // Never lose the STT result if Smart/Gemma cleanup fails.
             return try await lightCleanup.cleanup(text: raw, mode: .light, modelDirectory: nil)
         }
     }
@@ -74,7 +74,7 @@ final class DictationPipeline {
 
     private func selectedCleanupEngine(for mode: CleanupMode) -> CleanupEngine {
         switch mode {
-        case .smart, .smartPlus:
+        case .smart, .smartPlus, .gemma:
             return qwenCleanup
         case .off, .light:
             return lightCleanup

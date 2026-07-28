@@ -471,8 +471,9 @@ final class ModelManager: ObservableObject {
         }
 
         progressObservations[packageID] = task.progress.observe(\.fractionCompleted) { [weak self] progress, _ in
+            let fraction = Self.clampedFraction(progress.fractionCompleted)
             Task { @MainActor in
-                self?.setStatus(packageID, .downloading(progress: progress.fractionCompleted))
+                self?.applyDownloadProgress(packageID: packageID, fraction: fraction)
             }
         }
 
@@ -491,8 +492,7 @@ final class ModelManager: ObservableObject {
                     packageDirectory: destination
                 ) { fraction in
                     Task { @MainActor in
-                        guard let self, !Task.isCancelled else { return }
-                        self.setStatus(packageID, .downloading(progress: fraction))
+                        self?.applyDownloadProgress(packageID: packageID, fraction: fraction)
                     }
                 }
                 await MainActor.run {
@@ -527,8 +527,7 @@ final class ModelManager: ObservableObject {
                     locale: locale
                 ) { fraction in
                     Task { @MainActor in
-                        guard let self, !Task.isCancelled else { return }
-                        self.setStatus(packageID, .downloading(progress: fraction))
+                        self?.applyDownloadProgress(packageID: packageID, fraction: fraction)
                     }
                 }
                 await MainActor.run {
@@ -568,12 +567,36 @@ final class ModelManager: ObservableObject {
             return
         }
         let destination = packageDirectory(for: package)
+        let expectedBytes = max(package.approximateBytes, 1)
+
+        // Mirror Parakeet: report progress via Task { @MainActor … }.
+        // Hub's Progress.fractionCompleted often stays 0 for large LFS snapshots, so we also
+        // pump an on-disk estimate (Application Support + HF hub cache) the same way.
         snapshotTasks[packageID] = Task { [weak self] in
+            let report: @Sendable (Double) -> Void = { fraction in
+                Task { @MainActor in
+                    self?.applyDownloadProgress(packageID: packageID, fraction: fraction)
+                }
+            }
+
+            let progressPump = Task.detached {
+                while !Task.isCancelled {
+                    let estimated = ModelManager.estimateMLXProgress(
+                        repoID: repoID,
+                        destination: destination,
+                        expectedBytes: expectedBytes
+                    )
+                    report(estimated)
+                    try? await Task.sleep(nanoseconds: 200_000_000)
+                }
+            }
+            defer { progressPump.cancel() }
+
             do {
                 try await QwenCleanupPackage.downloadPackage(repoID: repoID, to: destination) { fraction in
-                    Task { @MainActor in
-                        guard let self, !Task.isCancelled else { return }
-                        self.setStatus(packageID, .downloading(progress: fraction))
+                    // Same hop as Parakeet; ignore broken Hub 0% samples.
+                    if fraction > 0.01 {
+                        report(fraction)
                     }
                 }
                 await MainActor.run {
@@ -594,6 +617,79 @@ final class ModelManager: ObservableObject {
                 }
             }
         }
+    }
+
+    /// On-disk MLX progress from package dir + Hugging Face hub cache (Parakeet-style reporting source).
+    nonisolated private static func estimateMLXProgress(
+        repoID: String,
+        destination: URL,
+        expectedBytes: Int64
+    ) -> Double {
+        let fm = FileManager.default
+        let destBytes = directorySizeNonisolated(at: destination, fileManager: fm) ?? 0
+        let hubBytes = hubCacheBytes(forRepoID: repoID)
+        let bytes = max(destBytes, hubBytes)
+        guard bytes > 0, expectedBytes > 0 else { return 0 }
+        return min(0.99, Double(bytes) / Double(expectedBytes))
+    }
+
+    /// Bytes already present under `~/.cache/huggingface/hub/models--org--name` (HubClient default cache).
+    nonisolated private static func hubCacheBytes(forRepoID repoID: String) -> Int64 {
+        let repoFolder = "models--" + repoID.replacingOccurrences(of: "/", with: "--")
+        var roots: [URL] = [
+            FileManager.default.homeDirectoryForCurrentUser
+                .appendingPathComponent(".cache/huggingface/hub", isDirectory: true),
+        ]
+        if let hfHome = ProcessInfo.processInfo.environment["HF_HOME"], !hfHome.isEmpty {
+            roots.insert(
+                URL(fileURLWithPath: hfHome, isDirectory: true)
+                    .appendingPathComponent("hub", isDirectory: true),
+                at: 0
+            )
+        }
+        let fm = FileManager.default
+        for root in roots {
+            let dir = root.appendingPathComponent(repoFolder, isDirectory: true)
+            if let size = directorySizeNonisolated(at: dir, fileManager: fm), size > 0 {
+                return size
+            }
+        }
+        return 0
+    }
+
+    nonisolated private static func directorySizeNonisolated(at url: URL, fileManager: FileManager) -> Int64? {
+        guard fileManager.fileExists(atPath: url.path),
+              let enumerator = fileManager.enumerator(
+                at: url,
+                includingPropertiesForKeys: [.fileSizeKey, .isRegularFileKey, .isSymbolicLinkKey],
+                options: [.skipsHiddenFiles]
+              )
+        else { return nil }
+        var total: Int64 = 0
+        for case let fileURL as URL in enumerator {
+            guard let values = try? fileURL.resourceValues(
+                forKeys: [.fileSizeKey, .isRegularFileKey, .isSymbolicLinkKey]
+            ) else { continue }
+            // Count regular files only — skip symlinks (HF snapshots → blobs) to avoid double count.
+            if values.isSymbolicLink == true { continue }
+            guard values.isRegularFile == true, let size = values.fileSize else { continue }
+            total += Int64(size)
+        }
+        return total
+    }
+
+    /// Publish download progress on the main actor; skip near-duplicate fractions to limit churn.
+    private func applyDownloadProgress(packageID: String, fraction: Double) {
+        let clamped = Self.clampedFraction(fraction)
+        if case .downloading(let current) = statuses[packageID], abs(current - clamped) < 0.005 {
+            return
+        }
+        setStatus(packageID, .downloading(progress: clamped))
+    }
+
+    nonisolated private static func clampedFraction(_ value: Double) -> Double {
+        guard value.isFinite else { return 0 }
+        return min(max(value, 0), 1)
     }
 
     private func isReadyOnDisk(_ package: CatalogPackage) -> Bool {

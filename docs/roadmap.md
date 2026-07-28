@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.8`** (unsigned DMG, invite-only): idle menu bar icon `waveform.badge.microphone`; Status Capsule and OOP Smart cleanup from prior releases.
+Milestone 0–2 vertical slice shipped; **private GitHub Release `v0.1.9`** (unsigned DMG, invite-only): optional Gemma 4 E2B cleanup (ADR-010) + hardened literal cleanup prompt; Status Capsule and OOP Smart cleanup from prior releases.
 
-Latest artifact: `CarrotType-0.1.8.dmg` (SHA-256 in `docs/github-release-notes-v0.1.8.md`).
+Latest artifact: `CarrotType-0.1.9.dmg` (SHA-256 in `docs/github-release-notes-v0.1.9.md`).
 
 **Current focus:** notarization after Apple Developer ID; public distribution only after that.
 
@@ -73,9 +73,11 @@ Checklist:
 - [x] Publish GitHub Release `v0.1.6` — OOP Smart cleanup + `docs/github-release-notes-v0.1.6.md`.
 - [x] Publish GitHub Release `v0.1.7` — Status Capsule session chrome + `docs/github-release-notes-v0.1.7.md`.
 - [x] Publish GitHub Release `v0.1.8` — idle menu bar icon `waveform.badge.microphone` + `docs/github-release-notes-v0.1.8.md`.
+- [x] Optional Gemma 4 E2B cleanup package beside Qwen Smart/Smart+ (ADR-010).
+- [x] Publish GitHub Release `v0.1.9` — optional Gemma cleanup + literal prompt + `docs/github-release-notes-v0.1.9.md`.
 - [ ] Notarized GitHub Release (blocked on Apple Developer ID purchase).
 
-Status: **v0.1.8 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
+Status: **v0.1.9 on private Release (unsigned DMG)** — invite-only download; install via Right-click → Open until notarization.
 
 ## Next focus (ordered)
 
@@ -92,6 +94,7 @@ Small, user-visible fixes that do not expand scope:
 - Confirm Whisper Small / Turbo download end-to-end on a clean Application Support folder.
 - Menu-bar remaining-hints refresh after language change (if any stale copy remains).
 - [x] Recommended STT is Parakeet (first-run CTA targets Parakeet when not Ready).
+- [x] Optional Gemma 4 E2B formatting package (ADR-010) — download / Make active / Delete beside Smart/Smart+.
 - Sparkle (or similar) auto-update after Developer ID / public or auth feed — Status currently only opens Releases.
 
 ## Post-v1 research spikes (no runtime yet)

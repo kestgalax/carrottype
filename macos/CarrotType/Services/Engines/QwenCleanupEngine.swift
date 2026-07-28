@@ -16,7 +16,7 @@ enum CleanupEngineError: LocalizedError {
     }
 }
 
-/// Spawns `CarrotTypeCleanupHelper` for Smart/Smart+ (ADR-009). No in-process MLX.
+/// Spawns `CarrotTypeCleanupHelper` for Smart/Smart+/Gemma (ADR-009 / ADR-010). No in-process MLX.
 actor QwenCleanupEngine: CleanupEngine {
     /// Wall-clock budget for cold load + generate (helper is killed on timeout).
     private static let timeoutNanoseconds: UInt64 = 120_000_000_000
@@ -27,7 +27,7 @@ actor QwenCleanupEngine: CleanupEngine {
             return text
         case .light:
             return TextCleanup.apply(text, mode: .light)
-        case .smart, .smartPlus:
+        case .smart, .smartPlus, .gemma:
             break
         }
 

@@ -150,6 +150,23 @@
     "CarrotType" : {
 
     },
+    "catalog.blurb.cleanup.gemma4-e2b-4bit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MLX · optional · ~3.5 GB · larger than Smart · Apple Silicon"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MLX · опционально · ~3.5 ГБ · тяжелее Smart · Apple Silicon"
+          }
+        }
+      }
+    },
     "catalog.blurb.cleanup.qwen3-0.6b-4bit" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -265,6 +282,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Четче речь · ~466 МБ"
+          }
+        }
+      }
+    },
+    "cleanup.mode.gemma" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemma 4 E2B"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemma 4 E2B"
           }
         }
       }
@@ -479,13 +513,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Formatting model not found. Download Qwen3 in Settings."
+            "value" : "Formatting model not found. Download it in Settings → Models."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Модель оформления не найдена. Скачайте Qwen3 в Настройках."
+            "value" : "Модель оформления не найдена. Скачайте её в Настройки → Модели."
           }
         }
       }
@@ -1040,13 +1074,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Smart/Smart+ appear after download. Optional: try without it first — formatting can improve or worsen the text."
+            "value" : "Smart/Smart+/Gemma appear after download. Optional: try Off/Light first — formatting can improve or worsen the text."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Smart/Smart+ — после скачивания. Режим необязателен: сначала попробуйте без него — оформление может и улучшить, и ухудшить текст."
+            "value" : "Smart/Smart+/Gemma — после скачивания. Режим необязателен: сначала попробуйте Off/Light — оформление может и улучшить, и ухудшить текст."
           }
         }
       }
@@ -2369,13 +2403,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Active packages are the current dictation model and Smart formatting (if selected). Delete unused removes the rest."
+            "value" : "Active packages are the current dictation model and the selected formatting package (Smart/Smart+/Gemma if used). Delete unused removes the rest."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Активны текущая модель диктовки и Smart-оформление (если выбрано). «Удалить неиспользуемые» убирает остальные."
+            "value" : "Активны текущая модель диктовки и выбранное оформление (Smart/Smart+/Gemma, если включено). «Удалить неиспользуемые» убирает остальные."
           }
         }
       }

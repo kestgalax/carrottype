@@ -7,9 +7,9 @@ Project memory lives in repository artifacts — not in chat transcripts.
 - Product: `docs/product-intent.md`
 - Status / next steps: `docs/roadmap.md`
 - Architecture: `docs/architecture.md`
-- Decisions: `docs/decisions/` (ADR-001 … ADR-008)
+- Decisions: `docs/decisions/` (ADR-001 … ADR-010)
 - Setup UX: `docs/specs/ux-setup-status.md`
-- Release notes: `docs/github-release-notes-v0.1.3.md` (prior: `docs/github-release-notes-v0.1.2.md`, `v0.1.1`, `v0.1.0`)
+- Release notes: `docs/github-release-notes-v0.1.9.md` (prior: `v0.1.8` … `v0.1.0`)
 - Ops: `ops/deploy.md`, `ops/environments.md`
 
 ## Rules

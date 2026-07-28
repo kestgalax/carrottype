@@ -1,10 +1,10 @@
 import Foundation
 import HuggingFace
 
-/// Host-side Hub download + readiness for Qwen cleanup packages (no MLX inference).
+/// Host-side Hub download + readiness for MLX cleanup packages (Qwen / Gemma; no inference).
 enum QwenCleanupPackage {
-    /// Download MLX Qwen snapshot into `directory`.
-    /// - Parameter onProgress: fraction in `[0, 1]` from Hub snapshot download.
+    /// Download an MLX Hub snapshot into `directory`.
+    /// - Parameter onProgress: fraction in `[0, 1]` — same signature / hop style as Parakeet STT.
     static func downloadPackage(
         repoID: String,
         to directory: URL,
@@ -15,13 +15,20 @@ enum QwenCleanupPackage {
             throw CleanupEngineError.modelMissing
         }
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        _ = try await HubClient.default.downloadSnapshot(
-            of: id,
-            to: directory,
-            progressHandler: { progress in
-                onProgress?(progress.fractionCompleted)
-            }
-        )
+
+        // Run Hub I/O off the caller's actor (ModelManager is @MainActor). FluidAudio/Parakeet
+        // already yields off-main; without this, Hub work on MainActor starves the UI.
+        _ = try await Task.detached {
+            try await HubClient.default.downloadSnapshot(
+                of: id,
+                to: directory,
+                progressHandler: { progress in
+                    // Hub handler is @MainActor sync (like FluidAudio); forward like Parakeet.
+                    onProgress?(Self.fraction(from: progress))
+                }
+            )
+        }.value
+
         onProgress?(1)
         let marker = ModelPackageLayout.readyMarker(in: directory)
         try Data().write(to: marker, options: .atomic)
@@ -36,5 +43,21 @@ enum QwenCleanupPackage {
         let contents = (try? FileManager.default.contentsOfDirectory(atPath: directory.path)) ?? []
         let hasWeights = contents.contains { $0.hasSuffix(".safetensors") || $0 == "model.safetensors.index.json" }
         return hasWeights
+    }
+
+    private static func fraction(from progress: Progress) -> Double {
+        let raw = progress.fractionCompleted
+        if raw.isFinite, raw > 0 {
+            return min(max(raw, 0), 1)
+        }
+        let total = progress.totalUnitCount
+        let completed = progress.completedUnitCount
+        if total > 0, completed > 0 {
+            return min(max(Double(completed) / Double(total), 0), 1)
+        }
+        if raw.isFinite {
+            return min(max(raw, 0), 1)
+        }
+        return 0
     }
 }

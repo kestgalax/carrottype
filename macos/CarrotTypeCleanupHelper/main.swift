@@ -30,7 +30,7 @@ do {
 }
 
 guard request.v == CleanupHelperProtocol.version,
-      request.mode == "smart" || request.mode == "smartPlus"
+      request.mode == "smart" || request.mode == "smartPlus" || request.mode == "gemma"
 else {
     failInvalid()
 }
@@ -43,7 +43,11 @@ guard FileManager.default.fileExists(atPath: directory.appendingPathComponent("c
 
 #if arch(arm64)
 do {
-    let text = try await QwenCleanupCore.cleanup(text: request.text, modelDirectory: directory)
+    let text = try await QwenCleanupCore.cleanup(
+        text: request.text,
+        modelDirectory: directory,
+        mode: request.mode
+    )
     emit(.success(text))
     exit(0)
 } catch QwenCleanupCore.CoreError.generationFailed {
