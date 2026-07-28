@@ -6,13 +6,12 @@ Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review 
 
 ## Current phase (after v0.1.9)
 
-Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Public repo visibility is allowed without notarization.
+Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**.
 
 Next ordered focus:
 
-1. After docs land: flip GitHub visibility to **public** when ready (`gh repo edit … --visibility public`).
-2. Optional later: Developer ID sign + notarize (`ops/deploy.md`) for one-click Gatekeeper UX.
-3. Post-v1 research spikes when useful (`docs/research-post-v1-spikes.md`).
+1. Optional later: Developer ID sign + notarize (`ops/deploy.md`) for one-click Gatekeeper UX.
+2. Post-v1 research spikes when useful (`docs/research-post-v1-spikes.md`).
 
 ## Phase gates
 
