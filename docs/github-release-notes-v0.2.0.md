@@ -6,7 +6,7 @@
 
 `CarrotType-0.2.0.dmg` (Apple Silicon, macOS 14+, app bundle without models).
 
-SHA-256 (this build): `_pending_`
+SHA-256 (this build): `0c39c863b30564caad83ce3888e6019b62b5c90d815039988a36fe09728e027d`
 
 ## What’s new
 
