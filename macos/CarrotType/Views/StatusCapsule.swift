@@ -3,11 +3,13 @@ import Combine
 import SwiftUI
 
 /// Compact dictation process indicator near the camera notch (or under the menu bar).
+/// `transformResult` shows selection-transform output with Copy / Close (ADR-012).
 enum StatusCapsulePhase: Equatable {
     case listening
     case understanding
     case writing
     case inserted
+    case transformResult
 }
 
 @MainActor
@@ -22,17 +24,29 @@ final class StatusCapsuleController {
         self.appState = appState
         cancellables.removeAll()
 
-        Publishers.CombineLatest(appState.$capsulePhase, appState.$appLanguage)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] phase, _ in
-                guard let self else { return }
-                if let phase {
-                    self.show(phase: phase)
-                } else {
-                    self.hide()
-                }
+        Publishers.CombineLatest4(
+            appState.$capsulePhase,
+            appState.$transformResultText,
+            appState.$transformResultDirection,
+            appState.$appLanguage
+        )
+        .combineLatest(appState.$transformResultCopiedFeedback)
+        .receive(on: RunLoop.main)
+        .sink { [weak self] phaseLang, copied in
+            guard let self else { return }
+            let (phase, resultText, direction, _) = phaseLang
+            if let phase {
+                self.show(
+                    phase: phase,
+                    resultText: resultText,
+                    direction: direction,
+                    copiedFeedback: copied
+                )
+            } else {
+                self.hide()
             }
-            .store(in: &cancellables)
+        }
+        .store(in: &cancellables)
 
         if screenObserver == nil {
             screenObserver = NotificationCenter.default.addObserver(
@@ -47,28 +61,46 @@ final class StatusCapsuleController {
 
     func sync(phase: StatusCapsulePhase?) {
         if let phase {
-            show(phase: phase)
+            show(
+                phase: phase,
+                resultText: appState?.transformResultText,
+                direction: appState?.transformResultDirection,
+                copiedFeedback: appState?.transformResultCopiedFeedback ?? false
+            )
         } else {
             hide()
         }
     }
 
-    private func show(phase: StatusCapsulePhase) {
+    private func show(
+        phase: StatusCapsulePhase,
+        resultText: String?,
+        direction: String?,
+        copiedFeedback: Bool
+    ) {
         let geometry = StatusCapsuleGeometry.preferred()
         let locale = appState?.effectiveLocale ?? Locale.current
+        let size = geometry.panelSize(for: phase)
         let root = StatusCapsuleView(
             phase: phase,
+            resultText: resultText ?? "",
+            direction: direction,
+            copiedFeedback: copiedFeedback,
             topInset: geometry.contentTopInset,
-            locale: locale
+            locale: locale,
+            onCopy: { [weak self] in self?.appState?.copyTransformResult() },
+            onClose: { [weak self] in self?.appState?.dismissTransformResult() }
         )
+
         if let hosting {
             hosting.rootView = root
+            hosting.frame = NSRect(origin: .zero, size: size)
+            applyPanelInteraction(for: phase)
             positionPanel()
             panel?.orderFrontRegardless()
             return
         }
 
-        let size = geometry.panelSize
         let hostingView = NSHostingView(rootView: root)
         hostingView.frame = NSRect(origin: .zero, size: size)
 
@@ -85,13 +117,18 @@ final class StatusCapsuleController {
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
         panel.hidesOnDeactivate = false
         panel.isReleasedWhenClosed = false
-        panel.ignoresMouseEvents = true
         panel.contentView = hostingView
 
         self.panel = panel
         self.hosting = hostingView
+        applyPanelInteraction(for: phase)
         positionPanel()
         panel.orderFrontRegardless()
+    }
+
+    private func applyPanelInteraction(for phase: StatusCapsulePhase) {
+        // Status phases stay click-through; result must accept Copy / Close clicks.
+        panel?.ignoresMouseEvents = (phase != .transformResult)
     }
 
     private func hide() {
@@ -104,17 +141,22 @@ final class StatusCapsuleController {
     }
 
     private func positionPanel() {
-        guard let panel else { return }
+        guard let panel, let appState, let phase = appState.capsulePhase else { return }
         let geometry = StatusCapsuleGeometry.preferred()
-        let size = geometry.panelSize
+        let size = geometry.panelSize(for: phase)
         panel.setContentSize(size)
         hosting?.frame = NSRect(origin: .zero, size: size)
-        panel.setFrame(NSRect(origin: geometry.origin, size: size), display: true)
-        if let hosting, let appState {
+        panel.setFrame(NSRect(origin: geometry.origin(for: phase), size: size), display: true)
+        if let hosting {
             hosting.rootView = StatusCapsuleView(
-                phase: hosting.rootView.phase,
+                phase: phase,
+                resultText: appState.transformResultText ?? "",
+                direction: appState.transformResultDirection,
+                copiedFeedback: appState.transformResultCopiedFeedback,
                 topInset: geometry.contentTopInset,
-                locale: appState.effectiveLocale
+                locale: appState.effectiveLocale,
+                onCopy: { [weak self] in self?.appState?.copyTransformResult() },
+                onClose: { [weak self] in self?.appState?.dismissTransformResult() }
             )
         }
     }
@@ -141,9 +183,13 @@ struct StatusCapsuleGeometry {
         hasNotch ? notchHeight : 0
     }
 
-    var panelSize: NSSize {
+    func panelSize(for phase: StatusCapsulePhase) -> NSSize {
+        if phase == .transformResult {
+            let width: CGFloat = hasNotch ? max(notchWidth + 24, 360) : 360
+            let height = contentTopInset + 200
+            return NSSize(width: width, height: height)
+        }
         if hasNotch {
-            // Slightly wider than the housing so the black capsule reads as one island.
             let width = max(notchWidth + 24, 148)
             return NSSize(width: width, height: notchHeight + visibleDrop)
         }
@@ -151,8 +197,8 @@ struct StatusCapsuleGeometry {
     }
 
     /// Top-left of the panel in Cocoa screen coords (origin bottom-left).
-    var origin: NSPoint {
-        let size = panelSize
+    func origin(for phase: StatusCapsulePhase) -> NSPoint {
+        let size = panelSize(for: phase)
         let x = centerX - size.width / 2
         if hasNotch {
             return NSPoint(x: x, y: screenTopY - size.height)
@@ -199,9 +245,14 @@ struct StatusCapsuleGeometry {
 
 struct StatusCapsuleView: View {
     let phase: StatusCapsulePhase
+    var resultText: String
+    var direction: String?
+    var copiedFeedback: Bool
     /// Matches physical notch height so content sits below the camera brow.
     var topInset: CGFloat
     var locale: Locale
+    var onCopy: () -> Void
+    var onClose: () -> Void
 
     @State private var pulse = false
 
@@ -210,9 +261,15 @@ struct StatusCapsuleView: View {
             Color.clear
                 .frame(height: max(0, topInset))
 
-            contentRow
-                .frame(minWidth: 96, maxWidth: 148)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            Group {
+                if phase == .transformResult {
+                    resultContent
+                } else {
+                    contentRow
+                        .frame(minWidth: 96, maxWidth: 148)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
         }
         .background {
             RoundedRectangle(cornerRadius: islandCornerRadius, style: .continuous)
@@ -228,6 +285,66 @@ struct StatusCapsuleView: View {
 
     private var islandCornerRadius: CGFloat {
         topInset > 0 ? 18 : 16
+    }
+
+    private var resultContent: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            if let direction, !direction.isEmpty {
+                Text(direction)
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.55))
+            }
+
+            ScrollView {
+                Text(resultText)
+                    .font(.system(size: 13, weight: .regular, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.95))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .textSelection(.enabled)
+            }
+            .frame(maxHeight: 140)
+
+            HStack(spacing: 8) {
+                Button {
+                    onCopy()
+                } label: {
+                    Text(
+                        copiedFeedback
+                            ? L10n.t("capsule.transform_copied", locale: locale)
+                            : L10n.t("capsule.transform_copy", locale: locale)
+                    )
+                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.black)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule(style: .continuous)
+                            .fill(Color.white.opacity(copiedFeedback ? 0.85 : 1.0))
+                    )
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    onClose()
+                } label: {
+                    Text(L10n.t("capsule.transform_close", locale: locale))
+                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.95))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            Capsule(style: .continuous)
+                                .strokeBorder(Color.white.opacity(0.35), lineWidth: 1)
+                        )
+                }
+                .buttonStyle(.plain)
+
+                Spacer(minLength: 0)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.bottom, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 
     @ViewBuilder
@@ -264,6 +381,8 @@ struct StatusCapsuleView: View {
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.95))
                 label(L10n.t("capsule.inserted", locale: locale))
+            case .transformResult:
+                EmptyView()
             }
         }
         .padding(.horizontal, 14)

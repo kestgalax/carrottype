@@ -5,6 +5,7 @@
 - MVP is a **macOS menu-bar** dictation app (Apple Silicon first, macOS 14+).
 - Do not expand to iOS, Windows, or cloud-first SaaS without an accepted ADR and product-intent change.
 - Primary loop stays: hotkey → local STT → optional formatting → caret paste.
+- Secondary loop (ADR-012): transform **bindings** → read selection → local LLM (Translate pair flip or custom instructions) → Capsule result (Copy / Close); reuse cleanup helper packages only.
 
 ## Engines and models
 

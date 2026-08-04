@@ -11,7 +11,12 @@ protocol STTEngine: Sendable {
 }
 
 protocol CleanupEngine: Sendable {
-    func cleanup(text: String, mode: CleanupMode, modelDirectory: URL?) async throws -> String
+    func cleanup(
+        text: String,
+        mode: CleanupMode,
+        modelDirectory: URL?,
+        instructions: String?
+    ) async throws -> String
     func unload() async
 }
 
@@ -42,16 +47,34 @@ final class DictationPipeline {
         let mode = modelManager.cleanupMode
         if mode.usesMLXHelper, modelManager.cleanupModelDirectory() == nil {
             // Package still downloading / missing — keep STT result via Light (download offered on select).
-            return try await lightCleanup.cleanup(text: raw, mode: .light, modelDirectory: nil)
+            return try await lightCleanup.cleanup(text: raw, mode: .light, modelDirectory: nil, instructions: nil)
         }
         do {
             let directory = modelManager.cleanupModelDirectory()
             return try await selectedCleanupEngine(for: mode)
-                .cleanup(text: raw, mode: mode, modelDirectory: directory)
+                .cleanup(text: raw, mode: mode, modelDirectory: directory, instructions: nil)
         } catch {
             // Never lose the STT result if Smart/Gemma cleanup fails.
-            return try await lightCleanup.cleanup(text: raw, mode: .light, modelDirectory: nil)
+            return try await lightCleanup.cleanup(text: raw, mode: .light, modelDirectory: nil, instructions: nil)
         }
+    }
+
+    /// Selection transform (ADR-012): custom instructions + explicit MLX mode/package.
+    func transform(
+        text: String,
+        mode: CleanupMode,
+        modelDirectory: URL,
+        instructions: String
+    ) async throws -> String {
+        guard mode.usesMLXHelper else {
+            throw CleanupEngineError.modelMissing
+        }
+        return try await qwenCleanup.cleanup(
+            text: text,
+            mode: mode,
+            modelDirectory: modelDirectory,
+            instructions: instructions
+        )
     }
 
     func unloadAll() async {

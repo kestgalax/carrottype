@@ -24,6 +24,8 @@ Build a macOS background / menu-bar app whose primary loop is:
 6. Optional: keep the result on the clipboard after paste so ⌘V still works if focus moved.
 7. UI language follows the system (RU/EN) with an in-app override.
 
+**Secondary loop** (ADR-012): transform **bindings** (hotkey + Translate with a user language pair, or Custom instruction + model) read the current text selection, run an on-device LLM, and show the result in the Status Capsule (Copy / Close, optional direction) without replacing the selection. Fresh default: Translate on ⌥' with pair ru↔en. Uses the same local cleanup packages as Smart formatting; does not require formatting to be active for dictation.
+
 Prefer a small, dependable MVP over feature breadth. Inspiration from products like TypeWhisper / Voicebox is allowed for UX direction only — no code or branding copying.
 
 ## Principles
@@ -59,4 +61,4 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 
 ## Current product status (2026-07)
 
-**v0.1.9** ships as an unsigned DMG (Right-click → Open): optional Gemma 4 E2B cleanup beside Smart/Smart+ (ADR-010); hardened literal cleanup prompt; Status Capsule; OOP cleanup helper (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public** for portfolio/open use; notarization is optional later, not required for visibility.
+**v0.2.0** ships as an unsigned DMG (Right-click → Open / Privacy & Security → Open Anyway): **Selection Transform** (ADR-012) — bindings with Translate (bidirectional language pair, default ru↔en) or Custom instructions; result in Status Capsule (Copy / Close). Also includes optional Gemma 4 E2B cleanup (ADR-010), Status Capsule dictation chrome, OOP cleanup helper (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public**; notarization is optional later.

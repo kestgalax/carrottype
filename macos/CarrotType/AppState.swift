@@ -1,4 +1,5 @@
 import AppKit
+import Carbon
 import Combine
 import Foundation
 
@@ -11,6 +12,12 @@ final class AppState: ObservableObject {
     }
     /// Session chrome phase for Status Capsule (nil = hidden).
     @Published private(set) var capsulePhase: StatusCapsulePhase?
+    /// Text shown while `capsulePhase == .transformResult` (ADR-012).
+    @Published private(set) var transformResultText: String?
+    /// Optional direction hint for Translate bindings (e.g. `EN → RU`).
+    @Published private(set) var transformResultDirection: String?
+    /// Brief Copy-button feedback while result capsule is open.
+    @Published private(set) var transformResultCopiedFeedback = false
     @Published var showFirstRun: Bool
     @Published var lastSessionError: String?
     /// Live mic level while recording (level decay / future meters).
@@ -43,8 +50,10 @@ final class AppState: ObservableObject {
             UserDefaults.standard.set(unmuteMicDuringDictation, forKey: Keys.unmuteDuringDictation)
         }
     }
-
     var effectiveLocale: Locale { appLanguage.effectiveLocale }
+
+    /// Selection-transform bindings (hotkey + kind + model); persisted via HotkeyService.
+    var transformBindings: [TransformBinding] { hotkey.transformBindings }
 
     let modelManager: ModelManager
     let permissions: PermissionService
@@ -62,6 +71,8 @@ final class AppState: ObservableObject {
     private var modelUnloadTask: Task<Void, Never>?
     /// Invalidates in-flight Writing → Inserted sleeps when a new session starts or cancels.
     private var capsuleSequenceToken = UUID()
+    /// Clears the temporary "Copied" label on the transform result capsule.
+    private var transformCopiedFeedbackTask: Task<Void, Never>?
     /// Counts nested Settings appearances so SwiftUI remounts do not clear the mic meter.
     private var settingsAppearanceCount = 0
 
@@ -174,10 +185,24 @@ final class AppState: ObservableObject {
         hotkey.setOnHotkey { [weak self] in
             self?.handleHotkeyPressed()
         }
-        hotkey.setOnEscapeCancel { [weak self] in
-            Task { await self?.cancelDictationSession() }
+        hotkey.setOnTransformHotkey { [weak self] bindingID in
+            self?.handleTransformHotkeyPressed(bindingID: bindingID)
         }
-        hotkey.registerGlobalHotkey()
+        hotkey.setOnEscapeCancel { [weak self] in
+            guard let self else { return }
+            if self.capsulePhase == .transformResult {
+                self.dismissTransformResult()
+                return
+            }
+            Task { await self.cancelDictationSession() }
+        }
+
+        let preferredMode = Self.preferredTransformCleanupMode(modelManager: modelManager)
+        let bindings = TransformBindingsStore.load(
+            defaults: defaults,
+            preferredCleanupMode: preferredMode
+        )
+        hotkey.replaceTransformBindings(bindings)
 
         refreshMenuBarMode()
     }
@@ -292,6 +317,10 @@ final class AppState: ObservableObject {
 
     /// Toggle: start recording → stop → transcribe → paste at caret.
     private func handleHotkeyPressed() {
+        if capsulePhase == .transformResult {
+            dismissTransformResult()
+        }
+
         if isProcessing || menuBarMode == .processing || menuBarMode == .cleanup {
             return
         }
@@ -308,6 +337,227 @@ final class AppState: ObservableObject {
         }
 
         Task { await startDictationSession() }
+    }
+
+    /// Selection transform (ADR-012): read selection → LLM → show result in Capsule.
+    private func handleTransformHotkeyPressed(bindingID: UUID) {
+        if isProcessing || menuBarMode == .recording || menuBarMode == .processing || menuBarMode == .cleanup {
+            return
+        }
+        guard let binding = hotkey.binding(id: bindingID) else { return }
+        if capsulePhase == .transformResult {
+            dismissTransformResult()
+        }
+        Task { await runSelectionTransform(binding: binding) }
+    }
+
+    /// Ready MLX modes for the transform model picker.
+    var selectableTransformModes: [CleanupMode] {
+        [.smart, .smartPlus, .gemma].filter { modelManager.isCleanupPackageReady(for: $0) }
+    }
+
+    var canAddTransformBinding: Bool {
+        transformBindings.count < TransformBinding.maxCount
+    }
+
+    func preferredTransformCleanupMode() -> CleanupMode {
+        Self.preferredTransformCleanupMode(modelManager: modelManager)
+    }
+
+    private static func preferredTransformCleanupMode(modelManager: ModelManager) -> CleanupMode {
+        if modelManager.isCleanupPackageReady(for: .smartPlus) { return .smartPlus }
+        for mode in [CleanupMode.smart, .gemma] where modelManager.isCleanupPackageReady(for: mode) {
+            return mode
+        }
+        return .smart
+    }
+
+    func addTransformBinding() {
+        guard canAddTransformBinding else { return }
+        var binding = TransformBinding.makeDefault(cleanupMode: preferredTransformCleanupMode())
+        binding.chord = nextAvailableTransformChord()
+        var next = transformBindings
+        next.append(binding)
+        hotkey.replaceTransformBindings(next)
+        objectWillChange.send()
+    }
+
+    func removeTransformBinding(id: UUID) {
+        let next = transformBindings.filter { $0.id != id }
+        hotkey.replaceTransformBindings(next)
+        objectWillChange.send()
+    }
+
+    func updateTransformBinding(_ binding: TransformBinding) {
+        var next = transformBindings
+        guard let index = next.firstIndex(where: { $0.id == binding.id }) else { return }
+        var updated = binding
+        updated.ensureDistinctLanguages()
+        if !updated.cleanupMode.usesMLXHelper {
+            updated.cleanupMode = preferredTransformCleanupMode()
+        }
+        next[index] = updated
+        hotkey.replaceTransformBindings(next)
+        objectWillChange.send()
+    }
+
+    private func nextAvailableTransformChord() -> KeyChord {
+        let used = Set(transformBindings.map(\.chord))
+        let dictation = hotkey.chord
+        let candidates: [KeyChord] = [
+            .defaultTransform,
+            KeyChord(keyCode: 39, carbonModifiers: UInt32(optionKey | shiftKey)),
+            KeyChord(keyCode: 37, carbonModifiers: UInt32(optionKey)), // ⌥L
+            KeyChord(keyCode: 35, carbonModifiers: UInt32(optionKey)), // ⌥P
+            KeyChord(keyCode: 17, carbonModifiers: UInt32(optionKey)), // ⌥T
+            KeyChord(keyCode: 16, carbonModifiers: UInt32(optionKey)), // ⌥Y
+        ]
+        for chord in candidates where chord != dictation && !used.contains(chord) {
+            return chord
+        }
+        // Last resort: still assign default; capture UI will surface conflicts on change.
+        return .defaultTransform
+    }
+
+    func presentTransformResult(_ text: String, direction: String? = nil) {
+        invalidateCapsuleSequence()
+        transformResultCopiedFeedback = false
+        transformCopiedFeedbackTask?.cancel()
+        transformResultText = text
+        transformResultDirection = direction
+        capsulePhase = .transformResult
+        hotkey.setEscapeCancelRegistered(true)
+    }
+
+    func dismissTransformResult() {
+        transformCopiedFeedbackTask?.cancel()
+        transformCopiedFeedbackTask = nil
+        transformResultCopiedFeedback = false
+        transformResultText = nil
+        transformResultDirection = nil
+        if capsulePhase == .transformResult {
+            capsulePhase = nil
+        }
+        // Escape is shared with dictation cancel — only keep it while recording.
+        if menuBarMode != .recording {
+            hotkey.setEscapeCancelRegistered(false)
+        }
+        statusCapsule.sync(phase: capsulePhase)
+    }
+
+    func copyTransformResult() {
+        guard let text = transformResultText, !text.isEmpty else { return }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(text, forType: .string)
+        transformResultCopiedFeedback = true
+        transformCopiedFeedbackTask?.cancel()
+        transformCopiedFeedbackTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
+            guard let self, !Task.isCancelled else { return }
+            self.transformResultCopiedFeedback = false
+        }
+    }
+
+    private func runSelectionTransform(binding: TransformBinding) async {
+        let locale = effectiveLocale
+
+        guard permissions.accessibilityGranted else {
+            lastSessionError = L10n.t("error.accessibility_denied", locale: locale)
+            menuBarMode = .error
+            refreshMenuBarMode()
+            return
+        }
+
+        var mode = binding.cleanupMode
+        if !mode.usesMLXHelper || !modelManager.isCleanupPackageReady(for: mode) {
+            if let fallback = selectableTransformModes.first {
+                mode = fallback
+                var fixed = binding
+                fixed.cleanupMode = fallback
+                updateTransformBinding(fixed)
+            } else {
+                lastSessionError = L10n.t("error.transform_model_missing", locale: locale)
+                menuBarMode = .error
+                refreshMenuBarMode()
+                return
+            }
+        }
+
+        guard let modelDirectory = modelManager.cleanupModelDirectory(for: mode) else {
+            lastSessionError = L10n.t("error.transform_model_missing", locale: locale)
+            menuBarMode = .error
+            refreshMenuBarMode()
+            return
+        }
+
+        isProcessing = true
+        lastSessionError = nil
+        cancelScheduledModelUnload()
+        invalidateCapsuleSequence()
+        transformResultText = nil
+        transformResultDirection = nil
+        transformResultCopiedFeedback = false
+        menuBarMode = .cleanup
+        capsulePhase = .understanding
+        defer {
+            isProcessing = false
+            if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
+            refreshMenuBarMode()
+            Task { await pipeline.unloadAll() }
+        }
+
+        do {
+            let selected = try await SelectionTextService.readSelectedText()
+            let instruction: String
+            var direction: String?
+            switch binding.kind {
+            case .translate:
+                let uiCode = locale.language.languageCode?.identifier ?? "en"
+                let preferred = LanguagePairDetector.preferredTarget(
+                    languageA: binding.languageA,
+                    languageB: binding.languageB,
+                    uiLanguageCode: uiCode
+                )
+                let flip = LanguagePairDetector.flip(
+                    text: selected,
+                    languageA: binding.languageA,
+                    languageB: binding.languageB,
+                    preferredTarget: preferred
+                )
+                instruction = LanguagePairDetector.translateInstruction(
+                    targetCode: flip.targetCode,
+                    uiLocale: locale
+                )
+                direction = LanguagePairDetector.directionLabel(
+                    sourceCode: flip.sourceCode,
+                    targetCode: flip.targetCode
+                )
+            case .custom:
+                let trimmed = binding.customInstruction.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard !trimmed.isEmpty else {
+                    lastSessionError = L10n.t("error.transform_empty_instruction", locale: locale)
+                    clearCapsulePhase()
+                    menuBarMode = .error
+                    return
+                }
+                instruction = trimmed
+            }
+
+            let result = try await pipeline.transform(
+                text: selected,
+                mode: mode,
+                modelDirectory: modelDirectory,
+                instructions: instruction
+            )
+            lastSessionError = nil
+            menuBarMode = .idle
+            presentTransformResult(result, direction: direction)
+        } catch {
+            lastSessionError = error.localizedDescription
+            clearCapsulePhase()
+            menuBarMode = .error
+        }
     }
 
     private func startDictationSession() async {
@@ -433,7 +683,15 @@ final class AppState: ObservableObject {
 
     private func clearCapsulePhase() {
         invalidateCapsuleSequence()
+        transformCopiedFeedbackTask?.cancel()
+        transformCopiedFeedbackTask = nil
+        transformResultCopiedFeedback = false
+        transformResultText = nil
+        transformResultDirection = nil
         capsulePhase = nil
+        if menuBarMode != .recording {
+            hotkey.setEscapeCancelRegistered(false)
+        }
         statusCapsule.sync(phase: nil)
     }
 
@@ -490,6 +748,7 @@ final class AppState: ObservableObject {
         Task { @MainActor in
             await pipeline.unloadAll()
             modelManager.deletePackage(packageID)
+            reloadTransformBindingsFromStore()
             if let message = modelManager.lastError {
                 lastSessionError = message
             }
@@ -501,11 +760,22 @@ final class AppState: ObservableObject {
         Task { @MainActor in
             await pipeline.unloadAll()
             modelManager.deleteUnusedPackages()
+            reloadTransformBindingsFromStore()
             if let message = modelManager.lastError {
                 lastSessionError = message
             }
             refreshMenuBarMode()
         }
+    }
+
+    private func reloadTransformBindingsFromStore() {
+        let preferred = preferredTransformCleanupMode()
+        let bindings = TransformBindingsStore.load(
+            defaults: .standard,
+            preferredCleanupMode: preferred
+        )
+        hotkey.replaceTransformBindings(bindings)
+        objectWillChange.send()
     }
 
     private enum Keys {

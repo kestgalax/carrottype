@@ -152,7 +152,11 @@ struct ModelsSettingsPane: View {
         } header: {
             Text(L10n.t("format.section", locale: locale))
         } footer: {
-            Text(L10n.t("format.footer", locale: locale))
+            Text(
+                L10n.t("format.footer", locale: locale)
+                    + "\n"
+                    + L10n.t("transform.models_hint", locale: locale)
+            )
         }
     }
 

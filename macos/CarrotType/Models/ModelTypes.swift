@@ -35,7 +35,7 @@ struct InstalledPackageFootprint: Identifiable, Equatable {
     let bytes: Int64
 }
 
-enum CleanupMode: String, CaseIterable, Identifiable, Hashable {
+enum CleanupMode: String, Codable, CaseIterable, Identifiable, Hashable {
     case off
     case light
     case smart

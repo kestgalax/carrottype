@@ -21,7 +21,12 @@ actor QwenCleanupEngine: CleanupEngine {
     /// Wall-clock budget for cold load + generate (helper is killed on timeout).
     private static let timeoutNanoseconds: UInt64 = 120_000_000_000
 
-    func cleanup(text: String, mode: CleanupMode, modelDirectory: URL?) async throws -> String {
+    func cleanup(
+        text: String,
+        mode: CleanupMode,
+        modelDirectory: URL?,
+        instructions: String?
+    ) async throws -> String {
         switch mode {
         case .off:
             return text
@@ -43,7 +48,8 @@ actor QwenCleanupEngine: CleanupEngine {
         let request = CleanupHelperRequest(
             text: text,
             mode: mode.rawValue,
-            modelDirectory: modelDirectory.path
+            modelDirectory: modelDirectory.path,
+            instructions: instructions
         )
         let requestData = try JSONEncoder().encode(request)
         let response = try await Self.runHelper(

@@ -29,7 +29,7 @@ do {
     failInvalid()
 }
 
-guard request.v == CleanupHelperProtocol.version,
+guard request.v == CleanupHelperProtocol.version || request.v == 1,
       request.mode == "smart" || request.mode == "smartPlus" || request.mode == "gemma"
 else {
     failInvalid()
@@ -46,7 +46,8 @@ do {
     let text = try await QwenCleanupCore.cleanup(
         text: request.text,
         modelDirectory: directory,
-        mode: request.mode
+        mode: request.mode,
+        instructions: request.instructions
     )
     emit(.success(text))
     exit(0)

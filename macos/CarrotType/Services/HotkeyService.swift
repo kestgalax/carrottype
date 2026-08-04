@@ -2,11 +2,16 @@ import AppKit
 import Carbon
 import Foundation
 
-struct KeyChord: Equatable, Codable {
+struct KeyChord: Equatable, Hashable, Codable {
     var keyCode: UInt16
     var carbonModifiers: UInt32
 
     static let `default` = KeyChord(keyCode: 44, carbonModifiers: UInt32(optionKey)) // ⌥/
+    /// Default selection-transform chord (ADR-012): ⌥'
+    static let defaultTransform = KeyChord(
+        keyCode: 39,
+        carbonModifiers: UInt32(optionKey)
+    )
 
     var displayString: String {
         var parts: [String] = []
@@ -97,6 +102,11 @@ struct KeyChord: Equatable, Codable {
     }
 }
 
+enum HotkeyCaptureTarget: Equatable {
+    case dictation
+    case transformBinding(UUID)
+}
+
 /// Carbon callbacks cannot capture Swift context; bridge via unsafe pointer.
 private func carrottypeHotKeyEventHandler(
     _ nextHandler: EventHandlerCallRef?,
@@ -123,7 +133,9 @@ private func carrottypeHotKeyEventHandler(
         case 2:
             service.handleCarbonEscapeCancel()
         default:
-            break
+            if hkID.id >= 3 {
+                service.handleCarbonTransformHotkey(carbonID: hkID.id)
+            }
         }
     }
     return noErr
@@ -132,14 +144,21 @@ private func carrottypeHotKeyEventHandler(
 @MainActor
 final class HotkeyService: ObservableObject {
     @Published private(set) var chord: KeyChord
+    @Published private(set) var transformBindings: [TransformBinding] = []
     @Published var isRecording = false
+    @Published private(set) var captureTarget: HotkeyCaptureTarget?
+    @Published private(set) var lastCaptureConflict = false
+    @Published private(set) var lastConflictTarget: HotkeyCaptureTarget?
 
     private let defaults: UserDefaults
     private var hotKeyRef: EventHotKeyRef?
+    private var transformHotKeyRefs: [EventHotKeyRef?] = []
+    private var transformCarbonIDByBindingID: [UUID: UInt32] = [:]
     private var escapeHotKeyRef: EventHotKeyRef?
     private var eventHandler: EventHandlerRef?
     private var localMonitor: Any?
     private var onHotkey: (() -> Void)?
+    private var onTransformHotkey: ((UUID) -> Void)?
     private var onEscapeCancel: (() -> Void)?
 
     private let hotKeyID = EventHotKeyID(signature: OSType(0x43525450), id: 1) // 'CRTP'
@@ -147,19 +166,29 @@ final class HotkeyService: ObservableObject {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        if let data = defaults.data(forKey: "carrottype.hotkeyChord"),
+        let dictation: KeyChord
+        if let data = defaults.data(forKey: Keys.dictationChord),
            let saved = try? JSONDecoder().decode(KeyChord.self, from: data) {
-            self.chord = saved
+            dictation = saved
         } else {
-            self.chord = .default
-            persist(chord)
+            dictation = .default
         }
+        self.chord = dictation
+        if defaults.data(forKey: Keys.dictationChord) == nil {
+            persistDictation(dictation)
+        }
+        // Bindings applied by AppState via `replaceTransformBindings` once preferred MLX mode is known.
+        self.transformBindings = []
     }
 
     var displayString: String { chord.displayString }
 
     func setOnHotkey(_ handler: @escaping () -> Void) {
         onHotkey = handler
+    }
+
+    func setOnTransformHotkey(_ handler: @escaping (UUID) -> Void) {
+        onTransformHotkey = handler
     }
 
     func setOnEscapeCancel(_ handler: @escaping () -> Void) {
@@ -170,11 +199,17 @@ final class HotkeyService: ObservableObject {
         onHotkey?()
     }
 
+    func handleCarbonTransformHotkey(carbonID: UInt32) {
+        guard let bindingID = transformCarbonIDByBindingID.first(where: { $0.value == carbonID })?.key else {
+            return
+        }
+        onTransformHotkey?(bindingID)
+    }
+
     func handleCarbonEscapeCancel() {
         onEscapeCancel?()
     }
 
-    /// Global Esc only while dictation capture is active — do not steal Esc when idle.
     func setEscapeCancelRegistered(_ enabled: Bool) {
         if enabled {
             registerEscapeCancelHotkey()
@@ -183,8 +218,26 @@ final class HotkeyService: ObservableObject {
         }
     }
 
-    func startRecording() {
+    /// Replace bindings (from AppState) and re-register hotkeys.
+    func replaceTransformBindings(_ bindings: [TransformBinding]) {
+        transformBindings = Array(bindings.prefix(TransformBinding.maxCount))
+        TransformBindingsStore.save(transformBindings, defaults: defaults)
+        // Drop legacy single-chord key once bindings own chords.
+        defaults.removeObject(forKey: Keys.legacyTransformChord)
+        defaults.removeObject(forKey: Keys.legacyTransformDisplay)
+        registerGlobalHotkey()
+        objectWillChange.send()
+    }
+
+    func binding(id: UUID) -> TransformBinding? {
+        transformBindings.first { $0.id == id }
+    }
+
+    func startRecording(for target: HotkeyCaptureTarget = .dictation) {
         stopRecordingMonitor()
+        lastCaptureConflict = false
+        lastConflictTarget = nil
+        captureTarget = target
         isRecording = true
         localMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             guard let self else { return event }
@@ -193,7 +246,7 @@ final class HotkeyService: ObservableObject {
                 return nil
             }
             guard let chord = KeyChord.from(event: event) else { return event }
-            Task { @MainActor in self.apply(chord) }
+            Task { @MainActor in self.apply(chord, for: target) }
             return nil
         }
     }
@@ -201,37 +254,90 @@ final class HotkeyService: ObservableObject {
     func cancelRecording() {
         stopRecordingMonitor()
         isRecording = false
+        captureTarget = nil
     }
 
-    func apply(_ chord: KeyChord) {
+    func apply(_ chord: KeyChord, for target: HotkeyCaptureTarget) {
         stopRecordingMonitor()
         isRecording = false
-        self.chord = chord
-        persist(chord)
-        registerGlobalHotkey()
+        captureTarget = nil
+
+        switch target {
+        case .dictation:
+            if transformBindings.contains(where: { $0.chord == chord }) {
+                lastCaptureConflict = true
+                lastConflictTarget = .dictation
+                return
+            }
+            lastCaptureConflict = false
+            lastConflictTarget = nil
+            self.chord = chord
+            persistDictation(chord)
+            registerGlobalHotkey()
+        case .transformBinding(let id):
+            if chord == self.chord || transformBindings.contains(where: { $0.id != id && $0.chord == chord }) {
+                lastCaptureConflict = true
+                lastConflictTarget = target
+                return
+            }
+            lastCaptureConflict = false
+            lastConflictTarget = nil
+            guard let index = transformBindings.firstIndex(where: { $0.id == id }) else { return }
+            transformBindings[index].chord = chord
+            TransformBindingsStore.save(transformBindings, defaults: defaults)
+            registerGlobalHotkey()
+            objectWillChange.send()
+        }
     }
 
     func resetToDefault() {
-        apply(.default)
+        apply(.default, for: .dictation)
+    }
+
+    func resetTransformBindingToDefault(id: UUID) {
+        apply(.defaultTransform, for: .transformBinding(id))
     }
 
     func registerGlobalHotkey() {
         unregisterGlobalHotkey()
         installHandlerIfNeeded()
 
-        var ref: EventHotKeyRef?
-        let status = RegisterEventHotKey(
+        var dictationRef: EventHotKeyRef?
+        let dictationStatus = RegisterEventHotKey(
             UInt32(chord.keyCode),
             chord.carbonModifiers,
             hotKeyID,
             GetApplicationEventTarget(),
             0,
-            &ref
+            &dictationRef
         )
-        if status == noErr {
-            hotKeyRef = ref
+        if dictationStatus == noErr {
+            hotKeyRef = dictationRef
         } else {
-            NSLog("CarrotType: RegisterEventHotKey failed status=%d", status)
+            NSLog("CarrotType: RegisterEventHotKey dictation failed status=%d", dictationStatus)
+        }
+
+        transformCarbonIDByBindingID.removeAll()
+        transformHotKeyRefs = []
+        for (offset, binding) in transformBindings.enumerated() {
+            let carbonID = UInt32(3 + offset)
+            let hotKeyID = EventHotKeyID(signature: OSType(0x43525450), id: carbonID)
+            var ref: EventHotKeyRef?
+            let status = RegisterEventHotKey(
+                UInt32(binding.chord.keyCode),
+                binding.chord.carbonModifiers,
+                hotKeyID,
+                GetApplicationEventTarget(),
+                0,
+                &ref
+            )
+            if status == noErr {
+                transformHotKeyRefs.append(ref)
+                transformCarbonIDByBindingID[binding.id] = carbonID
+            } else {
+                transformHotKeyRefs.append(nil)
+                NSLog("CarrotType: RegisterEventHotKey transform[%d] failed status=%d", offset, status)
+            }
         }
     }
 
@@ -240,6 +346,13 @@ final class HotkeyService: ObservableObject {
             UnregisterEventHotKey(hotKeyRef)
             self.hotKeyRef = nil
         }
+        for ref in transformHotKeyRefs {
+            if let ref {
+                UnregisterEventHotKey(ref)
+            }
+        }
+        transformHotKeyRefs = []
+        transformCarbonIDByBindingID.removeAll()
     }
 
     private func registerEscapeCancelHotkey() {
@@ -247,7 +360,6 @@ final class HotkeyService: ObservableObject {
         installHandlerIfNeeded()
 
         var ref: EventHotKeyRef?
-        // Bare Escape (keyCode 53), no modifiers.
         let status = RegisterEventHotKey(
             53,
             0,
@@ -270,11 +382,11 @@ final class HotkeyService: ObservableObject {
         }
     }
 
-    private func persist(_ chord: KeyChord) {
+    private func persistDictation(_ chord: KeyChord) {
         if let data = try? JSONEncoder().encode(chord) {
-            defaults.set(data, forKey: "carrottype.hotkeyChord")
+            defaults.set(data, forKey: Keys.dictationChord)
         }
-        defaults.set(chord.displayString, forKey: "carrottype.hotkeyDisplay")
+        defaults.set(chord.displayString, forKey: Keys.dictationDisplay)
     }
 
     private func stopRecordingMonitor() {
@@ -300,5 +412,12 @@ final class HotkeyService: ObservableObject {
             pointer,
             &eventHandler
         )
+    }
+
+    private enum Keys {
+        static let dictationChord = "carrottype.hotkeyChord"
+        static let dictationDisplay = "carrottype.hotkeyDisplay"
+        static let legacyTransformChord = "carrottype.transformHotkeyChord"
+        static let legacyTransformDisplay = "carrottype.transformHotkeyDisplay"
     }
 }

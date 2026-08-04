@@ -1,2572 +1,3046 @@
 {
-  "sourceLanguage" : "ru",
-  "strings" : {
-    "%@ · %@" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ · %2$@"
+  "sourceLanguage": "ru",
+  "strings": {
+    "%@ · %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ · %2$@"
           }
         }
       }
     },
-    "a11y.cleanup" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType is formatting text"
+    "a11y.cleanup": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType is formatting text"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType оформляет текст"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType оформляет текст"
           }
         }
       }
     },
-    "a11y.error" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType error"
+    "a11y.error": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType error"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType ошибка"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType ошибка"
           }
         }
       }
     },
-    "a11y.idle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType ready"
+    "a11y.idle": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType ready"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType готов"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType готов"
           }
         }
       }
     },
-    "a11y.mic_level" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Microphone level"
+    "a11y.mic_level": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone level"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Уровень микрофона"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уровень микрофона"
           }
         }
       }
     },
-    "a11y.mic_level_value" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d percent"
+    "a11y.mic_level_value": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d percent"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d процентов"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d процентов"
           }
         }
       }
     },
-    "a11y.processing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType is transcribing"
+    "a11y.processing": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType is transcribing"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType распознаёт"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType распознаёт"
           }
         }
       }
     },
-    "a11y.recording" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType is recording"
+    "a11y.recording": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType is recording"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType записывает"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType записывает"
           }
         }
       }
     },
-    "a11y.setup" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType needs setup"
+    "a11y.setup": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType needs setup"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CarrotType нужно настроить"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType нужно настроить"
           }
         }
       }
     },
-    "CarrotType" : {
-
+    "CarrotType": {},
+    "catalog.blurb.cleanup.gemma4-e2b-4bit": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MLX · optional · ~3.5 GB · larger than Smart · Apple Silicon"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MLX · опционально · ~3.5 ГБ · тяжелее Smart · Apple Silicon"
+          }
+        }
+      }
+    },
+    "catalog.blurb.cleanup.qwen3-0.6b-4bit": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MLX · Smart formatting · Apple Silicon"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MLX · Smart-оформление · Apple Silicon"
+          }
+        }
+      }
+    },
+    "catalog.blurb.cleanup.qwen3-1.7b-4bit": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MLX · heavy · expect ~1–2 GB RAM while running · Apple Silicon"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MLX · тяжёлая · учитывайте ~1–2 ГБ памяти во время работы · Apple Silicon"
+          }
+        }
+      }
+    },
+    "catalog.blurb.stt.parakeet-tdt-0.6b-v3": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optimized for Apple Silicon · ~700 MB"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Под Apple Silicon · ~700 МБ"
+          }
+        }
+      }
+    },
+    "catalog.blurb.stt.apple-speechanalyzer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System on-device STT · macOS 26+ · Prepare assets"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Системный on-device STT · macOS 26+ · Подготовить assets"
+          }
+        }
+      }
+    },
+    "catalog.blurb.stt.whisper-base-ggml": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light & quick · ~148 MB"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лёгкий и быстрый · ~148 МБ"
+          }
+        }
+      }
+    },
+    "catalog.blurb.stt.whisper-large-v3-turbo-q5": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best Whisper quality · ~574 MB"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лучшее Whisper · ~574 МБ"
+          }
+        }
+      }
+    },
+    "catalog.blurb.stt.whisper-small-ggml": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clearer speech · ~466 MB"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Четче речь · ~466 МБ"
+          }
+        }
+      }
+    },
+    "cleanup.mode.gemma": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemma 4 E2B"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemma 4 E2B"
+          }
+        }
+      }
+    },
+    "cleanup.mode.light": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light"
+          }
+        }
+      }
+    },
+    "cleanup.mode.off": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
+          }
+        }
+      }
+    },
+    "cleanup.mode.smart": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart (Qwen3 0.6B)"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart (Qwen3 0.6B)"
+          }
+        }
+      }
+    },
+    "cleanup.mode.smart_plus": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart+ (Qwen3 1.7B)"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart+ (Qwen3 1.7B)"
+          }
+        }
+      }
+    },
+    "capsule.inserted": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserted"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вставлено"
+          }
+        }
+      }
+    },
+    "capsule.listening": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listening"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Слушаю"
+          }
+        }
+      }
+    },
+    "capsule.understanding": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Understanding"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Распознаю"
+          }
+        }
+      }
+    },
+    "capsule.writing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Writing"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Печатаю"
+          }
+        }
+      }
+    },
+    "error.accessibility_denied": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accessibility is required to paste text at the caret."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нужен Универсальный доступ, чтобы вставить текст у курсора."
+          }
+        }
+      }
+    },
+    "error.already_recording": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Already recording"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запись уже идёт"
+          }
+        }
+      }
+    },
+    "error.bad_url": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid URL"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Некорректный URL"
+          }
+        }
+      }
+    },
+    "error.cleanup_failed": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart formatting failed."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart-оформление не удалось."
+          }
+        }
+      }
+    },
+    "error.cleanup_model_missing": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formatting model not found. Download it in Settings → Models."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Модель оформления не найдена. Скачайте её в Настройки → Модели."
+          }
+        }
+      }
     },
-    "catalog.blurb.cleanup.gemma4-e2b-4bit" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MLX · optional · ~3.5 GB · larger than Smart · Apple Silicon"
+    "error.cleanup_not_silicon": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart formatting requires Apple Silicon."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MLX · опционально · ~3.5 ГБ · тяжелее Smart · Apple Silicon"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart-оформление требует Apple Silicon."
           }
         }
       }
     },
-    "catalog.blurb.cleanup.qwen3-0.6b-4bit" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MLX · Smart formatting · Apple Silicon"
+    "error.delete_failed": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t delete %@: %@"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MLX · Smart-оформление · Apple Silicon"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось удалить %@: %@"
           }
         }
       }
     },
-    "catalog.blurb.cleanup.qwen3-1.7b-4bit" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MLX · heavy · expect ~1–2 GB RAM while running · Apple Silicon"
+    "error.empty_download": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empty download response"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MLX · тяжёлая · учитывайте ~1–2 ГБ памяти во время работы · Apple Silicon"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пустой ответ загрузки"
           }
         }
       }
     },
-    "catalog.blurb.stt.parakeet-tdt-0.6b-v3" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Optimized for Apple Silicon · ~700 MB"
+    "error.empty_text": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing to paste."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Под Apple Silicon · ~700 МБ"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нечего вставлять."
           }
         }
       }
     },
-    "catalog.blurb.stt.apple-speechanalyzer" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "System on-device STT · macOS 26+ · Prepare assets"
+    "error.meter_unavailable": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone unavailable for the level meter"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Системный on-device STT · macOS 26+ · Подготовить assets"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Микрофон недоступен для индикатора уровня"
           }
         }
       }
     },
-    "catalog.blurb.stt.whisper-base-ggml" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Light & quick · ~148 MB"
+    "error.missing_artifact": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "artifactFileName is missing"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Лёгкий и быстрый · ~148 МБ"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не задан artifactFileName"
           }
         }
       }
     },
-    "catalog.blurb.stt.whisper-large-v3-turbo-q5" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Best Whisper quality · ~574 MB"
+    "error.missing_hub_repo": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hubRepoID is missing"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Лучшее Whisper · ~574 МБ"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не задан hubRepoID"
           }
         }
       }
     },
-    "catalog.blurb.stt.whisper-small-ggml" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clearer speech · ~466 MB"
+    "error.not_recording": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not recording"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Четче речь · ~466 МБ"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запись не активна"
           }
         }
       }
     },
-    "cleanup.mode.gemma" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gemma 4 E2B"
+    "error.package_not_downloadable": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Package %@ can’t be downloaded yet — runtime isn’t ready."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gemma 4 E2B"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пакет %@ пока нельзя скачать — runtime не готов."
           }
         }
       }
     },
-    "cleanup.mode.light" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Light"
+    "error.package_still_on_disk": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Package %@ is still on disk after delete."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Light"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пакет %@ всё ещё на диске после удаления."
           }
         }
       }
     },
-    "cleanup.mode.off" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Off"
+    "error.select_cleanup_download_first": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download the package for %@ first, then select it."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Off"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сначала скачайте пакет для режима %@, затем выберите его."
           }
         }
       }
     },
-    "cleanup.mode.smart" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smart (Qwen3 0.6B)"
+    "error.select_stt_download_first": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download %@ first, then set it as active."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smart (Qwen3 0.6B)"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сначала скачайте %@, затем выберите её как активную."
           }
         }
       }
     },
-    "cleanup.mode.smart_plus" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smart+ (Qwen3 1.7B)"
+    "error.sha_mismatch": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SHA-256 mismatch — file removed. Please download again."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smart+ (Qwen3 1.7B)"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SHA-256 не совпал — файл удалён. Повторите загрузку."
           }
         }
       }
     },
-    "capsule.inserted" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inserted"
+    "error.silent_recording": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording was nearly silent. Check the selected microphone and the level meter in Settings."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Вставлено"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запись почти без звука. Проверьте выбранный микрофон и индикатор уровня в Настройках."
           }
         }
       }
     },
-    "capsule.listening" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Listening"
+    "error.stt_empty_audio": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio file is empty. Check the microphone with the level meter."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Слушаю"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Аудиофайл пустой. Проверьте микрофон по индикатору уровня."
           }
         }
       }
     },
-    "capsule.understanding" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Understanding"
+    "error.stt_empty_result": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not recognize speech (empty result)."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Распознаю"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось распознать речь (пустой результат)."
           }
         }
       }
     },
-    "capsule.writing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Writing"
+    "error.stt_model_missing": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictation model not found. Download it in Settings."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Печатаю"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Модель диктовки не найдена. Скачайте её в Настройках."
           }
         }
       }
     },
-    "error.accessibility_denied" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accessibility is required to paste text at the caret."
+    "error.stt_unsupported": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This dictation runtime needs macOS 26+ with Apple speech assets prepared."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Нужен Универсальный доступ, чтобы вставить текст у курсора."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Этому runtime диктовки нужен macOS 26+ и подготовленные speech assets Apple."
           }
         }
       }
     },
-    "error.already_recording" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Already recording"
+    "error.apple_speech_os": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple SpeechAnalyzer needs macOS 26 or later."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Запись уже идёт"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple SpeechAnalyzer доступен только на macOS 26 и новее."
           }
         }
       }
     },
-    "error.bad_url" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid URL"
+    "error.apple_speech_locale": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple SpeechAnalyzer doesn’t list %@. Try English in Language, or use Whisper / Parakeet."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Некорректный URL"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple SpeechAnalyzer не предлагает язык «%@». Попробуй English в Language или Whisper / Parakeet."
           }
         }
       }
     },
-    "error.cleanup_failed" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smart formatting failed."
+    "error.apple_speech_ru_unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple isn’t delivering the Russian speech pack on this Mac yet (English usually works). For Russian dictation use Whisper or Parakeet."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smart-оформление не удалось."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple пока не отдаёт русский speech-пакет на этом Mac (английский обычно ставится). Для русской диктовки используй Whisper или Parakeet."
           }
         }
       }
     },
-    "error.cleanup_model_missing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Formatting model not found. Download it in Settings → Models."
+    "error.apple_speech_asset_unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple couldn’t install the %@ speech pack right now. Try again later, switch Language, or use Whisper / Parakeet."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Модель оформления не найдена. Скачайте её в Настройки → Модели."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Система не смогла установить speech-пакет Apple для языка «%@». Попробуй позже, смени Language или используй Whisper / Parakeet."
           }
         }
       }
     },
-    "error.cleanup_not_silicon" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smart formatting requires Apple Silicon."
+    "error.apple_speech_prepare_failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t prepare Apple speech assets. Check the network and try again, or use Whisper / Parakeet."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smart-оформление требует Apple Silicon."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось подготовить speech assets Apple. Проверь сеть и попробуй снова — или используй Whisper / Parakeet."
           }
         }
       }
     },
-    "error.delete_failed" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Couldn’t delete %@: %@"
+    "package.apple_unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unavailable for this language"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Не удалось удалить %@: %@"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Недоступно для этого языка"
           }
         }
       }
     },
-    "error.empty_download" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empty download response"
+    "package.not_prepared": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not prepared"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Пустой ответ загрузки"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не подготовлено"
           }
         }
       }
     },
-    "error.empty_text" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing to paste."
+    "error.unknown_runtime": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown runtime: %@"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Нечего вставлять."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неизвестный runtime: %@"
           }
         }
       }
     },
-    "error.meter_unavailable" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Microphone unavailable for the level meter"
+    "first_run.body": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local dictation: hotkey → record → on-device recognition → paste at the caret. Audio never leaves your Mac."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Микрофон недоступен для индикатора уровня"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Локальная диктовка: горячая клавиша → запись → распознавание на устройстве → вставка у курсора. Аудио никуда не отправляется."
           }
         }
       }
     },
-    "error.missing_artifact" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "artifactFileName is missing"
+    "first_run.continue": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Не задан artifactFileName"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Продолжить"
           }
         }
       }
     },
-    "error.missing_hub_repo" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "hubRepoID is missing"
+    "first_run.footer": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download the recommended dictation model below and grant permissions — Ready appears automatically."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Не задан hubRepoID"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скачайте рекомендованную модель диктовки ниже и выдайте разрешения — статус Ready появится автоматически."
           }
         }
       }
     },
-    "error.not_recording" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not recording"
+    "first_run.header": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welcome"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Запись не активна"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добро пожаловать"
           }
         }
       }
     },
-    "error.package_not_downloadable" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Package %@ can’t be downloaded yet — runtime isn’t ready."
+    "format.built_in": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Built-in"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Пакет %@ пока нельзя скачать — runtime не готов."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Встроено"
           }
         }
       }
     },
-    "error.package_still_on_disk" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Package %@ is still on disk after delete."
+    "format.download_smart": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Also download Smart formatting (Qwen3 0.6B)"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Пакет %@ всё ещё на диске после удаления."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Также скачать Smart-оформление (Qwen3 0.6B)"
           }
         }
       }
     },
-    "error.select_cleanup_download_first" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Download the package for %@ first, then select it."
+    "format.footer": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart/Smart+/Gemma appear after download. Optional: try Off/Light first — formatting can improve or worsen the text."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сначала скачайте пакет для режима %@, затем выберите его."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart/Smart+/Gemma — после скачивания. Режим необязателен: сначала попробуйте Off/Light — оформление может и улучшить, и ухудшить текст."
           }
         }
       }
     },
-    "error.select_stt_download_first" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Download %@ first, then set it as active."
+    "format.make_active": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make active"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сначала скачайте %@, затем выберите её как активную."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сделать активным"
           }
         }
       }
     },
-    "error.sha_mismatch" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SHA-256 mismatch — file removed. Please download again."
+    "format.mode": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mode"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SHA-256 не совпал — файл удалён. Повторите загрузку."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Режим"
           }
         }
       }
     },
-    "error.silent_recording" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recording was nearly silent. Check the selected microphone and the level meter in Settings."
+    "format.section": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Post-dictation formatting"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Запись почти без звука. Проверьте выбранный микрофон и индикатор уровня в Настройках."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Оформление после диктовки"
           }
         }
       }
     },
-    "error.stt_empty_audio" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Audio file is empty. Check the microphone with the level meter."
+    "hint.accessibility": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accessibility"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Аудиофайл пустой. Проверьте микрофон по индикатору уровня."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Универсальный доступ"
           }
         }
       }
     },
-    "error.stt_empty_result" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Could not recognize speech (empty result)."
+    "hint.microphone": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "microphone access"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Не удалось распознать речь (пустой результат)."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "доступ к микрофону"
           }
         }
       }
     },
-    "error.stt_model_missing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dictation model not found. Download it in Settings."
+    "hint.stt_model": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "download a dictation model"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Модель диктовки не найдена. Скачайте её в Настройках."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "скачать модель диктовки"
           }
         }
       }
     },
-    "error.stt_unsupported" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This dictation runtime needs macOS 26+ with Apple speech assets prepared."
+    "hotkey.cancel": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Этому runtime диктовки нужен macOS 26+ и подготовленные speech assets Apple."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отмена"
           }
         }
       }
     },
-    "error.apple_speech_os" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple SpeechAnalyzer needs macOS 26 or later."
+    "hotkey.change": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple SpeechAnalyzer доступен только на macOS 26 и новее."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Изменить"
           }
         }
       }
     },
-    "error.apple_speech_locale" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple SpeechAnalyzer doesn’t list %@. Try English in Language, or use Whisper / Parakeet."
+    "hotkey.combination": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shortcut"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple SpeechAnalyzer не предлагает язык «%@». Попробуй English в Language или Whisper / Parakeet."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сочетание"
           }
         }
       }
     },
-    "error.apple_speech_ru_unavailable" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple isn’t delivering the Russian speech pack on this Mac yet (English usually works). For Russian dictation use Whisper or Parakeet."
+    "hotkey.footer_idle": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Global key to start and stop recording."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple пока не отдаёт русский speech-пакет на этом Mac (английский обычно ставится). Для русской диктовки используй Whisper или Parakeet."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Глобальная клавиша для старта и стопа записи."
           }
         }
       }
     },
-    "error.apple_speech_asset_unavailable" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple couldn’t install the %@ speech pack right now. Try again later, switch Language, or use Whisper / Parakeet."
+    "hotkey.footer_recording": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold ⌘/⌥/⌃/⇧ and press a key. Esc cancels."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Система не смогла установить speech-пакет Apple для языка «%@». Попробуй позже, смени Language или используй Whisper / Parakeet."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удерживайте ⌘/⌥/⌃/⇧ и нажмите клавишу. Esc — отмена."
           }
         }
       }
     },
-    "error.apple_speech_prepare_failed" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Couldn’t prepare Apple speech assets. Check the network and try again, or use Whisper / Parakeet."
+    "hotkey.press_combo": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Press a shortcut…"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Не удалось подготовить speech assets Apple. Проверь сеть и попробуй снова — или используй Whisper / Parakeet."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нажмите сочетание…"
           }
         }
       }
     },
-    "package.apple_unavailable" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unavailable for this language"
+    "hotkey.reset": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Недоступно для этого языка"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сбросить"
           }
         }
       }
     },
-    "package.not_prepared" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not prepared"
+    "hotkey.retain_clipboard": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Also keep the result on the clipboard"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Не подготовлено"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Также оставить результат в буфере обмена"
           }
         }
       }
     },
-    "error.unknown_runtime" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unknown runtime: %@"
+    "hotkey.retain_clipboard_footer": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text still pastes at the caret. If focus moves to another app, the result stays on the clipboard so you can paste with ⌘V. While recording, press Escape to cancel without pasting."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Неизвестный runtime: %@"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Текст вставляется у курсора как обычно. Если фокус уйдёт в другое приложение, результат останется в буфере — его можно вставить ⌘V. Во время записи Escape отменяет диктовку без вставки."
           }
         }
       }
     },
-    "first_run.body" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Local dictation: hotkey → record → on-device recognition → paste at the caret. Audio never leaves your Mac."
+    "hotkey.section": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotkey"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Локальная диктовка: горячая клавиша → запись → распознавание на устройстве → вставка у курсора. Аудио никуда не отправляется."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Горячая клавиша"
           }
         }
       }
     },
-    "first_run.continue" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue"
+    "language.english": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Продолжить"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
           }
         }
       }
     },
-    "first_run.footer" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Download the recommended dictation model below and grant permissions — Ready appears automatically."
+    "language.footer": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Defaults to the system language. You can override it here."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Скачайте рекомендованную модель диктовки ниже и выдайте разрешения — статус Ready появится автоматически."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "По умолчанию — язык системы. Можно переопределить здесь."
           }
         }
       }
     },
-    "first_run.header" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Welcome"
+    "language.russian": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Russian"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Добро пожаловать"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
           }
         }
       }
     },
-    "format.built_in" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Built-in"
+    "language.section": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Встроено"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Язык"
           }
         }
       }
     },
-    "format.download_smart" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Also download Smart formatting (Qwen3 0.6B)"
+    "language.system": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Также скачать Smart-оформление (Qwen3 0.6B)"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как в системе"
           }
         }
       }
     },
-    "format.footer" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smart/Smart+/Gemma appear after download. Optional: try Off/Light first — formatting can improve or worsen the text."
+    "menu.mic_no_access": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone: no access"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smart/Smart+/Gemma — после скачивания. Режим необязателен: сначала попробуйте Off/Light — оформление может и улучшить, и ухудшить текст."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Микрофон: нет доступа"
           }
         }
       }
     },
-    "format.make_active" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Make active"
+    "menu.mic_not_found": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone: not found"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сделать активным"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Микрофон: не найден"
           }
         }
       }
     },
-    "format.mode" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mode"
+    "menu.mic_prefix": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone: %@"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Режим"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Микрофон: %@"
           }
         }
       }
     },
-    "format.section" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Post-dictation formatting"
+    "menu.open_settings": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Settings…"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оформление после диктовки"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть настройки…"
           }
         }
       }
     },
-    "hint.accessibility" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accessibility"
+    "menu.quit": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Универсальный доступ"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выйти"
           }
         }
       }
     },
-    "hint.microphone" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "microphone access"
+    "menu.remaining": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remaining (%d)"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "доступ к микрофону"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Осталось (%d)"
           }
         }
       }
     },
-    "hint.stt_model" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "download a dictation model"
+    "menu.settings": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings…"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "скачать модель диктовки"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройки…"
           }
         }
       }
     },
-    "hotkey.cancel" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
+    "menu.status.cleanup": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Understanding…"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Отмена"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Распознаю…"
           }
         }
       }
     },
-    "hotkey.change" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change"
+    "menu.status.error": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Изменить"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ошибка"
           }
         }
       }
     },
-    "hotkey.combination" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shortcut"
+    "menu.status.processing": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Understanding…"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сочетание"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Распознаю…"
           }
         }
       }
     },
-    "hotkey.footer_idle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Global key to start and stop recording."
+    "menu.status.recording": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listening…"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Глобальная клавиша для старта и стопа записи."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Слушаю…"
           }
         }
       }
     },
-    "hotkey.footer_recording" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hold ⌘/⌥/⌃/⇧ and press a key. Esc cancels."
+    "package.cancel": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Удерживайте ⌘/⌥/⌃/⇧ и нажмите клавишу. Esc — отмена."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отменить"
           }
         }
       }
     },
-    "hotkey.press_combo" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Press a shortcut…"
+    "package.delete": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Нажмите сочетание…"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удалить"
           }
         }
       }
     },
-    "hotkey.reset" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reset"
+    "package.download": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сбросить"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скачать"
           }
         }
       }
     },
-    "hotkey.retain_clipboard" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Also keep the result on the clipboard"
+    "package.prepare": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prepare…"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Также оставить результат в буфере обмена"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подготовить…"
           }
         }
       }
     },
-    "hotkey.retain_clipboard_footer" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text still pastes at the caret. If focus moves to another app, the result stays on the clipboard so you can paste with ⌘V. While recording, press Escape to cancel without pasting."
+    "package.preparing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing… %d%%"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Текст вставляется у курсора как обычно. Если фокус уйдёт в другое приложение, результат останется в буфере — его можно вставить ⌘V. Во время записи Escape отменяет диктовку без вставки."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подготовка… %d%%"
           }
         }
       }
     },
-    "hotkey.section" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hotkey"
+    "package.downloading": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading %d%%"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Горячая клавиша"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скачивание %d%%"
           }
         }
       }
     },
-    "language.english" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "English"
+    "package.failed": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error: %@"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "English"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ошибка: %@"
           }
         }
       }
     },
-    "language.footer" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Defaults to the system language. You can override it here."
+    "package.not_downloaded": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not downloaded"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "По умолчанию — язык системы. Можно переопределить здесь."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не скачано"
           }
         }
       }
     },
-    "language.russian" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Russian"
+    "package.ready": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Русский"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Готово"
           }
         }
       }
     },
-    "language.section" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Language"
+    "package.retry": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Язык"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Повторить"
           }
         }
       }
     },
-    "language.system" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "System"
+    "package.soon": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soon"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Как в системе"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скоро"
           }
         }
       }
     },
-    "menu.mic_no_access" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Microphone: no access"
+    "package.status.ready": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Микрофон: нет доступа"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready"
           }
         }
       }
     },
-    "menu.mic_not_found" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Microphone: not found"
+    "permissions.accessibility": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accessibility"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Микрофон: не найден"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Универсальный доступ"
           }
         }
       }
     },
-    "menu.mic_prefix" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Microphone: %@"
+    "permissions.accessibility_tip": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If Accessibility is already checked in System Settings but status here is stuck — remove CarrotType from the Accessibility list and add it again, then refresh status or restart the app."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Микрофон: %@"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Если в Системных настройках галочка уже стоит, а здесь статус не обновляется — удалите CarrotType из списка Универсального доступа и добавьте снова, затем обновите статус или перезапустите приложение."
           }
         }
       }
     },
-    "menu.open_settings" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Settings…"
+    "permissions.allow": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Открыть настройки…"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрешить"
           }
         }
       }
     },
-    "menu.quit" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Quit"
+    "permissions.allowed": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allowed"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Выйти"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрешено"
           }
         }
       }
     },
-    "menu.remaining" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remaining (%d)"
+    "permissions.default_suffix": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ (default)"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Осталось (%d)"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ (по умолчанию)"
           }
         }
       }
     },
-    "menu.settings" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Settings…"
+    "permissions.input_device": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Input device"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Настройки…"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Устройство ввода"
           }
         }
       }
     },
-    "menu.status.cleanup" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Understanding…"
+    "permissions.meter_hearing": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone is picking up sound — you can dictate."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Распознаю…"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Микрофон слышит звук — можно диктовать."
           }
         }
       }
     },
-    "menu.status.error" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error"
+    "permissions.meter_off": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meter is off."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ошибка"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Индикатор выключен."
           }
         }
       }
     },
-    "menu.status.processing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Understanding…"
+    "permissions.meter_off_hint": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn the meter on to check that the microphone hears you. While it’s off, CarrotType keeps the mic idle."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Распознаю…"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Включите индикатор, чтобы проверить, что микрофон слышит звук. Пока он выключен, CarrotType не держит микрофон активным."
           }
         }
       }
     },
-    "menu.status.recording" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Listening…"
+    "permissions.meter_speak": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speak — the meter should move."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Слушаю…"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Говорите — полоска должна двигаться."
           }
         }
       }
     },
-    "package.cancel" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
+    "permissions.meter_toggle": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show microphone meter"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Отменить"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показать индикатор микрофона"
           }
         }
       }
     },
-    "package.delete" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete"
+    "permissions.microphone": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Удалить"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Микрофон"
           }
         }
       }
     },
-    "package.download" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Download"
+    "permissions.no_devices": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No input devices found. Check your microphone connection."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Скачать"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Устройства ввода не найдены. Проверьте подключение микрофона."
           }
         }
       }
     },
-    "package.prepare" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prepare…"
+    "permissions.open_settings": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Settings"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Подготовить…"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть настройки"
           }
         }
       }
     },
-    "package.preparing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Preparing… %d%%"
+    "permissions.refresh": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh permission status"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Подготовка… %d%%"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновить статус разрешений"
           }
         }
       }
     },
-    "package.downloading" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Downloading %d%%"
+    "permissions.relaunch": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart app"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Скачивание %d%%"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перезапустить приложение"
           }
         }
       }
     },
-    "package.failed" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error: %@"
+    "permissions.section": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permissions"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ошибка: %@"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрешения"
           }
         }
       }
     },
-    "package.not_downloaded" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not downloaded"
+    "permissions.unmute_during_dictation": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unmute mic during dictation (experimental)"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Не скачано"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Снимать mute на время диктовки (экспериментально)"
           }
         }
       }
     },
-    "package.ready" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ready"
+    "permissions.unmute_during_dictation_hint": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Experimental — Elgato Wave Link only. Unmutes the mic for capture and restores mute afterward. Wave Link must be running. Off by default."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Готово"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экспериментально — только Elgato Wave Link. Снимает mute микрофона на запись и возвращает после. Нужен запущенный Wave Link. По умолчанию выкл."
           }
         }
       }
     },
-    "package.retry" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retry"
+    "readiness.almost": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Almost"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Повторить"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Almost"
           }
         }
       }
     },
-    "package.soon" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Soon"
+    "readiness.blocked": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blocked"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Скоро"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blocked"
           }
         }
       }
     },
-    "package.status.ready" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ready"
+    "readiness.ready": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ready"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready"
           }
         }
       }
     },
-    "permissions.accessibility" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accessibility"
+    "REC": {},
+    "settings.pane.general": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "General"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Универсальный доступ"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Основные"
           }
         }
       }
     },
-    "permissions.accessibility_tip" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If Accessibility is already checked in System Settings but status here is stuck — remove CarrotType from the Accessibility list and add it again, then refresh status or restart the app."
+    "settings.pane.models": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Models"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Если в Системных настройках галочка уже стоит, а здесь статус не обновляется — удалите CarrotType из списка Универсального доступа и добавьте снова, затем обновите статус или перезапустите приложение."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Модели"
           }
         }
       }
     },
-    "permissions.allow" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Allow"
+    "settings.pane.setup": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Разрешить"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройка"
           }
         }
       }
     },
-    "permissions.allowed" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Allowed"
+    "settings.pane.storage": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storage"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Разрешено"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хранилище"
           }
         }
       }
     },
-    "permissions.default_suffix" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (default)"
+    "status.check_updates": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for updates…"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (по умолчанию)"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверить обновления…"
           }
         }
       }
     },
-    "permissions.input_device" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Input device"
+    "status.details": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details…"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Устройство ввода"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подробнее…"
           }
         }
       }
     },
-    "permissions.meter_hearing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Microphone is picking up sound — you can dictate."
+    "status.remaining": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remaining: %@."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Микрофон слышит звук — можно диктовать."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Осталось: %@."
           }
         }
       }
     },
-    "permissions.meter_off" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meter is off."
+    "status.section": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Status"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Индикатор выключен."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Статус"
           }
         }
       }
     },
-    "permissions.meter_off_hint" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turn the meter on to check that the microphone hears you. While it’s off, CarrotType keeps the mic idle."
+    "storage.active": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Включите индикатор, чтобы проверить, что микрофон слышит звук. Пока он выключен, CarrotType не держит микрофон активным."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Активна"
           }
         }
       }
     },
-    "permissions.meter_speak" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speak — the meter should move."
+    "storage.delete_unused": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete unused packages"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Говорите — полоска должна двигаться."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удалить неиспользуемые пакеты"
           }
         }
       }
     },
-    "permissions.meter_toggle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show microphone meter"
+    "storage.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No downloaded packages on disk yet."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Показать индикатор микрофона"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пока нет скачанных пакетов на диске."
           }
         }
       }
     },
-    "permissions.microphone" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Microphone"
+    "storage.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active packages are the current dictation model, the selected formatting package (if used), and any model chosen in transform bindings. Delete unused removes the rest."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Микрофон"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Активны текущая модель диктовки, выбранное оформление (если включено) и модели из связок преобразования. «Удалить неиспользуемые» убирает остальные."
           }
         }
       }
     },
-    "permissions.no_devices" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No input devices found. Check your microphone connection."
+    "storage.share": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d%% of total"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Устройства ввода не найдены. Проверьте подключение микрофона."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d%% от общего объёма"
           }
         }
       }
     },
-    "permissions.open_settings" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Settings"
+    "storage.section": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storage"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Открыть настройки"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хранилище"
           }
         }
       }
     },
-    "permissions.refresh" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refresh permission status"
+    "storage.unused": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unused"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Обновить статус разрешений"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не используется"
           }
         }
       }
     },
-    "permissions.relaunch" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Restart app"
+    "storage.used": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used by models"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Перезапустить приложение"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Занято моделями"
           }
         }
       }
     },
-    "permissions.section" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Permissions"
+    "stt.active": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active model"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Разрешения"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Активная модель"
           }
         }
       }
     },
-    "permissions.unmute_during_dictation" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unmute mic during dictation (experimental)"
+    "stt.download_below": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download a model below"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Снимать mute на время диктовки (экспериментально)"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скачайте модель ниже"
           }
         }
       }
     },
-    "permissions.unmute_during_dictation_hint" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Experimental — Elgato Wave Link only. Unmutes the mic for capture and restores mute afterward. Wave Link must be running. Off by default."
+    "stt.footer": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only a downloaded model can be set as active."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Экспериментально — только Elgato Wave Link. Снимает mute микрофона на запись и возвращает после. Нужен запущенный Wave Link. По умолчанию выкл."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Активной можно сделать только уже скачанную модель."
           }
         }
       }
     },
-    "readiness.almost" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Almost"
+    "stt.recommended": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recommended download: %@ (%@)"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Almost"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Рекомендуемая загрузка: %@ (%@)"
           }
         }
       }
     },
-    "readiness.blocked" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Blocked"
+    "stt.section": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictation model"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Blocked"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Модель диктовки"
           }
         }
       }
     },
-    "readiness.ready" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ready"
+    "hotkey.conflict": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This shortcut is already used. Choose a different combination."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ready"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Это сочетание уже занято. Выберите другое."
           }
         }
       }
     },
-    "REC" : {
-
+    "transform.section": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transform selected text"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Преобразование выделенного текста"
+          }
+        }
+      }
+    },
+    "transform.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select text, press a binding shortcut — result in the Capsule."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выделите текст и нажмите сочетание — результат в Capsule."
+          }
+        }
+      }
     },
-    "settings.pane.general" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "General"
+    "transform.kind": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Action"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Основные"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Действие"
           }
         }
       }
     },
-    "settings.pane.models" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Models"
+    "transform.kind.translate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Translate"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Модели"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перевод"
           }
         }
       }
     },
-    "settings.pane.setup" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Setup"
+    "transform.kind.custom": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Настройка"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Своя инструкция"
           }
         }
       }
     },
-    "settings.pane.storage" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Storage"
+    "transform.binding_add": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add binding"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Хранилище"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добавить связку"
           }
         }
       }
     },
-    "status.check_updates" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check for updates…"
+    "transform.binding_delete": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Проверить обновления…"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удалить"
           }
         }
       }
     },
-    "status.details" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Details…"
+    "transform.binding_hotkey": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shortcut"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Подробнее…"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сочетание"
           }
         }
       }
     },
-    "status.remaining" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remaining: %@."
+    "transform.bindings_empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No bindings yet. Add one to transform selected text."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Осталось: %@."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Связок пока нет. Добавьте одну, чтобы преобразовывать выделение."
           }
         }
       }
     },
-    "status.section" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status"
+    "transform.pair_a": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language A"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Статус"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Язык A"
           }
         }
       }
     },
-    "storage.active" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Active"
+    "transform.pair_b": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language B"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Активна"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Язык B"
           }
         }
       }
     },
-    "storage.delete_unused" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete unused packages"
+    "transform.pair_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text in one language of the pair is translated into the other."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Удалить неиспользуемые пакеты"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выделение на одном языке пары переводится на другой."
           }
         }
+      }
+    },
+    "transform.lang.en": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "English" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Английский" } }
+      }
+    },
+    "transform.lang.ru": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Russian" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Русский" } }
+      }
+    },
+    "transform.lang.de": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "German" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Немецкий" } }
+      }
+    },
+    "transform.lang.fr": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "French" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Французский" } }
+      }
+    },
+    "transform.lang.es": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Spanish" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Испанский" } }
+      }
+    },
+    "transform.lang.it": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Italian" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Итальянский" } }
+      }
+    },
+    "transform.lang.pt": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Portuguese" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Португальский" } }
+      }
+    },
+    "transform.lang.zh-Hans": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Chinese (Simplified)" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Китайский (упр.)" } }
+      }
+    },
+    "transform.lang.ja": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Japanese" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Японский" } }
+      }
+    },
+    "transform.lang.ko": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Korean" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Корейский" } }
       }
     },
-    "storage.empty" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No downloaded packages on disk yet."
+    "transform.preset.translate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Translate"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Пока нет скачанных пакетов на диске."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перевести"
           }
         }
       }
     },
-    "storage.footer" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Active packages are the current dictation model and the selected formatting package (Smart/Smart+/Gemma if used). Delete unused removes the rest."
+    "transform.preset.translate_instruction": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Translate into English. Output only the translation, with no quotes or commentary."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Активны текущая модель диктовки и выбранное оформление (Smart/Smart+/Gemma, если включено). «Удалить неиспользуемые» убирает остальные."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Переведи на русский. Выведи только перевод, без кавычек и пояснений."
           }
         }
       }
     },
-    "storage.share" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d%% of total"
+    "transform.model": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d%% от общего объёма"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Модель"
           }
         }
       }
     },
-    "storage.section" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Storage"
+    "transform.model_none": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download Smart, Smart+, or Gemma in Models to enable transform."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Хранилище"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скачайте Smart, Smart+ или Gemma в «Модели», чтобы включить преобразование."
           }
         }
       }
     },
-    "storage.unused" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unused"
+    "transform.models_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transform selected text (General) uses the same Smart / Smart+ / Gemma packages."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Не используется"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Преобразование выделенного текста (Основные) использует те же пакеты Smart / Smart+ / Gemma."
           }
         }
       }
     },
-    "storage.used" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Used by models"
+    "error.no_selection": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No text selection found. Select text, then try again."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Занято моделями"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет выделенного текста. Выделите текст и попробуйте снова."
           }
         }
       }
     },
-    "stt.active" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Active model"
+    "error.transform_empty_instruction": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom instruction is empty. Add text for this Custom binding in Settings → General."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Активная модель"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Инструкция пуста. Заполните её для этой связки в Настройки → Основные."
           }
         }
       }
     },
-    "stt.download_below" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Download a model below"
+    "error.transform_model_missing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No transform model ready. Download Smart, Smart+, or Gemma in Settings → Models."
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Скачайте модель ниже"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет готовой модели для преобразования. Скачайте Smart, Smart+ или Gemma в Настройки → Модели."
           }
         }
       }
     },
-    "stt.footer" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only a downloaded model can be set as active."
+    "capsule.transform_copy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Активной можно сделать только уже скачанную модель."
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Копировать"
           }
         }
       }
     },
-    "stt.recommended" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recommended download: %@ (%@)"
+    "capsule.transform_close": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Рекомендуемая загрузка: %@ (%@)"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закрыть"
           }
         }
       }
     },
-    "stt.section" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dictation model"
+    "capsule.transform_copied": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copied"
           }
         },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Модель диктовки"
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скопировано"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

@@ -36,7 +36,12 @@ enum QwenCleanupCore {
     """
 
     #if arch(arm64)
-    static func cleanup(text: String, modelDirectory: URL, mode: String) async throws -> String {
+    static func cleanup(
+        text: String,
+        modelDirectory: URL,
+        mode: String,
+        instructions: String? = nil
+    ) async throws -> String {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty {
             return ""
@@ -48,29 +53,35 @@ enum QwenCleanupCore {
             Memory.clearCache()
         }
 
+        let customInstructions = instructions?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let useCustom = !(customInstructions?.isEmpty ?? true)
+        let sessionInstructions = useCustom ? customInstructions! : editorInstructions
+
         let isQwen = mode == "smart" || mode == "smartPlus"
-        // Greedy-ish decode favors literal cleanup over creative rewrite.
+        // Greedy-ish decode; transform allows a higher cap for longer rewrites (ADR-012).
         let wordCount = trimmed.split { $0.isWhitespace }.count
-        let maxTokens = min(1024, max(256, wordCount * 2))
+        let tokenCap = useCustom ? 2048 : 1024
+        let maxTokens = min(tokenCap, max(256, wordCount * 2))
         let params = GenerateParameters(maxTokens: maxTokens, temperature: 0)
         let session: ChatSession
         if isQwen {
             // Qwen3 defaults to chain-of-thought (`<think>…</think>`). Disable it for cleanup.
             session = ChatSession(
                 container,
-                instructions: editorInstructions,
+                instructions: sessionInstructions,
                 generateParameters: params,
                 additionalContext: ["enable_thinking": false]
             )
         } else {
             session = ChatSession(
                 container,
-                instructions: editorInstructions,
+                instructions: sessionInstructions,
                 generateParameters: params
             )
         }
-        // Neutral framing: avoid "improve/rewrite" verbs that invite paraphrase.
-        let prompt = "Транскрипт:\n\(trimmed)"
+        // Custom transform: neutral framing. Literal cleanup: transcript framing.
+        let prompt = useCustom ? "Текст:\n\(trimmed)" : "Транскрипт:\n\(trimmed)"
         let raw = try await session.respond(to: prompt)
         let result = stripModelExtras(raw, isQwen: isQwen)
         if result.isEmpty {

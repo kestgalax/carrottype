@@ -101,14 +101,15 @@ final class ModelManager: ObservableObject {
         .sorted { $0.bytes > $1.bytes }
     }
 
-    /// Matches `deleteUnusedPackages`: active STT selection or required Smart/Smart+ package.
+    /// Matches `deleteUnusedPackages`: active STT, dictation formatting package, or any transform-binding model.
     func isActiveInstalledPackage(_ packageID: String) -> Bool {
         guard let package = package(id: packageID) else { return false }
         switch package.role {
         case .stt:
             return packageID == selectedSTTPackageID
         case .cleanup:
-            return cleanupMode.requiredPackageID == packageID
+            if cleanupMode.requiredPackageID == packageID { return true }
+            return TransformBindingsStore.referencedCleanupPackageIDs().contains(packageID)
         }
     }
 
@@ -311,7 +312,7 @@ final class ModelManager: ObservableObject {
             }
         }
         for package in catalog.packages where package.role == .cleanup {
-            let needed = cleanupMode.requiredPackageID == package.id
+            let needed = isActiveInstalledPackage(package.id)
             if !needed, case .ready = status(for: package.id) {
                 remove(packageID: package.id)
             }
@@ -343,9 +344,14 @@ final class ModelManager: ObservableObject {
         }
     }
 
-    /// Directory with MLX weights for the active Smart/Smart+ mode, if ready.
+    /// Directory with MLX weights for the active Smart/Smart+/Gemma mode, if ready.
     func cleanupModelDirectory() -> URL? {
-        guard let packageID = cleanupMode.requiredPackageID,
+        cleanupModelDirectory(for: cleanupMode)
+    }
+
+    /// Directory with MLX weights for an explicit cleanup mode, if ready.
+    func cleanupModelDirectory(for mode: CleanupMode) -> URL? {
+        guard let packageID = mode.requiredPackageID,
               let package = package(id: packageID),
               case .ready = statuses[packageID]
         else { return nil }
@@ -736,6 +742,21 @@ final class ModelManager: ObservableObject {
             cleanupMode = .light
             persistCleanupMode()
         }
+        if package.role == .cleanup {
+            let fallback = firstReadyCleanupMode(excludingPackageID: package.id) ?? .smart
+            TransformBindingsStore.remapCleanupMode(
+                removingPackageID: package.id,
+                fallback: fallback
+            )
+        }
+    }
+
+    private func firstReadyCleanupMode(excludingPackageID: String) -> CleanupMode? {
+        for mode in [CleanupMode.smartPlus, .smart, .gemma] {
+            guard let id = mode.requiredPackageID, id != excludingPackageID else { continue }
+            if isCleanupPackageReady(for: mode) { return mode }
+        }
+        return nil
     }
 
     /// Streaming SHA-256 of a file on disk (hex lowercase).

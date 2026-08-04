@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.1.9`** (unsigned DMG): optional Gemma 4 E2B cleanup (ADR-010) + hardened literal cleanup prompt; Status Capsule and OOP Smart cleanup from prior releases.
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.2.0`** (unsigned DMG): **Selection Transform** bindings + bidirectional Translate (ADR-012), Capsule Copy/Close.
 
-Latest artifact: `CarrotType-0.1.9.dmg` (SHA-256 in `docs/github-release-notes-v0.1.9.md`).
+Latest artifact: `CarrotType-0.2.0.dmg` (SHA-256 in `docs/github-release-notes-v0.2.0.md`).
 
 **Current focus:** repo is **public** (MIT + ADR-011). Notarization / Apple Developer ID remains **optional later**, not a publish blocker.
 
@@ -76,14 +76,19 @@ Checklist:
 - [x] Optional Gemma 4 E2B cleanup package beside Qwen Smart/Smart+ (ADR-010).
 - [x] Publish GitHub Release `v0.1.9` — optional Gemma cleanup + literal prompt + `docs/github-release-notes-v0.1.9.md`.
 - [x] Public MIT distribution posture (ADR-011) — `LICENSE`, README branding/install notes; notarization not required for visibility.
+- [x] Publish GitHub Release `v0.2.0` — Selection Transform bindings + bidirectional Translate (ADR-012) + `docs/github-release-notes-v0.2.0.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 
-Status: **v0.1.9 unsigned DMG** on public GitHub — install via Right-click → Open.
+Status: **v0.2.0 unsigned DMG** on public GitHub — install via Right-click → Open / Privacy & Security → Open Anyway.
 
 ## Next focus (ordered)
 
 1. **Optional trust:** Developer ID sign + `notarytool` + staple (`ops/deploy.md`); sign both host and helper.
 2. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
+
+## In progress / on branch
+
+- (none — Selection Transform shipped in v0.2.0)
 
 ## Near-term polish candidates (if release is blocked)
 

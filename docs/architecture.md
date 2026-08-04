@@ -7,10 +7,19 @@
 ```text
 Global hotkey
   → microphone capture
-  → on-device STT (catalog model)
+    → on-device STT (catalog model)
   → optional post-dictation formatting (Light / Qwen3 Smart)
   → insert text at caret in frontmost app
   → optional: keep result on clipboard (no pasteboard restore)
+```
+
+Secondary loop (ADR-012):
+
+```text
+Transform hotkey (default ⌥')
+  → read selected text (AX / ⌘C fallback)
+  → on-device LLM via cleanup helper (custom instructions + chosen Smart/Gemma package)
+  → Status Capsule result (Copy / Close; no auto-replace)
 ```
 
 ## Components
@@ -18,11 +27,12 @@ Global hotkey
 | Component | Responsibility |
 |-----------|----------------|
 | App shell (Swift / SwiftUI) | Lifecycle, menu bar status, Status Capsule (session chrome near notch), Setup/Status UI, permission prompts, RU/EN locale |
-| Hotkey service | Register and handle global start/stop recording |
+| Hotkey service | Register and handle global dictation + N transform binding hotkeys |
 | Audio capture | Record microphone audio for the active session; optional experimental temporary unmute via Wave Link (ADR-007) |
 | Model Manager | Catalog, download, verify, activate STT/cleanup packages (ADR-003) |
 | STT runtime | Run active STT package (Parakeet / Whisper paths) |
-| Cleanup runtime | `off` / `light` heuristics / Qwen3 MLX Smart modes via session-scoped helper process (ADR-009; UI: post-dictation formatting) |
+| Cleanup runtime | `off` / `light` heuristics / Qwen3 MLX Smart modes via session-scoped helper process (ADR-009; UI: post-dictation formatting); same helper for selection transform with custom instructions (ADR-012) |
+| Selection text | Read focused selection; transform result shown in Capsule (not auto-paste) |
 | Text insertion | Paste at caret via Accessibility; optional retain-on-clipboard |
 
 ## Boundaries
@@ -42,11 +52,12 @@ Global hotkey
 - Distribution via GitHub Releases (`.dmg` / `.app`); public MIT source allowed (ADR-011); notarization optional
 - Models cached under Application Support; not bundled in the first release artifact by default
 
-## Model catalog (ADR-003 + ADR-004 + ADR-005 + ADR-006 + ADR-008 + ADR-010)
+## Model catalog (ADR-003 + ADR-004 + ADR-005 + ADR-006 + ADR-008 + ADR-010 + ADR-012)
 
 - **STT (runnable):** Whisper Base/Small/Turbo q5 ggml via WhisperMetalKit (ADR-004); **recommended** Parakeet TDT 0.6B v3 via FluidAudio CoreML (ADR-006); optional Apple SpeechAnalyzer on macOS 26+ via system `AssetInventory` (ADR-008). ggml downloads stage the URLSession temp file synchronously, then verify SHA-256 from the catalog.
 - **Cleanup:** Off / Light heuristics; Smart / Smart+ via Qwen3 MLX; optional **Gemma 4 E2B** MLX (`cleanup.gemma4-e2b-4bit`, ADR-010) — all LLM cleanup in `CarrotTypeCleanupHelper` (`mlx-swift-lm`, ADR-005 + ADR-009). Host downloads packages; inference is out-of-process (stdin/stdout JSON, helper exits).
-- Engines are selected through `STTEngine` / `CleanupEngine` adapters (`DictationPipeline`).
+- **Selection transform (ADR-012):** same helper + packages; General **bindings** (hotkey + Translate with user language pair / Custom instruction + model); Translate uses `NLLanguageRecognizer` flip; result in Status Capsule (Copy / Close + optional direction); not required for Ready.
+- Engines are selected through `STTEngine` / `CleanupEngine` adapters (`DictationPipeline`); transform reuses the MLX cleanup engine with non-nil instructions.
 - Settings selection UX: only Ready packages are selectable; Ready-but-inactive rows offer **Make active** for both STT and post-dictation formatting packages (Qwen Smart/Smart+ and optional Gemma).
 - Idle resource policy: mic meter only when the user enables it in Settings (not on window open); language changes update copy via `L10n` without remounting Settings; permission poll stops when Ready; STT unloads after each session; Smart MLX lives only in the helper process (ADR-009) so host idle stays near cold start.
 - Optional experimental temporary unmute during dictation (ADR-007): Settings toggle framed as Elgato Wave Link only; `MicMuteController` clears mute for the capture window (Wave Link primary; Core Audio silent fallback) and restores prior state when capture ends.

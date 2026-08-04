@@ -29,7 +29,7 @@ enum TextInsertionService {
         }
 
         let pasteboard = NSPasteboard.general
-        let previous = retainInClipboard ? [] : capturePasteboard(pasteboard)
+        let previous = retainInClipboard ? [] : capturePasteboardItems(pasteboard)
 
         pasteboard.clearContents()
         pasteboard.setString(trimmed, forType: .string)
@@ -40,7 +40,32 @@ enum TextInsertionService {
 
         // Restore clipboard after the target app has consumed paste.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-            restorePasteboard(pasteboard, items: previous)
+            restorePasteboardItems(pasteboard, items: previous)
+        }
+    }
+
+    static func capturePasteboardItems(_ pasteboard: NSPasteboard) -> [[String: Data]] {
+        guard let items = pasteboard.pasteboardItems else { return [] }
+        return items.map { item in
+            var map: [String: Data] = [:]
+            for type in item.types {
+                if let data = item.data(forType: type) {
+                    map[type.rawValue] = data
+                }
+            }
+            return map
+        }
+    }
+
+    static func restorePasteboardItems(_ pasteboard: NSPasteboard, items: [[String: Data]]) {
+        guard !items.isEmpty else { return }
+        pasteboard.clearContents()
+        for map in items {
+            let item = NSPasteboardItem()
+            for (type, data) in map {
+                item.setData(data, forType: NSPasteboard.PasteboardType(type))
+            }
+            pasteboard.writeObjects([item])
         }
     }
 
@@ -54,30 +79,5 @@ enum TextInsertionService {
 
         keyVDown?.post(tap: .cghidEventTap)
         keyVUp?.post(tap: .cghidEventTap)
-    }
-
-    private static func capturePasteboard(_ pasteboard: NSPasteboard) -> [[String: Data]] {
-        guard let items = pasteboard.pasteboardItems else { return [] }
-        return items.map { item in
-            var map: [String: Data] = [:]
-            for type in item.types {
-                if let data = item.data(forType: type) {
-                    map[type.rawValue] = data
-                }
-            }
-            return map
-        }
-    }
-
-    private static func restorePasteboard(_ pasteboard: NSPasteboard, items: [[String: Data]]) {
-        guard !items.isEmpty else { return }
-        pasteboard.clearContents()
-        for map in items {
-            let item = NSPasteboardItem()
-            for (type, data) in map {
-                item.setData(data, forType: NSPasteboard.PasteboardType(type))
-            }
-            pasteboard.writeObjects([item])
-        }
     }
 }
