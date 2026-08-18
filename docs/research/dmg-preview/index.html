@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CarrotType: экран установки</title>
+  <style>
+    :root {
+      --page: #e7e8e4;
+      --page-ink: #1d1d1f;
+      --page-muted: #6e6e73;
+      --card: #f6f6f3;
+      --line: rgb(29 29 31 / .12);
+      --accent: #fe6c19;
+      --accent-soft: rgb(254 108 25 / .14);
+      --dmg: #f1f2ef;
+      --dmg-ink: #1d1d1f;
+      --finder-bar: #ecece8;
+      --finder-border: rgb(0 0 0 / .12);
+      --radius: 14px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page: #1c1d1b;
+        --page-ink: #f2f2ef;
+        --page-muted: #a1a19a;
+        --card: #262724;
+        --line: rgb(242 242 239 / .12);
+        --accent-soft: rgb(254 108 25 / .22);
+        --finder-border: rgb(255 255 255 / .08);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      min-height: 100dvh;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background: var(--page);
+      color: var(--page-ink);
+      line-height: 1.45;
+    }
+
+    .wrap {
+      width: min(920px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 36px 0 64px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    header .read {
+      margin: 0 0 28px;
+      max-width: 62ch;
+      color: var(--page-muted);
+      font-size: 0.98rem;
+    }
+
+    .locked {
+      margin: 0 0 16px;
+      font-size: 0.85rem;
+      color: var(--page-muted);
+    }
+
+    .locked strong { color: var(--page-ink); font-weight: 600; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 20px;
+      margin-bottom: 20px;
+    }
+
+    .seg {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1px solid var(--line);
+    }
+
+    .seg button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--page-muted);
+      font: inherit;
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .seg button[aria-pressed="true"] {
+      background: var(--page-ink);
+      color: var(--page);
+    }
+
+    .rec {
+      font-size: 0.85rem;
+      color: var(--page-muted);
+    }
+
+    .rec strong { color: var(--accent); font-weight: 600; }
+
+    .stage {
+      display: grid;
+      place-items: center;
+      padding: 28px 12px 36px;
+    }
+
+    .finder {
+      width: min(640px, 100%);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--dmg);
+      border: 1px solid var(--finder-border);
+      box-shadow:
+        0 1px 0 rgb(255 255 255 / .55) inset,
+        0 24px 60px rgb(0 0 0 / .18);
+    }
+
+    .titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 52px;
+      background: linear-gradient(180deg, #f7f7f4, var(--finder-bar));
+      border-bottom: 1px solid rgb(0 0 0 / .08);
+      position: relative;
+    }
+
+    .traffic {
+      position: absolute;
+      left: 14px;
+      display: flex;
+      gap: 7px;
+    }
+
+    .traffic i {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .traffic .r { background: #ff5f57; }
+    .traffic .y { background: #febc2e; }
+    .traffic .g { background: #28c840; }
+
+    .vol {
+      font-size: 13px;
+      font-weight: 590;
+      color: #3a3a3c;
+      letter-spacing: -0.01em;
+    }
+
+    .canvas {
+      position: relative;
+      height: 368px;
+      background: var(--dmg);
+    }
+
+    .headline {
+      position: absolute;
+      left: 48px;
+      right: 48px;
+      top: 36px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      color: var(--dmg-ink);
+      line-height: 1.2;
+      min-height: 2.4em;
+    }
+
+    .headline em {
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .headline[data-empty="true"] { visibility: hidden; }
+
+    .icons {
+      position: absolute;
+      left: 72px;
+      right: 72px;
+      top: 128px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .icon {
+      width: 128px;
+      text-align: center;
+    }
+
+    .icon img.face {
+      width: 128px;
+      height: 128px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 18px rgb(0 0 0 / .16));
+    }
+
+    .apps {
+      position: relative;
+      width: 128px;
+      height: 128px;
+      margin: 0 auto;
+    }
+
+    .apps .face { display: block; }
+
+    .apps .badge {
+      position: absolute;
+      left: -2px;
+      bottom: -2px;
+      width: 44px;
+      height: 44px;
+      pointer-events: none;
+    }
+
+    .icon .name {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #3a3a3c;
+      letter-spacing: -0.01em;
+    }
+
+    .swatch {
+      display: inline-block;
+      width: 0.85em;
+      height: 0.85em;
+      margin: 0 0.15em -0.05em;
+      border-radius: 3px;
+      background: var(--accent);
+      vertical-align: baseline;
+    }
+
+    .mark {
+      position: absolute;
+      left: 50%;
+      top: 168px;
+      width: 120px;
+      height: 28px;
+      transform: translateX(-50%);
+      pointer-events: none;
+      display: grid;
+      place-items: center;
+    }
+
+    .mark svg { display: block; }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 24px;
+      padding: 0 10px;
+      background: #e8e8e4;
+      border-top: 1px solid rgb(0 0 0 / .08);
+      color: #6e6e73;
+      font-size: 11px;
+    }
+
+    .statusbar img {
+      width: 14px;
+      height: 14px;
+      object-fit: contain;
+    }
+
+    .explain {
+      display: grid;
+      gap: 18px;
+      margin-top: 8px;
+      padding-top: 8px;
+    }
+
+    .explain h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .explain p {
+      margin: 0;
+      color: var(--page-muted);
+      max-width: 68ch;
+    }
+
+    .note {
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
+    }
+
+    .note p { color: var(--page-ink); }
+
+    @media (max-width: 680px) {
+      .headline { font-size: 20px; left: 20px; right: 20px; }
+      .icons { left: 24px; right: 24px; }
+      .icon, .icon img.face, .apps { width: 96px; }
+      .icon img.face, .apps { height: 96px; }
+      .apps .badge { width: 32px; height: 32px; }
+      .canvas { height: 320px; }
+      .mark { top: 150px; width: 72px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Экран установки CarrotType</h1>
+      <p class="read">
+        Макет окна Finder. Зафиксировано: English, прямая стрелка, цвет моркови с иконки
+        <span class="swatch" title="#FE6C19"></span> #FE6C19.
+      </p>
+    </header>
+
+    <p class="locked">Язык: <strong>English</strong> · знак: <strong>прямая стрелка</strong></p>
+
+    <div class="stage">
+      <figure class="finder" aria-label="Макет окна диска CarrotType">
+        <div class="titlebar">
+          <span class="traffic" aria-hidden="true"><i class="r"></i><i class="y"></i><i class="g"></i></span>
+          <span class="vol">CarrotType</span>
+        </div>
+        <div class="canvas">
+          <p class="headline">To install, <em>drag</em> CarrotType to Applications</p>
+          <div class="mark" aria-hidden="true">
+            <svg width="112" height="28" viewBox="0 0 112 28" fill="none">
+              <path d="M4 14h82" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>
+              <path d="M82 6l22 8-22 8z" fill="var(--accent)"/>
+            </svg>
+          </div>
+          <div class="icons">
+            <div class="icon">
+              <img class="face" src="app-icon.png" alt="" />
+              <div class="name">CarrotType.app</div>
+            </div>
+            <div class="icon">
+              <div class="apps">
+                <img class="face" src="applications.png" alt="" />
+                <img class="badge" src="alias-badge.png" alt="" />
+              </div>
+              <div class="name" id="apps-name">Applications</div>
+            </div>
+          </div>
+        </div>
+        <div class="statusbar">
+          <img src="app-icon.png" alt="" />
+          <span>CarrotType</span>
+        </div>
+      </figure>
+    </div>
+
+    <section class="explain">
+      <h2>Цвет стрелки</h2>
+      <p>
+        Со стрелки снят старый приглушённый оранжевый. Новый цвет снят с тела моркови на иконке:
+        #FE6C19. Наконечник залит тем же цветом, чтобы стрелка читалась как кусок той же глины, а не как обводка.
+      </p>
+      <div class="note">
+        <p>
+          Если окно выглядит верно, следующий шаг: зафиксировать это в спецификации и собрать фон в реальный DMG.
+        </p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

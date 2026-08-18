@@ -32,7 +32,15 @@ Everyday local DMG iteration can omit `CLEAN` (faster):
 ./macos/scripts/build-release-dmg.sh
 ```
 
-Output: `dist/CarrotType-<version>.dmg` (version from `macos/project.yml` → `CFBundleShortVersionString`, currently `0.1.1`).
+Output: `dist/CarrotType-<version>.dmg` (version from `macos/project.yml` → `CFBundleShortVersionString`).
+
+The disk image uses a custom Finder window (English “To install, *drag*…” plus a straight carrot-coloured arrow). Layout lives in [`macos/packaging/dmg/layout.sh`](../macos/packaging/dmg/layout.sh). Rebuild the committed background with:
+
+```bash
+swift macos/scripts/render-dmg-background.swift
+```
+
+Then run `build-release-dmg.sh` as usual. The script mounts a read-write image, applies Finder icon positions via AppleScript, and converts to UDZO. This does **not** notarize the app.
 
 Optional:
 
