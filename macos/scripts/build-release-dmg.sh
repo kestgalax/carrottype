@@ -16,6 +16,10 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 MACOS="$ROOT/macos"
 DIST="$ROOT/dist"
+PACKAGING_DMG="$MACOS/packaging/dmg"
+LAYOUT="$PACKAGING_DMG/layout.sh"
+# shellcheck source=../packaging/dmg/layout.sh
+source "$LAYOUT"
 CONFIGURATION="${CONFIGURATION:-Release}"
 VERSION="${VERSION:-}"
 SIGN_IDENTITY="${SIGN_IDENTITY:-CarrotType Development}"
@@ -131,16 +135,90 @@ fi
 
 DMG_NAME="CarrotType-${VERSION}.dmg"
 DMG_PATH="$DIST/$DMG_NAME"
-rm -f "$DMG_PATH"
+RW_DMG="$DIST/CarrotType-rw.dmg"
+BG_SRC="$PACKAGING_DMG/background@2x.png"
+rm -f "$DMG_PATH" "$RW_DMG"
 
-echo "==> Creating $DMG_PATH"
+if [[ ! -f "$BG_SRC" ]]; then
+  echo "ERROR: missing $BG_SRC (run: swift macos/scripts/render-dmg-background.swift)" >&2
+  exit 1
+fi
+
+VOLUME="/Volumes/${DMG_VOLNAME}"
+if [[ -d "$VOLUME" ]]; then
+  echo "==> Detaching leftover $VOLUME"
+  hdiutil detach "$VOLUME" -quiet || hdiutil detach "$VOLUME" -force || true
+  sleep 1
+fi
+
+echo "==> Creating read-write $RW_DMG"
 hdiutil create \
-  -volname "CarrotType" \
+  -volname "$DMG_VOLNAME" \
   -srcfolder "$STAGE" \
   -ov \
-  -format UDZO \
-  "$DMG_PATH"
+  -fs HFS+ \
+  -format UDRW \
+  "$RW_DMG"
 
+echo "==> Attaching $RW_DMG"
+MOUNT_OUTPUT="$(hdiutil attach -readwrite -noverify -noautoopen "$RW_DMG")"
+echo "$MOUNT_OUTPUT"
+DEVICE="$(echo "$MOUNT_OUTPUT" | awk 'NR==1 { print $1 }')"
+if [[ -z "$DEVICE" || ! -d "$VOLUME" ]]; then
+  echo "ERROR: failed to mount $RW_DMG at $VOLUME" >&2
+  exit 1
+fi
+
+detach_rw() {
+  hdiutil detach "$DEVICE" -quiet 2>/dev/null \
+    || hdiutil detach "$VOLUME" -force 2>/dev/null \
+    || true
+}
+trap detach_rw EXIT
+
+echo "==> Installing Finder background"
+mkdir -p "$VOLUME/.background"
+sips -s format tiff -s dpiWidth 144 -s dpiHeight 144 \
+  "$BG_SRC" --out "$VOLUME/.background/background.tiff" >/dev/null
+chflags hidden "$VOLUME/.background"
+
+WINDOW_RIGHT=$((DMG_WINDOW_LEFT + DMG_WINDOW_WIDTH))
+WINDOW_BOTTOM=$((DMG_WINDOW_TOP + DMG_WINDOW_HEIGHT))
+
+echo "==> Applying Finder window layout"
+osascript <<EOF
+tell application "Finder"
+  tell disk "$DMG_VOLNAME"
+    open
+    set current view of container window to icon view
+    set toolbar visible of container window to false
+    set statusbar visible of container window to false
+    set sidebar width of container window to 0
+    set the bounds of container window to {${DMG_WINDOW_LEFT}, ${DMG_WINDOW_TOP}, ${WINDOW_RIGHT}, ${WINDOW_BOTTOM}}
+    set theViewOptions to the icon view options of container window
+    set arrangement of theViewOptions to not arranged
+    set icon size of theViewOptions to ${DMG_ICON_SIZE}
+    set background picture of theViewOptions to file ".background:background.tiff"
+    set position of item "CarrotType.app" of container window to {${DMG_APP_X}, ${DMG_APP_Y}}
+    set position of item "Applications" of container window to {${DMG_APPS_X}, ${DMG_APPS_Y}}
+    close
+    open
+    update without registering applications
+    delay 3
+    close
+  end tell
+end tell
+EOF
+
+sync
+echo "==> Detaching $DEVICE"
+trap - EXIT
+detach_rw
+sleep 1
+
+echo "==> Converting $DMG_PATH"
+hdiutil convert "$RW_DMG" -format UDZO -imagekey zlib-level=9 -o "$DMG_PATH"
+rm -f "$RW_DMG"
 rm -rf "$STAGE"
 
 echo

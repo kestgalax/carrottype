@@ -59,6 +59,6 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 - First successful end-to-end carrottype session is documented and reproducible.
 - Setup UI makes readiness, active STT, and formatting mode obvious without rebuilding the app.
 
-## Current product status (2026-07)
+## Current product status (2026-08)
 
-**v0.2.0** ships as an unsigned DMG (Right-click → Open / Privacy & Security → Open Anyway): **Selection Transform** (ADR-012) — bindings with Translate (bidirectional language pair, default ru↔en) or Custom instructions; result in Status Capsule (Copy / Close). Also includes optional Gemma 4 E2B cleanup (ADR-010), Status Capsule dictation chrome, OOP cleanup helper (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public**; notarization is optional later.
+**v0.2.1** ships as an unsigned DMG with a custom Finder install window (drag CarrotType to Applications). **v0.2.0** added **Selection Transform** (ADR-012) — bindings with Translate (bidirectional language pair, default ru↔en) or Custom instructions; result in Status Capsule (Copy / Close). Also includes optional Gemma 4 E2B cleanup (ADR-010), Status Capsule dictation chrome, OOP cleanup helper (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public**; notarization is optional later.

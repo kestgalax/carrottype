@@ -27,6 +27,8 @@ xcodebuild -project CarrotType.xcodeproj -scheme CarrotType \
 # tagged / clean rebuild: CLEAN=1 ./scripts/build-release-dmg.sh
 ```
 
+Custom window art: `swift ../macos/scripts/render-dmg-background.swift` writes `macos/packaging/dmg/background@2x.png` from `macos/packaging/dmg/layout.sh`.
+
 See `../ops/deploy.md`.
 
 ## First-run checklist

@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.2.0`** (unsigned DMG): **Selection Transform** bindings + bidirectional Translate (ADR-012), Capsule Copy/Close.
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.2.1`** (unsigned DMG): custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
 
-Latest artifact: `CarrotType-0.2.0.dmg` (SHA-256 in `docs/github-release-notes-v0.2.0.md`).
+Latest artifact: `CarrotType-0.2.1.dmg` (SHA-256 in `docs/github-release-notes-v0.2.1.md`).
 
 **Current focus:** repo is **public** (MIT + ADR-011). Notarization / Apple Developer ID remains **optional later**, not a publish blocker.
 
@@ -56,6 +56,7 @@ Checklist:
 - [x] Storage: Active/Unused markers on installed packages (aligned with delete-unused).
 - [x] Optional Whisper Turbo q5 (ggml) + SHA-256 verify for ggml packages.
 - [x] Release `.dmg` build script (`macos/scripts/build-release-dmg.sh`) without notarization + Gatekeeper install docs (`ops/deploy.md`).
+- [x] Custom Finder window for the Release `.dmg` (background + drag arrow) — `docs/superpowers/specs/2026-08-18-dmg-installer-design.md`.
 - [x] Clean Parakeet/Whisper package delete (FluidAudio sibling layout) + select-only-when-ready UX.
 - [x] Settings copy polish (dictation model / post-dictation formatting) + optional retain-in-clipboard + RU/EN localization.
 - [x] «Make active» on Ready STT packages (same pattern as post-dictation formatting).
@@ -77,9 +78,10 @@ Checklist:
 - [x] Publish GitHub Release `v0.1.9` — optional Gemma cleanup + literal prompt + `docs/github-release-notes-v0.1.9.md`.
 - [x] Public MIT distribution posture (ADR-011) — `LICENSE`, README branding/install notes; notarization not required for visibility.
 - [x] Publish GitHub Release `v0.2.0` — Selection Transform bindings + bidirectional Translate (ADR-012) + `docs/github-release-notes-v0.2.0.md`.
+- [x] Publish GitHub Release `v0.2.1` — custom DMG install window + `docs/github-release-notes-v0.2.1.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 
-Status: **v0.2.0 unsigned DMG** on public GitHub — install via Right-click → Open / Privacy & Security → Open Anyway.
+Status: **v0.2.1 unsigned DMG** — custom Finder install window; Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
 
 ## Next focus (ordered)
 
@@ -88,7 +90,7 @@ Status: **v0.2.0 unsigned DMG** on public GitHub — install via Right-click →
 
 ## In progress / on branch
 
-- (none — Selection Transform shipped in v0.2.0)
+- (none — custom DMG window ships in v0.2.1)
 
 ## Near-term polish candidates (if release is blocked)
 
