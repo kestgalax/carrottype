@@ -38,13 +38,27 @@ struct KeyChord: Equatable, Hashable, Codable {
         return KeyChord(keyCode: keyCode, carbonModifiers: carbonModifiers(from: flags))
     }
 
-    private static func carbonModifiers(from flags: NSEvent.ModifierFlags) -> UInt32 {
+    static func carbonModifiers(from flags: NSEvent.ModifierFlags) -> UInt32 {
         var carbon: UInt32 = 0
         if flags.contains(.command) { carbon |= UInt32(cmdKey) }
         if flags.contains(.option) { carbon |= UInt32(optionKey) }
         if flags.contains(.control) { carbon |= UInt32(controlKey) }
         if flags.contains(.shift) { carbon |= UInt32(shiftKey) }
         return carbon
+    }
+
+    /// True when this event ends the held chord (key-up of the key, or a required modifier dropped).
+    func isReleased(by event: NSEvent) -> Bool {
+        switch event.type {
+        case .keyUp:
+            return event.keyCode == keyCode
+        case .flagsChanged:
+            let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+            let current = Self.carbonModifiers(from: flags)
+            return (current & carbonModifiers) != carbonModifiers
+        default:
+            return false
+        }
     }
 
     private static func keyLabel(for keyCode: UInt16) -> String {
@@ -126,14 +140,21 @@ private func carrottypeHotKeyEventHandler(
         &hkID
     )
     guard hkID.signature == OSType(0x43525450) else { return noErr } // 'CRTP'
+    let isRelease = GetEventKind(event) == UInt32(kEventHotKeyReleased)
     DispatchQueue.main.async {
         switch hkID.id {
         case 1:
-            service.handleCarbonHotkey()
+            if isRelease {
+                service.handleCarbonHotkeyReleased()
+            } else {
+                service.handleCarbonHotkeyPressed()
+            }
         case 2:
-            service.handleCarbonEscapeCancel()
+            if !isRelease {
+                service.handleCarbonEscapeCancel()
+            }
         default:
-            if hkID.id >= 3 {
+            if !isRelease, hkID.id >= 3 {
                 service.handleCarbonTransformHotkey(carbonID: hkID.id)
             }
         }
@@ -157,7 +178,10 @@ final class HotkeyService: ObservableObject {
     private var escapeHotKeyRef: EventHotKeyRef?
     private var eventHandler: EventHandlerRef?
     private var localMonitor: Any?
+    private var pttGlobalReleaseMonitor: Any?
+    private var pttLocalReleaseMonitor: Any?
     private var onHotkey: (() -> Void)?
+    private var onHotkeyReleased: (() -> Void)?
     private var onTransformHotkey: ((UUID) -> Void)?
     private var onEscapeCancel: (() -> Void)?
 
@@ -187,6 +211,10 @@ final class HotkeyService: ObservableObject {
         onHotkey = handler
     }
 
+    func setOnHotkeyReleased(_ handler: @escaping () -> Void) {
+        onHotkeyReleased = handler
+    }
+
     func setOnTransformHotkey(_ handler: @escaping (UUID) -> Void) {
         onTransformHotkey = handler
     }
@@ -195,8 +223,43 @@ final class HotkeyService: ObservableObject {
         onEscapeCancel = handler
     }
 
-    func handleCarbonHotkey() {
+    func handleCarbonHotkeyPressed() {
         onHotkey?()
+    }
+
+    func handleCarbonHotkeyReleased() {
+        emitDictationReleased()
+    }
+
+    /// Hold-to-talk safety net: Carbon `kEventHotKeyReleased` is not always delivered.
+    func startPushToTalkReleaseMonitor() {
+        stopPushToTalkReleaseMonitor()
+        pttGlobalReleaseMonitor = NSEvent.addGlobalMonitorForEvents(
+            matching: [.keyUp, .flagsChanged]
+        ) { [weak self] event in
+            Task { @MainActor in
+                self?.handlePushToTalkReleaseEvent(event)
+            }
+        }
+        pttLocalReleaseMonitor = NSEvent.addLocalMonitorForEvents(
+            matching: [.keyUp, .flagsChanged]
+        ) { [weak self] event in
+            Task { @MainActor in
+                self?.handlePushToTalkReleaseEvent(event)
+            }
+            return event
+        }
+    }
+
+    func stopPushToTalkReleaseMonitor() {
+        if let pttGlobalReleaseMonitor {
+            NSEvent.removeMonitor(pttGlobalReleaseMonitor)
+            self.pttGlobalReleaseMonitor = nil
+        }
+        if let pttLocalReleaseMonitor {
+            NSEvent.removeMonitor(pttLocalReleaseMonitor)
+            self.pttLocalReleaseMonitor = nil
+        }
     }
 
     func handleCarbonTransformHotkey(carbonID: UInt32) {
@@ -396,22 +459,41 @@ final class HotkeyService: ObservableObject {
         }
     }
 
+    private func handlePushToTalkReleaseEvent(_ event: NSEvent) {
+        guard chord.isReleased(by: event) else { return }
+        emitDictationReleased()
+    }
+
+    private func emitDictationReleased() {
+        stopPushToTalkReleaseMonitor()
+        onHotkeyReleased?()
+    }
+
     private func installHandlerIfNeeded() {
         guard eventHandler == nil else { return }
 
-        var eventType = EventTypeSpec(
-            eventClass: OSType(kEventClassKeyboard),
-            eventKind: UInt32(kEventHotKeyPressed)
-        )
+        var eventTypes: [EventTypeSpec] = [
+            EventTypeSpec(
+                eventClass: OSType(kEventClassKeyboard),
+                eventKind: UInt32(kEventHotKeyPressed)
+            ),
+            EventTypeSpec(
+                eventClass: OSType(kEventClassKeyboard),
+                eventKind: UInt32(kEventHotKeyReleased)
+            ),
+        ]
         let pointer = Unmanaged.passUnretained(self).toOpaque()
-        InstallEventHandler(
-            GetApplicationEventTarget(),
-            carrottypeHotKeyEventHandler,
-            1,
-            &eventType,
-            pointer,
-            &eventHandler
-        )
+        _ = eventTypes.withUnsafeMutableBufferPointer { buffer in
+            guard let base = buffer.baseAddress else { return OSStatus(paramErr) }
+            return InstallEventHandler(
+                GetApplicationEventTarget(),
+                carrottypeHotKeyEventHandler,
+                2,
+                base,
+                pointer,
+                &eventHandler
+            )
+        }
     }
 
     private enum Keys {

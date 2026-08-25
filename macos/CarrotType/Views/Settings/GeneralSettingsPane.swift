@@ -6,10 +6,24 @@ struct GeneralSettingsPane: View {
 
     private var locale: Locale { appState.effectiveLocale }
 
+    private var hotkeyFooter: String {
+        if hotkey.isRecording, hotkey.captureTarget == .dictation {
+            return L10n.t("hotkey.footer_recording", locale: locale)
+        }
+        if appState.pushToTalkEnabled {
+            return L10n.t("hotkey.push_to_talk_footer", locale: locale)
+        }
+        return L10n.t("hotkey.retain_clipboard_footer", locale: locale)
+    }
+
     var body: some View {
         Form {
             Section {
                 HotkeySettingsRow(hotkey: hotkey, target: .dictation)
+                Toggle(
+                    L10n.t("hotkey.push_to_talk", locale: locale),
+                    isOn: $appState.pushToTalkEnabled
+                )
                 Toggle(
                     L10n.t("hotkey.retain_clipboard", locale: locale),
                     isOn: $appState.retainDictationInClipboard
@@ -17,11 +31,7 @@ struct GeneralSettingsPane: View {
             } header: {
                 Text(L10n.t("hotkey.section", locale: locale))
             } footer: {
-                Text(
-                    hotkey.isRecording && hotkey.captureTarget == .dictation
-                        ? L10n.t("hotkey.footer_recording", locale: locale)
-                        : L10n.t("hotkey.retain_clipboard_footer", locale: locale)
-                )
+                Text(hotkeyFooter)
             }
 
             Section {

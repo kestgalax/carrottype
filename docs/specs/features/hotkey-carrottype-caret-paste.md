@@ -19,14 +19,14 @@ Users need a fast, private way to turn speech into text in whatever app they are
 ## Proposed Behavior
 
 1. User presses a global hotkey to start recording.
-2. User presses again (or releases, if push-to-talk) to stop.
+2. User presses again to stop (**toggle**, default), or **releases** to stop when Walkie-talkie is enabled in Settings → General (hold-to-talk only; a quick tap without holding does not leave recording active). Escape cancels in both modes.
 3. Audio is transcribed on-device with a Parakeet/Whisper-class model.
 4. Resulting text is inserted at the caret of the frontmost application.
 
 ## Acceptance Criteria
 
 - Global hotkey works while another app is focused.
-- Recording start/stop is under explicit user control.
+- Recording start/stop is under explicit user control (toggle: two presses; Walkie-talkie: hold then release only).
 - Transcription completes without network dependency for the default model path.
 - Text is pasted/inserted at the current caret (not only shown in a separate window).
 - Failure modes (mic denied, model missing, empty audio) surface a clear local status.
@@ -34,6 +34,7 @@ Users need a fast, private way to turn speech into text in whatever app they are
 ## Verification Plan
 
 - Manual: hotkey start/stop while TextEdit is focused; spoken text appears at caret.
+- Manual: Settings → General → Walkie-talkie on; hold the dictation shortcut, speak, release; text appears. A quick tap without holding does not keep recording. Escape while holding cancels.
 - Manual: repeat in a browser text field.
 - Manual: airplane mode / blocked network still succeeds for the default local model path.
 - Manual: deny Microphone and Accessibility once each; app shows a clear recovery hint.
