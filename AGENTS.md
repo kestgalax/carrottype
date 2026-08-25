@@ -27,6 +27,7 @@ Also respect `.ai/constraints.md`, `.ai/workflow.md`, and `.ai/memory.md`.
 - After every completed implementation task, update `docs/roadmap.md`.
 - Update other documentation when behavior, workflow, architecture, or decisions change.
 - Do not remove project memory unless explicitly instructed by a human maintainer.
+- Implement each new plan on a **new git branch** from the current default branch (typically `main`). Do not implement on `main` or an unrelated existing branch unless a human maintainer explicitly asked to stay on the current branch.
 
 ## Traceability
 

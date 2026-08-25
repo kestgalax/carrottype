@@ -1287,6 +1287,40 @@
         }
       }
     },
+    "hotkey.push_to_talk": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Walkie-talkie (hold to talk)"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Режим рации (удерживать для записи)"
+          }
+        }
+      }
+    },
+    "hotkey.push_to_talk_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold the shortcut to record. Release to transcribe and paste. Without holding, a tap does not keep recording. Escape cancels without pasting."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удерживайте сочетание, чтобы писать. Отпустите — распознать и вставить. Без удержания короткое нажатие не оставляет запись. Escape отменяет диктовку без вставки."
+          }
+        }
+      }
+    },
     "hotkey.reset": {
       "extractionState": "stale",
       "localizations": {

@@ -5,7 +5,7 @@
 `carrottype` is a native macOS menu bar / background app. The primary loop is:
 
 ```text
-Global hotkey
+Global hotkey (toggle by default; hold-to-talk only when Walkie-talkie is on)
   → microphone capture
     → on-device STT (catalog model)
   → optional post-dictation formatting (Light / Qwen3 Smart)
@@ -27,7 +27,7 @@ Transform hotkey (default ⌥')
 | Component | Responsibility |
 |-----------|----------------|
 | App shell (Swift / SwiftUI) | Lifecycle, menu bar status, Status Capsule (session chrome near notch), Setup/Status UI, permission prompts, RU/EN locale |
-| Hotkey service | Register and handle global dictation + N transform binding hotkeys |
+| Hotkey service | Register and handle global dictation + N transform binding hotkeys; dictation is toggle (default) or hold-to-talk only (Settings Walkie-talkie) |
 | Audio capture | Record microphone audio for the active session; optional experimental temporary unmute via Wave Link (ADR-007) |
 | Model Manager | Catalog, download, verify, activate STT/cleanup packages (ADR-003) |
 | STT runtime | Run active STT package (Parakeet / Whisper paths) |

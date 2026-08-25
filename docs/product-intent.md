@@ -17,7 +17,7 @@ Anyone can speak into any macOS app and get accurate text without leaving the ke
 Build a macOS background / menu-bar app whose primary loop is:
 
 1. Global hotkey starts recording.
-2. Same or release hotkey stops recording.
+2. Same hotkey stops recording: **press again** in toggle mode (default), or **release** when Walkie-talkie is on in Settings (hold-to-talk only). The modes are mutually exclusive; same dictation shortcut either way.
 3. On-device STT (default Parakeet TDT v3; user-selectable catalog) produces text.
 4. Optional cleanup / post-dictation formatting (Light heuristics or Qwen3 Smart) formats text without rewriting meaning.
 5. Text is inserted at the current caret in the frontmost app.
@@ -61,4 +61,4 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 
 ## Current product status (2026-08)
 
-**v0.2.1** ships as an unsigned DMG with a custom Finder install window (drag CarrotType to Applications). **v0.2.0** added **Selection Transform** (ADR-012) — bindings with Translate (bidirectional language pair, default ru↔en) or Custom instructions; result in Status Capsule (Copy / Close). Also includes optional Gemma 4 E2B cleanup (ADR-010), Status Capsule dictation chrome, OOP cleanup helper (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public**; notarization is optional later.
+**v0.2.2** ships Walkie-talkie / hold-to-talk as a Settings toggle (same dictation hotkey; default remains press-toggle). **v0.2.1** added a custom Finder install window. **v0.2.0** added **Selection Transform** (ADR-012) — bindings with Translate (bidirectional language pair, default ru↔en) or Custom instructions; result in Status Capsule (Copy / Close). Also includes optional Gemma 4 E2B cleanup (ADR-010), Status Capsule dictation chrome, OOP cleanup helper (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public**; notarization is optional later.

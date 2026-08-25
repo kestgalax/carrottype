@@ -34,6 +34,12 @@ final class AppState: ObservableObject {
             UserDefaults.standard.set(retainDictationInClipboard, forKey: Keys.retainClipboard)
         }
     }
+    /// When true, the dictation hotkey is hold-to-talk (release commits). Default is toggle.
+    @Published var pushToTalkEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(pushToTalkEnabled, forKey: Keys.pushToTalk)
+        }
+    }
     /// User opted into the live Settings mic meter (off by default to save energy).
     @Published var micMeterEnabled = false {
         didSet {
@@ -75,6 +81,10 @@ final class AppState: ObservableObject {
     private var transformCopiedFeedbackTask: Task<Void, Never>?
     /// Counts nested Settings appearances so SwiftUI remounts do not clear the mic meter.
     private var settingsAppearanceCount = 0
+    /// Walkie-talkie: true while the dictation chord is physically held (set on press, cleared on release).
+    private var pttKeyHeld = false
+    /// Walkie-talkie: guards against overlapping async starts on very fast press/release.
+    private var pttStartInFlight = false
 
     init(
         modelManager: ModelManager? = nil,
@@ -103,6 +113,7 @@ final class AppState: ObservableObject {
             self.appLanguage = .system
         }
         self.retainDictationInClipboard = defaults.bool(forKey: Keys.retainClipboard)
+        self.pushToTalkEnabled = defaults.bool(forKey: Keys.pushToTalk)
         self.unmuteMicDuringDictation = defaults.bool(forKey: Keys.unmuteDuringDictation)
 
         statusCapsule.attach(appState: self)
@@ -184,6 +195,9 @@ final class AppState: ObservableObject {
 
         hotkey.setOnHotkey { [weak self] in
             self?.handleHotkeyPressed()
+        }
+        hotkey.setOnHotkeyReleased { [weak self] in
+            self?.handleHotkeyReleased()
         }
         hotkey.setOnTransformHotkey { [weak self] bindingID in
             self?.handleTransformHotkeyPressed(bindingID: bindingID)
@@ -315,7 +329,8 @@ final class AppState: ObservableObject {
         }
     }
 
-    /// Toggle: start recording → stop → transcribe → paste at caret.
+    /// Toggle (default): press starts, press again commits.
+    /// Walkie-talkie: hold records, release commits; repeat press while holding is ignored.
     private func handleHotkeyPressed() {
         if capsulePhase == .transformResult {
             dismissTransformResult()
@@ -323,6 +338,13 @@ final class AppState: ObservableObject {
 
         if isProcessing || menuBarMode == .processing || menuBarMode == .cleanup {
             return
+        }
+
+        if pushToTalkEnabled {
+            pttKeyHeld = true
+            if menuBarMode == .recording || pttStartInFlight {
+                return
+            }
         }
 
         if menuBarMode == .recording {
@@ -336,7 +358,27 @@ final class AppState: ObservableObject {
             return
         }
 
-        Task { await startDictationSession() }
+        if pushToTalkEnabled {
+            pttStartInFlight = true
+            Task {
+                await startDictationSession()
+                pttStartInFlight = false
+            }
+        } else {
+            Task { await startDictationSession() }
+        }
+    }
+
+    /// Walkie-talkie only: release commits (or cancels if the session never got a hold).
+    private func handleHotkeyReleased() {
+        guard pushToTalkEnabled else { return }
+        pttKeyHeld = false
+
+        if isProcessing || menuBarMode == .processing || menuBarMode == .cleanup {
+            return
+        }
+        guard menuBarMode == .recording else { return }
+        Task { await finishDictationSession() }
     }
 
     /// Selection transform (ADR-012): read selection → LLM → show result in Capsule.
@@ -568,6 +610,10 @@ final class AppState: ObservableObject {
         }
         guard menuBarMode != .recording, !isProcessing else { return }
 
+        if pushToTalkEnabled, !pttKeyHeld {
+            return
+        }
+
         lastSessionError = nil
         cancelScheduledModelUnload()
         audioLevel.stop()
@@ -581,12 +627,24 @@ final class AppState: ObservableObject {
             )
         }
 
+        if pushToTalkEnabled, !pttKeyHeld {
+            await micMute.endDictationRestore()
+            return
+        }
+
         do {
             _ = try recorder.start(deviceUID: audioInput.selectedDeviceID)
             invalidateCapsuleSequence()
             menuBarMode = .recording
             capsulePhase = .listening
             hotkey.setEscapeCancelRegistered(true)
+            if pushToTalkEnabled {
+                hotkey.startPushToTalkReleaseMonitor()
+                if !pttKeyHeld {
+                    await cancelDictationSession()
+                    return
+                }
+            }
         } catch {
             await micMute.endDictationRestore()
             lastSessionError = error.localizedDescription
@@ -601,7 +659,10 @@ final class AppState: ObservableObject {
     private func cancelDictationSession() async {
         guard menuBarMode == .recording, !isProcessing else { return }
 
+        hotkey.stopPushToTalkReleaseMonitor()
         hotkey.setEscapeCancelRegistered(false)
+        pttKeyHeld = false
+        pttStartInFlight = false
         recorder.cancel()
         recorderLiveLevel = 0
         lastSessionError = nil
@@ -613,9 +674,13 @@ final class AppState: ObservableObject {
     }
 
     private func finishDictationSession() async {
+        guard menuBarMode == .recording, !isProcessing else { return }
+
         isProcessing = true
         recorderLiveLevel = 0
+        hotkey.stopPushToTalkReleaseMonitor()
         hotkey.setEscapeCancelRegistered(false)
+        pttKeyHeld = false
         menuBarMode = .processing
         capsulePhase = .understanding
         defer {
@@ -780,6 +845,7 @@ final class AppState: ObservableObject {
 
     private enum Keys {
         static let retainClipboard = "carrottype.retainDictationInClipboard"
+        static let pushToTalk = "carrottype.dictationPushToTalk"
         static let unmuteDuringDictation = "carrottype.unmuteMicDuringDictation"
     }
 }

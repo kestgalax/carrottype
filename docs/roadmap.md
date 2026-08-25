@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.2.1`** (unsigned DMG): custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.2.2`** (unsigned DMG): Walkie-talkie / hold-to-talk dictation mode. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
 
-Latest artifact: `CarrotType-0.2.1.dmg` (SHA-256 in `docs/github-release-notes-v0.2.1.md`).
+Latest artifact: `CarrotType-0.2.2.dmg` (SHA-256 in `docs/github-release-notes-v0.2.2.md`).
 
 **Current focus:** repo is **public** (MIT + ADR-011). Notarization / Apple Developer ID remains **optional later**, not a publish blocker.
 
@@ -79,9 +79,10 @@ Checklist:
 - [x] Public MIT distribution posture (ADR-011) — `LICENSE`, README branding/install notes; notarization not required for visibility.
 - [x] Publish GitHub Release `v0.2.0` — Selection Transform bindings + bidirectional Translate (ADR-012) + `docs/github-release-notes-v0.2.0.md`.
 - [x] Publish GitHub Release `v0.2.1` — custom DMG install window + `docs/github-release-notes-v0.2.1.md`.
+- [x] Publish GitHub Release `v0.2.2` — Walkie-talkie dictation mode + `docs/github-release-notes-v0.2.2.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 
-Status: **v0.2.1 unsigned DMG** — custom Finder install window; Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
+Status: **v0.2.2 unsigned DMG** — Walkie-talkie hold-to-talk toggle in General; Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
 
 ## Next focus (ordered)
 
@@ -90,7 +91,7 @@ Status: **v0.2.1 unsigned DMG** — custom Finder install window; Gatekeeper pat
 
 ## In progress / on branch
 
-- (none — custom DMG window ships in v0.2.1)
+- (none — Walkie-talkie ships in v0.2.2)
 
 ## Near-term polish candidates (if release is blocked)
 
@@ -103,6 +104,7 @@ Small, user-visible fixes that do not expand scope:
 - Menu-bar remaining-hints refresh after language change (if any stale copy remains).
 - [x] Recommended STT is Parakeet (first-run CTA targets Parakeet when not Ready).
 - [x] Optional Gemma 4 E2B formatting package (ADR-010) — download / Make active / Delete beside Smart/Smart+.
+- [x] Walkie-talkie / hold-to-talk dictation mode (Settings toggle, default off; same dictation hotkey).
 - Sparkle (or similar) auto-update after Developer ID / public or auth feed — Status currently only opens Releases.
 
 ## Post-v1 research spikes (no runtime yet)

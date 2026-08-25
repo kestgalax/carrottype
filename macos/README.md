@@ -44,6 +44,7 @@ See `../ops/deploy.md`.
 1. Focus a text field in any app.
 2. Press the hotkey (default **⌥/**) — recording starts.
 3. Speak, then press the hotkey again — processing, then text is pasted at the caret.
+4. Optional: Settings → General → **Walkie-talkie** — hold the same shortcut to record, release to transcribe and paste (repeat press does not commit; toggle mode when off).
 
 Models: `~/Library/Application Support/carrottype/models/`
 
