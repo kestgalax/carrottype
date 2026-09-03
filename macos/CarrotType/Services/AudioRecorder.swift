@@ -193,13 +193,19 @@ final class AudioRecorder {
         return url
     }
 
-    func stop() throws -> URL {
+    struct StoppedRecording: Sendable {
+        let url: URL
+        let duration: TimeInterval
+    }
+
+    func stop() throws -> StoppedRecording {
         guard isRecording, let url = outputURL, let engine else {
             throw AudioRecorderError.notRecording
         }
 
         let snapshot = buffers?.snapshot ?? (frames: 0, peak: 0)
         lastPeakLevel = snapshot.peak
+        let duration = Double(snapshot.frames) / targetFormat.sampleRate
 
         engine.inputNode.removeTap(onBus: 0)
         engine.stop()
@@ -215,7 +221,7 @@ final class AudioRecorder {
             throw AudioRecorderError.silentOrTooShort
         }
 
-        return url
+        return StoppedRecording(url: url, duration: max(0, duration))
     }
 
     func cancel() {

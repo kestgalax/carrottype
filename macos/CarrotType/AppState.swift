@@ -56,6 +56,23 @@ final class AppState: ObservableObject {
             UserDefaults.standard.set(unmuteMicDuringDictation, forKey: Keys.unmuteDuringDictation)
         }
     }
+    /// Opt-in local usage counts (ADR-013). Default off — no writes until enabled.
+    @Published var statsCollectionEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(statsCollectionEnabled, forKey: Keys.statsCollection)
+        }
+    }
+    /// Typing speed used only to estimate time saved (not measured).
+    @Published var typingSpeedWPM: Int {
+        didSet {
+            let clamped = UsageStatsEstimate.clampedWPM(typingSpeedWPM)
+            if clamped != typingSpeedWPM {
+                typingSpeedWPM = clamped
+                return
+            }
+            UserDefaults.standard.set(clamped, forKey: Keys.typingSpeedWPM)
+        }
+    }
     var effectiveLocale: Locale { appLanguage.effectiveLocale }
 
     /// Selection-transform bindings (hotkey + kind + model); persisted via HotkeyService.
@@ -67,6 +84,7 @@ final class AppState: ObservableObject {
     let audioInput: AudioInputService
     let audioLevel: AudioLevelMonitor
     let pipeline: DictationPipeline
+    let usageStats: UsageStatsStore
 
     private let recorder = AudioRecorder()
     private let micMute = MicMuteController()
@@ -92,6 +110,7 @@ final class AppState: ObservableObject {
         hotkey: HotkeyService? = nil,
         audioInput: AudioInputService? = nil,
         audioLevel: AudioLevelMonitor? = nil,
+        usageStats: UsageStatsStore? = nil,
         defaults: UserDefaults = .standard
     ) {
         let modelManager = modelManager ?? ModelManager()
@@ -105,6 +124,7 @@ final class AppState: ObservableObject {
         self.audioInput = audioInput
         self.audioLevel = audioLevel
         self.pipeline = DictationPipeline(modelManager: modelManager)
+        self.usageStats = usageStats ?? UsageStatsStore()
         self.showFirstRun = !defaults.bool(forKey: "carrottype.didCompleteFirstRun")
         if let raw = defaults.string(forKey: AppLanguage.defaultsKey),
            let language = AppLanguage(rawValue: raw) {
@@ -115,6 +135,12 @@ final class AppState: ObservableObject {
         self.retainDictationInClipboard = defaults.bool(forKey: Keys.retainClipboard)
         self.pushToTalkEnabled = defaults.bool(forKey: Keys.pushToTalk)
         self.unmuteMicDuringDictation = defaults.bool(forKey: Keys.unmuteDuringDictation)
+        self.statsCollectionEnabled = defaults.bool(forKey: Keys.statsCollection)
+        if defaults.object(forKey: Keys.typingSpeedWPM) != nil {
+            self.typingSpeedWPM = UsageStatsEstimate.clampedWPM(defaults.integer(forKey: Keys.typingSpeedWPM))
+        } else {
+            self.typingSpeedWPM = UsageStatsEstimate.defaultWPM
+        }
 
         statusCapsule.attach(appState: self)
         NotificationCenter.default.addObserver(
@@ -595,6 +621,7 @@ final class AppState: ObservableObject {
             lastSessionError = nil
             menuBarMode = .idle
             presentTransformResult(result, direction: direction)
+            recordTransformIfEnabled(binding: binding)
         } catch {
             lastSessionError = error.localizedDescription
             clearCapsulePhase()
@@ -693,8 +720,11 @@ final class AppState: ObservableObject {
         }
 
         let audioURL: URL
+        let recordingDuration: TimeInterval
         do {
-            audioURL = try recorder.stop()
+            let stopped = try recorder.stop()
+            audioURL = stopped.url
+            recordingDuration = stopped.duration
         } catch {
             await micMute.endDictationRestore()
             if case AudioRecorderError.silentOrTooShort = error {
@@ -736,6 +766,7 @@ final class AppState: ObservableObject {
                 cleaned,
                 retainInClipboard: retainDictationInClipboard
             )
+            recordUsageIfEnabled(text: cleaned, recordingDuration: recordingDuration)
             lastSessionError = nil
             menuBarMode = .idle
             await presentSuccessCapsuleSequence()
@@ -843,10 +874,28 @@ final class AppState: ObservableObject {
         objectWillChange.send()
     }
 
+    private func recordUsageIfEnabled(text: String, recordingDuration: TimeInterval) {
+        guard statsCollectionEnabled else { return }
+        let characters = text.trimmingCharacters(in: .whitespacesAndNewlines).count
+        let recordingMilliseconds = Int((recordingDuration * 1000).rounded())
+        usageStats.record(characters: characters, recordingMilliseconds: recordingMilliseconds)
+    }
+
+    private func recordTransformIfEnabled(binding: TransformBinding) {
+        guard statsCollectionEnabled else { return }
+        usageStats.recordTransform(bindingID: binding.id, kind: binding.kind)
+    }
+
+    func clearUsageStatistics() {
+        usageStats.clear()
+    }
+
     private enum Keys {
         static let retainClipboard = "carrottype.retainDictationInClipboard"
         static let pushToTalk = "carrottype.dictationPushToTalk"
         static let unmuteDuringDictation = "carrottype.unmuteMicDuringDictation"
+        static let statsCollection = "carrottype.statsCollectionEnabled"
+        static let typingSpeedWPM = "carrottype.typingSpeedWPM"
     }
 }
 

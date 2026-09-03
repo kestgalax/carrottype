@@ -59,6 +59,6 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 - First successful end-to-end carrottype session is documented and reproducible.
 - Setup UI makes readiness, active STT, and formatting mode obvious without rebuilding the app.
 
-## Current product status (2026-08)
+## Current product status (2026-09)
 
-**v0.2.2** ships Walkie-talkie / hold-to-talk as a Settings toggle (same dictation hotkey; default remains press-toggle). **v0.2.1** added a custom Finder install window. **v0.2.0** added **Selection Transform** (ADR-012) — bindings with Translate (bidirectional language pair, default ru↔en) or Custom instructions; result in Status Capsule (Copy / Close). Also includes optional Gemma 4 E2B cleanup (ADR-010), Status Capsule dictation chrome, OOP cleanup helper (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public**; notarization is optional later.
+**v0.3.0** ships **local opt-in usage statistics** (ADR-013): Settings → Statistics; month estimates of typing time saved; successful dictation count; per-binding transform counts. Collection is off by default and stays on-device. **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added a custom Finder install window. **v0.2.0** added **Selection Transform** (ADR-012). Also includes optional Gemma 4 E2B cleanup (ADR-010), Status Capsule dictation chrome, OOP cleanup helper (ADR-009). Recommended STT is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public**; notarization is optional later.
