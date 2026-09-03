@@ -23,6 +23,7 @@ Replace the default Finder folder window with a branded drag-to-Applications scr
 - Volume name: `CarrotType` (no version in the window title).
 - Icon labels: Finder-drawn `CarrotType.app` and `Applications`.
 - Packaging: extend `macos/scripts/build-release-dmg.sh` with RW DMG + AppleScript. No `create-dmg` / npm / extra Python packages.
+- After Finder layout: `chflags hidden` on `.background`, delete `.fseventsd`, park leftover icons off-canvas. Those folders are packaging-only (wallpaper + FSEvents) and must not appear in the install window.
 - No new ADR: distribution channel remains unsigned GitHub DMG (ADR-011).
 
 ## Layout (points)

@@ -4,7 +4,7 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (after v0.3.0)
+## Current phase (after v0.3.1)
 
 Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**.
 
