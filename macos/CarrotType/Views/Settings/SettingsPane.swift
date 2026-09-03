@@ -6,6 +6,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
     case setup
     case models
     case storage
+    case statistics
 
     var id: String { rawValue }
 
@@ -15,6 +16,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .setup: return "gear"
         case .models: return "cpu"
         case .storage: return "internaldrive"
+        case .statistics: return "chart.bar"
         }
     }
 
@@ -24,6 +26,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .setup: return L10n.t("settings.pane.setup", locale: locale)
         case .models: return L10n.t("settings.pane.models", locale: locale)
         case .storage: return L10n.t("settings.pane.storage", locale: locale)
+        case .statistics: return L10n.t("settings.pane.statistics", locale: locale)
         }
     }
 }

@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.2.2`** (unsigned DMG): Walkie-talkie / hold-to-talk dictation mode. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.0`** (unsigned DMG): local opt-in usage statistics (ADR-013). **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
 
-Latest artifact: `CarrotType-0.2.2.dmg` (SHA-256 in `docs/github-release-notes-v0.2.2.md`).
+Latest artifact: `CarrotType-0.3.0.dmg` (SHA-256 in `docs/github-release-notes-v0.3.0.md`).
 
 **Current focus:** repo is **public** (MIT + ADR-011). Notarization / Apple Developer ID remains **optional later**, not a publish blocker.
 
@@ -80,9 +80,10 @@ Checklist:
 - [x] Publish GitHub Release `v0.2.0` — Selection Transform bindings + bidirectional Translate (ADR-012) + `docs/github-release-notes-v0.2.0.md`.
 - [x] Publish GitHub Release `v0.2.1` — custom DMG install window + `docs/github-release-notes-v0.2.1.md`.
 - [x] Publish GitHub Release `v0.2.2` — Walkie-talkie dictation mode + `docs/github-release-notes-v0.2.2.md`.
+- [x] Publish GitHub Release `v0.3.0` — local opt-in usage statistics (ADR-013) + `docs/github-release-notes-v0.3.0.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 
-Status: **v0.2.2 unsigned DMG** — Walkie-talkie hold-to-talk toggle in General; Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
+Status: **v0.3.0 unsigned DMG** — Settings → Statistics (opt-in local time-saved estimates + per-binding transform counts); Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
 
 ## Next focus (ordered)
 
@@ -91,7 +92,7 @@ Status: **v0.2.2 unsigned DMG** — Walkie-talkie hold-to-talk toggle in General
 
 ## In progress / on branch
 
-- (none — Walkie-talkie ships in v0.2.2)
+- (none — local usage statistics ships in v0.3.0)
 
 ## Near-term polish candidates (if release is blocked)
 
@@ -105,6 +106,7 @@ Small, user-visible fixes that do not expand scope:
 - [x] Recommended STT is Parakeet (first-run CTA targets Parakeet when not Ready).
 - [x] Optional Gemma 4 E2B formatting package (ADR-010) — download / Make active / Delete beside Smart/Smart+.
 - [x] Walkie-talkie / hold-to-talk dictation mode (Settings toggle, default off; same dictation hotkey).
+- [x] Local opt-in time-saved statistics (ADR-013) — Settings → Statistics; month estimates; WPM default 50; per-binding transform counts (shipped in v0.3.0).
 - Sparkle (or similar) auto-update after Developer ID / public or auth feed — Status currently only opens Releases.
 
 ## Post-v1 research spikes (no runtime yet)

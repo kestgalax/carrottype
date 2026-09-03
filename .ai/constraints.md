@@ -25,6 +25,7 @@ mic → temp audio → on-device STT → optional local cleanup → caret paste 
 
 - Settings and selections stay on-device (`UserDefaults`, Application Support).
 - Do not persist dictation audio longer than the session needs.
+- Optional **opt-in** usage counts (ADR-013): daily dictation totals (characters, recording duration, sessions) and per-binding transform counts under Application Support — never transcripts, never upload. Default off.
 
 ### Closed network sinks
 

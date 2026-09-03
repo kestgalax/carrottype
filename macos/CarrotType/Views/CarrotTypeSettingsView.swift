@@ -119,6 +119,8 @@ struct CarrotTypeSettingsView: View {
                 )
             case .storage:
                 StorageSettingsPane(appState: appState, models: appState.modelManager)
+            case .statistics:
+                StatisticsSettingsPane(appState: appState, usageStats: appState.usageStats)
             }
         }
     }

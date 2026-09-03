@@ -34,12 +34,14 @@ Transform hotkey (default ⌥')
 | Cleanup runtime | `off` / `light` heuristics / Qwen3 MLX Smart modes via session-scoped helper process (ADR-009; UI: post-dictation formatting); same helper for selection transform with custom instructions (ADR-012) |
 | Selection text | Read focused selection; transform result shown in Capsule (not auto-paste) |
 | Text insertion | Paste at caret via Accessibility; optional retain-on-clipboard |
+| Usage stats (ADR-013) | Opt-in local daily buckets (dictation characters/duration/sessions + per-binding transform counts); Settings → Statistics; no upload |
 
 ## Boundaries
 
 - Default path is fully local: audio is not uploaded.
 - Model weights download anonymously; no login required (ADR-003).
-- Settings/Setup UI is secondary to the hotkey loop but required for readiness transparency; shell is a locked `NavigationSplitView` sidebar (General / Setup / Models / Storage) with Status as a compact header (`docs/specs/ux-setup-status.md`).
+- Settings/Setup UI is secondary to the hotkey loop but required for readiness transparency; shell is a locked sidebar (General / Setup / Models / Storage / Statistics) with Status as a compact header (`docs/specs/ux-setup-status.md`).
+- Optional usage statistics (ADR-013) are local JSON under Application Support; off by default; never transcripts or network.
 - Cloud STT/cleanup is out of MVP scope.
 - Non-macOS platforms are out of MVP scope.
 
