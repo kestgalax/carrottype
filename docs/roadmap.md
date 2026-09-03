@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.0`** (unsigned DMG): local opt-in usage statistics (ADR-013). **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.1`** (unsigned DMG): hide DMG packaging folders in the install window. **v0.3.0** added local opt-in usage statistics (ADR-013). **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
 
-Latest artifact: `CarrotType-0.3.0.dmg` (SHA-256 in `docs/github-release-notes-v0.3.0.md`).
+Latest artifact: `CarrotType-0.3.1.dmg` (SHA-256 in `docs/github-release-notes-v0.3.1.md`).
 
 **Current focus:** repo is **public** (MIT + ADR-011). Notarization / Apple Developer ID remains **optional later**, not a publish blocker.
 
@@ -81,9 +81,10 @@ Checklist:
 - [x] Publish GitHub Release `v0.2.1` — custom DMG install window + `docs/github-release-notes-v0.2.1.md`.
 - [x] Publish GitHub Release `v0.2.2` — Walkie-talkie dictation mode + `docs/github-release-notes-v0.2.2.md`.
 - [x] Publish GitHub Release `v0.3.0` — local opt-in usage statistics (ADR-013) + `docs/github-release-notes-v0.3.0.md`.
+- [x] Publish GitHub Release `v0.3.1` — hide DMG packaging folders (`.background` / `.fseventsd`) + `docs/github-release-notes-v0.3.1.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 
-Status: **v0.3.0 unsigned DMG** — Settings → Statistics (opt-in local time-saved estimates + per-binding transform counts); Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
+Status: **v0.3.1 unsigned DMG** — same app as v0.3.0; install window only shows CarrotType and Applications. Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
 
 ## Next focus (ordered)
 
@@ -92,7 +93,7 @@ Status: **v0.3.0 unsigned DMG** — Settings → Statistics (opt-in local time-s
 
 ## In progress / on branch
 
-- (none — local usage statistics ships in v0.3.0)
+- (none)
 
 ## Near-term polish candidates (if release is blocked)
 

@@ -201,14 +201,36 @@ tell application "Finder"
     set background picture of theViewOptions to file ".background:background.tiff"
     set position of item "CarrotType.app" of container window to {${DMG_APP_X}, ${DMG_APP_Y}}
     set position of item "Applications" of container window to {${DMG_APPS_X}, ${DMG_APPS_Y}}
+    -- macOS 26 may still draw hidden items; park them outside the 640x420 window.
+    try
+      set position of item ".background" of container window to {10000, 10000}
+    end try
+    try
+      set position of item ".fseventsd" of container window to {10000, 10000}
+    end try
     close
     open
     update without registering applications
     delay 3
+    try
+      set position of item ".background" of container window to {10000, 10000}
+    end try
+    try
+      set position of item ".fseventsd" of container window to {10000, 10000}
+    end try
     close
   end tell
 end tell
 EOF
+
+# Finder un-hides .background when assigning the wallpaper; hide again after layout.
+# .fseventsd is written while Finder is open — drop it so it is not in the UDZO image.
+echo "==> Hiding packaging folders"
+rm -rf "$VOLUME/.fseventsd"
+chflags hidden "$VOLUME/.background" "$VOLUME/.DS_Store" || true
+if command -v SetFile >/dev/null 2>&1; then
+  SetFile -a V "$VOLUME/.background" "$VOLUME/.DS_Store" || true
+fi
 
 sync
 echo "==> Detaching $DEVICE"
