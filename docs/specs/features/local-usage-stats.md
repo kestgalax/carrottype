@@ -24,9 +24,9 @@ Users want a private, local sense of how much typing time dictation replaced, wi
 4. For the selected calendar month (default: current, local timezone), show:
    - **Would have typed:** `characters / (WPM × 5 / 60)` seconds
    - **Time saved:** `max(0, would-have-typed − recording duration)`
-   - **Successful dictations:** paste count for the month
+   - **Characters** and **Successful dictations** side by side: inserted character total and paste count for the month
    - **Bindings:** per-binding successful transform counts (live label from current bindings; deleted bindings as “Deleted binding” + kind)
-5. WPM default 50 (range 10–200). Footer: one word = 5 characters including spaces. Changing WPM recomputes the two numbers from stored totals. WPM does not apply to transforms.
+5. WPM default 50 (range 10–200), shown above **Bindings**. Footer: one word = 5 characters including spaces. Changing WPM recomputes the two numbers from stored totals. WPM does not apply to transforms.
 6. Month stepper: current month and past months that have data; cannot step into the future.
 7. Clear statistics deletes the local JSON file. Disabling collection stops writes but keeps history.
 

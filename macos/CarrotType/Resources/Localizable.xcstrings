@@ -2342,6 +2342,23 @@
         }
       }
     },
+    "stats.characters": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Characters"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Символов"
+          }
+        }
+      }
+    },
     "stats.clear": {
       "extractionState": "stale",
       "localizations": {
