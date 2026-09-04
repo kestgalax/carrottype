@@ -70,27 +70,15 @@ struct StatisticsSettingsPane: View {
                         titleKey: "stats.saved",
                         seconds: estimate.savedSeconds
                     )
-                    sessionCountRow()
+                    HStack(alignment: .top, spacing: 16) {
+                        countRow(titleKey: "stats.characters", value: monthTotals.characters)
+                        countRow(titleKey: "stats.sessions", value: monthTotals.sessions)
+                    }
                 }
             } header: {
                 Text(L10n.t("stats.section.period", locale: locale))
             } footer: {
                 Text(L10n.t("stats.estimate_footer", locale: locale))
-            }
-
-            Section {
-                if transformTotals.isEmpty {
-                    Text(L10n.t("stats.transform.empty", locale: locale))
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach(transformTotals) { row in
-                        transformRow(row)
-                    }
-                }
-            } header: {
-                Text(L10n.t("stats.section.bindings", locale: locale))
-            } footer: {
-                Text(L10n.t("stats.bindings_footer", locale: locale))
             }
 
             Section {
@@ -108,6 +96,21 @@ struct StatisticsSettingsPane: View {
                 Text(L10n.t("stats.section.speed", locale: locale))
             } footer: {
                 Text(L10n.t("stats.wpm_footer", locale: locale))
+            }
+
+            Section {
+                if transformTotals.isEmpty {
+                    Text(L10n.t("stats.transform.empty", locale: locale))
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(transformTotals) { row in
+                        transformRow(row)
+                    }
+                }
+            } header: {
+                Text(L10n.t("stats.section.bindings", locale: locale))
+            } footer: {
+                Text(L10n.t("stats.bindings_footer", locale: locale))
             }
 
             Section {
@@ -179,18 +182,27 @@ struct StatisticsSettingsPane: View {
         .padding(.vertical, 4)
     }
 
-    private func sessionCountRow() -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(L10n.t("stats.sessions", locale: locale))
+    private func countRow(titleKey: String, value: Int) -> some View {
+        let formatted = formattedCount(value)
+        return VStack(alignment: .leading, spacing: 4) {
+            Text(L10n.t(titleKey, locale: locale))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-            Text("\(monthTotals.sessions)")
+            Text(formatted)
                 .font(.title2.monospacedDigit())
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical, 4)
-        .accessibilityLabel(L10n.t("stats.sessions", locale: locale))
-        .accessibilityValue("\(monthTotals.sessions)")
+        .accessibilityLabel(L10n.t(titleKey, locale: locale))
+        .accessibilityValue(formatted)
+    }
+
+    private func formattedCount(_ value: Int) -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = locale
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
     }
 
     private func transformRow(_ row: UsageStatsStore.TransformMonthTotal) -> some View {
