@@ -10,7 +10,7 @@ SHA-256 (this build): `8d65fd80696626dd43a095b1e4ecd32dfcf18437f1573470f2a6740cd
 
 ## What’s new
 
-- **Parakeet Ultra** — optional STT package beside Parakeet TDT 0.6B v3 (same FluidAudio CoreML path, its own download). Recommended stays **Parakeet TDT 0.6B v3**. FluidAudio pin is 0.17.7.
+- **Parakeet Ultra** — optional STT package beside Parakeet TDT 0.6B v3 (same FluidAudio CoreML path, its own download). A new install still offers **Parakeet TDT 0.6B v3** as the default download; Ultra is in the model list. FluidAudio pin is 0.17.7.
 
 ## Install (unsigned / not notarized)
 
@@ -28,7 +28,7 @@ xattr -dr com.apple.quarantine /Applications/CarrotType.app
 
 4. Menu bar icon → **Settings…** / **Настройки…**
 5. Grant **Microphone** and **Accessibility** if needed.
-6. Download an STT model (**Parakeet TDT 0.6B v3** recommended; **Parakeet Ultra** is optional) and Make active if needed.
+6. Download an STT model (the default download is **Parakeet TDT 0.6B v3**; **Parakeet Ultra** is in the model list) and Make active if needed.
 7. For transform: download Smart / Smart+ / Gemma in Models; configure bindings under **Transform selected text**.
 8. Optional: Settings → **Statistics** → enable local collection.
 9. Optional (Elgato Wave + Wave Link): Setup → **Unmute mic during dictation (experimental)** — off by default (ADR-007).
