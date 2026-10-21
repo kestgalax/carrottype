@@ -18,12 +18,14 @@ Raw NVIDIA NeMo checkpoints are not suitable for in-app conversion. We need a pr
 4. **Resources:** only the active STT engine stays loaded; unload after idle timeout; switching STT packages reloads on next session.
 5. **Catalog:** `downloadable: true`, `runtimeHint: parakeet-fluidaudio`. Recommendation stayed on Whisper Base until the quality gate; **2026-07-24:** catalog `recommended` flipped to Parakeet (`docs/stt-ru-en-quality-note.md`), matching ADR-003.
 6. **Selection UX:** active STT / Smart cleanup may be chosen only when the package is Ready on disk (no auto-download on picker change).
+7. **2026-10-20 — Parakeet Ultra beside v3.** SPM pin moves from FluidAudio 0.15.5 to **0.17.7** (`from: 0.17.7`). Optional catalog id `stt.parakeet-ultra` uses the same `ParakeetSTTEngine` / `AsrManager` with `AsrModelVersion.ultra` and its own cache folder (`Repo.parakeetUltra.folderName`, `parakeet-ultra`). v3 stays `recommended`. Deleting one package removes only that variant’s cache; the v3 delete still also removes the legacy `parakeet-tdt-0.6b-v3-coreml` sibling.
 
 ## Consequences
 
 - Users can download and run Parakeet without converting NeMo weights locally.
 - FluidAudio is an additional SPM dependency (macOS 14+, Apple Silicon for Parakeet models).
 - Whisper Base/Small continue to work unchanged for machines or users that prefer ggml.
+- **Downloader residual (checked on FluidAudio 0.17.7):** `ModelHub` still builds each local path by appending the registry tree-listing path onto the cache directory, and repo downloads still replace a file that blocks a path component. A listing entry with parent-directory segments can write outside `models/`. CarrotType cannot confine that write from outside `AsrModels.download`. The 0.17.7 bump does not close it, and this change does not fork FluidAudio.
 
 ## Alternatives considered
 

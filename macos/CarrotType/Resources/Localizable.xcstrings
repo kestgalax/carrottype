@@ -199,6 +199,23 @@
         }
       }
     },
+    "catalog.blurb.stt.parakeet-ultra": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Same 25 languages as v3 · more accurate · ~630 MB · Apple Silicon"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Те же 25 языков, что у v3 · точнее · ~630 МБ · Apple Silicon"
+          }
+        }
+      }
+    },
     "catalog.blurb.stt.parakeet-tdt-0.6b-v3": {
       "extractionState": "stale",
       "localizations": {

@@ -248,7 +248,8 @@ final class ModelManager: ObservableObject {
             if package.runtimeHint == "parakeet-fluidaudio" {
                 try ParakeetSTTEngine.removeInstalled(
                     modelsRoot: modelsRoot,
-                    packageDirectory: packageDirectory(for: package)
+                    packageDirectory: packageDirectory(for: package),
+                    packageID: package.id
                 )
             } else if package.runtimeHint == "apple-speechanalyzer" {
                 let dir = packageDirectory(for: package)
@@ -328,10 +329,14 @@ final class ModelManager: ObservableObject {
 
         switch package.runtimeHint {
         case "parakeet-fluidaudio":
-            let cache = ParakeetSTTEngine.fluidCacheDirectory(modelsRoot: modelsRoot)
+            let cache = ParakeetSTTEngine.fluidCacheDirectory(
+                modelsRoot: modelsRoot,
+                packageID: package.id
+            )
             return ParakeetSTTEngine.isPackageReady(
                 modelsRoot: modelsRoot,
-                packageDirectory: packageDirectory(for: package)
+                packageDirectory: packageDirectory(for: package),
+                packageID: package.id
             ) ? cache.path : nil
         case "apple-speechanalyzer":
             // System assets; engine resolves locale itself.
@@ -495,7 +500,8 @@ final class ModelManager: ObservableObject {
             do {
                 try await ParakeetSTTEngine.downloadPackage(
                     modelsRoot: root,
-                    packageDirectory: destination
+                    packageDirectory: destination,
+                    packageID: packageID
                 ) { fraction in
                     Task { @MainActor in
                         self?.applyDownloadProgress(packageID: packageID, fraction: fraction)
@@ -702,7 +708,11 @@ final class ModelManager: ObservableObject {
         let dir = packageDirectory(for: package)
         switch package.runtimeHint {
         case "parakeet-fluidaudio":
-            return ParakeetSTTEngine.isPackageReady(modelsRoot: modelsRoot, packageDirectory: dir)
+            return ParakeetSTTEngine.isPackageReady(
+                modelsRoot: modelsRoot,
+                packageDirectory: dir,
+                packageID: package.id
+            )
         case "apple-speechanalyzer":
             return AppleSpeechSTTEngine.isPackageReady(packageDirectory: dir)
         case "mlx-lm":
@@ -723,7 +733,10 @@ final class ModelManager: ObservableObject {
         let dir = packageDirectory(for: package)
         var total = directorySize(at: dir) ?? 0
         if package.runtimeHint == "parakeet-fluidaudio" {
-            let fluid = ParakeetSTTEngine.fluidCacheDirectory(modelsRoot: modelsRoot)
+            let fluid = ParakeetSTTEngine.fluidCacheDirectory(
+                modelsRoot: modelsRoot,
+                packageID: package.id
+            )
             if fluid.path != dir.path {
                 total += directorySize(at: fluid) ?? 0
             }
