@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.2`** (unsigned DMG): Statistics shows month character totals beside successful dictations; WPM above Bindings. **v0.3.1** hid DMG packaging folders. **v0.3.0** added local opt-in usage statistics (ADR-013). **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.3`** (unsigned DMG): optional Parakeet Ultra beside v3; recommended STT stays Parakeet TDT 0.6B v3. **v0.3.2** showed month character totals beside successful dictations and WPM above Bindings. **v0.3.1** hid DMG packaging folders. **v0.3.0** added local opt-in usage statistics (ADR-013). **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
 
-Latest artifact: `CarrotType-0.3.2.dmg` (SHA-256 in `docs/github-release-notes-v0.3.2.md`).
+Latest artifact: `CarrotType-0.3.3.dmg` (SHA-256 in `docs/github-release-notes-v0.3.3.md`).
 
 **Current focus:** repo is **public** (MIT + ADR-011). Notarization / Apple Developer ID remains **optional later**, not a publish blocker.
 
@@ -83,9 +83,11 @@ Checklist:
 - [x] Publish GitHub Release `v0.3.0` — local opt-in usage statistics (ADR-013) + `docs/github-release-notes-v0.3.0.md`.
 - [x] Publish GitHub Release `v0.3.1` — hide DMG packaging folders (`.background` / `.fseventsd`) + `docs/github-release-notes-v0.3.1.md`.
 - [x] Publish GitHub Release `v0.3.2` — Statistics character total + WPM above Bindings + `docs/github-release-notes-v0.3.2.md`.
+- [x] Optional Parakeet Ultra STT beside v3 (ADR-006, FluidAudio 0.17.7). Recommended stays v3.
+- [x] Publish GitHub Release `v0.3.3` — optional Parakeet Ultra + `docs/github-release-notes-v0.3.3.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 
-Status: **v0.3.2 unsigned DMG** — Settings → Statistics shows month characters beside successful dictations; typing speed sits above Bindings. Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
+Status: **v0.3.3 unsigned DMG** — optional Parakeet Ultra beside recommended Parakeet TDT 0.6B v3. Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
 
 ## Next focus (ordered)
 
