@@ -30,6 +30,8 @@ private final class RecordingBuffers: @unchecked Sendable {
     private(set) var peakLevel: Float = 0
     private(set) var instantaneousPeak: Float = 0
     var onInstantPeak: ((Float) -> Void)?
+    /// Fan-out of the same 16 kHz mono buffers written to the WAV (live draft / streaming).
+    var onConvertedBuffer: ((AVAudioPCMBuffer) -> Void)?
 
     init(file: AVAudioFile, converter: AVAudioConverter?, targetFormat: AVAudioFormat) {
         self.file = file
@@ -69,13 +71,37 @@ private final class RecordingBuffers: @unchecked Sendable {
                 lock.lock()
                 framesWritten += AVAudioFramePosition(converted.frameLength)
                 lock.unlock()
+                emitConverted(converted)
             }
         } else if buffer.frameLength > 0 {
             try? file.write(from: buffer)
             lock.lock()
             framesWritten += AVAudioFramePosition(buffer.frameLength)
             lock.unlock()
+            emitConverted(buffer)
         }
+    }
+
+    private func emitConverted(_ buffer: AVAudioPCMBuffer) {
+        guard let onConvertedBuffer else { return }
+        // Tap reuses buffer memory on the next callback — copy before fan-out.
+        guard let copy = Self.copyPCM(buffer) else { return }
+        onConvertedBuffer(copy)
+    }
+
+    private nonisolated static func copyPCM(_ buffer: AVAudioPCMBuffer) -> AVAudioPCMBuffer? {
+        guard let copy = AVAudioPCMBuffer(pcmFormat: buffer.format, frameCapacity: buffer.frameLength)
+        else { return nil }
+        copy.frameLength = buffer.frameLength
+        guard let src = buffer.floatChannelData, let dst = copy.floatChannelData else {
+            return copy.frameLength > 0 ? copy : nil
+        }
+        let channels = Int(buffer.format.channelCount)
+        let frames = Int(buffer.frameLength)
+        for ch in 0..<channels {
+            memcpy(dst[ch], src[ch], frames * MemoryLayout<Float>.size)
+        }
+        return copy
     }
 
     private nonisolated static func peak(of buffer: AVAudioPCMBuffer) -> Float {
@@ -111,6 +137,8 @@ final class AudioRecorder {
     private(set) var lastPeakLevel: Float = 0
     /// Live peak for UI meters (0…1-ish), updated off the audio callback.
     var onLivePeak: ((Float) -> Void)?
+    /// Same 16 kHz mono PCM written to the session WAV (for live draft streaming).
+    var onConvertedBuffer: ((AVAudioPCMBuffer) -> Void)?
 
     init() {
         guard let format = AVAudioFormat(
@@ -166,6 +194,9 @@ final class AudioRecorder {
             Task { @MainActor in
                 self?.onLivePeak?(display)
             }
+        }
+        session.onConvertedBuffer = { [weak self] buffer in
+            self?.onConvertedBuffer?(buffer)
         }
         buffers = session
         outputURL = url

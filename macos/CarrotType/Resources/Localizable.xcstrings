@@ -3348,71 +3348,171 @@
     "transform.lang.en": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "English" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Английский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Английский"
+          }
+        }
       }
     },
     "transform.lang.ru": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Russian" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Русский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Russian"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        }
       }
     },
     "transform.lang.de": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "German" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Немецкий" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "German"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Немецкий"
+          }
+        }
       }
     },
     "transform.lang.fr": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "French" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Французский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "French"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Французский"
+          }
+        }
       }
     },
     "transform.lang.es": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Spanish" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Испанский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spanish"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Испанский"
+          }
+        }
       }
     },
     "transform.lang.it": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Italian" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Итальянский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italian"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Итальянский"
+          }
+        }
       }
     },
     "transform.lang.pt": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Portuguese" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Португальский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Portuguese"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Португальский"
+          }
+        }
       }
     },
     "transform.lang.zh-Hans": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Chinese (Simplified)" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Китайский (упр.)" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chinese (Simplified)"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Китайский (упр.)"
+          }
+        }
       }
     },
     "transform.lang.ja": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Japanese" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Японский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Japanese"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Японский"
+          }
+        }
       }
     },
     "transform.lang.ko": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Korean" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Корейский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Korean"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Корейский"
+          }
+        }
       }
     },
     "transform.preset.translate": {
@@ -3598,6 +3698,91 @@
           "stringUnit": {
             "state": "translated",
             "value": "Скопировано"
+          }
+        }
+      }
+    },
+    "hotkey.live_draft": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live draft in Status Capsule"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Живой черновик в Status Capsule"
+          }
+        }
+      }
+    },
+    "hotkey.live_draft_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "While you speak, show interim text in the capsule (confirmed + fading draft). Nothing is typed into the target app until you stop. Requires a Parakeet model. Off by default."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пока вы говорите, в Capsule виден промежуточный текст (подтверждённый + бледный черновик). В целевое приложение ничего не вставляется до остановки. Нужна модель Parakeet. По умолчанию выключено."
+          }
+        }
+      }
+    },
+    "hotkey.live_draft_unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live draft is unavailable for the active model (Whisper and Apple SpeechAnalyzer are file-based). Select Parakeet v3 or Ultra."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Живой черновик недоступен для активной модели (Whisper и Apple SpeechAnalyzer работают только с файлом). Выберите Parakeet v3 или Ultra."
+          }
+        }
+      }
+    },
+    "hotkey.offline_second_pass": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline second pass after live draft"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Офлайн-проход по WAV после живого черновика"
+          }
+        }
+      }
+    },
+    "hotkey.offline_second_pass_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After stop, re-transcribe the session WAV with the same Parakeet model and use that text for cleanup/paste. Off by default; live draft finish() is used when this is off."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "После остановки дополнительно распознать WAV той же моделью Parakeet и отправить этот текст в cleanup/вставку. По умолчанию выключено; иначе используется finish() стриминга."
           }
         }
       }

@@ -16,6 +16,13 @@ struct GeneralSettingsPane: View {
         return L10n.t("hotkey.retain_clipboard_footer", locale: locale)
     }
 
+    private var liveDraftFooter: String {
+        if appState.activeSTTSupportsStreaming {
+            return L10n.t("hotkey.live_draft_footer", locale: locale)
+        }
+        return L10n.t("hotkey.live_draft_unavailable", locale: locale)
+    }
+
     var body: some View {
         Form {
             Section {
@@ -28,10 +35,27 @@ struct GeneralSettingsPane: View {
                     L10n.t("hotkey.retain_clipboard", locale: locale),
                     isOn: $appState.retainDictationInClipboard
                 )
+                Toggle(
+                    L10n.t("hotkey.live_draft", locale: locale),
+                    isOn: $appState.liveDraftEnabled
+                )
+                .disabled(!appState.activeSTTSupportsStreaming)
+                if appState.liveDraftEnabled, appState.activeSTTSupportsStreaming {
+                    Toggle(
+                        L10n.t("hotkey.offline_second_pass", locale: locale),
+                        isOn: $appState.offlineSecondPassAfterLiveDraft
+                    )
+                }
             } header: {
                 Text(L10n.t("hotkey.section", locale: locale))
             } footer: {
-                Text(hotkeyFooter)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(hotkeyFooter)
+                    Text(liveDraftFooter)
+                    if appState.liveDraftEnabled, appState.activeSTTSupportsStreaming {
+                        Text(L10n.t("hotkey.offline_second_pass_footer", locale: locale))
+                    }
+                }
             }
 
             Section {

@@ -6,8 +6,8 @@
 
 ```text
 Global hotkey (toggle by default; hold-to-talk only when Walkie-talkie is on)
-  → microphone capture
-    → on-device STT (catalog model)
+  → microphone capture (16 kHz mono WAV; optional fan-out to streaming STT)
+    → on-device STT (catalog model; live draft via SlidingWindow when enabled — ADR-014)
   → optional post-dictation formatting (Light / Qwen3 Smart)
   → insert text at caret in frontmost app
   → optional: keep result on clipboard (no pasteboard restore)
@@ -30,7 +30,7 @@ Transform hotkey (default ⌥')
 | Hotkey service | Register and handle global dictation + N transform binding hotkeys; dictation is toggle (default) or hold-to-talk only (Settings Walkie-talkie) |
 | Audio capture | Record microphone audio for the active session; optional experimental temporary unmute via Wave Link (ADR-007) |
 | Model Manager | Catalog, download, verify, activate STT/cleanup packages (ADR-003) |
-| STT runtime | Run active STT package (Parakeet / Whisper paths) |
+| STT runtime | Run active STT package (Parakeet / Whisper / Apple paths); optional Parakeet live draft via `StreamingSTTEngine` (ADR-014) |
 | Cleanup runtime | `off` / `light` heuristics / Qwen3 MLX Smart modes via session-scoped helper process (ADR-009; UI: post-dictation formatting); same helper for selection transform with custom instructions (ADR-012) |
 | Selection text | Read focused selection; transform result shown in Capsule (not auto-paste) |
 | Text insertion | Paste at caret via Accessibility; optional retain-on-clipboard |
@@ -60,6 +60,7 @@ Transform hotkey (default ⌥')
 - **Cleanup:** Off / Light heuristics; Smart / Smart+ via Qwen3 MLX; optional **Gemma 4 E2B** MLX (`cleanup.gemma4-e2b-4bit`, ADR-010) — all LLM cleanup in `CarrotTypeCleanupHelper` (`mlx-swift-lm`, ADR-005 + ADR-009). Host downloads packages; inference is out-of-process (stdin/stdout JSON, helper exits).
 - **Selection transform (ADR-012):** same helper + packages; General **bindings** (hotkey + Translate with user language pair / Custom instruction + model); Translate uses `NLLanguageRecognizer` flip; result in Status Capsule (Copy / Close + optional direction); not required for Ready.
 - Engines are selected through `STTEngine` / `CleanupEngine` adapters (`DictationPipeline`); transform reuses the MLX cleanup engine with non-nil instructions.
+- Live draft (ADR-014): catalog `supportsStreaming` + Settings toggle (default off); Parakeet v3/Ultra use FluidAudio `SlidingWindowAsrManager`; Capsule shows confirmed + volatile text; stop uses `finish()` (optional offline WAV second pass); failures fall back to the file path.
 - Settings selection UX: only Ready packages are selectable; Ready-but-inactive rows offer **Make active** for both STT and post-dictation formatting packages (Qwen Smart/Smart+ and optional Gemma).
 - Idle resource policy: mic meter only when the user enables it in Settings (not on window open); language changes update copy via `L10n` without remounting Settings; permission poll stops when Ready; STT unloads after each session; Smart MLX lives only in the helper process (ADR-009) so host idle stays near cold start.
 - Optional experimental temporary unmute during dictation (ADR-007): Settings toggle framed as Elgato Wave Link only; `MicMuteController` clears mute for the capture window (Wave Link primary; Core Audio silent fallback) and restores prior state when capture ends.

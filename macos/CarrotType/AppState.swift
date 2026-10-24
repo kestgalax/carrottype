@@ -40,6 +40,21 @@ final class AppState: ObservableObject {
             UserDefaults.standard.set(pushToTalkEnabled, forKey: Keys.pushToTalk)
         }
     }
+    /// Show confirmed + volatile draft in the Status Capsule while speaking (ADR-014). Default off.
+    @Published var liveDraftEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(liveDraftEnabled, forKey: Keys.liveDraft)
+        }
+    }
+    /// After live-draft stop, optionally re-run offline STT on the session WAV. Default off.
+    @Published var offlineSecondPassAfterLiveDraft: Bool {
+        didSet {
+            UserDefaults.standard.set(offlineSecondPassAfterLiveDraft, forKey: Keys.offlineSecondPass)
+        }
+    }
+    /// Live draft text for the capsule (confirmed = stable colour, volatile = faded tail).
+    @Published private(set) var liveDraftConfirmed = ""
+    @Published private(set) var liveDraftVolatile = ""
     /// User opted into the live Settings mic meter (off by default to save energy).
     @Published var micMeterEnabled = false {
         didSet {
@@ -134,6 +149,8 @@ final class AppState: ObservableObject {
         }
         self.retainDictationInClipboard = defaults.bool(forKey: Keys.retainClipboard)
         self.pushToTalkEnabled = defaults.bool(forKey: Keys.pushToTalk)
+        self.liveDraftEnabled = defaults.bool(forKey: Keys.liveDraft)
+        self.offlineSecondPassAfterLiveDraft = defaults.bool(forKey: Keys.offlineSecondPass)
         self.unmuteMicDuringDictation = defaults.bool(forKey: Keys.unmuteDuringDictation)
         self.statsCollectionEnabled = defaults.bool(forKey: Keys.statsCollection)
         if defaults.object(forKey: Keys.typingSpeedWPM) != nil {
@@ -269,6 +286,11 @@ final class AppState: ObservableObject {
             hints.append(L10n.t("hint.stt_model", locale: locale))
         }
         return hints
+    }
+
+    /// Active STT package can drive live draft (Parakeet v3 / Ultra).
+    var activeSTTSupportsStreaming: Bool {
+        modelManager.selectedSTTSupportsStreaming
     }
 
     func refreshMenuBarMode() {
@@ -660,6 +682,27 @@ final class AppState: ObservableObject {
         }
 
         do {
+            clearLiveDraftText()
+            if liveDraftEnabled, activeSTTSupportsStreaming {
+                let languageCode = appLanguage.effectiveLanguageCode
+                _ = await pipeline.startLiveDraftIfPossible(
+                    languageCode: languageCode
+                ) { [weak self] update in
+                    Task { @MainActor in
+                        self?.liveDraftConfirmed = update.confirmed
+                        self?.liveDraftVolatile = update.volatile
+                    }
+                }
+            }
+            // Fan-out only while streaming is active (WAV path always records).
+            if pipeline.isLiveDraftActive {
+                recorder.onConvertedBuffer = { [weak self] buffer in
+                    self?.pipeline.feedLiveDraft(buffer)
+                }
+            } else {
+                recorder.onConvertedBuffer = nil
+            }
+
             _ = try recorder.start(deviceUID: audioInput.selectedDeviceID)
             invalidateCapsuleSequence()
             menuBarMode = .recording
@@ -673,6 +716,9 @@ final class AppState: ObservableObject {
                 }
             }
         } catch {
+            recorder.onConvertedBuffer = nil
+            await pipeline.cancelLiveDraft()
+            clearLiveDraftText()
             await micMute.endDictationRestore()
             lastSessionError = error.localizedDescription
             clearCapsulePhase()
@@ -691,7 +737,10 @@ final class AppState: ObservableObject {
         pttKeyHeld = false
         pttStartInFlight = false
         recorder.cancel()
+        recorder.onConvertedBuffer = nil
         recorderLiveLevel = 0
+        await pipeline.cancelLiveDraft()
+        clearLiveDraftText()
         lastSessionError = nil
         await micMute.endDictationRestore()
         clearCapsulePhase()
@@ -721,11 +770,16 @@ final class AppState: ObservableObject {
 
         let audioURL: URL
         let recordingDuration: TimeInterval
+        let usedLiveDraft = pipeline.isLiveDraftActive
         do {
             let stopped = try recorder.stop()
+            recorder.onConvertedBuffer = nil
             audioURL = stopped.url
             recordingDuration = stopped.duration
         } catch {
+            recorder.onConvertedBuffer = nil
+            await pipeline.cancelLiveDraft()
+            clearLiveDraftText()
             await micMute.endDictationRestore()
             if case AudioRecorderError.silentOrTooShort = error {
                 // Soft cancel: nothing useful was said — no red error, no paste.
@@ -748,11 +802,14 @@ final class AppState: ObservableObject {
         do {
             let cleaned = try await pipeline.run(
                 audioURL: audioURL,
+                useLiveDraftResult: usedLiveDraft,
+                offlineSecondPass: usedLiveDraft && offlineSecondPassAfterLiveDraft,
                 onPhase: { [weak self] phase in
                     Task { @MainActor in
                         guard let self else { return }
                         switch phase {
                         case .transcribing:
+                            self.clearLiveDraftText()
                             self.menuBarMode = .processing
                             self.capsulePhase = .understanding
                         case .cleaning:
@@ -762,6 +819,7 @@ final class AppState: ObservableObject {
                     }
                 }
             )
+            clearLiveDraftText()
             try TextInsertionService.insertAtCaret(
                 cleaned,
                 retainInClipboard: retainDictationInClipboard
@@ -771,10 +829,16 @@ final class AppState: ObservableObject {
             menuBarMode = .idle
             await presentSuccessCapsuleSequence()
         } catch {
+            clearLiveDraftText()
             lastSessionError = error.localizedDescription
             clearCapsulePhase()
             menuBarMode = .error
         }
+    }
+
+    private func clearLiveDraftText() {
+        liveDraftConfirmed = ""
+        liveDraftVolatile = ""
     }
 
     private func clearCapsulePhase() {
@@ -893,6 +957,8 @@ final class AppState: ObservableObject {
     private enum Keys {
         static let retainClipboard = "carrottype.retainDictationInClipboard"
         static let pushToTalk = "carrottype.dictationPushToTalk"
+        static let liveDraft = "carrottype.liveDraftEnabled"
+        static let offlineSecondPass = "carrottype.offlineSecondPassAfterLiveDraft"
         static let unmuteDuringDictation = "carrottype.unmuteMicDuringDictation"
         static let statsCollection = "carrottype.statsCollectionEnabled"
         static let typingSpeedWPM = "carrottype.typingSpeedWPM"

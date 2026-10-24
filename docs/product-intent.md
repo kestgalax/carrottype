@@ -18,7 +18,7 @@ Build a macOS background / menu-bar app whose primary loop is:
 
 1. Global hotkey starts recording.
 2. Same hotkey stops recording: **press again** in toggle mode (default), or **release** when Walkie-talkie is on in Settings (hold-to-talk only). The modes are mutually exclusive; same dictation shortcut either way.
-3. On-device STT (default Parakeet TDT v3; user-selectable catalog) produces text.
+3. On-device STT (default Parakeet TDT v3; user-selectable catalog) produces text. Optional live draft (Parakeet SlidingWindow, ADR-014) may show interim text in the Status Capsule while speaking; paste still happens only after stop.
 4. Optional cleanup / post-dictation formatting (Light heuristics or Qwen3 Smart) formats text without rewriting meaning.
 5. Text is inserted at the current caret in the frontmost app.
 6. Optional: keep the result on the clipboard after paste so ⌘V still works if focus moved.

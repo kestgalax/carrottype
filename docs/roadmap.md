@@ -6,7 +6,7 @@ Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.3`** (unsigned DM
 
 Latest artifact: `CarrotType-0.3.3.dmg` (SHA-256 in `docs/github-release-notes-v0.3.3.md`).
 
-**Current focus:** repo is **public** (MIT + ADR-011). Notarization / Apple Developer ID remains **optional later**, not a publish blocker.
+**Current focus:** live dictation draft on Parakeet (ADR-014) for a **v0.3.4** candidate — owner builds/tests on Mac. Notarization / Apple Developer ID remains **optional later**, not a publish blocker.
 
 Privacy / supply-chain agent governance lives in `.ai/constraints.md` (§ Privacy / network / dependencies). A full security pass / offline network audit is **deferred** — not current focus.
 
@@ -85,18 +85,20 @@ Checklist:
 - [x] Publish GitHub Release `v0.3.2` — Statistics character total + WPM above Bindings + `docs/github-release-notes-v0.3.2.md`.
 - [x] Optional Parakeet Ultra STT beside v3 (ADR-006, FluidAudio 0.17.7). Catalog default stays v3.
 - [x] Publish GitHub Release `v0.3.3` — optional Parakeet Ultra + `docs/github-release-notes-v0.3.3.md`.
+- [ ] Live dictation draft via FluidAudio SlidingWindow (ADR-014) — Capsule live text; paste still on stop; default off.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 
 Status: **v0.3.3 unsigned DMG** — optional Parakeet Ultra beside the default Parakeet TDT 0.6B v3. Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
 
 ## Next focus (ordered)
 
-1. **Optional trust:** Developer ID sign + `notarytool` + staple (`ops/deploy.md`); sign both host and helper.
-2. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
+1. **Owner Mac verify** live draft (ADR-014 / F-004): Debug build, Capsule latency/jitter, quality vs offline Ultra, memory, fallback, setting off = unchanged. Then ship **v0.3.4** when ready (version bump left to owner).
+2. **Optional trust:** Developer ID sign + `notarytool` + staple (`ops/deploy.md`); sign both host and helper.
+3. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 
 ## In progress / on branch
 
-- (none)
+- [ ] Live dictation draft (ADR-014): `StreamingSTTEngine` + Parakeet SlidingWindow; catalog `supportsStreaming`; Capsule confirmed/volatile; default-off Settings toggle; WAV fallback intact — branch `feat/live-dictation` (not merged until owner review).
 
 ## Near-term polish candidates (if release is blocked)
 

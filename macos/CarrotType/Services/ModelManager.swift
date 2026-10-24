@@ -117,6 +117,11 @@ final class ModelManager: ObservableObject {
         catalog.packages.first { $0.id == selectedSTTPackageID }
     }
 
+    /// Active STT package advertises live-draft streaming (Parakeet v3 / Ultra).
+    var selectedSTTSupportsStreaming: Bool {
+        selectedSTTPackage?.supportsStreaming == true
+    }
+
     var isSelectedSTTReady: Bool { activeSTTStatus.isReady }
 
     var isDownloadingAnything: Bool {
