@@ -30,17 +30,26 @@ final class StatusCapsuleController {
             appState.$transformResultDirection,
             appState.$appLanguage
         )
-        .combineLatest(appState.$transformResultCopiedFeedback)
+        .combineLatest(
+            Publishers.CombineLatest3(
+                appState.$transformResultCopiedFeedback,
+                appState.$liveDraftConfirmed,
+                appState.$liveDraftVolatile
+            )
+        )
         .receive(on: RunLoop.main)
-        .sink { [weak self] phaseLang, copied in
+        .sink { [weak self] phaseLang, draftTuple in
             guard let self else { return }
             let (phase, resultText, direction, _) = phaseLang
+            let (copied, liveConfirmed, liveVolatile) = draftTuple
             if let phase {
                 self.show(
                     phase: phase,
                     resultText: resultText,
                     direction: direction,
-                    copiedFeedback: copied
+                    copiedFeedback: copied,
+                    liveConfirmed: liveConfirmed,
+                    liveVolatile: liveVolatile
                 )
             } else {
                 self.hide()
@@ -65,7 +74,9 @@ final class StatusCapsuleController {
                 phase: phase,
                 resultText: appState?.transformResultText,
                 direction: appState?.transformResultDirection,
-                copiedFeedback: appState?.transformResultCopiedFeedback ?? false
+                copiedFeedback: appState?.transformResultCopiedFeedback ?? false,
+                liveConfirmed: appState?.liveDraftConfirmed ?? "",
+                liveVolatile: appState?.liveDraftVolatile ?? ""
             )
         } else {
             hide()
@@ -76,17 +87,24 @@ final class StatusCapsuleController {
         phase: StatusCapsulePhase,
         resultText: String?,
         direction: String?,
-        copiedFeedback: Bool
+        copiedFeedback: Bool,
+        liveConfirmed: String,
+        liveVolatile: String
     ) {
         let geometry = StatusCapsuleGeometry.preferred()
         let locale = appState?.effectiveLocale ?? Locale.current
-        let size = geometry.panelSize(for: phase)
+        let draftText = [liveConfirmed, liveVolatile].filter { !$0.isEmpty }.joined(separator: " ")
+        let hasLiveDraft = phase == .listening && !draftText.isEmpty
+        let size = geometry.panelSize(for: phase, hasLiveDraft: hasLiveDraft, liveDraftText: draftText)
         let root = StatusCapsuleView(
             phase: phase,
             resultText: resultText ?? "",
             direction: direction,
             copiedFeedback: copiedFeedback,
+            liveConfirmed: liveConfirmed,
+            liveVolatile: liveVolatile,
             topInset: geometry.contentTopInset,
+            maxLiveDraftBodyHeight: StatusCapsuleGeometry.maxLiveDraftBodyHeight,
             locale: locale,
             onCopy: { [weak self] in self?.appState?.copyTransformResult() },
             onClose: { [weak self] in self?.appState?.dismissTransformResult() }
@@ -143,17 +161,30 @@ final class StatusCapsuleController {
     private func positionPanel() {
         guard let panel, let appState, let phase = appState.capsulePhase else { return }
         let geometry = StatusCapsuleGeometry.preferred()
-        let size = geometry.panelSize(for: phase)
+        let liveConfirmed = appState.liveDraftConfirmed
+        let liveVolatile = appState.liveDraftVolatile
+        let draftText = [liveConfirmed, liveVolatile].filter { !$0.isEmpty }.joined(separator: " ")
+        let hasLiveDraft = phase == .listening && !draftText.isEmpty
+        let size = geometry.panelSize(for: phase, hasLiveDraft: hasLiveDraft, liveDraftText: draftText)
         panel.setContentSize(size)
         hosting?.frame = NSRect(origin: .zero, size: size)
-        panel.setFrame(NSRect(origin: geometry.origin(for: phase), size: size), display: true)
+        panel.setFrame(
+            NSRect(
+                origin: geometry.origin(for: phase, hasLiveDraft: hasLiveDraft, liveDraftText: draftText),
+                size: size
+            ),
+            display: true
+        )
         if let hosting {
             hosting.rootView = StatusCapsuleView(
                 phase: phase,
                 resultText: appState.transformResultText ?? "",
                 direction: appState.transformResultDirection,
                 copiedFeedback: appState.transformResultCopiedFeedback,
+                liveConfirmed: liveConfirmed,
+                liveVolatile: liveVolatile,
                 topInset: geometry.contentTopInset,
+                maxLiveDraftBodyHeight: StatusCapsuleGeometry.maxLiveDraftBodyHeight,
                 locale: appState.effectiveLocale,
                 onCopy: { [weak self] in self?.appState?.copyTransformResult() },
                 onClose: { [weak self] in self?.appState?.dismissTransformResult() }
@@ -183,11 +214,29 @@ struct StatusCapsuleGeometry {
         hasNotch ? notchHeight : 0
     }
 
-    func panelSize(for phase: StatusCapsulePhase) -> NSSize {
+    /// Max height of the live-draft body (below the camera inset), before scrolling.
+    static let maxLiveDraftBodyHeight: CGFloat = 280
+    private static let liveDraftMinBodyHeight: CGFloat = 72
+    private static let liveDraftHorizontalPadding: CGFloat = 28
+    private static let liveDraftChromeHeight: CGFloat = 40 // listening row + spacing + bottom pad
+
+    func panelSize(
+        for phase: StatusCapsulePhase,
+        hasLiveDraft: Bool = false,
+        liveDraftText: String = ""
+    ) -> NSSize {
         if phase == .transformResult {
             let width: CGFloat = hasNotch ? max(notchWidth + 24, 360) : 360
             let height = contentTopInset + 200
             return NSSize(width: width, height: height)
+        }
+        if phase == .listening, hasLiveDraft {
+            let width: CGFloat = hasNotch ? max(notchWidth + 24, 360) : 360
+            let textWidth = width - Self.liveDraftHorizontalPadding
+            let textHeight = Self.boundingHeight(of: liveDraftText, width: textWidth)
+            let uncappedBody = Self.liveDraftChromeHeight + textHeight
+            let body = min(max(uncappedBody, Self.liveDraftMinBodyHeight), Self.maxLiveDraftBodyHeight)
+            return NSSize(width: width, height: contentTopInset + body)
         }
         if hasNotch {
             let width = max(notchWidth + 24, 148)
@@ -197,14 +246,29 @@ struct StatusCapsuleGeometry {
     }
 
     /// Top-left of the panel in Cocoa screen coords (origin bottom-left).
-    func origin(for phase: StatusCapsulePhase) -> NSPoint {
-        let size = panelSize(for: phase)
+    func origin(
+        for phase: StatusCapsulePhase,
+        hasLiveDraft: Bool = false,
+        liveDraftText: String = ""
+    ) -> NSPoint {
+        let size = panelSize(for: phase, hasLiveDraft: hasLiveDraft, liveDraftText: liveDraftText)
         let x = centerX - size.width / 2
         if hasNotch {
             return NSPoint(x: x, y: screenTopY - size.height)
         }
         let menuBottom = screen.visibleFrame.maxY
         return NSPoint(x: x, y: menuBottom - size.height - 2)
+    }
+
+    private static func boundingHeight(of text: String, width: CGFloat) -> CGFloat {
+        guard !text.isEmpty, width > 0 else { return 16 }
+        let font = NSFont.systemFont(ofSize: 12, weight: .regular)
+        let rect = (text as NSString).boundingRect(
+            with: NSSize(width: width, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: font]
+        )
+        return ceil(rect.height)
     }
 
     static func preferred() -> StatusCapsuleGeometry {
@@ -248,13 +312,25 @@ struct StatusCapsuleView: View {
     var resultText: String
     var direction: String?
     var copiedFeedback: Bool
+    var liveConfirmed: String = ""
+    var liveVolatile: String = ""
     /// Matches physical notch height so content sits below the camera brow.
     var topInset: CGFloat
+    /// Cap for the scrollable live-draft body (matches `StatusCapsuleGeometry.maxLiveDraftBodyHeight`).
+    var maxLiveDraftBodyHeight: CGFloat = StatusCapsuleGeometry.maxLiveDraftBodyHeight
     var locale: Locale
     var onCopy: () -> Void
     var onClose: () -> Void
 
     @State private var pulse = false
+
+    private var liveDraftCombined: String {
+        [liveConfirmed, liveVolatile].filter { !$0.isEmpty }.joined(separator: " ")
+    }
+
+    private var hasLiveDraft: Bool {
+        phase == .listening && !liveDraftCombined.isEmpty
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -264,6 +340,8 @@ struct StatusCapsuleView: View {
             Group {
                 if phase == .transformResult {
                     resultContent
+                } else if hasLiveDraft {
+                    liveDraftContent
                 } else {
                     contentRow
                         .frame(minWidth: 96, maxWidth: 148)
@@ -281,10 +359,47 @@ struct StatusCapsuleView: View {
             }
         }
         .animation(.easeInOut(duration: 0.18), value: phase)
+        .animation(.easeInOut(duration: 0.12), value: liveConfirmed)
+        .animation(.easeInOut(duration: 0.12), value: liveVolatile)
     }
 
     private var islandCornerRadius: CGFloat {
         topInset > 0 ? 18 : 16
+    }
+
+    private var liveDraftContent: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 8) {
+                Circle()
+                    .fill(Color.red)
+                    .frame(width: 7, height: 7)
+                    .shadow(color: .red.opacity(0.85), radius: pulse ? 5 : 1)
+                    .scaleEffect(pulse ? 1.12 : 0.96)
+                label(L10n.t("capsule.listening", locale: locale))
+                Spacer(minLength: 0)
+            }
+
+            ScrollView(.vertical, showsIndicators: liveDraftCombined.count > 180) {
+                liveDraftText
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        }
+        .padding(.horizontal, 14)
+        .padding(.bottom, 10)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private var liveDraftText: some View {
+        // Body normal; last ~2 words muted (OpenBot-style interim chrome — not ASR tiers).
+        let spacer = liveConfirmed.isEmpty || liveVolatile.isEmpty ? "" : " "
+        return (
+            Text(liveConfirmed).foregroundStyle(.white.opacity(0.95))
+                + Text(spacer + liveVolatile).foregroundStyle(.white.opacity(0.42))
+        )
+        .font(.system(size: 12, weight: .regular, design: .rounded))
+        .multilineTextAlignment(.leading)
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     private var resultContent: some View {

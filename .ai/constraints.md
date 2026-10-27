@@ -20,7 +20,7 @@ Local-first privacy is a hard product constraint (see `docs/product-intent.md`, 
 ### Data-flow contract
 
 ```text
-mic → temp audio → on-device STT → optional local cleanup → caret paste → delete temp
+mic → temp audio (+ optional local streaming draft) → on-device STT → optional local cleanup → caret paste → delete temp
 ```
 
 - Settings and selections stay on-device (`UserDefaults`, Application Support).

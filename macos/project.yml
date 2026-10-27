@@ -121,7 +121,7 @@ targets:
         CFBundleName: CarrotType
         CFBundleDisplayName: CarrotType
         CFBundleIconName: AppIcon
-        CFBundleShortVersionString: "0.3.3"
+        CFBundleShortVersionString: "0.3.4"
         CFBundleVersion: "17"
         LSMinimumSystemVersion: "14.0"
         LSUIElement: true

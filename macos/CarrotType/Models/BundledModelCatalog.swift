@@ -19,7 +19,7 @@ enum BundledModelCatalog {
     }
 
     static let fallback = ModelCatalogFile(
-        version: 8,
+        version: 9,
         packages: [
             CatalogPackage(
                 id: "stt.whisper-base-ggml",
@@ -33,7 +33,8 @@ enum BundledModelCatalog {
                 runtimeHint: "whisper-cpp-ggml",
                 artifactFileName: "ggml-base.bin",
                 downloadable: true,
-                sha256: "60ed5bc3dd14eea856493d334349b405782ddcaf0028d4b5df4088345fba2efe"
+                sha256: "60ed5bc3dd14eea856493d334349b405782ddcaf0028d4b5df4088345fba2efe",
+                supportsStreaming: false
             ),
             CatalogPackage(
                 id: "stt.whisper-small-ggml",
@@ -47,7 +48,8 @@ enum BundledModelCatalog {
                 runtimeHint: "whisper-cpp-ggml",
                 artifactFileName: "ggml-small.bin",
                 downloadable: true,
-                sha256: "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b"
+                sha256: "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b",
+                supportsStreaming: false
             ),
             CatalogPackage(
                 id: "stt.whisper-large-v3-turbo-q5",
@@ -61,7 +63,8 @@ enum BundledModelCatalog {
                 runtimeHint: "whisper-cpp-ggml",
                 artifactFileName: "ggml-large-v3-turbo-q5_0.bin",
                 downloadable: true,
-                sha256: "394221709cd5ad1f40c46e6031ca61bce88931e6e088c188294c6d5a55ffa7e2"
+                sha256: "394221709cd5ad1f40c46e6031ca61bce88931e6e088c188294c6d5a55ffa7e2",
+                supportsStreaming: false
             ),
             CatalogPackage(
                 id: "stt.parakeet-tdt-0.6b-v3",
@@ -74,7 +77,8 @@ enum BundledModelCatalog {
                 downloadURL: "https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v3-coreml",
                 runtimeHint: "parakeet-fluidaudio",
                 hubRepoID: "FluidInference/parakeet-tdt-0.6b-v3-coreml",
-                downloadable: true
+                downloadable: true,
+                supportsStreaming: true
             ),
             CatalogPackage(
                 id: parakeetUltraSTTID,
@@ -87,7 +91,8 @@ enum BundledModelCatalog {
                 downloadURL: "https://huggingface.co/FluidInference/parakeet-ultra-coreml",
                 runtimeHint: "parakeet-fluidaudio",
                 hubRepoID: "FluidInference/parakeet-ultra-coreml",
-                downloadable: true
+                downloadable: true,
+                supportsStreaming: true
             ),
             CatalogPackage(
                 id: "stt.apple-speechanalyzer",
@@ -99,7 +104,8 @@ enum BundledModelCatalog {
                 recommended: false,
                 downloadURL: "apple-speechanalyzer://system",
                 runtimeHint: "apple-speechanalyzer",
-                downloadable: true
+                downloadable: true,
+                supportsStreaming: false
             ),
             CatalogPackage(
                 id: "cleanup.qwen3-0.6b-4bit",

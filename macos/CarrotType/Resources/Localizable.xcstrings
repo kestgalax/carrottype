@@ -3348,71 +3348,171 @@
     "transform.lang.en": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "English" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Английский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Английский"
+          }
+        }
       }
     },
     "transform.lang.ru": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Russian" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Русский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Russian"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        }
       }
     },
     "transform.lang.de": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "German" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Немецкий" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "German"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Немецкий"
+          }
+        }
       }
     },
     "transform.lang.fr": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "French" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Французский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "French"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Французский"
+          }
+        }
       }
     },
     "transform.lang.es": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Spanish" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Испанский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spanish"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Испанский"
+          }
+        }
       }
     },
     "transform.lang.it": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Italian" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Итальянский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italian"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Итальянский"
+          }
+        }
       }
     },
     "transform.lang.pt": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Portuguese" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Португальский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Portuguese"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Португальский"
+          }
+        }
       }
     },
     "transform.lang.zh-Hans": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Chinese (Simplified)" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Китайский (упр.)" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chinese (Simplified)"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Китайский (упр.)"
+          }
+        }
       }
     },
     "transform.lang.ja": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Japanese" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Японский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Japanese"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Японский"
+          }
+        }
       }
     },
     "transform.lang.ko": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Korean" } },
-        "ru": { "stringUnit": { "state": "translated", "value": "Корейский" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Korean"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Корейский"
+          }
+        }
       }
     },
     "transform.preset.translate": {
@@ -3598,6 +3698,91 @@
           "stringUnit": {
             "state": "translated",
             "value": "Скопировано"
+          }
+        }
+      }
+    },
+    "hotkey.live_draft": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show text while you speak"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показывать текст, пока говорите"
+          }
+        }
+      }
+    },
+    "hotkey.live_draft_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "While you speak, a preview appears in the status pill and can rephrase earlier words as context grows. Nothing is inserted until you stop. Needs Parakeet. Off by default."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пока вы говорите, в плашке статуса виден черновик: по мере речи он может уточнять уже сказанное. В документ ничего не попадёт, пока не остановите запись. Нужен Parakeet. По умолчанию выключено."
+          }
+        }
+      }
+    },
+    "hotkey.live_draft_unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live preview works with Parakeet (v3 or Ultra). With the current model, text appears only after you stop."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Предпросмотр во время речи доступен с Parakeet (v3 или Ultra). С текущей моделью текст появится только после остановки."
+          }
+        }
+      }
+    },
+    "hotkey.offline_second_pass": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refine accuracy after you stop"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уточнить текст после остановки"
+          }
+        }
+      }
+    },
+    "hotkey.offline_second_pass_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After you stop, re-check the whole phrase for a more accurate result — usually a bit slower. Off by default: the live preview text is used as-is."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "После остановки ещё раз проверить всю фразу целиком — обычно точнее, но чуть дольше. По умолчанию выключено: в документ уходит текст из живого черновика."
           }
         }
       }
