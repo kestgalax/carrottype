@@ -685,13 +685,16 @@ final class AppState: ObservableObject {
             clearLiveDraftText()
             if liveDraftEnabled, activeSTTSupportsStreaming {
                 let languageCode = appLanguage.effectiveLanguageCode
-                _ = await pipeline.startLiveDraftIfPossible(
+                let started = await pipeline.startLiveDraftIfPossible(
                     languageCode: languageCode
                 ) { [weak self] update in
                     Task { @MainActor in
                         self?.liveDraftConfirmed = update.confirmed
                         self?.liveDraftVolatile = update.volatile
                     }
+                }
+                if !started {
+                    NSLog("CarrotType: live draft requested but streaming did not start; using file STT path")
                 }
             }
             // Fan-out only while streaming is active (WAV path always records).
@@ -770,7 +773,6 @@ final class AppState: ObservableObject {
 
         let audioURL: URL
         let recordingDuration: TimeInterval
-        let usedLiveDraft = pipeline.isLiveDraftActive
         do {
             let stopped = try recorder.stop()
             recorder.onConvertedBuffer = nil
@@ -797,13 +799,17 @@ final class AppState: ObservableObject {
         // Remute as soon as capture ends — do not wait for STT/cleanup.
         await micMute.endDictationRestore()
 
+        // Live draft is Capsule-only (periodic offline preview). Final paste always uses WAV STT.
+        await pipeline.cancelLiveDraft()
+        clearLiveDraftText()
+
         defer { try? FileManager.default.removeItem(at: audioURL) }
 
         do {
             let cleaned = try await pipeline.run(
                 audioURL: audioURL,
-                useLiveDraftResult: usedLiveDraft,
-                offlineSecondPass: usedLiveDraft && offlineSecondPassAfterLiveDraft,
+                useLiveDraftResult: false,
+                offlineSecondPass: false,
                 onPhase: { [weak self] phase in
                     Task { @MainActor in
                         guard let self else { return }

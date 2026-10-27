@@ -2,19 +2,27 @@ import AVFoundation
 import FluidAudio
 import Foundation
 
-/// Pseudo-streaming Parakeet via FluidAudio `SlidingWindowAsrManager` (v0.17.7).
-/// Loads the same cache directory / `AsrModelVersion` as `ParakeetSTTEngine`.
-/// `AsrModels` keeps `MLModel` class references — offline second pass can reuse them
-/// without a second disk load (see ADR-014).
+/// Live Capsule preview via periodic **full-buffer offline** Parakeet passes (OpenBot-style).
+///
+/// SlidingWindow was dropped for live draft: short windows could not rewrite earlier words
+/// with growing context. Each tick re-transcribes all accumulated 16 kHz samples so the
+/// draft can adapt. Paste still uses the session WAV file path after stop (ADR-014).
 actor ParakeetStreamingEngine: StreamingSTTEngine {
-    private var manager: SlidingWindowAsrManager?
+    private var asr: AsrManager?
     private var loadedModels: AsrModels?
-    private var updatePump: Task<Void, Never>?
-    private var feedPump: Task<Void, Never>?
-    private let feedBridge = FeedBridge()
+    private var language: Language?
+    private var samples: [Float] = []
+    private var previewLoop: Task<Void, Never>?
+    private var passInFlight = false
+    private var onUpdate: (@Sendable (LiveTranscript) -> Void)?
 
-    /// Shared CoreML models from the last successful `start`, for an optional offline WAV pass.
+    /// Shared CoreML models from the last successful `start` (optional offline reuse).
     var sharedModels: AsrModels? { loadedModels }
+
+    private static let previewIntervalNs: UInt64 = 1_000_000_000
+    /// Skip ticks until we have a little speech (OpenBot waits on first chunk cadence).
+    private static let minPreviewSamples = 8_000 // 0.5 s @ 16 kHz
+    private static let interimWordCount = 2
 
     func start(
         modelDirectory: URL,
@@ -30,63 +38,37 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         }
 
         let models = try await AsrModels.load(from: modelDirectory, version: kind.version)
-        let language = Self.fluidLanguage(from: languageCode)
-        let sliding = SlidingWindowAsrManager(
-            config: .streaming.applying(language: language)
-        )
-        try await sliding.loadModels(models)
-        try await sliding.startStreaming(source: .microphone)
+        let manager = AsrManager(config: .default)
+        try await manager.loadModels(models)
 
         loadedModels = models
-        manager = sliding
+        asr = manager
+        language = Self.fluidLanguage(from: languageCode)
+        samples = []
+        self.onUpdate = onUpdate
 
-        let (feedStream, feedContinuation) = AsyncStream<AVAudioPCMBuffer>.makeStream()
-        feedBridge.continuation = feedContinuation
-        feedPump = Task {
-            for await buffer in feedStream {
-                await sliding.streamAudio(buffer)
-            }
-        }
-
-        updatePump = Task {
-            for await _ in await sliding.transcriptionUpdates {
-                let confirmed = await sliding.confirmedTranscript
-                let volatile = await sliding.volatileTranscript
-                onUpdate(LiveTranscript(confirmed: confirmed, volatile: volatile))
+        previewLoop = Task {
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: Self.previewIntervalNs)
+                if Task.isCancelled { break }
+                await self.runPreviewPassIfNeeded()
             }
         }
     }
 
     nonisolated func feed(_ buffer: AVAudioPCMBuffer) {
-        guard let copy = Self.copyBuffer(buffer) else { return }
-        feedBridge.yield(copy)
+        guard let floats = Self.monoFloats(from: buffer), !floats.isEmpty else { return }
+        Task { await self.appendSamples(floats) }
     }
 
     func finish() async throws -> String {
-        defer {
-            updatePump?.cancel()
-            updatePump = nil
-            feedPump = nil
-            feedBridge.finish()
-            manager = nil
-        }
-
-        guard let manager else { throw STTEngineError.emptyResult }
-
-        feedBridge.finish()
-        // Let the feed pump drain into SlidingWindow before finish() closes recognition.
-        await feedPump?.value
-        feedPump = nil
-
-        let text = try await manager.finish()
-        await manager.cleanup()
-        updatePump?.cancel()
-        updatePump = nil
-
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { throw STTEngineError.emptyResult }
-        // Keep `loadedModels` until `unload()` so an optional offline WAV pass can reuse them.
-        return trimmed
+        // Capsule preview only — paste always uses the session WAV file path after stop.
+        previewLoop?.cancel()
+        previewLoop = nil
+        onUpdate = nil
+        asr = nil
+        samples = []
+        throw STTEngineError.emptyResult
     }
 
     func cancel() async {
@@ -97,38 +79,84 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         await cancelInternal(clearModels: true)
     }
 
-    /// Offline WAV pass using the already-loaded `AsrModels` (shared `MLModel` refs).
+    /// Offline WAV pass using already-loaded models (Settings “refine after stop” / helpers).
     func transcribeOffline(audioURL: URL) async throws -> String {
         guard let models = loadedModels else { throw STTEngineError.modelMissing }
-        let asr = AsrManager(config: .default)
-        try await asr.loadModels(models)
+        let manager = AsrManager(config: .default)
+        try await manager.loadModels(models)
         do {
             var decoderState = TdtDecoderState.make()
-            let result = try await asr.transcribe(audioURL, decoderState: &decoderState)
-            await asr.cleanup()
+            let result = try await manager.transcribe(audioURL, decoderState: &decoderState, language: language)
+            await manager.cleanup()
             let text = result.text.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !text.isEmpty else { throw STTEngineError.emptyResult }
             return text
         } catch {
-            await asr.cleanup()
+            await manager.cleanup()
             throw error
         }
     }
 
-    private func cancelInternal(clearModels: Bool) async {
-        updatePump?.cancel()
-        updatePump = nil
-        feedBridge.finish()
-        feedPump?.cancel()
-        feedPump = nil
-        if let manager {
-            await manager.cancel()
-            await manager.cleanup()
+    // MARK: - Private
+
+    private func appendSamples(_ chunk: [Float]) {
+        samples.append(contentsOf: chunk)
+    }
+
+    private func runPreviewPassIfNeeded(force: Bool = false) async {
+        guard !passInFlight else { return }
+        guard let asr else { return }
+        let snapshot = samples
+        guard force || snapshot.count >= Self.minPreviewSamples else { return }
+
+        passInFlight = true
+        defer { passInFlight = false }
+
+        do {
+            var decoderState = TdtDecoderState.make()
+            let result = try await asr.transcribe(
+                snapshot,
+                decoderState: &decoderState,
+                language: language
+            )
+            let trimmed = result.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty else { return }
+            let split = Self.splitInterimTail(trimmed, interimWords: Self.interimWordCount)
+            onUpdate?(LiveTranscript(confirmed: split.body, volatile: split.tail))
+        } catch {
+            if error is CancellationError || Task.isCancelled { return }
+            NSLog("CarrotType: live draft preview pass failed: %@", error.localizedDescription)
         }
-        manager = nil
+    }
+
+    private func cancelInternal(clearModels: Bool) async {
+        previewLoop?.cancel()
+        previewLoop = nil
+        passInFlight = false
+        samples = []
+        onUpdate = nil
+        if let asr {
+            await asr.cleanup()
+        }
+        asr = nil
         if clearModels {
             loadedModels = nil
         }
+        language = nil
+    }
+
+    private static func splitInterimTail(
+        _ text: String,
+        interimWords: Int
+    ) -> (body: String, tail: String) {
+        let words = text.split { $0.isWhitespace || $0.isNewline }.map(String.init)
+        guard !words.isEmpty else { return ("", "") }
+        if words.count <= interimWords {
+            return ("", words.joined(separator: " "))
+        }
+        let body = words.dropLast(interimWords).joined(separator: " ")
+        let tail = words.suffix(interimWords).joined(separator: " ")
+        return (body, tail)
     }
 
     private static func fluidLanguage(from code: String?) -> Language? {
@@ -139,52 +167,22 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         return Language(rawValue: primary)
     }
 
-    private static func copyBuffer(_ buffer: AVAudioPCMBuffer) -> AVAudioPCMBuffer? {
-        guard let copy = AVAudioPCMBuffer(pcmFormat: buffer.format, frameCapacity: buffer.frameLength)
-        else { return nil }
-        copy.frameLength = buffer.frameLength
-        guard let src = buffer.floatChannelData, let dst = copy.floatChannelData else {
-            return copy.frameLength > 0 ? copy : nil
-        }
-        let channels = Int(buffer.format.channelCount)
+    private static func monoFloats(from buffer: AVAudioPCMBuffer) -> [Float]? {
         let frames = Int(buffer.frameLength)
-        for ch in 0..<channels {
-            memcpy(dst[ch], src[ch], frames * MemoryLayout<Float>.size)
+        guard frames > 0, let channels = buffer.floatChannelData else { return nil }
+        if buffer.format.channelCount == 1 {
+            return Array(UnsafeBufferPointer(start: channels[0], count: frames))
         }
-        return copy
-    }
-}
-
-/// Thread-safe yield into the actor's feed `AsyncStream` (audio tap must not await the actor).
-private final class FeedBridge: @unchecked Sendable {
-    private let lock = NSLock()
-    var continuation: AsyncStream<AVAudioPCMBuffer>.Continuation? {
-        get {
-            lock.lock()
-            defer { lock.unlock() }
-            return _continuation
+        // Downmix if a converter ever feeds multi-channel (recorder targets mono).
+        var out = [Float](repeating: 0, count: frames)
+        let chCount = Int(buffer.format.channelCount)
+        for f in 0..<frames {
+            var sum: Float = 0
+            for ch in 0..<chCount {
+                sum += channels[ch][f]
+            }
+            out[f] = sum / Float(chCount)
         }
-        set {
-            lock.lock()
-            _continuation = newValue
-            lock.unlock()
-        }
-    }
-
-    private var _continuation: AsyncStream<AVAudioPCMBuffer>.Continuation?
-
-    func yield(_ buffer: AVAudioPCMBuffer) {
-        lock.lock()
-        let cont = _continuation
-        lock.unlock()
-        cont?.yield(buffer)
-    }
-
-    func finish() {
-        lock.lock()
-        let cont = _continuation
-        _continuation = nil
-        lock.unlock()
-        cont?.finish()
+        return out
     }
 }

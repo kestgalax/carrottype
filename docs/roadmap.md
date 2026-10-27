@@ -2,11 +2,11 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.3`** (unsigned DMG): optional Parakeet Ultra beside v3; the default download for a new install stays Parakeet TDT 0.6B v3. **v0.3.2** showed month character totals beside successful dictations and WPM above Bindings. **v0.3.1** hid DMG packaging folders. **v0.3.0** added local opt-in usage statistics (ADR-013). **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.4`** (unsigned DMG): optional live draft in Status Capsule (ADR-014). **v0.3.3** added optional Parakeet Ultra beside v3 (default download still v3). **v0.3.2** showed month character totals beside successful dictations and WPM above Bindings. **v0.3.1** hid DMG packaging folders. **v0.3.0** added local opt-in usage statistics (ADR-013). **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
 
-Latest artifact: `CarrotType-0.3.3.dmg` (SHA-256 in `docs/github-release-notes-v0.3.3.md`).
+Latest artifact: `CarrotType-0.3.4.dmg` (SHA-256 in `docs/github-release-notes-v0.3.4.md`).
 
-**Current focus:** live dictation draft on Parakeet (ADR-014) for a **v0.3.4** candidate — owner builds/tests on Mac. Notarization / Apple Developer ID remains **optional later**, not a publish blocker.
+**Current focus:** optional later — Developer ID sign + notarization (`ops/deploy.md`). Not a publish blocker.
 
 Privacy / supply-chain agent governance lives in `.ai/constraints.md` (§ Privacy / network / dependencies). A full security pass / offline network audit is **deferred** — not current focus.
 
@@ -85,20 +85,20 @@ Checklist:
 - [x] Publish GitHub Release `v0.3.2` — Statistics character total + WPM above Bindings + `docs/github-release-notes-v0.3.2.md`.
 - [x] Optional Parakeet Ultra STT beside v3 (ADR-006, FluidAudio 0.17.7). Catalog default stays v3.
 - [x] Publish GitHub Release `v0.3.3` — optional Parakeet Ultra + `docs/github-release-notes-v0.3.3.md`.
-- [ ] Live dictation draft via FluidAudio SlidingWindow (ADR-014) — Capsule live text; paste still on stop; default off.
+- [x] Live dictation draft via offline re-transcribe preview (ADR-014) — Capsule adapts with full context; dynamic size; paste on stop via WAV; default off.
+- [x] Publish GitHub Release `v0.3.4` — live draft + `docs/github-release-notes-v0.3.4.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 
-Status: **v0.3.3 unsigned DMG** — optional Parakeet Ultra beside the default Parakeet TDT 0.6B v3. Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
+Status: **v0.3.4 unsigned DMG** — optional live draft (Parakeet); Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
 
 ## Next focus (ordered)
 
-1. **Owner Mac verify** live draft (ADR-014 / F-004): Debug build, Capsule latency/jitter, quality vs offline Ultra, memory, fallback, setting off = unchanged. Then ship **v0.3.4** when ready (version bump left to owner).
-2. **Optional trust:** Developer ID sign + `notarytool` + staple (`ops/deploy.md`); sign both host and helper.
-3. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
+1. **Optional trust:** Developer ID sign + `notarytool` + staple (`ops/deploy.md`); sign both host and helper.
+2. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 
 ## In progress / on branch
 
-- [ ] Live dictation draft (ADR-014): `StreamingSTTEngine` + Parakeet SlidingWindow; catalog `supportsStreaming`; Capsule confirmed/volatile; default-off Settings toggle; WAV fallback intact — branch `feat/live-dictation` (not merged until owner review).
+- _(none — v0.3.4 live draft merged)_
 
 ## Near-term polish candidates (if release is blocked)
 

@@ -4,15 +4,14 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (after v0.3.3)
+## Current phase (after v0.3.4)
 
-Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**.
+Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**. Live draft (ADR-014) shipped in v0.3.4.
 
 Next ordered focus:
 
-1. Live dictation draft (ADR-014) on `feat/live-dictation` — owner Mac Debug verify, then v0.3.4 when ready.
-2. Optional later: Developer ID sign + notarize (`ops/deploy.md`) for one-click Gatekeeper UX.
-3. Post-v1 research spikes when useful (`docs/research-post-v1-spikes.md`).
+1. Optional later: Developer ID sign + notarize (`ops/deploy.md`) for one-click Gatekeeper UX.
+2. Post-v1 research spikes when useful (`docs/research-post-v1-spikes.md`).
 
 ## Phase gates
 

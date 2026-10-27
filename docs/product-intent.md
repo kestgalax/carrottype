@@ -18,7 +18,7 @@ Build a macOS background / menu-bar app whose primary loop is:
 
 1. Global hotkey starts recording.
 2. Same hotkey stops recording: **press again** in toggle mode (default), or **release** when Walkie-talkie is on in Settings (hold-to-talk only). The modes are mutually exclusive; same dictation shortcut either way.
-3. On-device STT (default Parakeet TDT v3; user-selectable catalog) produces text. Optional live draft (Parakeet SlidingWindow, ADR-014) may show interim text in the Status Capsule while speaking; paste still happens only after stop.
+3. On-device STT (default Parakeet TDT v3; user-selectable catalog) produces text. Optional live draft (ADR-014) may show adapting interim text in the Status Capsule while speaking (periodic full-buffer Parakeet preview); paste still happens only after stop.
 4. Optional cleanup / post-dictation formatting (Light heuristics or Qwen3 Smart) formats text without rewriting meaning.
 5. Text is inserted at the current caret in the frontmost app.
 6. Optional: keep the result on the clipboard after paste so ⌘V still works if focus moved.
@@ -59,6 +59,6 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 - First successful end-to-end carrottype session is documented and reproducible.
 - Setup UI makes readiness, active STT, and formatting mode obvious without rebuilding the app.
 
-## Current product status (2026-09)
+## Current product status (2026-10)
 
-**v0.3.3** adds optional **Parakeet Ultra** beside Parakeet TDT 0.6B v3; the default download for a new install stays v3. **v0.3.2** adds a month **character** total next to successful dictations in Settings → Statistics, and moves typing speed (WPM) above Bindings. **v0.3.1** is a packaging patch: the unsigned DMG install window no longer shows `.background` / `.fseventsd`. **v0.3.0** ships **local opt-in usage statistics** (ADR-013): Settings → Statistics; month estimates of typing time saved; successful dictation count; per-binding transform counts. Collection is off by default and stays on-device. **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added a custom Finder install window. **v0.2.0** added **Selection Transform** (ADR-012). Also includes optional Gemma 4 E2B cleanup (ADR-010), Status Capsule dictation chrome, OOP cleanup helper (ADR-009). The default STT download is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public**; notarization is optional later.
+**v0.3.4** adds optional **live draft** in the Status Capsule (ADR-014): while speaking with Parakeet, the Capsule shows an adapting preview (full-buffer offline re-transcribe); paste still only after stop via the session WAV. Default off. **v0.3.3** added optional **Parakeet Ultra** beside Parakeet TDT 0.6B v3; the default download for a new install stays v3. **v0.3.2** adds a month **character** total next to successful dictations in Settings → Statistics, and moves typing speed (WPM) above Bindings. **v0.3.1** is a packaging patch: the unsigned DMG install window no longer shows `.background` / `.fseventsd`. **v0.3.0** ships **local opt-in usage statistics** (ADR-013). Also includes Walkie-talkie, Selection Transform (ADR-012), optional Gemma cleanup (ADR-010), Status Capsule chrome, OOP cleanup helper (ADR-009). The default STT download is **Parakeet TDT 0.6B v3**. Distribution posture (ADR-011): **MIT** source; repository **may be public**; notarization is optional later.

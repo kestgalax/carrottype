@@ -1,33 +1,35 @@
-# ADR-014: Live Dictation Draft via FluidAudio SlidingWindow
+# ADR-014: Live Dictation Draft via Offline Re-transcribe Preview
 
 ## Status
 
-Accepted
+Accepted (revised 2026-10-27 — OpenBot-style full-buffer preview)
 
 ## Context
 
-CarrotType records 16 kHz mono WAV chunks (~85–90 ms) and transcribes the whole file after stop (`DictationPipeline` → `STTEngine.transcribe`). Users want interim text while speaking (Status Capsule), without pasting into the frontmost app until stop. Cloud realtime STT conflicts with local-first privacy. FluidAudio **0.17.7** (already pinned, ADR-006) ships `SlidingWindowAsrManager` with `volatileTranscript` / `confirmedTranscript`, `.streaming` config, `Language` hints, and `AsrModels` reference sharing for v3 and Ultra.
+Users want interim text in the Status Capsule while speaking, without pasting until stop. Cloud realtime STT conflicts with local-first privacy. The first implementation used FluidAudio `SlidingWindowAsrManager` with short windows for latency; that path did **not** rewrite earlier words with growing context, so Capsule drafts stayed choppy compared with OpenBot’s local Parakeet UX.
+
+OpenBot (local Parakeet TDT v3 via sherpa-onnx) re-transcribes the **entire** accumulated recording about once per second (single-flight) and fades only the last two words in the UI. That is the behaviour owners expect.
 
 ## Decision
 
-1. **Engine path:** Add `StreamingSTTEngine` (`start` / `feed` / `finish` / `cancel` / `unload`) and `ParakeetStreamingEngine` on `SlidingWindowAsrManager(config: .streaming.applying(language:))`. Same package id → `ParakeetSTTEngine.PackageKind` / `fluidCacheDirectory` as offline Parakeet.
-2. **Capability flag:** Catalog field `supportsStreaming` (v3 + Ultra `true`; Whisper + Apple SpeechAnalyzer `false`). Live draft runs only when the active package supports streaming **and** Settings → **Live draft** is on (default **off**).
-3. **Capture fan-out:** Keep WAV write intact. `AudioRecorder` also emits converted 16 kHz buffers for streaming (copy before fan-out). File path remains the fallback and the only path for non-streaming engines.
-4. **Stop behaviour:** Prefer streaming `finish()` → existing cleanup → caret paste. Optional **Offline second pass** (default off) re-runs offline STT on the same WAV using the already-loaded `AsrModels` (`MLModel` refs), then cleanup/paste.
-5. **Failure:** If streaming fails to start or `finish()` errors, fall back silently to file STT and log (`NSLog`).
-6. **UI:** Capsule shows confirmed text at normal opacity and the volatile tail faded; each update **replaces** the volatile segment. No caret insertion while recording.
-7. **Language:** Pass the in-app effective language code (`ru` / `en`) into FluidAudio `Language` for script-aware filtering, consistent with Settings language.
+1. **Engine path:** `StreamingSTTEngine` + `ParakeetStreamingEngine` load the same FluidAudio `AsrModels` / package id as offline Parakeet. Live draft **accumulates 16 kHz samples** from the recorder fan-out and, about every **1 s** (skip while a pass is running), runs **offline** `AsrManager.transcribe` on a snapshot of **all** samples so far.
+2. **Capability flag:** Catalog `supportsStreaming` (v3 + Ultra `true`; Whisper + Apple `false`). Live draft only when the active package supports it **and** Settings → **Show text while you speak** is on (default **off**).
+3. **Capture:** WAV write stays intact. Converted 16 kHz buffers also feed the preview engine. File STT remains the paste path and the only path for non-streaming engines.
+4. **Stop:** Cancel preview; **always** transcribe the session WAV with offline STT → cleanup → caret paste. Preview failures never block paste.
+5. **UI:** Capsule shows draft body at normal opacity and the **last two words** muted (cosmetic interim, OpenBot-style). Capsule **grows with text** (down from notch/menu bar), with a max body height and scroll beyond that.
+6. **Language:** Pass in-app effective language (`ru` / `en`) into FluidAudio `Language` when transcribing.
+7. **SlidingWindow** is **not** used for live Capsule preview (kept available in FluidAudio for other uses / research only).
 
 ## Consequences
 
-- No new SPM dependency or cloud sink.
-- Parakeet sessions may load CoreML slightly earlier (before/at record start) when live draft is on.
-- Whisper / Apple SpeechAnalyzer users see the live-draft toggle disabled with an unavailable footer.
-- Sliding-window ASR is pseudo-streaming (overlapping windows); draft quality and latency must be validated on device (see roadmap / PR checklist).
+- Live draft CPU cost ≈ one offline Parakeet pass per second while speaking (single-flight).
+- One Parakeet model load (selected v3 or Ultra); no dual v3+Ultra.
+- Capsule draft quality tracks full-utterance context; final paste quality matches the existing file path.
+- “Offline second pass” Settings control removed from General (final path is always WAV STT).
 
 ## Alternatives considered
 
-- **Apple SpeechAnalyzer volatile stream:** deferred — current integration is file-based (`finishAfterFile`); RU asset install remains fragile (ADR-008).
-- **True FluidAudio EOU / Nemotron streaming:** EN-oriented in 0.17.7; not chosen for RU/EN product path.
-- **Cloud realtime (ElevenLabs / Soniox / etc.):** rejected for MVP — violates closed network sinks without a new product-intent + ADR.
-- **Always dual-load v3 draft + Ultra final:** rejected — doubles disk/RAM; Ultra alone on both passes is preferred when the user selected Ultra.
+- **SlidingWindow short windows:** fast first token, weak whole-utterance coherence — rejected for Capsule after owner comparison with OpenBot.
+- **Mid-speech LLM cleanup:** deferred — not how OpenBot/Grok STT public paths work; needs a separate ADR if productized.
+- **Cloud realtime (ElevenLabs / xAI / etc.):** rejected for MVP — closed network sinks / product intent.
+- **True FluidAudio EOU / Nemotron streaming:** EN-oriented; not chosen for RU/EN default path.

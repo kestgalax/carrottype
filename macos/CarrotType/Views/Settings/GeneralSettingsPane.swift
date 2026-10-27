@@ -40,21 +40,12 @@ struct GeneralSettingsPane: View {
                     isOn: $appState.liveDraftEnabled
                 )
                 .disabled(!appState.activeSTTSupportsStreaming)
-                if appState.liveDraftEnabled, appState.activeSTTSupportsStreaming {
-                    Toggle(
-                        L10n.t("hotkey.offline_second_pass", locale: locale),
-                        isOn: $appState.offlineSecondPassAfterLiveDraft
-                    )
-                }
             } header: {
                 Text(L10n.t("hotkey.section", locale: locale))
             } footer: {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(hotkeyFooter)
                     Text(liveDraftFooter)
-                    if appState.liveDraftEnabled, appState.activeSTTSupportsStreaming {
-                        Text(L10n.t("hotkey.offline_second_pass_footer", locale: locale))
-                    }
                 }
             }
 
