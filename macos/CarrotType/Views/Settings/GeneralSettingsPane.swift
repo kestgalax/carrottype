@@ -6,16 +6,6 @@ struct GeneralSettingsPane: View {
 
     private var locale: Locale { appState.effectiveLocale }
 
-    private var hotkeyFooter: String {
-        if hotkey.isRecording, hotkey.captureTarget == .dictation {
-            return L10n.t("hotkey.footer_recording", locale: locale)
-        }
-        if appState.pushToTalkEnabled {
-            return L10n.t("hotkey.push_to_talk_footer", locale: locale)
-        }
-        return L10n.t("hotkey.retain_clipboard_footer", locale: locale)
-    }
-
     private var liveDraftFooter: String {
         if appState.activeSTTSupportsStreaming {
             return L10n.t("hotkey.live_draft_footer", locale: locale)
@@ -27,26 +17,38 @@ struct GeneralSettingsPane: View {
         Form {
             Section {
                 HotkeySettingsRow(hotkey: hotkey, target: .dictation)
+                if hotkey.isRecording, hotkey.captureTarget == .dictation {
+                    Text(L10n.t("hotkey.footer_recording", locale: locale))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
                 Toggle(
                     L10n.t("hotkey.push_to_talk", locale: locale),
                     isOn: $appState.pushToTalkEnabled
                 )
+                Text(L10n.t("hotkey.push_to_talk_footer", locale: locale))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
                 Toggle(
                     L10n.t("hotkey.retain_clipboard", locale: locale),
                     isOn: $appState.retainDictationInClipboard
                 )
+                Text(L10n.t("hotkey.retain_clipboard_footer", locale: locale))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
                 Toggle(
                     L10n.t("hotkey.live_draft", locale: locale),
                     isOn: $appState.liveDraftEnabled
                 )
                 .disabled(!appState.activeSTTSupportsStreaming)
+                Text(liveDraftFooter)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             } header: {
                 Text(L10n.t("hotkey.section", locale: locale))
-            } footer: {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(hotkeyFooter)
-                    Text(liveDraftFooter)
-                }
             }
 
             Section {

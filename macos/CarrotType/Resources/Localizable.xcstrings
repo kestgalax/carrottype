@@ -1327,13 +1327,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hold the shortcut to record. Release to transcribe and paste. Without holding, a tap does not keep recording. Escape cancels without pasting."
+            "value": "Hold the shortcut to record. Release to transcribe and paste. Without holding, a tap does not keep recording. Escape cancels without pasting; if live draft was showing, the status pill keeps it briefly so you can Copy."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Удерживайте сочетание, чтобы писать. Отпустите — распознать и вставить. Без удержания короткое нажатие не оставляет запись. Escape отменяет диктовку без вставки."
+            "value": "Удерживайте сочетание, чтобы писать. Отпустите — распознать и вставить. Без удержания короткое нажатие не оставляет запись. Escape отменяет без вставки; если был черновик, плашка ненадолго остаётся — можно Скопировать."
           }
         }
       }
@@ -1378,13 +1378,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Text still pastes at the caret. If focus moves to another app, the result stays on the clipboard so you can paste with ⌘V. While recording, press Escape to cancel without pasting."
+            "value": "Text still pastes at the caret. If focus moves to another app, the result stays on the clipboard so you can paste with ⌘V. While recording, Escape cancels without pasting. If live draft showed text, the status pill keeps it briefly so you can Copy."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Текст вставляется у курсора как обычно. Если фокус уйдёт в другое приложение, результат останется в буфере — его можно вставить ⌘V. Во время записи Escape отменяет диктовку без вставки."
+            "value": "Текст вставляется у курсора как обычно. Если фокус уйдёт в другое приложение, результат останется в буфере — его можно вставить ⌘V. Во время записи Escape отменяет диктовку без вставки. Если в плашке уже был черновик, она ненадолго останется — можно Скопировать."
           }
         }
       }
@@ -3725,13 +3725,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "While you speak, a preview appears in the status pill and can rephrase earlier words as context grows. Nothing is inserted until you stop. Needs Parakeet. Off by default."
+            "value": "While you speak, a preview appears in the status pill and can rephrase earlier words as context grows. Nothing is inserted until you stop. Escape keeps a Copy-able snapshot in the pill for a few seconds. Needs Parakeet. Off by default."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Пока вы говорите, в плашке статуса виден черновик: по мере речи он может уточнять уже сказанное. В документ ничего не попадёт, пока не остановите запись. Нужен Parakeet. По умолчанию выключено."
+            "value": "Пока вы говорите, в плашке статуса виден черновик: по мере речи он может уточнять уже сказанное. В документ ничего не попадёт, пока не остановите запись. Escape на несколько секунд оставляет в плашке снимок, который можно Скопировать. Нужен Parakeet. По умолчанию выключено."
           }
         }
       }
