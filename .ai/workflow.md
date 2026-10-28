@@ -4,15 +4,14 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (v0.3.5 on branch)
+## Current phase (after v0.3.5)
 
-Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**. Live draft (ADR-014) shipped in v0.3.4. **v0.3.5** (`feat/live-draft-cancel-copy`): live-draft Escape cancel Copy capsule + Settings hint layout — implementation/docs complete; merge + DMG + Release pending.
+Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**. Live draft (ADR-014) in v0.3.4; Escape cancel Copy capsule + Settings hint layout in v0.3.5.
 
 Next ordered focus:
 
-1. Merge `feat/live-draft-cancel-copy`, build DMG, publish GitHub Release `v0.3.5`.
-2. Optional later: Developer ID sign + notarize (`ops/deploy.md`) for one-click Gatekeeper UX.
-3. Post-v1 research spikes when useful (`docs/research-post-v1-spikes.md`).
+1. Optional later: Developer ID sign + notarize (`ops/deploy.md`) for one-click Gatekeeper UX.
+2. Post-v1 research spikes when useful (`docs/research-post-v1-spikes.md`).
 
 ## Phase gates
 
