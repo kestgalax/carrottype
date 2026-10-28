@@ -114,6 +114,8 @@ final class AppState: ObservableObject {
     private var transformCopiedFeedbackTask: Task<Void, Never>?
     /// Hides the live-draft snapshot capsule after 5 seconds.
     private var liveDraftResultDismissTask: Task<Void, Never>?
+    /// Starts live-draft streaming after the recorder is already capturing.
+    private var liveDraftStartTask: Task<Void, Never>?
     /// True while Escape cancel is tearing down a session, so a second Escape
     /// cannot snapshot an already-cleared draft and wipe the Copy capsule.
     private var isCancellingDictation = false
@@ -728,34 +730,44 @@ final class AppState: ObservableObject {
 
         do {
             clearLiveDraftText()
-            if liveDraftEnabled, activeSTTSupportsStreaming {
-                let languageCode = appLanguage.effectiveLanguageCode
-                let started = await pipeline.startLiveDraftIfPossible(
-                    languageCode: languageCode
-                ) { [weak self] update in
-                    Task { @MainActor in
-                        self?.liveDraftConfirmed = update.confirmed
-                        self?.liveDraftVolatile = update.volatile
-                    }
-                }
-                if !started {
-                    NSLog("CarrotType: live draft requested but streaming did not start; using file STT path")
-                }
-            }
-            // Fan-out only while streaming is active (WAV path always records).
-            if pipeline.isLiveDraftActive {
-                recorder.onConvertedBuffer = { [weak self] buffer in
-                    self?.pipeline.feedLiveDraft(buffer)
-                }
-            } else {
-                recorder.onConvertedBuffer = nil
-            }
+            liveDraftStartTask?.cancel()
+            liveDraftStartTask = nil
+            recorder.onConvertedBuffer = nil
 
             _ = try recorder.start(deviceUID: audioInput.selectedDeviceID)
             invalidateCapsuleSequence()
             menuBarMode = .recording
             capsulePhase = .listening
             hotkey.setEscapeCancelRegistered(true)
+
+            if liveDraftEnabled, activeSTTSupportsStreaming {
+                let languageCode = appLanguage.effectiveLanguageCode
+                liveDraftStartTask = Task { @MainActor [weak self] in
+                    guard let self else { return }
+                    let started = await self.pipeline.startLiveDraftIfPossible(
+                        languageCode: languageCode
+                    ) { [weak self] update in
+                        Task { @MainActor in
+                            self?.liveDraftConfirmed = update.confirmed
+                            self?.liveDraftVolatile = update.volatile
+                        }
+                    }
+                    guard !Task.isCancelled else {
+                        if started {
+                            await self.pipeline.cancelLiveDraft()
+                        }
+                        return
+                    }
+                    if started, self.menuBarMode == .recording {
+                        self.recorder.onConvertedBuffer = { [weak self] buffer in
+                            self?.pipeline.feedLiveDraft(buffer)
+                        }
+                    } else if !started {
+                        NSLog("CarrotType: live draft requested but streaming did not start; using file STT path")
+                    }
+                }
+            }
+
             if pushToTalkEnabled {
                 hotkey.startPushToTalkReleaseMonitor()
                 if !pttKeyHeld {
@@ -764,6 +776,8 @@ final class AppState: ObservableObject {
                 }
             }
         } catch {
+            liveDraftStartTask?.cancel()
+            liveDraftStartTask = nil
             recorder.onConvertedBuffer = nil
             await pipeline.cancelLiveDraft()
             clearLiveDraftText()
@@ -795,6 +809,8 @@ final class AppState: ObservableObject {
         pttKeyHeld = false
         pttStartInFlight = false
         recorder.cancel()
+        liveDraftStartTask?.cancel()
+        liveDraftStartTask = nil
         recorder.onConvertedBuffer = nil
         recorderLiveLevel = 0
         await pipeline.cancelLiveDraft()
@@ -814,6 +830,9 @@ final class AppState: ObservableObject {
 
     private func finishDictationSession() async {
         guard menuBarMode == .recording, !isProcessing else { return }
+
+        liveDraftStartTask?.cancel()
+        liveDraftStartTask = nil
 
         isProcessing = true
         recorderLiveLevel = 0
