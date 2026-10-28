@@ -114,6 +114,9 @@ final class AppState: ObservableObject {
     private var transformCopiedFeedbackTask: Task<Void, Never>?
     /// Hides the live-draft snapshot capsule after 5 seconds.
     private var liveDraftResultDismissTask: Task<Void, Never>?
+    /// True while Escape cancel is tearing down a session, so a second Escape
+    /// cannot snapshot an already-cleared draft and wipe the Copy capsule.
+    private var isCancellingDictation = false
     /// Counts nested Settings appearances so SwiftUI remounts do not clear the mic meter.
     private var settingsAppearanceCount = 0
     /// Walkie-talkie: true while the dictation chord is physically held (set on press, cleared on release).
@@ -776,7 +779,10 @@ final class AppState: ObservableObject {
     /// Escape (or soft silent stop): discard capture, no STT/paste.
     /// A non-empty live draft is kept as a Copy capsule instead of being dropped.
     private func cancelDictationSession() async {
+        if isCancellingDictation { return }
         guard menuBarMode == .recording, !isProcessing else { return }
+        isCancellingDictation = true
+        defer { isCancellingDictation = false }
 
         let draft = liveDraftSnapshotText()
         let showDraftResult = liveDraftEnabled && activeSTTSupportsStreaming && !draft.isEmpty
