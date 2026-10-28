@@ -90,7 +90,7 @@ Checklist:
 - [x] Live-draft Escape cancel → Copy capsule (non-empty preview, no paste; 5 s auto-dismiss; ADR-014 / F-004) — implemented on `feat/live-draft-cancel-copy`.
 - [x] Settings → General: per-toggle caption hints (Walkie-talkie, clipboard retain, live draft + Escape Copy note).
 - [x] Publish GitHub Release `v0.3.5` — live-draft cancel Copy + Settings hints + `docs/github-release-notes-v0.3.5.md`.
-- [x] Live draft recorder-first session start (ADR-014 / F-004) — mic/WAV before Parakeet load; concurrent attach; cancel mid-load (v0.3.6) — `feat/live-draft-recorder-first`.
+- [x] Live draft recorder-first session start (ADR-014 / F-004) — mic/WAV before Parakeet load; concurrent attach; cancel or a newer start invalidates the in-flight Parakeet `start` before it can publish (v0.3.6) — `feat/live-draft-recorder-first`.
 - [ ] Publish GitHub Release `v0.3.6` — recorder-first live draft + `docs/github-release-notes-v0.3.6.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 

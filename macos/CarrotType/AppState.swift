@@ -702,8 +702,9 @@ final class AppState: ObservableObject {
     }
 
     /// Bumps the live-draft generation and cancels the in-flight load task.
-    /// The cancelled task may still finish model load; it must see the new generation
-    /// and skip both `feed` attach and `cancelLiveDraft`.
+    /// The cancelled task may still finish model load. A generation mismatch must not
+    /// call `cancelLiveDraft` (that would tear down a newer session). The streaming
+    /// engine drops a superseded `start` before publish, so this task only skips attach.
     @discardableResult
     private func invalidateLiveDraftStart() -> UInt64 {
         liveDraftStartGeneration &+= 1
@@ -768,13 +769,7 @@ final class AppState: ObservableObject {
                             self?.liveDraftVolatile = update.volatile
                         }
                     }
-                    guard self.liveDraftStartGeneration == generation else { return }
-                    guard !Task.isCancelled else {
-                        if started {
-                            await self.pipeline.cancelLiveDraft()
-                        }
-                        return
-                    }
+                    guard self.liveDraftStartGeneration == generation, !Task.isCancelled else { return }
                     if started, self.menuBarMode == .recording {
                         self.recorder.onConvertedBuffer = { [weak self] buffer in
                             self?.pipeline.feedLiveDraft(buffer)
