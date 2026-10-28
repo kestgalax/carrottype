@@ -31,7 +31,8 @@ private final class RecordingBuffers: @unchecked Sendable {
     private(set) var instantaneousPeak: Float = 0
     var onInstantPeak: ((Float) -> Void)?
     /// Fan-out of the same 16 kHz mono buffers written to the WAV (live draft / streaming).
-    var onConvertedBuffer: ((AVAudioPCMBuffer) -> Void)?
+    /// Written from the main actor and read on the tap thread — always under `lock`.
+    private var onConvertedBuffer: ((AVAudioPCMBuffer) -> Void)?
 
     init(file: AVAudioFile, converter: AVAudioConverter?, targetFormat: AVAudioFormat) {
         self.file = file
@@ -82,11 +83,20 @@ private final class RecordingBuffers: @unchecked Sendable {
         }
     }
 
+    func setOnConvertedBuffer(_ handler: ((AVAudioPCMBuffer) -> Void)?) {
+        lock.lock()
+        onConvertedBuffer = handler
+        lock.unlock()
+    }
+
     private func emitConverted(_ buffer: AVAudioPCMBuffer) {
-        guard let onConvertedBuffer else { return }
+        lock.lock()
+        let handler = onConvertedBuffer
+        lock.unlock()
+        guard let handler else { return }
         // Tap reuses buffer memory on the next callback — copy before fan-out.
         guard let copy = Self.copyPCM(buffer) else { return }
-        onConvertedBuffer(copy)
+        handler(copy)
     }
 
     private nonisolated static func copyPCM(_ buffer: AVAudioPCMBuffer) -> AVAudioPCMBuffer? {
@@ -125,6 +135,31 @@ private final class RecordingBuffers: @unchecked Sendable {
     }
 }
 
+/// Main-actor assignment of `AudioRecorder.onConvertedBuffer`; the tap calls `emit`.
+private final class ConvertedBufferFanout: @unchecked Sendable {
+    private let lock = NSLock()
+    private var handler: ((AVAudioPCMBuffer) -> Void)?
+
+    func setHandler(_ handler: ((AVAudioPCMBuffer) -> Void)?) {
+        lock.lock()
+        self.handler = handler
+        lock.unlock()
+    }
+
+    func currentHandler() -> ((AVAudioPCMBuffer) -> Void)? {
+        lock.lock()
+        defer { lock.unlock() }
+        return handler
+    }
+
+    func emit(_ buffer: AVAudioPCMBuffer) {
+        lock.lock()
+        let handler = self.handler
+        lock.unlock()
+        handler?(buffer)
+    }
+}
+
 /// Captures microphone audio as 16 kHz mono Float32 WAV for whisper.cpp.
 @MainActor
 final class AudioRecorder {
@@ -138,7 +173,13 @@ final class AudioRecorder {
     /// Live peak for UI meters (0…1-ish), updated off the audio callback.
     var onLivePeak: ((Float) -> Void)?
     /// Same 16 kHz mono PCM written to the session WAV (for live draft streaming).
-    var onConvertedBuffer: ((AVAudioPCMBuffer) -> Void)?
+    /// Main actor writes; the tap reads a copy under `convertedBufferFanout`'s lock.
+    var onConvertedBuffer: ((AVAudioPCMBuffer) -> Void)? {
+        get { convertedBufferFanout.currentHandler() }
+        set { convertedBufferFanout.setHandler(newValue) }
+    }
+
+    private let convertedBufferFanout = ConvertedBufferFanout()
 
     init() {
         guard let format = AVAudioFormat(
@@ -195,8 +236,9 @@ final class AudioRecorder {
                 self?.onLivePeak?(display)
             }
         }
-        session.onConvertedBuffer = { [weak self] buffer in
-            self?.onConvertedBuffer?(buffer)
+        let fanout = convertedBufferFanout
+        session.setOnConvertedBuffer { buffer in
+            fanout.emit(buffer)
         }
         buffers = session
         outputURL = url

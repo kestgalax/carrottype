@@ -67,6 +67,10 @@ final class DictationPipeline {
             )
             isLiveDraftActive = true
             return true
+        } catch is CancellationError {
+            // Start lost the race (cancel or a newer start) and did not publish.
+            // Unload here would invalidate that newer session.
+            return false
         } catch {
             NSLog("CarrotType: live draft streaming failed to start: %@", error.localizedDescription)
             isLiveDraftActive = false

@@ -15,6 +15,8 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
     private var previewLoop: Task<Void, Never>?
     private var passInFlight = false
     private var onUpdate: (@Sendable (LiveTranscript) -> Void)?
+    /// Bumped by `cancelInternal` so an in-flight `start` cannot publish after cancel or a newer start.
+    private var startToken: UInt64 = 0
 
     /// Shared CoreML models from the last successful `start` (optional offline reuse).
     var sharedModels: AsrModels? { loadedModels }
@@ -30,16 +32,35 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         languageCode: String?,
         onUpdate: @escaping @Sendable (LiveTranscript) -> Void
     ) async throws {
-        await cancelInternal(clearModels: true)
+        let myToken = await cancelInternal(clearModels: true)
+        guard startToken == myToken else { throw CancellationError() }
 
         let kind = ParakeetSTTEngine.PackageKind.resolve(packageID: packageID)
         guard AsrModels.modelsExist(at: modelDirectory, version: kind.version) else {
             throw STTEngineError.modelMissing
         }
 
-        let models = try await AsrModels.load(from: modelDirectory, version: kind.version)
+        let models: AsrModels
+        do {
+            models = try await AsrModels.load(from: modelDirectory, version: kind.version)
+        } catch {
+            if startToken != myToken { throw CancellationError() }
+            throw error
+        }
+        guard startToken == myToken else { throw CancellationError() }
+
         let manager = AsrManager(config: .default)
-        try await manager.loadModels(models)
+        do {
+            try await manager.loadModels(models)
+        } catch {
+            await manager.cleanup()
+            if startToken != myToken { throw CancellationError() }
+            throw error
+        }
+        guard startToken == myToken else {
+            await manager.cleanup()
+            throw CancellationError()
+        }
 
         loadedModels = models
         asr = manager
@@ -129,20 +150,29 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         }
     }
 
-    private func cancelInternal(clearModels: Bool) async {
+    /// Invalidates any in-flight `start` before the first await, then tears down published state.
+    /// Returns the token captured at invalidation so the caller can detect a newer `start`/`cancel`.
+    @discardableResult
+    private func cancelInternal(clearModels: Bool) async -> UInt64 {
+        startToken &+= 1
+        let token = startToken
         previewLoop?.cancel()
         previewLoop = nil
         passInFlight = false
         samples = []
         onUpdate = nil
-        if let asr {
-            await asr.cleanup()
+        let published = asr
+        if let published {
+            await published.cleanup()
         }
+        // A newer start/cancel may have published during cleanup. Do not clear it.
+        guard startToken == token else { return token }
         asr = nil
         if clearModels {
             loadedModels = nil
         }
         language = nil
+        return token
     }
 
     private static func splitInterimTail(
