@@ -108,7 +108,7 @@ final class StatusCapsuleController {
             maxLiveDraftBodyHeight: StatusCapsuleGeometry.maxLiveDraftBodyHeight,
             locale: locale,
             onCopy: { [weak self] in self?.appState?.copyTransformResult() },
-            onClose: { [weak self] in self?.appState?.dismissTransformResult() }
+            onClose: { [weak self] in self?.appState?.dismissAnyResultCapsule() }
         )
 
         if let hosting {
@@ -188,7 +188,7 @@ final class StatusCapsuleController {
                 maxLiveDraftBodyHeight: StatusCapsuleGeometry.maxLiveDraftBodyHeight,
                 locale: appState.effectiveLocale,
                 onCopy: { [weak self] in self?.appState?.copyTransformResult() },
-                onClose: { [weak self] in self?.appState?.dismissTransformResult() }
+                onClose: { [weak self] in self?.appState?.dismissAnyResultCapsule() }
             )
         }
     }
