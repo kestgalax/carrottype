@@ -116,6 +116,9 @@ final class AppState: ObservableObject {
     private var liveDraftResultDismissTask: Task<Void, Never>?
     /// Starts live-draft streaming after the recorder is already capturing.
     private var liveDraftStartTask: Task<Void, Never>?
+    /// Incremented on each dictation start and live-draft cancel. A load task may
+    /// finish after a newer session is streaming; it must not attach or cancel then.
+    private var liveDraftStartGeneration: UInt64 = 0
     /// True while Escape cancel is tearing down a session, so a second Escape
     /// cannot snapshot an already-cleared draft and wipe the Copy capsule.
     private var isCancellingDictation = false
@@ -698,6 +701,17 @@ final class AppState: ObservableObject {
         }
     }
 
+    /// Bumps the live-draft generation and cancels the in-flight load task.
+    /// The cancelled task may still finish model load; it must see the new generation
+    /// and skip both `feed` attach and `cancelLiveDraft`.
+    @discardableResult
+    private func invalidateLiveDraftStart() -> UInt64 {
+        liveDraftStartGeneration &+= 1
+        liveDraftStartTask?.cancel()
+        liveDraftStartTask = nil
+        return liveDraftStartGeneration
+    }
+
     private func startDictationSession() async {
         guard readiness == .ready else {
             menuBarMode = .needsSetup
@@ -730,8 +744,7 @@ final class AppState: ObservableObject {
 
         do {
             clearLiveDraftText()
-            liveDraftStartTask?.cancel()
-            liveDraftStartTask = nil
+            let generation = invalidateLiveDraftStart()
             recorder.onConvertedBuffer = nil
 
             _ = try recorder.start(deviceUID: audioInput.selectedDeviceID)
@@ -744,6 +757,9 @@ final class AppState: ObservableObject {
                 let languageCode = appLanguage.effectiveLanguageCode
                 liveDraftStartTask = Task { @MainActor [weak self] in
                     guard let self else { return }
+                    guard !Task.isCancelled, self.liveDraftStartGeneration == generation else {
+                        return
+                    }
                     let started = await self.pipeline.startLiveDraftIfPossible(
                         languageCode: languageCode
                     ) { [weak self] update in
@@ -752,6 +768,7 @@ final class AppState: ObservableObject {
                             self?.liveDraftVolatile = update.volatile
                         }
                     }
+                    guard self.liveDraftStartGeneration == generation else { return }
                     guard !Task.isCancelled else {
                         if started {
                             await self.pipeline.cancelLiveDraft()
@@ -776,8 +793,7 @@ final class AppState: ObservableObject {
                 }
             }
         } catch {
-            liveDraftStartTask?.cancel()
-            liveDraftStartTask = nil
+            invalidateLiveDraftStart()
             recorder.onConvertedBuffer = nil
             await pipeline.cancelLiveDraft()
             clearLiveDraftText()
@@ -809,8 +825,7 @@ final class AppState: ObservableObject {
         pttKeyHeld = false
         pttStartInFlight = false
         recorder.cancel()
-        liveDraftStartTask?.cancel()
-        liveDraftStartTask = nil
+        invalidateLiveDraftStart()
         recorder.onConvertedBuffer = nil
         recorderLiveLevel = 0
         await pipeline.cancelLiveDraft()
@@ -831,8 +846,7 @@ final class AppState: ObservableObject {
     private func finishDictationSession() async {
         guard menuBarMode == .recording, !isProcessing else { return }
 
-        liveDraftStartTask?.cancel()
-        liveDraftStartTask = nil
+        invalidateLiveDraftStart()
 
         isProcessing = true
         recorderLiveLevel = 0
