@@ -98,7 +98,9 @@ During an active dictation session a compact floating **Status Capsule** appears
 
 **Transform result** (ADR-012): after a successful selection transform the capsule expands to show the result text (Translate may show direction e.g. `EN → RU`) with **Copy** and **Close** buttons (mouse events enabled for this phase only). Escape dismisses. Does not auto-replace the selection.
 
-Escape cancel, soft silent cancel, and pipeline errors hide the capsule immediately (no Writing/Inserted). Design: `docs/superpowers/specs/2026-07-24-status-capsule-design.md`.
+**Live-draft cancel Copy** (ADR-014, v0.3.5): Escape during recording with live draft on and non-empty preview cancels without paste but keeps a **Copy / Close** snapshot in the Capsule (transform-style chrome); auto-dismiss ~5 s; new dictation clears it.
+
+Escape cancel with empty preview, soft silent cancel, and pipeline errors hide the capsule immediately (no Writing/Inserted). Design: `docs/superpowers/specs/2026-07-24-status-capsule-design.md`.
 
 ## First-run behavior
 
