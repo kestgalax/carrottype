@@ -12,7 +12,7 @@ final class AppState: ObservableObject {
     }
     /// Session chrome phase for Status Capsule (nil = hidden).
     @Published private(set) var capsulePhase: StatusCapsulePhase?
-    /// Text shown while `capsulePhase == .transformResult` (ADR-012).
+    /// Text shown while `capsulePhase` is `.transformResult` or `.liveDraftResult`.
     @Published private(set) var transformResultText: String?
     /// Optional direction hint for Translate bindings (e.g. `EN → RU`).
     @Published private(set) var transformResultDirection: String?
@@ -112,6 +112,11 @@ final class AppState: ObservableObject {
     private var capsuleSequenceToken = UUID()
     /// Clears the temporary "Copied" label on the transform result capsule.
     private var transformCopiedFeedbackTask: Task<Void, Never>?
+    /// Hides the live-draft snapshot capsule after 5 seconds.
+    private var liveDraftResultDismissTask: Task<Void, Never>?
+    /// True while Escape cancel is tearing down a session, so a second Escape
+    /// cannot snapshot an already-cleared draft and wipe the Copy capsule.
+    private var isCancellingDictation = false
     /// Counts nested Settings appearances so SwiftUI remounts do not clear the mic meter.
     private var settingsAppearanceCount = 0
     /// Walkie-talkie: true while the dictation chord is physically held (set on press, cleared on release).
@@ -251,6 +256,10 @@ final class AppState: ObservableObject {
                 self.dismissTransformResult()
                 return
             }
+            if self.capsulePhase == .liveDraftResult {
+                self.dismissLiveDraftResult()
+                return
+            }
             Task { await self.cancelDictationSession() }
         }
 
@@ -380,9 +389,7 @@ final class AppState: ObservableObject {
     /// Toggle (default): press starts, press again commits.
     /// Walkie-talkie: hold records, release commits; repeat press while holding is ignored.
     private func handleHotkeyPressed() {
-        if capsulePhase == .transformResult {
-            dismissTransformResult()
-        }
+        dismissAnyResultCapsule()
 
         if isProcessing || menuBarMode == .processing || menuBarMode == .cleanup {
             return
@@ -435,9 +442,7 @@ final class AppState: ObservableObject {
             return
         }
         guard let binding = hotkey.binding(id: bindingID) else { return }
-        if capsulePhase == .transformResult {
-            dismissTransformResult()
-        }
+        dismissAnyResultCapsule()
         Task { await runSelectionTransform(binding: binding) }
     }
 
@@ -507,6 +512,46 @@ final class AppState: ObservableObject {
         }
         // Last resort: still assign default; capture UI will surface conflicts on change.
         return .defaultTransform
+    }
+
+    func presentLiveDraftResult(_ text: String) {
+        invalidateCapsuleSequence()
+        liveDraftResultDismissTask?.cancel()
+        transformCopiedFeedbackTask?.cancel()
+        transformResultCopiedFeedback = false
+        transformResultText = text
+        transformResultDirection = nil
+        capsulePhase = .liveDraftResult
+        hotkey.setEscapeCancelRegistered(true)
+        liveDraftResultDismissTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 5_000_000_000)
+            guard let self, !Task.isCancelled else { return }
+            if self.capsulePhase == .liveDraftResult {
+                self.dismissLiveDraftResult()
+            }
+        }
+    }
+
+    func dismissLiveDraftResult() {
+        liveDraftResultDismissTask?.cancel()
+        liveDraftResultDismissTask = nil
+        transformCopiedFeedbackTask?.cancel()
+        transformCopiedFeedbackTask = nil
+        transformResultCopiedFeedback = false
+        transformResultText = nil
+        transformResultDirection = nil
+        if capsulePhase == .liveDraftResult {
+            capsulePhase = nil
+        }
+        if menuBarMode != .recording {
+            hotkey.setEscapeCancelRegistered(false)
+        }
+        statusCapsule.sync(phase: capsulePhase)
+    }
+
+    func dismissAnyResultCapsule() {
+        if capsulePhase == .transformResult { dismissTransformResult() }
+        if capsulePhase == .liveDraftResult { dismissLiveDraftResult() }
     }
 
     func presentTransformResult(_ text: String, direction: String? = nil) {
@@ -732,11 +777,21 @@ final class AppState: ObservableObject {
     }
 
     /// Escape (or soft silent stop): discard capture, no STT/paste.
+    /// A non-empty live draft is kept as a Copy capsule instead of being dropped.
     private func cancelDictationSession() async {
+        if isCancellingDictation { return }
         guard menuBarMode == .recording, !isProcessing else { return }
+        isCancellingDictation = true
+        defer { isCancellingDictation = false }
+
+        let draft = liveDraftSnapshotText()
+        let showDraftResult = liveDraftEnabled && activeSTTSupportsStreaming && !draft.isEmpty
 
         hotkey.stopPushToTalkReleaseMonitor()
-        hotkey.setEscapeCancelRegistered(false)
+        // Keep Escape registered if we will show liveDraftResult.
+        if !showDraftResult {
+            hotkey.setEscapeCancelRegistered(false)
+        }
         pttKeyHeld = false
         pttStartInFlight = false
         recorder.cancel()
@@ -746,10 +801,15 @@ final class AppState: ObservableObject {
         clearLiveDraftText()
         lastSessionError = nil
         await micMute.endDictationRestore()
-        clearCapsulePhase()
         menuBarMode = .idle
         if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
         refreshMenuBarMode()
+
+        if showDraftResult {
+            presentLiveDraftResult(draft)
+        } else {
+            clearCapsulePhase()
+        }
     }
 
     private func finishDictationSession() async {
@@ -847,8 +907,17 @@ final class AppState: ObservableObject {
         liveDraftVolatile = ""
     }
 
+    private func liveDraftSnapshotText() -> String {
+        [liveDraftConfirmed, liveDraftVolatile]
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     private func clearCapsulePhase() {
         invalidateCapsuleSequence()
+        liveDraftResultDismissTask?.cancel()
+        liveDraftResultDismissTask = nil
         transformCopiedFeedbackTask?.cancel()
         transformCopiedFeedbackTask = nil
         transformResultCopiedFeedback = false

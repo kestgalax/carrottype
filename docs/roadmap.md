@@ -2,11 +2,11 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.4`** (unsigned DMG): optional live draft in Status Capsule (ADR-014). **v0.3.3** added optional Parakeet Ultra beside v3 (default download still v3). **v0.3.2** showed month character totals beside successful dictations and WPM above Bindings. **v0.3.1** hid DMG packaging folders. **v0.3.0** added local opt-in usage statistics (ADR-013). **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.4`** (unsigned DMG): optional live draft in Status Capsule (ADR-014). **`v0.3.5`** (on branch `feat/live-draft-cancel-copy`, marketing version bumped): Escape cancel with non-empty live draft keeps a Copy/Close Capsule snapshot (no paste); Settings General hints under each toggle. **v0.3.3** added optional Parakeet Ultra beside v3 (default download still v3). **v0.3.2** showed month character totals beside successful dictations and WPM above Bindings. **v0.3.1** hid DMG packaging folders. **v0.3.0** added local opt-in usage statistics (ADR-013). **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
 
-Latest artifact: `CarrotType-0.3.4.dmg` (SHA-256 in `docs/github-release-notes-v0.3.4.md`).
+Latest published artifact: `CarrotType-0.3.4.dmg` (SHA-256 in `docs/github-release-notes-v0.3.4.md`). Next publish: `v0.3.5` release notes draft in `docs/github-release-notes-v0.3.5.md` (SHA placeholder until DMG build).
 
-**Current focus:** optional later — Developer ID sign + notarization (`ops/deploy.md`). Not a publish blocker.
+**Current focus:** merge `feat/live-draft-cancel-copy`, build unsigned DMG, publish GitHub Release `v0.3.5`. Optional later — Developer ID sign + notarization (`ops/deploy.md`). Not a publish blocker.
 
 Privacy / supply-chain agent governance lives in `.ai/constraints.md` (§ Privacy / network / dependencies). A full security pass / offline network audit is **deferred** — not current focus.
 
@@ -87,9 +87,12 @@ Checklist:
 - [x] Publish GitHub Release `v0.3.3` — optional Parakeet Ultra + `docs/github-release-notes-v0.3.3.md`.
 - [x] Live dictation draft via offline re-transcribe preview (ADR-014) — Capsule adapts with full context; dynamic size; paste on stop via WAV; default off.
 - [x] Publish GitHub Release `v0.3.4` — live draft + `docs/github-release-notes-v0.3.4.md`.
+- [x] Live-draft Escape cancel → Copy capsule (non-empty preview, no paste; 5 s auto-dismiss; ADR-014 / F-004) — implemented on `feat/live-draft-cancel-copy`.
+- [x] Settings → General: per-toggle caption hints (Walkie-talkie, clipboard retain, live draft + Escape Copy note).
+- [ ] Publish GitHub Release `v0.3.5` — live-draft cancel Copy + Settings hints + `docs/github-release-notes-v0.3.5.md` (after merge + DMG).
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
 
-Status: **v0.3.4 unsigned DMG** — optional live draft (Parakeet); Gatekeeper path unchanged (Right-click → Open / Privacy & Security → Open Anyway).
+Status: **v0.3.5 ready for review/merge** on `feat/live-draft-cancel-copy` (unsigned DMG publish pending). Latest shipped build remains **v0.3.4** until Release `v0.3.5`.
 
 ## Next focus (ordered)
 
@@ -98,7 +101,7 @@ Status: **v0.3.4 unsigned DMG** — optional live draft (Parakeet); Gatekeeper p
 
 ## In progress / on branch
 
-- _(none — v0.3.4 live draft merged)_
+- **v0.3.5** (`feat/live-draft-cancel-copy`): implementation and docs **complete** — ready for review/merge; remaining gate is unsigned DMG build + GitHub Release (SHA in release notes).
 
 ## Near-term polish candidates (if release is blocked)
 

@@ -3,13 +3,14 @@ import Combine
 import SwiftUI
 
 /// Compact dictation process indicator near the camera notch (or under the menu bar).
-/// `transformResult` shows selection-transform output with Copy / Close (ADR-012).
+/// `transformResult` and `liveDraftResult` show Copy / Close result chrome (ADR-012).
 enum StatusCapsulePhase: Equatable {
     case listening
     case understanding
     case writing
     case inserted
     case transformResult
+    case liveDraftResult
 }
 
 @MainActor
@@ -107,7 +108,7 @@ final class StatusCapsuleController {
             maxLiveDraftBodyHeight: StatusCapsuleGeometry.maxLiveDraftBodyHeight,
             locale: locale,
             onCopy: { [weak self] in self?.appState?.copyTransformResult() },
-            onClose: { [weak self] in self?.appState?.dismissTransformResult() }
+            onClose: { [weak self] in self?.appState?.dismissAnyResultCapsule() }
         )
 
         if let hosting {
@@ -146,7 +147,7 @@ final class StatusCapsuleController {
 
     private func applyPanelInteraction(for phase: StatusCapsulePhase) {
         // Status phases stay click-through; result must accept Copy / Close clicks.
-        panel?.ignoresMouseEvents = (phase != .transformResult)
+        panel?.ignoresMouseEvents = !(phase == .transformResult || phase == .liveDraftResult)
     }
 
     private func hide() {
@@ -187,7 +188,7 @@ final class StatusCapsuleController {
                 maxLiveDraftBodyHeight: StatusCapsuleGeometry.maxLiveDraftBodyHeight,
                 locale: appState.effectiveLocale,
                 onCopy: { [weak self] in self?.appState?.copyTransformResult() },
-                onClose: { [weak self] in self?.appState?.dismissTransformResult() }
+                onClose: { [weak self] in self?.appState?.dismissAnyResultCapsule() }
             )
         }
     }
@@ -225,7 +226,7 @@ struct StatusCapsuleGeometry {
         hasLiveDraft: Bool = false,
         liveDraftText: String = ""
     ) -> NSSize {
-        if phase == .transformResult {
+        if phase == .transformResult || phase == .liveDraftResult {
             let width: CGFloat = hasNotch ? max(notchWidth + 24, 360) : 360
             let height = contentTopInset + 200
             return NSSize(width: width, height: height)
@@ -338,7 +339,7 @@ struct StatusCapsuleView: View {
                 .frame(height: max(0, topInset))
 
             Group {
-                if phase == .transformResult {
+                if phase == .transformResult || phase == .liveDraftResult {
                     resultContent
                 } else if hasLiveDraft {
                     liveDraftContent
@@ -496,7 +497,7 @@ struct StatusCapsuleView: View {
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.95))
                 label(L10n.t("capsule.inserted", locale: locale))
-            case .transformResult:
+            case .transformResult, .liveDraftResult:
                 EmptyView()
             }
         }
