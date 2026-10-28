@@ -8,7 +8,7 @@
 ## Traceability
 
 - Product Intent Link: docs/product-intent.md
-- Roadmap Item: Live dictation draft (v0.3.4); Escape cancel Copy capsule (v0.3.5)
+- Roadmap Item: Live dictation draft (v0.3.4); Escape cancel Copy capsule (v0.3.5); recorder-first session start (v0.3.6)
 - Related ADRs: docs/decisions/ADR-014-live-dictation-streaming.md, docs/decisions/ADR-006-parakeet-fluidaudio-stt.md
 - UX Spec: docs/specs/ux-setup-status.md
 - Design: docs/superpowers/specs/2026-10-27-live-draft-offline-preview-design.md
@@ -21,10 +21,11 @@ Users only see progress after stop. Interim text while speaking (without pasting
 ## Proposed Behavior
 
 1. Settings → General → **Show text while you speak** (default **off**). Disabled when active STT `supportsStreaming` is false.
-2. When on + Parakeet: fan-out 16 kHz buffers into `ParakeetStreamingEngine`; ~1 s single-flight **offline** re-transcribe of **all** samples so far; Capsule shows body + muted last 2 words; Capsule height grows with text (scroll after max).
+2. When on + Parakeet: **start mic and session WAV before** Parakeet model load; load preview engine concurrently and attach 16 kHz fan-out when ready. ~1 s single-flight **offline** re-transcribe of **all** samples so far (post-attach buffers feed preview; WAV holds full utterance for paste); Capsule shows body + muted last 2 words; Capsule height grows with text (scroll after max).
 3. On stop: cancel preview → session WAV file STT → cleanup → caret paste.
 4. On Escape while recording: cancel preview and capture; **no paste**. If live draft was on and the preview was non-empty, show the snapshot in Copy / Close Capsule chrome (~5 s auto-dismiss; new dictation clears it).
-5. Preview start/pass failures: log; paste path unchanged.
+5. Preview start/pass failures: log; recording and WAV paste path unchanged.
+6. Cold load: words spoken before preview attach remain on the session WAV; Capsule preview may appear after load completes.
 
 ## Acceptance Criteria
 
@@ -42,6 +43,7 @@ Users only see progress after stop. Interim text while speaking (without pasting
 - Compare Capsule coherence vs OpenBot on multi-clause RU phrases.
 - Memory: one Parakeet load; no v3+Ultra dual load.
 - Fallback: preview failure → file path still pastes.
+- Cold start: speak immediately after hotkey with live draft on — first words appear in final paste even if Capsule preview is still loading.
 - Setting off → unchanged prior behaviour.
 
 ## Documentation Impact
