@@ -1378,13 +1378,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Text still pastes at the caret. If focus moves to another app, the result stays on the clipboard so you can paste with ⌘V. While recording, Escape cancels without pasting. If live draft showed text, the status pill keeps it briefly so you can Copy."
+            "value": "Text still pastes at the caret. If focus moves, the result stays on the system pasteboard so you can ⌘V — other apps and clipboard tools can read it while it remains there. While recording, Escape cancels without pasting. If live draft showed text, the status pill keeps it briefly so you can Copy."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Текст вставляется у курсора как обычно. Если фокус уйдёт в другое приложение, результат останется в буфере — его можно вставить ⌘V. Во время записи Escape отменяет диктовку без вставки. Если в плашке уже был черновик, она ненадолго останется — можно Скопировать."
+            "value": "Текст вставляется у курсора как обычно. Если фокус уйдёт, результат останется в системном буфере для ⌘V — другие приложения и утилиты буфера могут его прочитать, пока он там. Во время записи Escape отменяет диктовку без вставки. Если в плашке уже был черновик, она ненадолго останется — можно Скопировать."
           }
         }
       }

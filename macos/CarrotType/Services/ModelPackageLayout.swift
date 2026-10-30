@@ -9,4 +9,9 @@ enum ModelPackageLayout {
     static func readyMarker(in directory: URL) -> URL {
         directory.appendingPathComponent(".ready", isDirectory: false)
     }
+
+    /// Written after a Hub snapshot download; contents = catalog `hubRevision` (or `main`).
+    static func hubRevisionMarker(in directory: URL) -> URL {
+        directory.appendingPathComponent(".hub-revision", isDirectory: false)
+    }
 }

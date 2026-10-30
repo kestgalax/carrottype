@@ -1,5 +1,5 @@
 {
-  "version": 9,
+  "version": 10,
   "packages": [
     {
       "id": "stt.whisper-base-ggml",
@@ -102,7 +102,8 @@
       "runtimeHint": "mlx-lm",
       "hubRepoID": "mlx-community/Qwen3-0.6B-4bit",
       "artifactFileName": null,
-      "downloadable": true
+      "downloadable": true,
+      "hubRevision": "73e3e38d981303bc594367cd910ea6eb48349da8"
     },
     {
       "id": "cleanup.qwen3-1.7b-4bit",
@@ -116,7 +117,8 @@
       "runtimeHint": "mlx-lm",
       "hubRepoID": "mlx-community/Qwen3-1.7B-4bit",
       "artifactFileName": null,
-      "downloadable": true
+      "downloadable": true,
+      "hubRevision": "3b1b1768f8f8cf8351c712464f906e86c2b8269e"
     },
     {
       "id": "cleanup.gemma4-e2b-4bit",
@@ -130,7 +132,8 @@
       "runtimeHint": "mlx-lm",
       "hubRepoID": "mlx-community/gemma-4-e2b-it-4bit",
       "artifactFileName": null,
-      "downloadable": true
+      "downloadable": true,
+      "hubRevision": "238767527555cb75a05732a84dff5d6ba0dd6809"
     }
   ]
 }

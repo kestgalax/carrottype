@@ -91,35 +91,41 @@ Then grant **Microphone** + **Accessibility**, download an STT model (**Parakeet
 
 ## Follow-up: Developer ID + notarization (after $99 Apple Developer)
 
-When a **Developer ID Application** certificate is available:
+Unsigned Releases remain valid (ADR-011). When a **Developer ID Application** certificate is available, use this checklist. Placeholders only: [`notarization.env.example`](notarization.env.example). Do **not** commit real Apple ID passwords or `.p12` files.
 
-1. Install the cert in Keychain (Xcode → Settings → Accounts → Manage Certificates → Developer ID Application).
-2. Rebuild:
+### Checklist
+
+1. **Certificate:** Xcode → Settings → Accounts → Manage Certificates → **Developer ID Application** (install in Keychain).
+2. **Build signed DMG** (host + helper + embedded frameworks via release script):
 
 ```bash
-SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" ./macos/scripts/build-release-dmg.sh
+SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" CLEAN=1 ./macos/scripts/build-release-dmg.sh
 ```
 
-Prefer signing the `.app` with hardened runtime before packaging; then notarize:
+3. **Store notary credentials once** (Keychain profile; prefer over env passwords):
 
 ```bash
-# Store credentials once (Apple ID + app-specific password + team id):
 xcrun notarytool store-credentials "carrottype-notary" \
   --apple-id "you@example.com" \
   --team-id "TEAMID" \
   --password "app-specific-password"
-
-APP="dist/dmg-extract/CarrotType.app"   # or resign the staged app before hdiutil
-# Submit the DMG:
-xcrun notarytool submit dist/CarrotType-0.1.0.dmg \
-  --keychain-profile "carrottype-notary" \
-  --wait
-
-xcrun stapler staple dist/CarrotType-0.1.0.dmg
-spctl --assess --type open --verbose dist/CarrotType-0.1.0.dmg
 ```
 
-3. Verify on a clean Mac: double-click opens without Right-click → Open.
-4. Update Release notes to remove the Gatekeeper workaround section.
+4. **Submit + staple** (or use the helper script):
 
-Until then, keep documenting the quarantine / Right-click path in every Release.
+```bash
+# Helper (fails closed if the Keychain profile is missing):
+./macos/scripts/notarize-dmg.sh dist/CarrotType-<version>.dmg
+
+# Or manually:
+xcrun notarytool submit dist/CarrotType-<version>.dmg \
+  --keychain-profile "carrottype-notary" \
+  --wait
+xcrun stapler staple dist/CarrotType-<version>.dmg
+spctl --assess --type open --verbose dist/CarrotType-<version>.dmg
+```
+
+5. **Clean Mac check:** double-click opens without Privacy & Security → Open Anyway.
+6. **Release notes:** remove the Gatekeeper workaround section only after staple succeeds; never claim notarized without evidence.
+
+Until credentials exist, keep documenting the quarantine / Right-click / Open Anyway path in every Release.

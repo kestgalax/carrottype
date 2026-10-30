@@ -127,6 +127,8 @@ struct CatalogPackage: Codable, Identifiable, Hashable {
     let downloadable: Bool
     /// Optional SHA-256 (hex) for single-file ggml downloads.
     let sha256: String?
+    /// Optional Hugging Face revision (prefer full commit SHA) for Hub snapshot packages (ADR-015).
+    let hubRevision: String?
     /// Whether this STT package can drive live draft via `StreamingSTTEngine` (ADR-014).
     let supportsStreaming: Bool
 
@@ -145,7 +147,7 @@ struct CatalogPackage: Codable, Identifiable, Hashable {
     enum CodingKeys: String, CodingKey {
         case id, role, displayName, approximateBytes, languagesBlurb, license
         case recommended, downloadURL, runtimeHint, artifactFileName, hubRepoID, downloadable, sha256
-        case supportsStreaming
+        case hubRevision, supportsStreaming
     }
 
     init(
@@ -162,6 +164,7 @@ struct CatalogPackage: Codable, Identifiable, Hashable {
         hubRepoID: String? = nil,
         downloadable: Bool = true,
         sha256: String? = nil,
+        hubRevision: String? = nil,
         supportsStreaming: Bool = false
     ) {
         self.id = id
@@ -177,6 +180,7 @@ struct CatalogPackage: Codable, Identifiable, Hashable {
         self.hubRepoID = hubRepoID
         self.downloadable = downloadable
         self.sha256 = sha256
+        self.hubRevision = hubRevision
         self.supportsStreaming = supportsStreaming
     }
 
@@ -195,6 +199,7 @@ struct CatalogPackage: Codable, Identifiable, Hashable {
         hubRepoID = try container.decodeIfPresent(String.self, forKey: .hubRepoID)
         downloadable = try container.decodeIfPresent(Bool.self, forKey: .downloadable) ?? true
         sha256 = try container.decodeIfPresent(String.self, forKey: .sha256)
+        hubRevision = try container.decodeIfPresent(String.self, forKey: .hubRevision)
         supportsStreaming = try container.decodeIfPresent(Bool.self, forKey: .supportsStreaming) ?? false
     }
 }
