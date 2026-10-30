@@ -2,13 +2,13 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.6`**: live draft starts **mic + session WAV before** Parakeet load so cold-start speech is not lost; preview attaches when ready; paste still WAV → STT. **v0.3.5**: Escape cancel with non-empty live draft keeps a Copy/Close Capsule snapshot (no paste); Settings General hints under each toggle. **v0.3.4** added optional live draft in Status Capsule (ADR-014). **v0.3.3** added optional Parakeet Ultra beside v3 (default download still v3). **v0.3.2** showed month character totals beside successful dictations and WPM above Bindings. **v0.3.1** hid DMG packaging folders. **v0.3.0** added local opt-in usage statistics (ADR-013). **v0.2.2** added Walkie-talkie / hold-to-talk. **v0.2.1** added custom Finder install window. **v0.2.0** added Selection Transform bindings + bidirectional Translate (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.7`**: Secure Coding hardening (ADR-015) — helper path jail, MLX `hubRevision` pins, clipboard restore/copy, security docs + notarization prep. **v0.3.6**: live draft starts **mic + session WAV before** Parakeet load. **v0.3.5**: Escape cancel with non-empty live draft keeps a Copy/Close Capsule snapshot. **v0.3.4** optional live draft (ADR-014). **v0.3.3** optional Parakeet Ultra. **v0.3.2** Statistics character totals + WPM above Bindings. **v0.3.1** hid DMG packaging folders. **v0.3.0** local opt-in usage statistics (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom Finder install window. **v0.2.0** Selection Transform (ADR-012).
 
-Latest published artifact: `CarrotType-0.3.6.dmg` (SHA-256 in `docs/github-release-notes-v0.3.6.md`).
+Latest published artifact: `CarrotType-0.3.7.dmg` (SHA-256 in `docs/github-release-notes-v0.3.7.md`).
 
-**Current focus:** optional Developer ID sign + notarization (`ops/deploy.md`) — trust polish only, not a publish blocker.
+**Current focus:** optional Developer ID sign + notarization when credentials exist (`ops/deploy.md`, `macos/scripts/notarize-dmg.sh`) — trust polish only, not a publish blocker.
 
-Privacy / supply-chain agent governance lives in `.ai/constraints.md` (§ Privacy / network / dependencies). A full security pass / offline network audit is **deferred** — not current focus.
+Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
 ## Milestone 0: Product Intent
 
@@ -92,13 +92,15 @@ Checklist:
 - [x] Publish GitHub Release `v0.3.5` — live-draft cancel Copy + Settings hints + `docs/github-release-notes-v0.3.5.md`.
 - [x] Live draft recorder-first session start (ADR-014 / F-004) — mic/WAV before Parakeet load; concurrent attach; cancel or a newer start invalidates the in-flight Parakeet `start` before it can publish (v0.3.6) — `feat/live-draft-recorder-first`.
 - [x] Publish GitHub Release `v0.3.6` — recorder-first live draft + `docs/github-release-notes-v0.3.6.md`.
-- [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate.
+- [x] Secure Coding / OWASP Mobile Top 10 pass — checklist + supply-chain docs, helper path jail, MLX `hubRevision`, clipboard restore/copy, notarization prep (ADR-015) — `feat/secure-coding-hardening`.
+- [x] Publish GitHub Release `v0.3.7` — security hardening + `docs/github-release-notes-v0.3.7.md`.
+- [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate; prep scripts ready, credentials not yet available.
 
-Status: **v0.3.6 unsigned DMG published** on GitHub Releases.
+Status: **v0.3.7 unsigned DMG published** on GitHub Releases.
 
 ## Next focus (ordered)
 
-1. **Optional trust:** Developer ID sign + `notarytool` + staple (`ops/deploy.md`); sign both host and helper.
+1. **Optional trust:** when Developer ID exists — sign + `notarytool` + staple (`ops/deploy.md` / `notarize-dmg.sh`); sign both host and helper.
 2. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 
 ## In progress / on branch

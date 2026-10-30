@@ -34,7 +34,7 @@ struct CleanupHelperResponse: Codable, Sendable {
     var v: Int
     var ok: Bool
     var text: String?
-    /// Stable machine codes: `modelMissing`, `generationFailed`, `notAppleSilicon`, `invalidRequest`.
+    /// Stable machine codes: `modelMissing`, `modelPathRejected`, `generationFailed`, `notAppleSilicon`, `invalidRequest`.
     var error: String?
 
     static func success(_ text: String) -> CleanupHelperResponse {

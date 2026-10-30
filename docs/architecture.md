@@ -54,10 +54,10 @@ Transform hotkey (default ⌥')
 - Distribution via GitHub Releases (`.dmg` / `.app`); public MIT source allowed (ADR-011); notarization optional
 - Models cached under Application Support; not bundled in the first release artifact by default
 
-## Model catalog (ADR-003 + ADR-004 + ADR-005 + ADR-006 + ADR-008 + ADR-010 + ADR-012)
+## Model catalog (ADR-003 + ADR-004 + ADR-005 + ADR-006 + ADR-008 + ADR-010 + ADR-012 + ADR-015)
 
 - **STT (runnable):** Whisper Base/Small/Turbo q5 ggml via WhisperMetalKit (ADR-004); **recommended** Parakeet TDT 0.6B v3 via FluidAudio CoreML (ADR-006); optional **Parakeet Ultra** on the same FluidAudio path (`stt.parakeet-ultra`, separate cache; the catalog default stays v3); optional Apple SpeechAnalyzer on macOS 26+ via system `AssetInventory` (ADR-008). ggml downloads stage the URLSession temp file synchronously, then verify SHA-256 from the catalog.
-- **Cleanup:** Off / Light heuristics; Smart / Smart+ via Qwen3 MLX; optional **Gemma 4 E2B** MLX (`cleanup.gemma4-e2b-4bit`, ADR-010) — all LLM cleanup in `CarrotTypeCleanupHelper` (`mlx-swift-lm`, ADR-005 + ADR-009). Host downloads packages; inference is out-of-process (stdin/stdout JSON, helper exits).
+- **Cleanup:** Off / Light heuristics; Smart / Smart+ via Qwen3 MLX; optional **Gemma 4 E2B** MLX (`cleanup.gemma4-e2b-4bit`, ADR-010) — all LLM cleanup in `CarrotTypeCleanupHelper` (`mlx-swift-lm`, ADR-005 + ADR-009). Host downloads Hub snapshots with optional catalog `hubRevision` (ADR-015); inference is out-of-process (stdin/stdout JSON, helper exits). Helper rejects `modelDirectory` outside Application Support `carrottype/models/`.
 - **Selection transform (ADR-012):** same helper + packages; General **bindings** (hotkey + Translate with user language pair / Custom instruction + model); Translate uses `NLLanguageRecognizer` flip; result in Status Capsule (Copy / Close + optional direction); not required for Ready.
 - Engines are selected through `STTEngine` / `CleanupEngine` adapters (`DictationPipeline`); transform reuses the MLX cleanup engine with non-nil instructions.
 - Live draft (ADR-014): catalog `supportsStreaming` + Settings toggle (default off); Parakeet v3/Ultra run ~1 s single-flight **offline** re-transcribes of accumulated PCM for Capsule (OpenBot-style); last two words muted; Capsule grows with text; stop always uses session WAV file STT → cleanup → paste.

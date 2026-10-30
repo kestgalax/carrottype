@@ -19,7 +19,7 @@ enum BundledModelCatalog {
     }
 
     static let fallback = ModelCatalogFile(
-        version: 9,
+        version: 10,
         packages: [
             CatalogPackage(
                 id: "stt.whisper-base-ggml",
@@ -118,7 +118,8 @@ enum BundledModelCatalog {
                 downloadURL: "https://huggingface.co/mlx-community/Qwen3-0.6B-4bit",
                 runtimeHint: "mlx-lm",
                 hubRepoID: "mlx-community/Qwen3-0.6B-4bit",
-                downloadable: true
+                downloadable: true,
+                hubRevision: "73e3e38d981303bc594367cd910ea6eb48349da8"
             ),
             CatalogPackage(
                 id: "cleanup.qwen3-1.7b-4bit",
@@ -131,7 +132,8 @@ enum BundledModelCatalog {
                 downloadURL: "https://huggingface.co/mlx-community/Qwen3-1.7B-4bit",
                 runtimeHint: "mlx-lm",
                 hubRepoID: "mlx-community/Qwen3-1.7B-4bit",
-                downloadable: true
+                downloadable: true,
+                hubRevision: "3b1b1768f8f8cf8351c712464f906e86c2b8269e"
             ),
             CatalogPackage(
                 id: "cleanup.gemma4-e2b-4bit",
@@ -144,7 +146,8 @@ enum BundledModelCatalog {
                 downloadURL: "https://huggingface.co/mlx-community/gemma-4-e2b-it-4bit",
                 runtimeHint: "mlx-lm",
                 hubRepoID: "mlx-community/gemma-4-e2b-it-4bit",
-                downloadable: true
+                downloadable: true,
+                hubRevision: "238767527555cb75a05732a84dff5d6ba0dd6809"
             ),
         ]
     )

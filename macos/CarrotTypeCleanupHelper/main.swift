@@ -19,6 +19,24 @@ func failInvalid() -> Never {
     exit(2)
 }
 
+/// Same layout as `ModelManager.modelsRoot` (ADR-015 path jail).
+func allowedModelsRoot() -> URL {
+    let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        ?? URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent("Library/Application Support")
+    return support
+        .appendingPathComponent("carrottype", isDirectory: true)
+        .appendingPathComponent("models", isDirectory: true)
+}
+
+/// True if `candidate` is the models root or a subdirectory (symlink-resolved, `/`-boundary safe).
+func isAllowedModelDirectory(_ candidate: URL) -> Bool {
+    let rootPath = allowedModelsRoot().resolvingSymlinksInPath().standardizedFileURL.path
+    let candPath = candidate.resolvingSymlinksInPath().standardizedFileURL.path
+    if candPath == rootPath { return true }
+    let prefix = rootPath.hasSuffix("/") ? rootPath : rootPath + "/"
+    return candPath.hasPrefix(prefix)
+}
+
 let data = FileHandle.standardInput.readDataToEndOfFile()
 guard !data.isEmpty else { failInvalid() }
 
@@ -36,6 +54,10 @@ else {
 }
 
 let directory = URL(fileURLWithPath: request.modelDirectory, isDirectory: true)
+guard isAllowedModelDirectory(directory) else {
+    emit(.failure("modelPathRejected"))
+    exit(0)
+}
 guard FileManager.default.fileExists(atPath: directory.appendingPathComponent("config.json").path) else {
     emit(.failure("modelMissing"))
     exit(0)

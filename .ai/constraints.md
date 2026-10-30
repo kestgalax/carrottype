@@ -54,6 +54,7 @@ Dictation runtime (`DictationPipeline` and engines) must not upload audio or tra
 
 - For changes that touch network, engines, or dependencies: state offline dictation expectation in the plan / completion report / review, or record residual risk if not verified.
 - Airplane mode / Little Snitch smoke is **not** required on every PR; it is deferred full-pass work, not a per-change gate.
+- Security checklist and supply-chain notes: [`docs/security/secure-coding-checklist.md`](../docs/security/secure-coding-checklist.md), [`docs/security/supply-chain.md`](../docs/security/supply-chain.md) (ADR-015).
 
 ## Repository hygiene
 
@@ -65,5 +66,6 @@ Dictation runtime (`DictationPipeline` and engines) must not upload audio or tra
 
 - Do not claim notarized / Gatekeeper-clean install until Developer ID signing + notarization are done.
 - The GitHub repository **may be public** (MIT, ADR-011). Unsigned DMG via GitHub Releases is an allowed distribute path; Gatekeeper install is Right-click → Open.
-- Notarization / Apple Developer ID is **optional later**, not a blocker for public source or unsigned Release downloads.
+- Notarization / Apple Developer ID is **optional later**, not a blocker for public source or unsigned Release downloads. Prep only: `ops/notarization.env.example`, `macos/scripts/notarize-dmg.sh`, `ops/deploy.md`.
 - Soft brand ask (README): forks should attribute CarrotType and not reuse the name/icon — no dual-commercial or registered-trademark requirement.
+- Whisper packages use catalog `sha256`; MLX Hub cleanup packages use catalog `hubRevision` (ADR-015). Helper model paths must stay under Application Support `carrottype/models/`.

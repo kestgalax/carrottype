@@ -38,8 +38,8 @@ enum TextInsertionService {
 
         guard !retainInClipboard else { return }
 
-        // Restore clipboard after the target app has consumed paste.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+        // Restore clipboard after the target app has consumed paste (keep window short — ADR-015 / Secure Coding).
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) {
             restorePasteboardItems(pasteboard, items: previous)
         }
     }

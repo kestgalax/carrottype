@@ -4,13 +4,13 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (after v0.3.6)
+## Current phase (after v0.3.7)
 
-Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**. Live draft (ADR-014) in v0.3.4; Escape cancel Copy + Settings hints in v0.3.5; **recorder-first** live draft start (mic before Parakeet load) in v0.3.6.
+Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**. Security hardening (ADR-015) in v0.3.7; live draft (ADR-014) through v0.3.4–v0.3.6.
 
 Next ordered focus:
 
-1. Optional later: Developer ID sign + notarize (`ops/deploy.md`) for one-click Gatekeeper UX.
+1. Optional later: Developer ID sign + notarize (`ops/deploy.md` / `notarize-dmg.sh`) when credentials exist.
 2. Post-v1 research spikes when useful (`docs/research-post-v1-spikes.md`).
 
 ## Phase gates
@@ -23,7 +23,7 @@ Next ordered focus:
 
 - New STT/cleanup engine, catalog policy, or distribution trust model → ADR before code.
 - New outbound network sink, telemetry/analytics, or direct SPM product dependency → ADR before code (closed sinks in `.ai/constraints.md`).
-- Accepted ADRs: ADR-002 (stack), ADR-003 (catalog), ADR-004 (Whisper), ADR-005 (Qwen), ADR-006 (Parakeet), ADR-007 (Wave Link unmute), ADR-008 (Apple SpeechAnalyzer STT), ADR-009 (OOP cleanup), ADR-010 (Gemma cleanup), ADR-011 (public MIT distribution), ADR-012 (selection transform), ADR-013 (local usage stats), ADR-014 (live dictation streaming).
+- Accepted ADRs: ADR-002 (stack), ADR-003 (catalog), ADR-004 (Whisper), ADR-005 (Qwen), ADR-006 (Parakeet), ADR-007 (Wave Link unmute), ADR-008 (Apple SpeechAnalyzer STT), ADR-009 (OOP cleanup), ADR-010 (Gemma cleanup), ADR-011 (public MIT distribution), ADR-012 (selection transform), ADR-013 (local usage stats), ADR-014 (live dictation streaming), ADR-015 (hub revision + helper path jail).
 
 ### Feature / Settings UX
 

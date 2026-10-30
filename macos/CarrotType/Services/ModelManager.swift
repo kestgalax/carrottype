@@ -366,7 +366,7 @@ final class ModelManager: ObservableObject {
               case .ready = statuses[packageID]
         else { return nil }
         let dir = packageDirectory(for: package)
-        return QwenCleanupPackage.isPackageReady(at: dir) ? dir : nil
+        return QwenCleanupPackage.isPackageReady(at: dir, expectedRevision: package.hubRevision) ? dir : nil
     }
 
     func isCleanupPackageReady(for mode: CleanupMode) -> Bool {
@@ -585,6 +585,13 @@ final class ModelManager: ObservableObject {
         }
         let destination = packageDirectory(for: package)
         let expectedBytes = max(package.approximateBytes, 1)
+        let pinnedRevision: String = {
+            if let trimmed = package.hubRevision?.trimmingCharacters(in: .whitespacesAndNewlines),
+               !trimmed.isEmpty {
+                return trimmed
+            }
+            return "main"
+        }()
 
         // Mirror Parakeet: report progress via Task { @MainActor … }.
         // Hub's Progress.fractionCompleted often stays 0 for large LFS snapshots, so we also
@@ -610,7 +617,11 @@ final class ModelManager: ObservableObject {
             defer { progressPump.cancel() }
 
             do {
-                try await QwenCleanupPackage.downloadPackage(repoID: repoID, to: destination) { fraction in
+                try await QwenCleanupPackage.downloadPackage(
+                    repoID: repoID,
+                    to: destination,
+                    revision: pinnedRevision
+                ) { fraction in
                     // Same hop as Parakeet; ignore broken Hub 0% samples.
                     if fraction > 0.01 {
                         report(fraction)
@@ -721,7 +732,7 @@ final class ModelManager: ObservableObject {
         case "apple-speechanalyzer":
             return AppleSpeechSTTEngine.isPackageReady(packageDirectory: dir)
         case "mlx-lm":
-            return QwenCleanupPackage.isPackageReady(at: dir)
+            return QwenCleanupPackage.isPackageReady(at: dir, expectedRevision: package.hubRevision)
         default:
             guard let url = artifactURL(for: package),
                   fileManager.fileExists(atPath: url.path)
