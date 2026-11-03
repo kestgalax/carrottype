@@ -25,6 +25,12 @@ Add or replace a **direct** dependency only with an ADR (or explicit engine ADR 
 | Parakeet (FluidAudio) | Library version + HTTPS; residual: trust FluidAudio + Hub tip for that library’s download API |
 | Apple SpeechAnalyzer | System `AssetInventory` (ADR-008) |
 
+## Application Support vs Hub cache
+
+- **Installed packages** live under `~/Library/Application Support/carrottype/models/`. Models → Delete / Storage → Delete unused remove these dirs only.
+- **Download cache** for Hub snapshots also lives under `~/.cache/huggingface/hub/models--…`. Re-download after package Delete can be fast because this cache remains.
+- Settings → **Storage → Clear download cache** removes only catalog `hubRepoID` folders (not the whole Hub tree, not Application Support installs).
+
 ## Closed network sinks (reminder)
 
 1. HTTPS model download (catalog / Hugging Face), user-triggered.

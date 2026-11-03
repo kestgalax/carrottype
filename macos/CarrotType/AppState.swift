@@ -1031,6 +1031,14 @@ final class AppState: ObservableObject {
         }
     }
 
+    /// Clears catalog-scoped Hugging Face hub cache only (not Application Support packages).
+    func clearModelDownloadCache() {
+        modelManager.clearDownloadCache()
+        if let message = modelManager.lastError {
+            lastSessionError = message
+        }
+    }
+
     private func reloadTransformBindingsFromStore() {
         let preferred = preferredTransformCleanupMode()
         let bindings = TransformBindingsStore.load(

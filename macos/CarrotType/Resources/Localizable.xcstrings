@@ -2920,6 +2920,125 @@
         }
       }
     },
+    "storage.cache_empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download cache is empty."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кэш загрузок пуст."
+          }
+        }
+      }
+    },
+    "storage.cache_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face keeps a local download cache so re-installing a package can be fast. Clearing it frees disk space but does not remove installed packages. The next Download may need the network again. Only CarrotType catalog repos are cleared — not other apps’ Hub data."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face хранит локальный кэш, поэтому повторная установка пакета может быть быстрой. Очистка освобождает место, но не удаляет установленные пакеты. Следующее скачивание может снова пойти из сети. Чистятся только репозитории каталога CarrotType — не чужой кэш других приложений."
+          }
+        }
+      }
+    },
+    "storage.cache_section": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download cache"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кэш загрузок"
+          }
+        }
+      }
+    },
+    "storage.cache_used": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face cache"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кэш Hugging Face"
+          }
+        }
+      }
+    },
+    "storage.clear_cache": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear download cache"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Очистить кэш загрузок"
+          }
+        }
+      }
+    },
+    "storage.clear_cache_confirm_message": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed models stay in place. The next time you download a package, files may need to be fetched from the network again."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Установленные модели останутся на месте. При следующем скачивании пакеты могут снова загрузиться из сети."
+          }
+        }
+      }
+    },
+    "storage.clear_cache_confirm_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear download cache?"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Очистить кэш загрузок?"
+          }
+        }
+      }
+    },
     "storage.delete_unused": {
       "extractionState": "stale",
       "localizations": {
@@ -2955,7 +3074,7 @@
       }
     },
     "storage.footer": {
-      "extractionState": "manual",
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -2967,6 +3086,57 @@
           "stringUnit": {
             "state": "translated",
             "value": "Активны текущая модель диктовки, выбранное оформление (если включено) и модели из связок преобразования. «Удалить неиспользуемые» убирает остальные."
+          }
+        }
+      }
+    },
+    "storage.packages_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active packages are the current dictation model, the selected formatting package (if used), and any model chosen in transform bindings. Delete unused removes the rest. Deleting a package in Models does not clear the download cache."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Активны текущая модель диктовки, выбранное оформление (если включено) и модели из связок преобразования. «Удалить неиспользуемые» убирает остальные. Удаление пакета в «Моделях» не очищает кэш загрузок."
+          }
+        }
+      }
+    },
+    "storage.packages_section": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed packages"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Установленные пакеты"
+          }
+        }
+      }
+    },
+    "storage.packages_used": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used by packages"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Занято пакетами"
           }
         }
       }

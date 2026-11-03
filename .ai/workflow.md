@@ -4,9 +4,9 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (after v0.3.7)
+## Current phase (after v0.3.8)
 
-Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**. Security hardening (ADR-015) in v0.3.7; live draft (ADR-014) through v0.3.4–v0.3.6.
+Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**. Storage download-cache clear in v0.3.8; security hardening (ADR-015) in v0.3.7; live draft (ADR-014) through v0.3.4–v0.3.6.
 
 Next ordered focus:
 
