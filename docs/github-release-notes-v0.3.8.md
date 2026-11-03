@@ -6,7 +6,7 @@
 
 `CarrotType-0.3.8.dmg` (Apple Silicon, macOS 14+, app bundle without models).
 
-SHA-256 (this build): `TBD`
+SHA-256 (this build): `23c67825fd85c0db358cecf76638ba8bb717f031af1d37b1dd99e42efd7566b2`
 
 ## What’s new
 
