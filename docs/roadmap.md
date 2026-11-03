@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.7`**: Secure Coding hardening (ADR-015) — helper path jail, MLX `hubRevision` pins, clipboard restore/copy, security docs + notarization prep. **v0.3.6**: live draft starts **mic + session WAV before** Parakeet load. **v0.3.5**: Escape cancel with non-empty live draft keeps a Copy/Close Capsule snapshot. **v0.3.4** optional live draft (ADR-014). **v0.3.3** optional Parakeet Ultra. **v0.3.2** Statistics character totals + WPM above Bindings. **v0.3.1** hid DMG packaging folders. **v0.3.0** local opt-in usage statistics (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom Finder install window. **v0.2.0** Selection Transform (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.8`**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
-Latest published artifact: `CarrotType-0.3.7.dmg` (SHA-256 in `docs/github-release-notes-v0.3.7.md`).
+Latest published artifact: `CarrotType-0.3.8.dmg` (SHA-256 in `docs/github-release-notes-v0.3.8.md`).
 
 **Current focus:** optional Developer ID sign + notarization when credentials exist (`ops/deploy.md`, `macos/scripts/notarize-dmg.sh`) — trust polish only, not a publish blocker.
 
@@ -94,9 +94,11 @@ Checklist:
 - [x] Publish GitHub Release `v0.3.6` — recorder-first live draft + `docs/github-release-notes-v0.3.6.md`.
 - [x] Secure Coding / OWASP Mobile Top 10 pass — checklist + supply-chain docs, helper path jail, MLX `hubRevision`, clipboard restore/copy, notarization prep (ADR-015) — `feat/secure-coding-hardening`.
 - [x] Publish GitHub Release `v0.3.7` — security hardening + `docs/github-release-notes-v0.3.7.md`.
+- [x] Storage UX — two-section pane + catalog-scoped HF download cache clear (`feat/storage-cache-ux`).
+- [x] Publish GitHub Release `v0.3.8` — Storage cache UX + `docs/github-release-notes-v0.3.8.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate; prep scripts ready, credentials not yet available.
 
-Status: **v0.3.7 unsigned DMG published** on GitHub Releases.
+Status: **v0.3.8 unsigned DMG published** on GitHub Releases.
 
 ## Next focus (ordered)
 

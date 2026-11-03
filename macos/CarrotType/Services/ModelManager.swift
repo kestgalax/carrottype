@@ -86,6 +86,9 @@ final class ModelManager: ObservableObject {
         }
     }
 
+    /// Hugging Face hub cache bytes for catalog repos only (Storage → Download cache).
+    @Published private(set) var downloadCacheBytes: Int64 = 0
+
     /// Ready packages with non-zero on-disk size, largest first (Storage pane).
     var installedPackageFootprints: [InstalledPackageFootprint] {
         catalog.packages.compactMap { package in
@@ -309,6 +312,32 @@ final class ModelManager: ObservableObject {
             )
             refreshStatusesFromDisk()
         }
+    }
+
+    /// Recompute catalog-scoped HF hub cache size (call when opening Storage).
+    func refreshDownloadCacheBytes() {
+        downloadCacheBytes = catalogHubCacheDirectories().reduce(Int64(0)) { sum, url in
+            sum + (Self.directorySizeNonisolated(at: url, fileManager: fileManager) ?? 0)
+        }
+    }
+
+    /// Removes only `~/.cache/huggingface/hub/models--*` folders for catalog Hub repos (not Application Support packages).
+    func clearDownloadCache() {
+        for url in catalogHubCacheDirectories() where fileManager.fileExists(atPath: url.path) {
+            do {
+                try fileManager.removeItem(at: url)
+            } catch {
+                lastError = String(
+                    format: L10n.t("error.delete_failed"),
+                    url.lastPathComponent,
+                    error.localizedDescription
+                )
+                refreshDownloadCacheBytes()
+                return
+            }
+        }
+        lastError = nil
+        refreshDownloadCacheBytes()
     }
 
     func deleteUnusedPackages() {
@@ -663,26 +692,8 @@ final class ModelManager: ObservableObject {
 
     /// Bytes already present under `~/.cache/huggingface/hub/models--org--name` (HubClient default cache).
     nonisolated private static func hubCacheBytes(forRepoID repoID: String) -> Int64 {
-        let repoFolder = "models--" + repoID.replacingOccurrences(of: "/", with: "--")
-        var roots: [URL] = [
-            FileManager.default.homeDirectoryForCurrentUser
-                .appendingPathComponent(".cache/huggingface/hub", isDirectory: true),
-        ]
-        if let hfHome = ProcessInfo.processInfo.environment["HF_HOME"], !hfHome.isEmpty {
-            roots.insert(
-                URL(fileURLWithPath: hfHome, isDirectory: true)
-                    .appendingPathComponent("hub", isDirectory: true),
-                at: 0
-            )
-        }
-        let fm = FileManager.default
-        for root in roots {
-            let dir = root.appendingPathComponent(repoFolder, isDirectory: true)
-            if let size = directorySizeNonisolated(at: dir, fileManager: fm), size > 0 {
-                return size
-            }
-        }
-        return 0
+        guard let dir = hubCacheDirectory(forRepoID: repoID) else { return 0 }
+        return directorySizeNonisolated(at: dir, fileManager: .default) ?? 0
     }
 
     nonisolated private static func directorySizeNonisolated(at url: URL, fileManager: FileManager) -> Int64? {
@@ -816,6 +827,46 @@ final class ModelManager: ObservableObject {
         let parts = url.path.split(separator: "/").map(String.init)
         guard parts.count >= 2 else { return nil }
         return "\(parts[0])/\(parts[1])"
+    }
+
+    /// Unique Hub cache directories for packages with catalog `hubRepoID` (Parakeet / MLX snapshots).
+    private func catalogHubCacheDirectories() -> [URL] {
+        var seen = Set<String>()
+        var urls: [URL] = []
+        for package in catalog.packages {
+            guard let repoID = package.hubRepoID?.trimmingCharacters(in: .whitespacesAndNewlines),
+                  !repoID.isEmpty,
+                  seen.insert(repoID).inserted
+            else { continue }
+            if let dir = Self.hubCacheDirectory(forRepoID: repoID) {
+                urls.append(dir)
+            }
+        }
+        return urls
+    }
+
+    /// Existing on-disk hub folder for a repo, if present under default HF cache roots.
+    nonisolated private static func hubCacheDirectory(forRepoID repoID: String) -> URL? {
+        let repoFolder = "models--" + repoID.replacingOccurrences(of: "/", with: "--")
+        var roots: [URL] = [
+            FileManager.default.homeDirectoryForCurrentUser
+                .appendingPathComponent(".cache/huggingface/hub", isDirectory: true),
+        ]
+        if let hfHome = ProcessInfo.processInfo.environment["HF_HOME"], !hfHome.isEmpty {
+            roots.insert(
+                URL(fileURLWithPath: hfHome, isDirectory: true)
+                    .appendingPathComponent("hub", isDirectory: true),
+                at: 0
+            )
+        }
+        let fm = FileManager.default
+        for root in roots {
+            let dir = root.appendingPathComponent(repoFolder, isDirectory: true)
+            if fm.fileExists(atPath: dir.path) {
+                return dir
+            }
+        }
+        return nil
     }
 
     private func directorySize(at url: URL) -> Int64? {
