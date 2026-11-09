@@ -53,7 +53,7 @@ Window title: **carrottype**. Default size ~880×680 (min 720×520); window is r
 
 ### Sidebar
 
-- **Status header** (not a pane): Ready / Almost / Blocked + version (`vX.Y.Z`). When Almost/Blocked, **Details…** opens the Status checklist in the detail column (deep-links to Setup / Models). When Ready, no Details link.
+- **Status header** (not a pane): Ready / Almost / Blocked + version (`vX.Y.Z`). When Almost/Blocked, **Details…** opens the Status checklist in the detail column (deep-links to Setup / Models). Details remains accessible when Ready (0.3.10); readiness and the last operation error are displayed separately.
 - **Panes** (SF Symbols):
   1. **General** (`info.square`) — dictation hotkey, optional Walkie-talkie (hold to talk), retain clipboard, transform selected text **bindings** (hotkey + Translate/Custom + model + language pair), language
   2. **Setup** (`gear`) — Microphone, input device, optional mic meter, optional unmute during dictation (ADR-007), Accessibility
@@ -66,12 +66,12 @@ Default pane after open (post first-run): **General** if Ready, else **Setup**.
 ### Detail panes (one job each)
 
 1. **Welcome** (only while `showFirstRun`) — one privacy sentence + **Continue**; then navigate to Setup (or Models if permissions already OK)
-2. **Status Details** (via Details… only) — readiness, remaining hint buttons, last session / model error, **Check for updates…** (opens private GitHub Releases; no auto-install)
+2. **Status Details** (via Details… at every readiness state) — readiness, remaining hint buttons, last session / model error, **Check for updates…** (opens public GitHub Releases; no auto-install)
 3. **General** — dictation hotkey capture + optional **Walkie-talkie (hold to talk)** (off by default: press starts, press again commits; on: **hold** records, **release** commits — repeat press does not commit) + optional **Also keep the result on the clipboard** + optional **Show text while you speak** (ADR-014, off by default; disabled when active STT `supportsStreaming` is false; Capsule grows with adapting preview text); while recording, **Escape** cancels (no STT/paste); silent/too-short finish is a soft cancel; **Transform selected text** bindings list (max 5): each row has hotkey (default first binding **⌥'**), kind Translate/Custom, Ready Smart/Smart+/Gemma model, language pair for Translate or instruction editor for Custom (ADR-012); Language System / Russian / English (must not remount Settings or stop the optional mic meter)
 4. **Setup** — Microphone, input device picker, Accessibility; optional **Show microphone meter** (off by default); optional **Unmute mic during dictation (experimental)** (off by default — ADR-007); tip to remove/re-add the app if Accessibility status is stuck
 5. **Models** — STT picker for active (downloaded-only) model; per-package status; prominent recommended-download CTA only when **no** STT package is Ready yet; **Make active** on Ready-but-not-active rows; **Delete** on every Ready STT / formatting package (not only Storage → delete unused); optional **Apple SpeechAnalyzer** (macOS 26+, ADR-008) uses **Prepare…** for system assets instead of HF download; formatting Off / Light / Smart / Smart+ / optional **Gemma 4 E2B** (ADR-010) with the same Make active + Delete pattern
 6. **Storage** — two sections: **Installed packages** (Application Support sizes, Active/Unused, share of package total, **Delete unused**) and **Download cache** (Hugging Face hub folders for catalog `hubRepoID` only, size + **Clear download cache** with confirmation). Per-package **Delete** stays on **Models**; package Delete does not clear the Hub cache. Clear cache does not uninstall Ready packages.
-7. **Statistics** — toggle to collect local counts (off by default); month stepper (current month default); two estimates (**Would have typed** / **Time saved**) plus **characters** and **successful dictation** counts side by side; **typing speed** (WPM default 50, 1 word = 5 characters, recomputes dictation times only); then **Bindings** rows with per-hotkey successful transform counts (live labels; deleted bindings remain as an orphan row). **Clear statistics** wipes the local JSON. No charts or transcripts. Copy from Capsule is not counted.
+7. **Statistics** — toggle to collect local counts (off by default); month stepper (current month default); two estimates (**Would have typed** / **Time saved**) plus **characters** and **completed dictation** counts side by side; **typing speed** (WPM default 50, 1 word = 5 characters, recomputes dictation times only); then **Bindings** rows with per-hotkey successful transform counts (live labels; deleted bindings remain as an orphan row). **Clear statistics** wipes the local JSON. No charts or transcripts. Copy from Capsule is not counted.
 
 No marketing cards, no stat strips. Progress belongs on the model row being downloaded.
 
@@ -93,10 +93,10 @@ During an active dictation session a compact floating **Status Capsule** appears
 |-------|---------|
 | Listening | `● Listening` / `● Слушаю` |
 | Understanding | `⋯ Understanding` / `⋯ Распознаю` (STT **and** cleanup; also transform while LLM runs) |
-| Writing | `✍ Writing` / `✍ Печатаю` (~0.35s after successful paste) |
-| Inserted | `✓ Inserted` / `✓ Вставлено` (~1s, then hide) |
+| Writing | `✍ Pasting` / `✍ Вставляю` (~0.35s after paste-command dispatch) |
+| Inserted | `✓ Done` / `✓ Готово` (~1s, then hide) |
 
-**Transform result** (ADR-012): after a successful selection transform the capsule expands to show the result text (Translate may show direction e.g. `EN → RU`) with **Copy** and **Close** buttons (mouse events enabled for this phase only). Escape dismisses. Does not auto-replace the selection.
+**Transform result** (ADR-012): after a successful selection transform the capsule expands to show the result text (Translate may show direction e.g. `EN → RU`) with **Copy** and **Close** buttons (mouse events enabled for result/recovery phases). Escape dismisses. Does not auto-replace the selection.
 
 **Live-draft cancel Copy** (ADR-014, v0.3.5): Escape during recording with live draft on and non-empty preview cancels without paste but keeps a **Copy / Close** snapshot in the Capsule (transform-style chrome); auto-dismiss ~5 s; new dictation clears it.
 
@@ -129,3 +129,12 @@ When **Also keep the result on the clipboard** is on: paste at caret still runs,
 - Collapsible Settings sidebar
 - Colored System Settings–style icon tiles / settings search
 - Third-party settings packages or private API swizzling
+
+## Reliability changes — 0.3.10
+
+- Menu → Copy Last Dictation / Clear Last Dictation appear when a completed non-empty dictation is retained. Only one text is held in RAM, until replaced by another completed dictation, explicit clear, or exit. Starting/cancelling a session or a later STT error does not erase it. No transcript files or logs are added.
+- A known insertion error presents the completed text in Copy / Close recovery chrome (existing transform-result panel, dismissed with Escape/new dictation). Other session errors remain readable in the menu and Status Details. A readiness refresh does not dismiss them; a subsequent successful dictation/transform or explicit Dismiss Error does.
+- Details is always accessible. Last session and model errors have separate messages; actions lead to Setup/Models and to Copy recovery where available. Readiness continues to describe permissions/model readiness, not the last operation's outcome.
+- Done means the paste command was sent, not that an external application acknowledged insertion. Statistics count completed dictations with dispatched paste commands, excluding known insertion errors; existing aggregates remain and are not reclassified as verified insertions. Copy does not count.
+- Clipboard restore checks the current change count and preserves a newer copy. An initially empty clipboard is restored as empty; item types and multiple items are preserved. Selection ⌘C fallback observes a short window and cleans up before returning cancellation; concurrent external copies in this window cannot be distinguished from the requested copy by macOS.
+- All existing model choices, Light/Smart/Gemma modes, transform bindings, RU/EN, microphone/meter, Wave Link, live draft, hold-to-talk and opt-in statistics remain available in this version.

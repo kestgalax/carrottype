@@ -40,3 +40,7 @@ XPC alone does not guarantee a flat host: a keep-alive XPC service retains helpe
 - **In-process unload + `Memory.clearCache()` only (ADR-005):** reduces Metal residency but leaves MLX runtime heap in the host — insufficient for “no bloat over time.”
 - **XPC keep-alive service now:** more ceremony; easy to leave the service resident; not required for non-sandbox Developer ID distribution.
 - **Keep-alive helper with idle timeout:** helper RAM stays between sessions; rejected for this increment’s memory goal.
+
+## Transport hardening — 0.3.10 candidate
+
+The process-per-request JSON transport remains unchanged. Parent stdout/stderr readers run concurrently with the child and stdin writer. Each output stream is limited to 4 MiB; stderr is drained without retaining its contents. Timeout (120 s) and task cancellation terminate the child, escalate to SIGKILL after 0.5 s if needed, and reap it before returning. Requests/response text are never logged. Launch is serialized with cancellation so a pre-launch cancel cannot orphan a process. Malformed or incompatible protocol responses fail cleanup; existing dictation Light fallback and transform error policies remain.

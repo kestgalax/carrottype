@@ -129,3 +129,15 @@ spctl --assess --type open --verbose dist/CarrotType-<version>.dmg
 6. **Release notes:** remove the Gatekeeper workaround section only after staple succeeds; never claim notarized without evidence.
 
 Until credentials exist, keep documenting the quarantine / Right-click / Open Anyway path in every Release.
+
+## Finder automation unavailable: preserve the existing installer template
+
+For v0.3.10, the clean Release app build and inside-out signing succeeded, but Finder layout AppleScript failed with `-1743` (Apple Events not authorized). No user permissions were changed. The verified v0.3.9 DMG was reused as an installer filesystem template:
+
+1. Verify the old DMG SHA-256 against its release notes before use.
+2. `hdiutil convert <old.dmg> -format UDRW -o <temporary-template.dmg>`; attach read-write with `-noautoopen -nobrowse -mountpoint <temporary-mount>`.
+3. Replace only `CarrotType.app` with the freshly built/signed `dist/dmg-stage/CarrotType.app` using `ditto`. Preserve `.DS_Store`, `.background` and the Applications symlink. Cloning the filesystem retains the background alias/file identity. Compare `.DS_Store` and background hashes before/after.
+4. Verify the new app version, deep signature, embedded helper and metallib; remove only the template's transient `.fseventsd`, sync and detach the temporary device.
+5. Convert the template to final UDZO DMG, run `hdiutil verify`, mount read-only to inspect the final app, record its SHA-256, then publish.
+
+Use a temporary directory and always detach the specific device created for the operation. This preserves installer appearance without dropping the custom window or requesting Finder automation access. It does not notarize the app. Keep the normal build script as the default when Finder automation is available.

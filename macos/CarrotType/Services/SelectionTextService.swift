@@ -56,25 +56,33 @@ enum SelectionTextService {
         return trimmed
     }
 
-    private static func readViaCopyFallback() async throws -> String {
-        let pasteboard = NSPasteboard.general
-        let previous = TextInsertionService.capturePasteboardItems(pasteboard)
+    static func readViaCopyFallback(
+        pasteboard: NSPasteboard = .general,
+        postCopy: (() -> Void)? = nil
+    ) async throws -> String {
+        try Task.checkCancellation()
+        let previous = ClipboardSnapshot(pasteboard)
         let changeCountBefore = pasteboard.changeCount
 
-        postCommandC()
-        // Give the frontmost app time to place the selection on the pasteboard.
-        try await Task.sleep(nanoseconds: 120_000_000)
-
-        let copied = pasteboard.string(forType: .string)?
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let changed = pasteboard.changeCount != changeCountBefore
-
-        TextInsertionService.restorePasteboardItems(pasteboard, items: previous)
-
-        guard changed, !copied.isEmpty else {
-            throw SelectionTextError.noSelection
+        if let postCopy { postCopy() } else { postCommandC() }
+        // Observe the first copy promptly instead of leaving an unconditional restore pending.
+        // macOS cannot identify the writer of a clipboard change; a concurrent external copy
+        // during this short fallback window is inherently indistinguishable from the target.
+        for _ in 0..<12 {
+            // Finish cleanup before propagating cancellation, including a copy already delivered.
+            await Task.detached { try? await Task.sleep(nanoseconds: 10_000_000) }.value
+            let observed = pasteboard.changeCount
+            if observed != changeCountBefore {
+                let copied = pasteboard.string(forType: .string)?
+                    .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                previous.restore(pasteboard, ifUnchangedSince: observed)
+                try Task.checkCancellation()
+                guard !copied.isEmpty else { throw SelectionTextError.noSelection }
+                return copied
+            }
         }
-        return copied
+        try Task.checkCancellation()
+        throw SelectionTextError.noSelection
     }
 
     private static func postCommandC() {

@@ -20,6 +20,8 @@ final class AppState: ObservableObject {
     @Published private(set) var transformResultCopiedFeedback = false
     @Published var showFirstRun: Bool
     @Published var lastSessionError: String?
+    /// One completed dictation in RAM only; never persisted or cleared by a cancelled next session.
+    @Published private(set) var lastDictationText: String?
     /// Live mic level while recording (level decay / future meters).
     @Published private(set) var recorderLiveLevel: Float = 0
     @Published private(set) var settingsVisible = false
@@ -257,7 +259,7 @@ final class AppState: ObservableObject {
         }
         hotkey.setOnEscapeCancel { [weak self] in
             guard let self else { return }
-            if self.capsulePhase == .transformResult {
+            if self.capsulePhase == .transformResult || self.capsulePhase == .dictationRecovery {
                 self.dismissTransformResult()
                 return
             }
@@ -313,7 +315,7 @@ final class AppState: ObservableObject {
         }
         switch readiness {
         case .ready:
-            menuBarMode = .idle
+            menuBarMode = lastSessionError == nil && modelManager.lastErrorMessage == nil ? .idle : .error
         case .almost:
             menuBarMode = .needsSetup
         case .blocked:
@@ -555,7 +557,7 @@ final class AppState: ObservableObject {
     }
 
     func dismissAnyResultCapsule() {
-        if capsulePhase == .transformResult { dismissTransformResult() }
+        if capsulePhase == .transformResult || capsulePhase == .dictationRecovery { dismissTransformResult() }
         if capsulePhase == .liveDraftResult { dismissLiveDraftResult() }
     }
 
@@ -575,7 +577,7 @@ final class AppState: ObservableObject {
         transformResultCopiedFeedback = false
         transformResultText = nil
         transformResultDirection = nil
-        if capsulePhase == .transformResult {
+        if capsulePhase == .transformResult || capsulePhase == .dictationRecovery {
             capsulePhase = nil
         }
         // Escape is shared with dictation cancel — only keep it while recording.
@@ -632,7 +634,6 @@ final class AppState: ObservableObject {
         }
 
         isProcessing = true
-        lastSessionError = nil
         cancelScheduledModelUnload()
         invalidateCapsuleSequence()
         transformResultText = nil
@@ -725,7 +726,6 @@ final class AppState: ObservableObject {
             return
         }
 
-        lastSessionError = nil
         cancelScheduledModelUnload()
         audioLevel.stop()
         recorderLiveLevel = 0
@@ -838,7 +838,6 @@ final class AppState: ObservableObject {
         recorderLiveLevel = 0
         await pipeline.cancelLiveDraft()
         clearLiveDraftText()
-        lastSessionError = nil
         await micMute.endDictationRestore()
         menuBarMode = .idle
         if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
@@ -886,7 +885,6 @@ final class AppState: ObservableObject {
             await micMute.endDictationRestore()
             if case AudioRecorderError.silentOrTooShort = error {
                 // Soft cancel: nothing useful was said — no red error, no paste.
-                lastSessionError = nil
                 clearCapsulePhase()
                 menuBarMode = .idle
                 return
@@ -927,10 +925,23 @@ final class AppState: ObservableObject {
                 }
             )
             clearLiveDraftText()
-            try TextInsertionService.insertAtCaret(
-                cleaned,
-                retainInClipboard: retainDictationInClipboard
-            )
+            let text = cleaned.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !text.isEmpty { lastDictationText = text }
+            do {
+                try TextInsertionService.insertAtCaret(
+                    cleaned,
+                    retainInClipboard: retainDictationInClipboard
+                )
+            } catch {
+                lastSessionError = error.localizedDescription
+                clearCapsulePhase()
+                menuBarMode = .error
+                if !text.isEmpty {
+                    presentTransformResult(text, direction: L10n.t("recovery.paste_failed", locale: effectiveLocale))
+                    capsulePhase = .dictationRecovery
+                }
+                return
+            }
             recordUsageIfEnabled(text: cleaned, recordingDuration: recordingDuration)
             lastSessionError = nil
             menuBarMode = .idle
@@ -941,6 +952,23 @@ final class AppState: ObservableObject {
             clearCapsulePhase()
             menuBarMode = .error
         }
+    }
+
+    func copyLastDictation() {
+        guard let text = lastDictationText else { return }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(text, forType: .string)
+    }
+
+    func clearLastDictation() {
+        lastDictationText = nil
+        if capsulePhase == .dictationRecovery { dismissTransformResult() }
+    }
+
+    func dismissSessionError() {
+        lastSessionError = nil
+        refreshMenuBarMode()
     }
 
     private func clearLiveDraftText() {
@@ -975,7 +1003,7 @@ final class AppState: ObservableObject {
         capsuleSequenceToken = UUID()
     }
 
-    /// Always Writing (~0.35s) → Inserted (~1s) → hide after a successful paste.
+    /// Command dispatched, then Done. CGEvent cannot acknowledge insertion in another app.
     private func presentSuccessCapsuleSequence() async {
         let token = UUID()
         capsuleSequenceToken = token

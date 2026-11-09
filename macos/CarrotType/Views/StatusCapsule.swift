@@ -11,6 +11,11 @@ enum StatusCapsulePhase: Equatable {
     case inserted
     case transformResult
     case liveDraftResult
+    case dictationRecovery
+
+    var isResult: Bool {
+        self == .transformResult || self == .liveDraftResult || self == .dictationRecovery
+    }
 }
 
 @MainActor
@@ -147,7 +152,7 @@ final class StatusCapsuleController {
 
     private func applyPanelInteraction(for phase: StatusCapsulePhase) {
         // Status phases stay click-through; result must accept Copy / Close clicks.
-        panel?.ignoresMouseEvents = !(phase == .transformResult || phase == .liveDraftResult)
+        panel?.ignoresMouseEvents = !(phase.isResult)
     }
 
     private func hide() {
@@ -226,7 +231,7 @@ struct StatusCapsuleGeometry {
         hasLiveDraft: Bool = false,
         liveDraftText: String = ""
     ) -> NSSize {
-        if phase == .transformResult || phase == .liveDraftResult {
+        if phase.isResult {
             let width: CGFloat = hasNotch ? max(notchWidth + 24, 360) : 360
             let height = contentTopInset + 200
             return NSSize(width: width, height: height)
@@ -339,7 +344,7 @@ struct StatusCapsuleView: View {
                 .frame(height: max(0, topInset))
 
             Group {
-                if phase == .transformResult || phase == .liveDraftResult {
+                if phase.isResult {
                     resultContent
                 } else if hasLiveDraft {
                     liveDraftContent
@@ -497,7 +502,7 @@ struct StatusCapsuleView: View {
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.95))
                 label(L10n.t("capsule.inserted", locale: locale))
-            case .transformResult, .liveDraftResult:
+            case .transformResult, .liveDraftResult, .dictationRecovery:
                 EmptyView()
             }
         }

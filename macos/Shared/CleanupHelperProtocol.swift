@@ -37,6 +37,15 @@ struct CleanupHelperResponse: Codable, Sendable {
     /// Stable machine codes: `modelMissing`, `modelPathRejected`, `generationFailed`, `notAppleSilicon`, `invalidRequest`.
     var error: String?
 
+    enum DecodeError: Error { case incompatibleVersion }
+
+    static func decode(_ data: Data) throws -> CleanupHelperResponse {
+        let line = data.prefix { $0 != UInt8(ascii: "\n") }
+        let response = try JSONDecoder().decode(Self.self, from: Data(line))
+        guard response.v == CleanupHelperProtocol.version else { throw DecodeError.incompatibleVersion }
+        return response
+    }
+
     static func success(_ text: String) -> CleanupHelperResponse {
         CleanupHelperResponse(v: CleanupHelperProtocol.version, ok: true, text: text, error: nil)
     }

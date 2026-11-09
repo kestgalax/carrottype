@@ -31,3 +31,7 @@ Unsigned GitHub Release DMGs remain allowed (ADR-011). Notarization stays option
 - Catalog schema gains optional `hubRevision`; bundled JSON version bumps when pins are added.
 - Users with previously downloaded Smart/Gemma packages may need one re-download so `.hub-revision` appears.
 - Security checklist: `docs/security/secure-coding-checklist.md`, supply chain: `docs/security/supply-chain.md`.
+
+## Clipboard clarification — 0.3.10 candidate
+
+Caret-paste restores an in-memory pasteboard snapshot only if the change count still matches the app's own temporary write. Empty snapshots clear the temporary text; multiple items/types are restored together. A later external copy takes precedence. Selection ⌘C fallback observes the first change within a bounded window and restores against that observed version, with no intervening await; macOS does not expose the writer identity, so a concurrent external copy within that fallback window cannot be reliably distinguished from the requested selection. The AX-selected-text path avoids this clipboard ambiguity.

@@ -14,8 +14,8 @@ The estimate is not a measurement of real typing speed. It is derived from inser
 
 1. **Opt-in, default off.** No daily buckets are written until the user enables collection in Settings.
 2. **On-device only.** Persist aggregates under `~/Library/Application Support/carrottype/stats/`. Do not use a network sink. This is not telemetry.
-3. **No transcripts, no audio.** Store per calendar day (local timezone): dictation character count, recording duration, successful dictation session count, and per-binding transform counts (`id` + `kind` + count). Do not store dictation text, selected text, custom instructions, audio, or hotkey chords.
-4. **Dictation:** record only successful caret paste. Cancel, silence, and STT/cleanup failure are out of scope.
+3. **No transcripts, no audio.** Store per calendar day (local timezone): dictation character count, recording duration, completed dictation session count, and per-binding transform counts (`id` + `kind` + count). Do not store dictation text, selected text, custom instructions, audio, or hotkey chords.
+4. **Dictation (clarified for 0.3.10):** record a completed dictation only after dispatching the caret-paste command without a known insertion error. CGEvent does not acknowledge actual insertion in the receiving app. UI labels these as completed dictations, not verified pastes. Cancel, silence, known insertion errors and STT failure are excluded. Existing aggregate data is retained; it was collected with the same dispatch-based mechanism and is not retroactively verified. Copy/recovery does not increment counts.
 5. **Selection transform (ADR-012):** record only when the result is shown in the Capsule, keyed by binding `id` and `kind`. Copy from Capsule is not counted. Labels are resolved live from current bindings; deleted bindings stay as an orphan row.
 6. **Estimates are computed at display time** from stored dictation counts + current WPM (default 50; 1 word = 5 characters including spaces). Transform stats are counts only — no typing-time estimate.
 7. Turning collection off stops writes; existing buckets remain until the user clears them.

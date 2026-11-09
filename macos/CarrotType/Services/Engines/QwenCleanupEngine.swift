@@ -52,11 +52,21 @@ actor QwenCleanupEngine: CleanupEngine {
             instructions: instructions
         )
         let requestData = try JSONEncoder().encode(request)
-        let response = try await Self.runHelper(
-            executable: helperURL,
-            requestData: requestData,
-            timeoutNanoseconds: Self.timeoutNanoseconds
-        )
+        let data: Data
+        do {
+            data = try await CleanupHelperTransport.run(
+                executable: helperURL,
+                request: requestData,
+                timeout: Double(Self.timeoutNanoseconds) / 1_000_000_000
+            )
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
+            throw CleanupEngineError.generationFailed
+        }
+        guard let response = try? CleanupHelperResponse.decode(data) else {
+            throw CleanupEngineError.generationFailed
+        }
         if response.ok, let cleaned = response.text, !cleaned.isEmpty {
             return cleaned
         }
@@ -84,71 +94,4 @@ actor QwenCleanupEngine: CleanupEngine {
         return FileManager.default.isExecutableFile(atPath: sibling.path) ? sibling : nil
     }
 
-    private static func runHelper(
-        executable: URL,
-        requestData: Data,
-        timeoutNanoseconds: UInt64
-    ) async throws -> CleanupHelperResponse {
-        let box = ProcessBox(executable: executable)
-        return try await withThrowingTaskGroup(of: CleanupHelperResponse.self) { group in
-            group.addTask {
-                try box.run(requestData: requestData)
-            }
-            group.addTask {
-                try await Task.sleep(nanoseconds: timeoutNanoseconds)
-                box.terminate()
-                throw CleanupEngineError.generationFailed
-            }
-            let first = try await group.next()!
-            group.cancelAll()
-            box.terminate()
-            return first
-        }
-    }
-}
-
-/// `Process` is not Sendable; isolate for timeout + wait tasks.
-private final class ProcessBox: @unchecked Sendable {
-    private let process = Process()
-    private let stdin = Pipe()
-    private let stdout = Pipe()
-    private let stderr = Pipe()
-    private let lock = NSLock()
-
-    init(executable: URL) {
-        process.executableURL = executable
-        process.standardInput = stdin
-        process.standardOutput = stdout
-        process.standardError = stderr
-    }
-
-    func run(requestData: Data) throws -> CleanupHelperResponse {
-        try process.run()
-        stdin.fileHandleForWriting.write(requestData)
-        try stdin.fileHandleForWriting.close()
-        process.waitUntilExit()
-        let outData = stdout.fileHandleForReading.readDataToEndOfFile()
-        _ = stderr.fileHandleForReading.readDataToEndOfFile()
-        if process.terminationStatus != 0, outData.isEmpty {
-            throw CleanupEngineError.generationFailed
-        }
-        let lineData: Data
-        if let newline = outData.firstIndex(of: UInt8(ascii: "\n")) {
-            lineData = outData.subdata(in: outData.startIndex..<newline)
-        } else {
-            lineData = outData
-        }
-        guard let response = try? JSONDecoder().decode(CleanupHelperResponse.self, from: lineData) else {
-            throw CleanupEngineError.generationFailed
-        }
-        return response
-    }
-
-    func terminate() {
-        lock.lock()
-        defer { lock.unlock() }
-        if process.isRunning {
-            process.terminate()
-        }
-    }
 }
