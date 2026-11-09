@@ -1,6 +1,6 @@
 # CarrotType 0.4.0 (24) — Debug для ручной проверки
 
-Статус: Debug проверен пользователем 2026-11-10; подтверждены все пункты, получено явное разрешение на публикацию. Release DMG готовится. Ветка: `feat/ultra-only-dictation` от main после выпуска 0.3.10. Подтверждение 0.3.10 не заменяет эту проверку.
+Статус: Debug проверен пользователем 2026-11-10; подтверждены все пункты, получено явное разрешение на публикацию. Release DMG собран и проверен, готов к публикации. Ветка: `feat/ultra-only-dictation` от main после выпуска 0.3.10. Подтверждение 0.3.10 не заменяет эту проверку.
 
 ## Запуск
 
@@ -21,6 +21,7 @@
 
 ## Выполненные проверки
 
+- Clean Release arm64 xcodebuild: **BUILD SUCCEEDED**. Final DMG integrity/signature/helper/shaders/Ultra-only catalog/no Whisper linkage проверены; оформление установщика сохранено побайтно из проверенного 0.3.10. SHA-256 записан в release notes.
 - arm64 Debug xcodebuild: **BUILD SUCCEEDED**, 0.4.0 (24), лог `/tmp/carrottype-0.4.0-debug-build.log`.
 - Production-code `verify-ultra-models.sh`: passed — каталог/fallback, изолированные preference migrations, прежние layouts, отсутствие автоматического удаления, сохранность Ultra/cleanup/unknown, path/symlink jail.
 - AIDOS validate/trace/review: passed; Missing Links: None. `git diff --check`: passed.

@@ -19,7 +19,7 @@
 - Architecture respected: ADR-016 covers the intentional retirement of STT alternatives/WhisperMetalKit. Remaining SPM pins are unchanged; no new runtime or network sink.
 - Existing useful functions preserved outside the explicitly agreed STT scope: Qwen/Gemma formatting, Translate/Custom, live draft, PTT, Wave Link, microphone/meter, clipboard/recovery, RU/EN and statistics remain.
 - Data migration is explicit: only the STT preference changes automatically; model downloads and legacy-file deletion require user actions. Legacy deletion is allowlisted/path-boundary safe and excludes shared Apple assets and unknown experiments.
-- Verification evidence present: accepted Debug candidate and production-code regression checks; final Release artifact checks/hash recorded in release notes before publication.
+- Verification evidence present: accepted Debug candidate and production-code regression checks; clean Release build and final DMG integrity/signature/catalog/no-Whisper/helper/shader checks passed; SHA-256 recorded in release notes.
 
 ## ADR Impact
 
