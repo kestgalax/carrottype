@@ -108,7 +108,7 @@
 
 ## Этап 3 — 0.5.0: обновление приложения из GitHub
 
-Статус 2026-11-10: реализация в `feat/github-app-updates`, Debug 0.5.0 (25) подготовлен; production gate tests и настоящий изолированный Sparkle install A → B / негативные проверки прошли. [Ручная проверка](../../debug-review-v0.5.0.md) UI/TCC и Release packaging ещё требуются; версия не опубликована. ADR-017 принят; вместо предложенного Pages feed используется подписанный `appcast.xml` в latest GitHub Release, без отдельного сайта.
+Статус 2026-11-10: реализация в `feat/github-app-updates`, Debug 0.5.0 (25) предоставлен, пользователь явно поручил публикацию; production gate tests и настоящий изолированный Sparkle install A → B / негативные проверки прошли. Clean Release DMG/ZIP/appcast, подписи и публичные endpoints проверены; [0.5.0 опубликована](https://github.com/kestgalax/carrottype/releases/tag/v0.5.0). Отдельное независимое подтверждение TCC отсутствует; [запись проверки](../../debug-review-v0.5.0.md) сохраняет ограничения. ADR-017 принят; вместо предложенного Pages feed используется подписанный `appcast.xml` в latest GitHub Release, без отдельного сайта.
 
 Ветка: `feat/github-app-updates`.
 

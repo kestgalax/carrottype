@@ -1,6 +1,6 @@
 # Проверка Debug 0.5.0 (25)
 
-Статус: Debug предоставлен; пользователь 2026-11-10 явно поручил публикацию после обсуждения ошибки доступа к feed. Выпуск готовится, ещё не опубликован. Ветка `feat/github-app-updates`, ADR-017, задачи U1–U3 плана улучшений. Предыдущая опубликованная версия — 0.4.0 (24).
+Статус: Debug предоставлен; пользователь 2026-11-10 явно поручил публикацию после обсуждения ошибки доступа к feed. [0.5.0 опубликована](https://github.com/kestgalax/carrottype/releases/tag/v0.5.0) после clean Release и remote asset verification. Ветка `feat/github-app-updates`, ADR-017, задачи U1–U3 плана улучшений. Предыдущая опубликованная версия — 0.4.0 (24).
 
 ## Что изменилось
 
@@ -14,7 +14,7 @@
 
 ## Ручная проверка
 
-1. Закрыть все запущенные копии CarrotType и открыть обычный Debug. В General появился блок «Обновления приложения», обе опции изначально выключены. Проверить включение/выключение и сохранение после перезапуска, RU/EN, доступность «Проверить обновления…» в меню и Details. Пока 0.5.0 не опубликована, настоящий GitHub feed отсутствует: ошибка проверки ожидаема и не должна мешать диктовке. После теста автоматические опции можно выключить.
+1. Закрыть все запущенные копии CarrotType и открыть обычный Debug. В General появился блок «Обновления приложения», обе опции изначально выключены. Проверить включение/выключение и сохранение после перезапуска, RU/EN, доступность «Проверить обновления…» в меню и Details. До публикации GitHub feed отсутствовал; дополнительно preflight обнаружил приватную видимость репозитория. После отдельного разрешения пользователя репозиторий публичный, релиз опубликован, feed работает: текущий build 25 должен получать «нет новой версии», без ошибки доступа. После теста автоматические опции можно выключить.
 2. Проверить обычную диктовку RU/EN, hold-to-talk, Escape, live draft, сохранение/Copy последнего результата, выбранный микрофон/meter и Wave Link unmute/restore, если используется. Проверить привычное форматирование и Translate/Custom, настройки и Statistics. Модели и данные основной установки должны остаться на месте.
 3. Закрыть обычный Debug. Запустить `start-server.command` (оставить его терминал открытым), затем тестовую `manual-A/CarrotType.app`. Пройти её отдельный Setup, выдать микрофон/Accessibility для тестовой копии; Ultra уже подготовлен. Проверить meter/короткую диктовку до обновления. Не скачивать cleanup ради этой проверки.
 4. В тестовой копии выбрать «Проверить обновления…»: должно появиться нативное предложение обновления с build 25 до 26, затем скачивание и установка. Marketing version обеих тестовых сборок — 0.5.0. После перезапуска подтвердить build 26 командой ниже; повторная проверка должна сообщить, что новой версии нет. Настройки тестовой копии и Ultra должны сохраниться; снова проверить meter, диктовку и Accessibility. Если macOS потребует повторной выдачи прав, записать это, не считать их сохранение доказанным.
@@ -43,4 +43,4 @@
 
 The user explicitly instructed publication after Debug delivery and separately authorized public repository code/history. GitHub visibility is verified public. Individual manual UI/TCC results were not enumerated; those limits remain recorded rather than inferred from the authorization.
 
-Clean Release arm64 `BUILD SUCCEEDED`. Final DMG `hdiutil verify`, deep app/component signatures, Ultra-only catalog, no Whisper/debug dylib/model weights, cleanup helper path-jail rejection and MLX shaders passed. Existing DMG background and layout hashes remain unchanged. Production ZIP and appcast are signed with the persistent Keychain key and verified; artifact hashes are in the 0.5.0 release notes. No private key was exported. Remote asset verification/publication follows these local gates.
+Clean Release arm64 `BUILD SUCCEEDED`. Final DMG `hdiutil verify`, deep app/component signatures, Ultra-only catalog, no Whisper/debug dylib/model weights, cleanup helper path-jail rejection and MLX shaders passed. Existing DMG background and layout hashes remain unchanged. Production ZIP and appcast are signed with the persistent Keychain key and verified; artifact hashes are in the 0.5.0 release notes. No private key was exported. Authenticated draft assets and anonymous public feed/archive were downloaded and verified against signatures, sizes, versions and SHA-256. Native Sparkle public-feed probe returned no-update (4), not a transport/signature error. [Published release](https://github.com/kestgalax/carrottype/releases/tag/v0.5.0).

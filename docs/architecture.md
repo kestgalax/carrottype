@@ -72,7 +72,7 @@ Transform hotkey (default ⌥')
 - Gatekeeper / notarization affect real-world install UX from GitHub.
 - Large model weights use on-demand download with progress in Setup UI (`docs/specs/ux-setup-status.md`).
 
-## Application updater — 0.5.0 candidate (ADR-017)
+## Application updater — 0.5.0 (ADR-017)
 
 `AppUpdateService` owns a single Sparkle 2.10.1 standard updater. Menu, Status Details and General use that instance; settings bind to Sparkle's KVO properties rather than duplicate UserDefaults flags. Checks/download-and-install-on-quit default off; profiling is disabled even for saved preferences. Feed and archives require Ed25519 signatures, verified before extraction; signed-feed failure never expires. Inline plain-text notes avoid a separate web view content origin.
 

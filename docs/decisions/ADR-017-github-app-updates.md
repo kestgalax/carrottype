@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — implements the maintainer-approved 0.5.0 U1–U3 plan; publication still requires its own Debug manual acceptance.
+Accepted — implements the maintainer-approved 0.5.0 U1–U3 plan; 0.5.0 shipped on 2026-11-10 after Debug delivery and explicit publication authorization. Future versions still require their own Debug/manual gate.
 
 ## Context
 

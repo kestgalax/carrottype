@@ -1,6 +1,6 @@
 # CarrotType v0.5.0 — signed in-app updates
 
-Version **0.5.0 (25)**, macOS 14+, Apple Silicon. Self-signed; not Developer ID signed or notarized.
+[Published release](https://github.com/kestgalax/carrottype/releases/tag/v0.5.0). Version **0.5.0 (25)**, macOS 14+, Apple Silicon. Self-signed; not Developer ID signed or notarized.
 
 - Check for updates directly from the menu, Status Details or General settings using the native Sparkle UI.
 - Optional automatic checks and background downloads/install-on-quit, both off by default. Updates require valid feed and archive signatures; no profiling, audio, text or statistics upload.
@@ -29,7 +29,7 @@ Automatic checks and downloads can be enabled independently in General → App U
 - Debug arm64 delivered before publication; the maintainer explicitly authorized release on 2026-11-10. Individual native GUI/TCC results were not enumerated; no claim of independently verified permission continuity.
 - Clean Release arm64 build, DMG integrity, deep app/component signatures, helper path-jail smoke, MLX shaders, Ultra-only catalog and absence of bundled model weights verified. Installer background/layout were preserved from the checksum-verified 0.4.0 DMG.
 - Real isolated Sparkle A → B native installation, no-update case and unavailable/tampered feed/corrupt archive rejection passed. Production install-gate and clipboard/selection/helper/protocol/Ultra migration/storage tests passed.
-- Signed archive and feed verified locally; remote draft/public asset verification is part of publication. Ed25519 signatures do not replace Gatekeeper/notarization. Key backup remains maintainer-controlled outside the repository; no private keys are exported or included in assets.
+- Signed archive and feed verified locally and after download from the draft/public release. Anonymous stable feed/archive endpoints matched the verified assets; native Sparkle accepted the live feed and reported no newer version as expected. Ed25519 signatures do not replace Gatekeeper/notarization. Key backup remains maintainer-controlled outside the repository; no private keys are exported or included in assets.
 - Full independent network audit remains deferred. Existing paste-acknowledgement, clipboard-copy ambiguity and FluidAudio downloader residuals remain documented.
 
 [Update trust decision](decisions/ADR-017-github-app-updates.md) · [Debug verification record](debug-review-v0.5.0.md)
