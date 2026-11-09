@@ -4,7 +4,7 @@
 
 Accepted (revised 2026-10-27 — OpenBot-style full-buffer preview)
 
-> From the 0.4.0 candidate, ADR-016 retires v3/Whisper/Apple offerings and keeps Ultra only. The live-draft/file-final behavior in this ADR remains unchanged.
+> From the 0.4.0, ADR-016 retires v3/Whisper/Apple offerings and keeps Ultra only. The live-draft/file-final behavior in this ADR remains unchanged.
 
 ## Context
 

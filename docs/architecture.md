@@ -30,7 +30,7 @@ Transform hotkey (default ⌥')
 | Hotkey service | Register and handle global dictation + N transform binding hotkeys; dictation is toggle (default) or hold-to-talk only (Settings Walkie-talkie) |
 | Audio capture | Record microphone audio for the active session; optional experimental temporary unmute via Wave Link (ADR-007) |
 | Model Manager | Catalog, download, verify, activate STT/cleanup packages (ADR-003) |
-| STT runtime | Parakeet Ultra only (ADR-016, 0.4.0 candidate); optional live draft via `StreamingSTTEngine` (ADR-014) |
+| STT runtime | Parakeet Ultra only (ADR-016, 0.4.0); optional live draft via `StreamingSTTEngine` (ADR-014) |
 | Cleanup runtime | `off` / `light` heuristics / Qwen3 MLX Smart modes via session-scoped helper process (ADR-009; UI: post-dictation formatting); same helper for selection transform with custom instructions (ADR-012) |
 | Selection text | Read focused selection; transform result shown in Capsule (not auto-paste) |
 | Text insertion | Paste command via Accessibility; clipboard ownership-aware restore; optional retain-on-clipboard; last completed text recoverable from RAM only (0.3.10) |
@@ -56,7 +56,7 @@ Transform hotkey (default ⌥')
 
 ## Model catalog (ADR-003 + ADR-004 + ADR-005 + ADR-006 + ADR-008 + ADR-010 + ADR-012 + ADR-015 + ADR-016)
 
-- **STT (0.4.0 candidate, ADR-016):** only `stt.parakeet-ultra` via FluidAudio CoreML. No STT picker, Whisper adapter/dependency or Apple SpeechAnalyzer runtime. Installed Ultra is reused; absent Ultra requires an explicit download. Legacy/unknown saved STT ids migrate to Ultra without deleting weights or silently downloading. Storage inventories known retired directories separately with confirmed optional deletion; shared Apple system assets and unknown experimental models are untouched.
+- **STT (0.4.0, ADR-016):** only `stt.parakeet-ultra` via FluidAudio CoreML. No STT picker, Whisper adapter/dependency or Apple SpeechAnalyzer runtime. Installed Ultra is reused; absent Ultra requires an explicit download. Legacy/unknown saved STT ids migrate to Ultra without deleting weights or silently downloading. Storage inventories known retired directories separately with confirmed optional deletion; shared Apple system assets and unknown experimental models are untouched.
 - **Cleanup:** Off / Light heuristics; Smart / Smart+ via Qwen3 MLX; optional **Gemma 4 E2B** MLX (`cleanup.gemma4-e2b-4bit`, ADR-010) — all LLM cleanup in `CarrotTypeCleanupHelper` (`mlx-swift-lm`, ADR-005 + ADR-009). Host downloads Hub snapshots with optional catalog `hubRevision` (ADR-015); inference is out-of-process (stdin/stdout JSON, helper exits). Helper rejects `modelDirectory` outside Application Support `carrottype/models/`.
 - **Selection transform (ADR-012):** same helper + packages; General **bindings** (hotkey + Translate with user language pair / Custom instruction + model); Translate uses `NLLanguageRecognizer` flip; result in Status Capsule (Copy / Close + optional direction); not required for Ready.
 - Engines are selected through `STTEngine` / `CleanupEngine` adapters (`DictationPipeline`); transform reuses the MLX cleanup engine with non-nil instructions.

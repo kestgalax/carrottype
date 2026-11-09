@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — explicit maintainer choice, 2026-11-09; implementation targets 0.4.0 and must pass its own Debug acceptance before publication.
+Accepted — explicit maintainer choice, 2026-11-09; shipped in 0.4.0 after its own Debug manual acceptance and explicit publication authorization on 2026-11-10.
 
 ## Context
 

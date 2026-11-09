@@ -32,7 +32,7 @@ Add or replace a **direct** dependency only with an ADR (or explicit engine ADR 
 
 1. HTTPS model download (catalog / Hugging Face), user-triggered.
 2. Localhost Wave Link (`127.0.0.1`) for experimental unmute.
-Apple SpeechAnalyzer asset preparation is retired in the 0.4.0 candidate (ADR-016). Existing shared system assets are not removed.
+Apple SpeechAnalyzer asset preparation is retired in the 0.4.0 (ADR-016). Existing shared system assets are not removed.
 
 Dictation runtime must not upload audio or transcript.
 
@@ -47,6 +47,6 @@ Dictation runtime must not upload audio or transcript.
 
 Unsigned Release DMGs are allowed (ADR-011). Developer ID + `notarytool` is optional polish — see `ops/deploy.md`, `ops/notarization.env.example`, `macos/scripts/notarize-dmg.sh`. Do not claim Gatekeeper-clean install without staple evidence.
 
-## 0.4.0 candidate — retired STT packages
+## 0.4.0 — retired STT packages
 
 ADR-016 removes WhisperMetalKit and Apple SpeechAnalyzer runtime; all remaining SPM pins are unchanged. Ultra uses the existing FluidAudio path and inherits ADR-006 downloader residuals (including path handling). No new download sink or inference runtime. Old STT weights are never removed automatically: LegacySTTStorage inventories fixed known paths and rejects symlink escapes for explicit group deletion. It excludes Ultra, cleanup packages, unknown experiments and shared Apple system assets. Safety checks run only against temporary fixtures.

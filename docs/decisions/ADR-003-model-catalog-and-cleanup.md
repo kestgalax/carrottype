@@ -4,7 +4,7 @@
 
 Accepted
 
-> Current policy for the 0.4.0 candidate: [ADR-016](ADR-016-ultra-only-dictation.md) supersedes the STT offerings/default below. Only Parakeet Ultra is offered; historical decisions and cleanup policies remain recorded here.
+> Current policy for the 0.4.0: [ADR-016](ADR-016-ultra-only-dictation.md) supersedes the STT offerings/default below. Only Parakeet Ultra is offered; historical decisions and cleanup policies remain recorded here.
 
 ## Context
 

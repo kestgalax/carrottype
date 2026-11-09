@@ -48,4 +48,4 @@ See `../ops/deploy.md`.
 
 Models: `~/Library/Application Support/carrottype/models/`
 
-Engines (0.4.0 candidate): FluidAudio Parakeet Ultra (CoreML), Qwen3/Gemma MLX cleanup helper. All existing formatting/transform features remain.
+Engines (0.4.0): FluidAudio Parakeet Ultra (CoreML), Qwen3/Gemma MLX cleanup helper. All existing formatting/transform features remain.

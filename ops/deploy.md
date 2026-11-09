@@ -82,7 +82,7 @@ Anyone who downloads the DMG from GitHub Releases will still see “Apple cannot
 xattr -dr com.apple.quarantine /Applications/CarrotType.app
 ```
 
-Then grant **Microphone** + **Accessibility**, download **Parakeet Ultra** if not already installed (0.4.0 candidate, ADR-016). Older model files are preserved and can be removed explicitly in Storage.
+Then grant **Microphone** + **Accessibility**, download **Parakeet Ultra** if not already installed (0.4.0, ADR-016). Older model files are preserved and can be removed explicitly in Storage.
 
 ### What not to ship in the DMG
 

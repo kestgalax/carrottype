@@ -4,7 +4,7 @@
 
 - Task ID: T-003
 - Title: One dictation model with explicit migration and optional legacy cleanup
-- Status: Debug accepted by the user on all checklist items (2026-11-10); publication authorized, Release packaging in progress.
+- Status: Done — Debug accepted by the user on all checklist items (2026-11-10); verified Release DMG published as v0.4.0.
 
 ## Traceability
 

@@ -4,13 +4,13 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (after v0.3.10)
+## Current phase (after v0.4.0)
 
 Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**. v0.3.9 parallel unmute + live-draft hygiene; Storage download-cache clear in v0.3.8; security hardening (ADR-015) in v0.3.7; live draft (ADR-014) through v0.3.4–v0.3.6.
 
 Next ordered focus:
 
-1. Staged improvements: reliability → Ultra-only dictation → GitHub app updates → setup/settings → lifecycle/tests. Target versions and acceptance criteria: [`2026-11-09-product-improvements.md`](../docs/superpowers/plans/2026-11-09-product-improvements.md). Reliability `0.3.10 (23)` was published after the user accepted every Debug manual checklist item and clean Release DMG verification passed. Ultra-only dictation `0.4.0 (24)` is a Debug candidate manually accepted by the user on all checklist items (2026-11-10); publication authorized, Release packaging in progress.
+1. Staged improvements: reliability → Ultra-only dictation → GitHub app updates → setup/settings → lifecycle/tests. Target versions and acceptance criteria: [`2026-11-09-product-improvements.md`](../docs/superpowers/plans/2026-11-09-product-improvements.md). Reliability `0.3.10 (23)` was published after the user accepted every Debug manual checklist item and clean Release DMG verification passed. Ultra-only dictation `0.4.0 (24)` was published after its own Debug manual acceptance and verified Release packaging (2026-11-10). Next is 0.5.0 GitHub updates, not yet implemented.
 2. Optional later: Developer ID sign + notarize (`ops/deploy.md` / `notarize-dmg.sh`) when credentials exist. Updater integration has its own ADR/network gate and unsigned-upgrade verification; notarization is not a prerequisite to begin it.
 3. Post-v1 research spikes when useful (`docs/research-post-v1-spikes.md`).
 
@@ -24,7 +24,7 @@ Next ordered focus:
 
 - New STT/cleanup engine, catalog policy, or distribution trust model → ADR before code.
 - New outbound network sink, telemetry/analytics, or direct SPM product dependency → ADR before code (closed sinks in `.ai/constraints.md`).
-- Accepted ADRs: ADR-002 (stack), ADR-003 (catalog), ADR-004 (Whisper), ADR-005 (Qwen), ADR-006 (Parakeet), ADR-007 (Wave Link unmute), ADR-008 (Apple SpeechAnalyzer STT), ADR-009 (OOP cleanup), ADR-010 (Gemma cleanup), ADR-011 (public MIT distribution), ADR-012 (selection transform), ADR-013 (local usage stats), ADR-014 (live dictation streaming), ADR-015 (hub revision + helper path jail), ADR-016 (Ultra-only dictation, 0.4.0 candidate).
+- Accepted ADRs: ADR-002 (stack), ADR-003 (catalog), ADR-004 (Whisper), ADR-005 (Qwen), ADR-006 (Parakeet), ADR-007 (Wave Link unmute), ADR-008 (Apple SpeechAnalyzer STT), ADR-009 (OOP cleanup), ADR-010 (Gemma cleanup), ADR-011 (public MIT distribution), ADR-012 (selection transform), ADR-013 (local usage stats), ADR-014 (live dictation streaming), ADR-015 (hub revision + helper path jail), ADR-016 (Ultra-only dictation, shipped in 0.4.0).
 
 ### Feature / Settings UX
 
