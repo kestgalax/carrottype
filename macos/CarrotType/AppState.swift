@@ -730,12 +730,18 @@ final class AppState: ObservableObject {
         audioLevel.stop()
         recorderLiveLevel = 0
 
+        // Unmute in parallel with mic open (ADR-007). Do not await before listening —
+        // Wave Link RPC used to block start. Live-draft feed waits for unmute below so
+        // muted prefix does not poison full-buffer Parakeet preview.
+        let unmuteTask: Task<Void, Never>?
         if unmuteMicDuringDictation {
             let name = audioInput.selectedDevice?.name ?? ""
-            await micMute.beginDictationUnmute(
-                deviceUID: audioInput.selectedDeviceID,
-                deviceName: name
-            )
+            let deviceUID = audioInput.selectedDeviceID
+            unmuteTask = Task {
+                await micMute.beginDictationUnmute(deviceUID: deviceUID, deviceName: name)
+            }
+        } else {
+            unmuteTask = nil
         }
 
         if pushToTalkEnabled, !pttKeyHeld {
@@ -755,19 +761,26 @@ final class AppState: ObservableObject {
             hotkey.setEscapeCancelRegistered(true)
 
             if liveDraftEnabled, activeSTTSupportsStreaming {
-                let languageCode = appLanguage.effectiveLanguageCode
                 liveDraftStartTask = Task { @MainActor [weak self] in
                     guard let self else { return }
                     guard !Task.isCancelled, self.liveDraftStartGeneration == generation else {
                         return
                     }
+                    // nil language = same as file STT: multilingual Parakeet auto-detect.
+                    // UI appLanguage must not force Latin/Cyrillic script filter on live draft
+                    // (that produced translit / comma spam when speaking the other language).
                     let started = await self.pipeline.startLiveDraftIfPossible(
-                        languageCode: languageCode
+                        languageCode: nil
                     ) { [weak self] update in
                         Task { @MainActor in
                             self?.liveDraftConfirmed = update.confirmed
                             self?.liveDraftVolatile = update.volatile
                         }
+                    }
+                    guard self.liveDraftStartGeneration == generation, !Task.isCancelled else { return }
+                    // Wait for hardware unmute before feeding preview (WAV already capturing).
+                    if let unmuteTask {
+                        await unmuteTask.value
                     }
                     guard self.liveDraftStartGeneration == generation, !Task.isCancelled else { return }
                     if started, self.menuBarMode == .recording {

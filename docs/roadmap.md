@@ -2,9 +2,9 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.8`**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.9`**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
-Latest published artifact: `CarrotType-0.3.8.dmg` (SHA-256 in `docs/github-release-notes-v0.3.8.md`).
+Latest published artifact: `CarrotType-0.3.9.dmg` (SHA-256 in `docs/github-release-notes-v0.3.9.md`).
 
 **Current focus:** optional Developer ID sign + notarization when credentials exist (`ops/deploy.md`, `macos/scripts/notarize-dmg.sh`) — trust polish only, not a publish blocker.
 
@@ -96,9 +96,11 @@ Checklist:
 - [x] Publish GitHub Release `v0.3.7` — security hardening + `docs/github-release-notes-v0.3.7.md`.
 - [x] Storage UX — two-section pane + catalog-scoped HF download cache clear (`feat/storage-cache-ux`).
 - [x] Publish GitHub Release `v0.3.8` — Storage cache UX + `docs/github-release-notes-v0.3.8.md`.
+- [x] Parallel Wave Link unmute + live-draft language/silence fixes (ADR-007 / ADR-014) — `feat/unmute-live-draft-latency`.
+- [x] Publish GitHub Release `v0.3.9` — unmute latency + live draft hygiene + `docs/github-release-notes-v0.3.9.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate; prep scripts ready, credentials not yet available.
 
-Status: **v0.3.8 unsigned DMG published** on GitHub Releases.
+Status: **v0.3.9 unsigned DMG published** on GitHub Releases.
 
 ## Next focus (ordered)
 

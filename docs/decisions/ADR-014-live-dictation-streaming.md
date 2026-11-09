@@ -19,8 +19,9 @@ OpenBot (local Parakeet TDT v3 via sherpa-onnx) re-transcribes the **entire** ac
 5. **Stop:** Cancel preview; **always** transcribe the session WAV with offline STT → cleanup → caret paste. Preview failures never block paste.
 6. **UI:** Capsule shows draft body at normal opacity and the **last two words** muted (cosmetic interim, OpenBot-style). Capsule **grows with text** (down from notch/menu bar), with a max body height and scroll beyond that.
 7. **Escape cancel (v0.3.5):** While recording with live draft on + non-empty preview, **Escape** still cancels capture (no WAV STT, no caret paste). The last preview snapshot stays in the Capsule as **Copy / Close** result chrome (same interaction model as transform results, ADR-012). Capsule auto-dismisses after **5 s**; Escape or Close dismisses sooner. Starting a new dictation dismisses the snapshot. Empty draft or live draft off: Escape behaves as before (immediate hide, no Copy capsule).
-8. **Language:** Pass in-app effective language (`ru` / `en`) into FluidAudio `Language` when transcribing.
+8. **Language:** Live draft passes `language: nil` (multilingual auto-detect), matching offline file STT. Do **not** bind Capsule preview to UI `appLanguage` — FluidAudio’s script filter would force Latin or Cyrillic and turn the other language into transliteration / junk.
 9. **SlidingWindow** is **not** used for live Capsule preview (kept available in FluidAudio for other uses / research only).
+10. **Leading silence (with ADR-007 parallel unmute):** Live-draft PCM feed attaches only after unmute finishes (mic capture/WAV still start immediately). The preview buffer also permanently drops near-silent prefix once voice appears, and Capsule text strips decoder junk (`<unk>`, etc.). Otherwise full-buffer re-decode of a muted prefix every ~1 s produces multilingual transliteration / `<unk>` across the whole draft. Final WAV STT is unchanged.
 
 ## Consequences
 
