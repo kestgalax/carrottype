@@ -4,6 +4,8 @@
 
 Accepted
 
+> Current policy for the 0.4.0 candidate: [ADR-016](ADR-016-ultra-only-dictation.md) supersedes the STT offerings/default below. Only Parakeet Ultra is offered; historical decisions and cleanup policies remain recorded here.
+
 ## Context
 
 ADR-003 preferred Parakeet TDT 0.6B v3 for RU-friendly STT. ADR-004 shipped Whisper ggml as the first runnable engine. The catalog entry `stt.parakeet-tdt-0.6b-v3` stayed non-downloadable until a reproducible Apple Silicon package existed.

@@ -4,6 +4,8 @@
 
 Accepted (revised 2026-10-27 — OpenBot-style full-buffer preview)
 
+> From the 0.4.0 candidate, ADR-016 retires v3/Whisper/Apple offerings and keeps Ultra only. The live-draft/file-final behavior in this ADR remains unchanged.
+
 ## Context
 
 Users want interim text in the Status Capsule while speaking, without pasting until stop. Cloud realtime STT conflicts with local-first privacy. The first implementation used FluidAudio `SlidingWindowAsrManager` with short windows for latency; that path did **not** rewrite earlier words with growing context, so Capsule drafts stayed choppy compared with OpenBot’s local Parakeet UX.

@@ -34,7 +34,7 @@ See `../ops/deploy.md`.
 ## First-run checklist
 
 1. Run the app (menu bar icon).
-2. Open **Settings** → download **Whisper Base (~148 MB)** (or Small / Turbo q5 / Parakeet).
+2. Open **Settings** → download **Parakeet Ultra (~630 MB)** if not installed. No model picker or automatic download; retired models are listed separately in Storage for optional cleanup.
 3. Allow **Microphone**.
 4. Enable **Accessibility** for CarrotType (debug builds may need re-enable after rebuild).
 5. Status should become **Ready**.
@@ -48,4 +48,4 @@ See `../ops/deploy.md`.
 
 Models: `~/Library/Application Support/carrottype/models/`
 
-Engines: WhisperMetalKit (ggml), FluidAudio Parakeet (CoreML), Qwen3 MLX cleanup.
+Engines (0.4.0 candidate): FluidAudio Parakeet Ultra (CoreML), Qwen3/Gemma MLX cleanup helper. All existing formatting/transform features remain.

@@ -1,4 +1,3 @@
-import CryptoKit
 import Foundation
 
 @MainActor
@@ -11,15 +10,8 @@ final class ModelManager: ObservableObject {
 
     private let fileManager: FileManager
     private let modelsRoot: URL
-    private var downloadTasks: [String: URLSessionDownloadTask] = [:]
-    private var progressObservations: [String: NSKeyValueObservation] = [:]
     private var snapshotTasks: [String: Task<Void, Never>] = [:]
-    private lazy var session: URLSession = {
-        let config = URLSessionConfiguration.default
-        config.waitsForConnectivity = true
-        config.timeoutIntervalForResource = 60 * 60
-        return URLSession(configuration: config)
-    }()
+    @Published private(set) var legacySTTPackages: [LegacySTTPackage] = []
 
     init(
         catalog: ModelCatalogFile = BundledModelCatalog.load(),
@@ -38,6 +30,7 @@ final class ModelManager: ObservableObject {
         try? fileManager.createDirectory(at: modelsRoot, withIntermediateDirectories: true)
         refreshStatusesFromDisk()
         restoreSelection()
+        refreshLegacySTTPackages()
     }
 
     // MARK: - Compatibility / Settings API
@@ -47,13 +40,7 @@ final class ModelManager: ObservableObject {
     var activeSTTID: String { selectedSTTPackageID }
 
     var sttPackages: [CatalogPackage] {
-        catalog.packages.filter { package in
-            guard package.role == .stt else { return false }
-            if package.runtimeHint == "apple-speechanalyzer" {
-                return AppleSpeechSTTEngine.isPlatformSupported
-            }
-            return true
-        }
+        catalog.packages.filter { $0.role == .stt && $0.id == BundledModelCatalog.parakeetUltraSTTID }
     }
 
     /// STT packages that are on disk and can be selected as active.
@@ -215,12 +202,8 @@ final class ModelManager: ObservableObject {
         setStatus(packageID, .downloading(progress: 0))
 
         switch package.runtimeHint {
-        case "whisper-cpp-ggml":
-            downloadWhisperFile(package)
         case "parakeet-fluidaudio":
             downloadParakeetSnapshot(package)
-        case "apple-speechanalyzer":
-            prepareAppleSpeechAssets(package)
         case "mlx-lm":
             downloadMLXSnapshot(package)
         default:
@@ -236,10 +219,6 @@ final class ModelManager: ObservableObject {
     }
 
     func cancelDownload(packageID: String) {
-        downloadTasks[packageID]?.cancel()
-        downloadTasks[packageID] = nil
-        progressObservations[packageID]?.invalidate()
-        progressObservations[packageID] = nil
         snapshotTasks[packageID]?.cancel()
         snapshotTasks[packageID] = nil
         setStatus(packageID, .notDownloaded)
@@ -259,33 +238,6 @@ final class ModelManager: ObservableObject {
                     packageDirectory: packageDirectory(for: package),
                     packageID: package.id
                 )
-            } else if package.runtimeHint == "apple-speechanalyzer" {
-                let dir = packageDirectory(for: package)
-                let locale = AppleSpeechSTTEngine.preferredAppLocale()
-                snapshotTasks[packageID] = Task { [weak self] in
-                    do {
-                        try await AppleSpeechSTTEngine.removePrepared(packageDirectory: dir, locale: locale)
-                        await MainActor.run {
-                            guard let self else { return }
-                            self.snapshotTasks[packageID] = nil
-                            self.setStatus(packageID, .notDownloaded)
-                            self.reconcileSelectionAfterRemoval(of: package)
-                            self.lastError = nil
-                        }
-                    } catch {
-                        await MainActor.run {
-                            guard let self else { return }
-                            self.snapshotTasks[packageID] = nil
-                            self.lastError = String(
-                                format: L10n.t("error.delete_failed"),
-                                package.displayName,
-                                error.localizedDescription
-                            )
-                            self.refreshStatusesFromDisk()
-                        }
-                    }
-                }
-                return
             } else {
                 let dir = packageDirectory(for: package)
                 if fileManager.fileExists(atPath: dir.path) {
@@ -312,6 +264,20 @@ final class ModelManager: ObservableObject {
             )
             refreshStatusesFromDisk()
         }
+    }
+
+    func refreshLegacySTTPackages() {
+        legacySTTPackages = LegacySTTStorage.inventory(modelsRoot: modelsRoot, fileManager: fileManager)
+    }
+
+    func deleteLegacySTTPackage(_ id: String) {
+        do {
+            try LegacySTTStorage.remove(id: id, modelsRoot: modelsRoot, fileManager: fileManager)
+            lastError = nil
+        } catch {
+            lastError = error.localizedDescription
+        }
+        refreshLegacySTTPackages()
     }
 
     /// Recompute catalog-scoped HF hub cache size (call when opening Storage).
@@ -354,7 +320,7 @@ final class ModelManager: ObservableObject {
         }
     }
 
-    /// Path consumed by STT engines: ggml file for Whisper, package directory for Parakeet.
+    /// Ultra CoreML directory, available only after an explicit download/previous installation.
     func selectedSTTModelPath() -> String? {
         guard let package = selectedSTTPackage,
               package.downloadable,
@@ -372,14 +338,8 @@ final class ModelManager: ObservableObject {
                 packageDirectory: packageDirectory(for: package),
                 packageID: package.id
             ) ? cache.path : nil
-        case "apple-speechanalyzer":
-            // System assets; engine resolves locale itself.
-            return nil
         default:
-            guard let url = artifactURL(for: package),
-                  fileManager.fileExists(atPath: url.path)
-            else { return nil }
-            return url.path
+            return nil
         }
     }
 
@@ -404,127 +364,6 @@ final class ModelManager: ObservableObject {
     }
 
     // MARK: - Private
-
-    private func downloadWhisperFile(_ package: CatalogPackage) {
-        let packageID = package.id
-        guard let remoteURL = URL(string: package.downloadURL) else {
-            setStatus(packageID, .failed(message: L10n.t("error.bad_url")))
-            return
-        }
-        guard let destination = artifactURL(for: package) else {
-            setStatus(packageID, .failed(message: L10n.t("error.missing_artifact")))
-            return
-        }
-
-        var request = URLRequest(url: remoteURL)
-        request.setValue("carrottype/0.1", forHTTPHeaderField: "User-Agent")
-
-        let packageDir = destination.deletingLastPathComponent()
-        let fileManager = self.fileManager
-
-        let task = session.downloadTask(with: request) { [weak self] location, response, error in
-            // URLSession deletes the temp file when this callback returns.
-            // Persist it synchronously before any MainActor hop.
-            var stagedURL: URL?
-            var stageError: Error?
-
-            if error == nil,
-               let http = response as? HTTPURLResponse,
-               (200...299).contains(http.statusCode),
-               let location {
-                do {
-                    try fileManager.createDirectory(at: packageDir, withIntermediateDirectories: true)
-                    let staging = packageDir.appendingPathComponent(
-                        ".\(destination.lastPathComponent).download",
-                        isDirectory: false
-                    )
-                    if fileManager.fileExists(atPath: staging.path) {
-                        try fileManager.removeItem(at: staging)
-                    }
-                    try fileManager.moveItem(at: location, to: staging)
-                    stagedURL = staging
-                } catch {
-                    stageError = error
-                }
-            }
-
-            Task { @MainActor in
-                guard let self else {
-                    if let stagedURL {
-                        try? fileManager.removeItem(at: stagedURL)
-                    }
-                    return
-                }
-                self.progressObservations[packageID]?.invalidate()
-                self.progressObservations[packageID] = nil
-                self.downloadTasks[packageID] = nil
-
-                if let error {
-                    let nsError = error as NSError
-                    if nsError.code == NSURLErrorCancelled {
-                        self.setStatus(packageID, .notDownloaded)
-                        return
-                    }
-                    self.setStatus(packageID, .failed(message: error.localizedDescription))
-                    self.lastError = error.localizedDescription
-                    return
-                }
-
-                if let http = response as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
-                    let message = "HTTP \(http.statusCode)"
-                    self.setStatus(packageID, .failed(message: message))
-                    self.lastError = message
-                    return
-                }
-
-                if let stageError {
-                    self.setStatus(packageID, .failed(message: stageError.localizedDescription))
-                    self.lastError = stageError.localizedDescription
-                    return
-                }
-
-                guard let stagedURL else {
-                    self.setStatus(packageID, .failed(message: L10n.t("error.empty_download")))
-                    return
-                }
-
-                do {
-                    if self.fileManager.fileExists(atPath: destination.path) {
-                        try self.fileManager.removeItem(at: destination)
-                    }
-                    try self.fileManager.moveItem(at: stagedURL, to: destination)
-                    if let expected = package.sha256 {
-                        let actual = try Self.sha256Hex(ofFileAt: destination)
-                        guard actual.caseInsensitiveCompare(expected) == .orderedSame else {
-                            try? self.fileManager.removeItem(at: destination)
-                            let message = L10n.t("error.sha_mismatch")
-                            self.setStatus(packageID, .failed(message: message))
-                            self.lastError = message
-                            return
-                        }
-                    }
-                    self.setStatus(packageID, .ready)
-                    if package.role == .stt {
-                        self.selectSTT(package.id)
-                    }
-                } catch {
-                    try? self.fileManager.removeItem(at: stagedURL)
-                    self.setStatus(packageID, .failed(message: error.localizedDescription))
-                    self.lastError = error.localizedDescription
-                }
-            }
-        }
-
-        progressObservations[packageID] = task.progress.observe(\.fractionCompleted) { [weak self] progress, _ in
-            let fraction = Self.clampedFraction(progress.fractionCompleted)
-            Task { @MainActor in
-                self?.applyDownloadProgress(packageID: packageID, fraction: fraction)
-            }
-        }
-
-        downloadTasks[packageID] = task
-        task.resume()
-    }
 
     private func downloadParakeetSnapshot(_ package: CatalogPackage) {
         let packageID = package.id
@@ -557,47 +396,6 @@ final class ModelManager: ObservableObject {
                     self?.snapshotTasks[packageID] = nil
                     self?.setStatus(packageID, .failed(message: error.localizedDescription))
                     self?.lastError = error.localizedDescription
-                }
-            }
-        }
-    }
-
-    private func prepareAppleSpeechAssets(_ package: CatalogPackage) {
-        let packageID = package.id
-        let destination = packageDirectory(for: package)
-        let locale = AppleSpeechSTTEngine.preferredAppLocale()
-        snapshotTasks[packageID] = Task { [weak self] in
-            do {
-                try await AppleSpeechSTTEngine.ensureAssets(
-                    packageDirectory: destination,
-                    locale: locale
-                ) { fraction in
-                    Task { @MainActor in
-                        self?.applyDownloadProgress(packageID: packageID, fraction: fraction)
-                    }
-                }
-                await MainActor.run {
-                    guard let self, !Task.isCancelled else { return }
-                    self.snapshotTasks[packageID] = nil
-                    self.setStatus(packageID, .ready)
-                    self.selectSTT(package.id)
-                }
-            } catch is CancellationError {
-                await MainActor.run {
-                    self?.snapshotTasks[packageID] = nil
-                    self?.setStatus(packageID, .notDownloaded)
-                }
-            } catch {
-                let message = (error as? LocalizedError)?.errorDescription
-                    ?? AppleSpeechPrepareError.from(
-                        systemError: error,
-                        languageCode: AppleSpeechSTTEngine.languageCode(for: locale)
-                    ).errorDescription
-                    ?? L10n.t("error.apple_speech_prepare_failed")
-                await MainActor.run {
-                    self?.snapshotTasks[packageID] = nil
-                    self?.setStatus(packageID, .failed(message: message))
-                    self?.lastError = message
                 }
             }
         }
@@ -740,19 +538,10 @@ final class ModelManager: ObservableObject {
                 packageDirectory: dir,
                 packageID: package.id
             )
-        case "apple-speechanalyzer":
-            return AppleSpeechSTTEngine.isPackageReady(packageDirectory: dir)
         case "mlx-lm":
             return QwenCleanupPackage.isPackageReady(at: dir, expectedRevision: package.hubRevision)
         default:
-            guard let url = artifactURL(for: package),
-                  fileManager.fileExists(atPath: url.path)
-            else { return false }
-            // Already-installed files without a catalog sha256 stay ready.
-            // If sha256 is set and mismatches, treat as not ready (user can re-download).
-            guard let expected = package.sha256 else { return true }
-            guard let actual = try? Self.sha256Hex(ofFileAt: url) else { return false }
-            return actual.caseInsensitiveCompare(expected) == .orderedSame
+            return false
         }
     }
 
@@ -799,27 +588,8 @@ final class ModelManager: ObservableObject {
         return nil
     }
 
-    /// Streaming SHA-256 of a file on disk (hex lowercase).
-    nonisolated private static func sha256Hex(ofFileAt url: URL) throws -> String {
-        let handle = try FileHandle(forReadingFrom: url)
-        defer { try? handle.close() }
-        var hasher = SHA256()
-        while autoreleasepool(invoking: {
-            let chunk = handle.readData(ofLength: 1024 * 1024)
-            if chunk.isEmpty { return false }
-            hasher.update(data: chunk)
-            return true
-        }) {}
-        return hasher.finalize().map { String(format: "%02x", $0) }.joined()
-    }
-
     private func packageDirectory(for package: CatalogPackage) -> URL {
         ModelPackageLayout.directory(modelsRoot: modelsRoot, packageID: package.id)
-    }
-
-    private func artifactURL(for package: CatalogPackage) -> URL? {
-        guard let name = package.artifactFileName, !name.isEmpty else { return nil }
-        return packageDirectory(for: package).appendingPathComponent(name, isDirectory: false)
     }
 
     private func hubRepoID(from downloadURL: String) -> String? {
@@ -833,14 +603,9 @@ final class ModelManager: ObservableObject {
     private func catalogHubCacheDirectories() -> [URL] {
         var seen = Set<String>()
         var urls: [URL] = []
-        for package in catalog.packages {
-            guard let repoID = package.hubRepoID?.trimmingCharacters(in: .whitespacesAndNewlines),
-                  !repoID.isEmpty,
-                  seen.insert(repoID).inserted
-            else { continue }
-            if let dir = Self.hubCacheDirectory(forRepoID: repoID) {
-                urls.append(dir)
-            }
+        let repos = catalog.packages.compactMap(\.hubRepoID) + ["FluidInference/parakeet-tdt-0.6b-v3-coreml"]
+        for repoID in repos where !repoID.isEmpty && seen.insert(repoID).inserted {
+            if let dir = Self.hubCacheDirectory(forRepoID: repoID) { urls.append(dir) }
         }
         return urls
     }
@@ -893,18 +658,8 @@ final class ModelManager: ObservableObject {
     }
 
     private func restoreSelection() {
-        if let saved = UserDefaults.standard.string(forKey: Keys.selectedSTT),
-           catalog.packages.contains(where: { $0.id == saved && $0.role == .stt }) {
-            selectedSTTPackageID = saved
-        } else if let recommended = catalog.packages.first(where: { $0.recommended && $0.role == .stt }) {
-            selectedSTTPackageID = recommended.id
-        }
-        // Prefer a ready package when the saved selection is not on disk.
-        if !status(for: selectedSTTPackageID).isReady,
-           let ready = selectableSTTPackages.first {
-            selectedSTTPackageID = ready.id
-            UserDefaults.standard.set(ready.id, forKey: Keys.selectedSTT)
-        }
+        // The only dictation runtime is Ultra. No download is triggered by migrating this preference.
+        selectedSTTPackageID = DictationModelPolicy.restoreSelection()
         if let raw = UserDefaults.standard.string(forKey: Keys.cleanupMode),
            let mode = CleanupMode(rawValue: raw) {
             if isCleanupPackageReady(for: mode) {

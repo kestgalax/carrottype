@@ -5,45 +5,12 @@ actor ParakeetSTTEngine: STTEngine {
     private var manager: AsrManager?
     private var loadedDirectory: String?
 
-    /// Which FluidAudio Parakeet checkpoint a catalog id uses.
-    /// v3 and Ultra share `AsrManager` but must not share a cache folder.
-    struct PackageKind: Sendable, Equatable {
-        let version: AsrModelVersion
-        let folderName: String
-        /// v3 installs once used a misnamed sibling; Ultra never did.
-        let removesLegacyCoreMLSibling: Bool
-
-        static let v3 = PackageKind(
-            version: .v3,
-            folderName: Repo.parakeetV3.folderName,
-            removesLegacyCoreMLSibling: true
-        )
-        static let ultra = PackageKind(
-            version: .ultra,
-            folderName: Repo.parakeetUltra.folderName,
-            removesLegacyCoreMLSibling: false
-        )
-
-        static func resolve(packageID: String) -> PackageKind {
-            if packageID == BundledModelCatalog.parakeetUltraSTTID {
-                return .ultra
-            }
-            return .v3
-        }
-
-        static func resolve(cacheDirectory: URL) -> PackageKind {
-            if cacheDirectory.lastPathComponent == ultra.folderName {
-                return .ultra
-            }
-            return .v3
-        }
-    }
+    static let modelVersion = AsrModelVersion.ultra
 
     /// Where CoreML bundles actually live under CarrotType `models/`.
     /// FluidAudio's `AsrModels.download(to:)` writes into `parent/folderName`.
     static func fluidCacheDirectory(modelsRoot: URL, packageID: String) -> URL {
-        let kind = PackageKind.resolve(packageID: packageID)
-        return modelsRoot.appendingPathComponent(kind.folderName, isDirectory: true)
+        modelsRoot.appendingPathComponent(Repo.parakeetUltra.folderName, isDirectory: true)
     }
 
     func transcribe(audioURL: URL, modelPath: String?) async throws -> String {
@@ -74,12 +41,12 @@ actor ParakeetSTTEngine: STTEngine {
         packageID: String,
         onProgress: (@Sendable (Double) -> Void)? = nil
     ) async throws {
-        let kind = PackageKind.resolve(packageID: packageID)
+        guard packageID == BundledModelCatalog.parakeetUltraSTTID else { throw STTEngineError.modelMissing }
         try FileManager.default.createDirectory(at: packageDirectory, withIntermediateDirectories: true)
         let cacheDir = fluidCacheDirectory(modelsRoot: modelsRoot, packageID: packageID)
         _ = try await AsrModels.download(
             to: cacheDir,
-            version: kind.version,
+            version: modelVersion,
             progressHandler: { progress in
                 onProgress?(progress.fractionCompleted)
             }
@@ -90,28 +57,24 @@ actor ParakeetSTTEngine: STTEngine {
     }
 
     static func isPackageReady(modelsRoot: URL, packageDirectory: URL, packageID: String) -> Bool {
-        let kind = PackageKind.resolve(packageID: packageID)
+        guard packageID == BundledModelCatalog.parakeetUltraSTTID else { return false }
         let cacheDir = fluidCacheDirectory(modelsRoot: modelsRoot, packageID: packageID)
-        let modelsPresent = AsrModels.modelsExist(at: cacheDir, version: kind.version)
+        let modelsPresent = AsrModels.modelsExist(at: cacheDir, version: modelVersion)
         guard modelsPresent else { return false }
         // Marker is optional for installs that predate this layout helper.
         _ = packageDirectory
         return true
     }
 
-    /// Removes the catalog marker dir and this variant's FluidAudio cache.
-    /// v3 also removes the legacy misnamed sibling. Ultra does not touch the v3 cache.
+    /// Removes only Ultra's catalog marker and CoreML cache. Retired packages use LegacySTTStorage.
     static func removeInstalled(modelsRoot: URL, packageDirectory: URL, packageID: String) throws {
-        let kind = PackageKind.resolve(packageID: packageID)
+        guard packageID == BundledModelCatalog.parakeetUltraSTTID else { throw STTEngineError.modelMissing }
         let fm = FileManager.default
         var errors: [Error] = []
-        var urls = [
+        let urls = [
             packageDirectory,
             fluidCacheDirectory(modelsRoot: modelsRoot, packageID: packageID),
         ]
-        if kind.removesLegacyCoreMLSibling {
-            urls.append(modelsRoot.appendingPathComponent("parakeet-tdt-0.6b-v3-coreml", isDirectory: true))
-        }
 
         for url in urls {
             guard fm.fileExists(atPath: url.path) else { continue }
@@ -136,7 +99,8 @@ actor ParakeetSTTEngine: STTEngine {
         let models: AsrModels
         if !hint.isEmpty {
             let url = URL(fileURLWithPath: hint, isDirectory: true)
-            let version = PackageKind.resolve(cacheDirectory: url).version
+            guard url.lastPathComponent == Repo.parakeetUltra.folderName else { throw STTEngineError.modelMissing }
+            let version = Self.modelVersion
             if AsrModels.modelsExist(at: url, version: version) {
                 models = try await AsrModels.load(from: url, version: version)
             } else {

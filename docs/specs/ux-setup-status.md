@@ -25,7 +25,7 @@ One clear Setup / Status surface so the user always knows:
 
 | State | Condition |
 |-------|-----------|
-| **Ready** | Microphone granted **and** Accessibility granted **and** active STT model `Ready` |
+| **Ready** | Microphone granted **and** Accessibility granted **and** Parakeet Ultra `Ready` |
 | **Almost** | Some requirements missing (show remaining checklist) |
 | **Blocked** | Hard failure (download corrupt, unsupported Mac, etc.) |
 
@@ -57,7 +57,7 @@ Window title: **carrottype**. Default size ~880×680 (min 720×520); window is r
 - **Panes** (SF Symbols):
   1. **General** (`info.square`) — dictation hotkey, optional Walkie-talkie (hold to talk), retain clipboard, transform selected text **bindings** (hotkey + Translate/Custom + model + language pair), language
   2. **Setup** (`gear`) — Microphone, input device, optional mic meter, optional unmute during dictation (ADR-007), Accessibility
-  3. **Models** (`cpu`) — dictation STT + post-dictation formatting
+  3. **Models** (`cpu`) — Parakeet Ultra + post-dictation formatting
   4. **Storage** (`internaldrive`) — installed packages (sizes, Active/Unused, delete unused) + catalog-scoped Hugging Face download cache size/clear
   5. **Statistics** (`chart.bar`) — opt-in local time-saved estimates for a selected month (ADR-013); off by default
 
@@ -69,8 +69,8 @@ Default pane after open (post first-run): **General** if Ready, else **Setup**.
 2. **Status Details** (via Details… at every readiness state) — readiness, remaining hint buttons, last session / model error, **Check for updates…** (opens public GitHub Releases; no auto-install)
 3. **General** — dictation hotkey capture + optional **Walkie-talkie (hold to talk)** (off by default: press starts, press again commits; on: **hold** records, **release** commits — repeat press does not commit) + optional **Also keep the result on the clipboard** + optional **Show text while you speak** (ADR-014, off by default; disabled when active STT `supportsStreaming` is false; Capsule grows with adapting preview text); while recording, **Escape** cancels (no STT/paste); silent/too-short finish is a soft cancel; **Transform selected text** bindings list (max 5): each row has hotkey (default first binding **⌥'**), kind Translate/Custom, Ready Smart/Smart+/Gemma model, language pair for Translate or instruction editor for Custom (ADR-012); Language System / Russian / English (must not remount Settings or stop the optional mic meter)
 4. **Setup** — Microphone, input device picker, Accessibility; optional **Show microphone meter** (off by default); optional **Unmute mic during dictation (experimental)** (off by default — ADR-007); tip to remove/re-add the app if Accessibility status is stuck
-5. **Models** — STT picker for active (downloaded-only) model; per-package status; prominent recommended-download CTA only when **no** STT package is Ready yet; **Make active** on Ready-but-not-active rows; **Delete** on every Ready STT / formatting package (not only Storage → delete unused); optional **Apple SpeechAnalyzer** (macOS 26+, ADR-008) uses **Prepare…** for system assets instead of HF download; formatting Off / Light / Smart / Smart+ / optional **Gemma 4 E2B** (ADR-010) with the same Make active + Delete pattern
-6. **Storage** — two sections: **Installed packages** (Application Support sizes, Active/Unused, share of package total, **Delete unused**) and **Download cache** (Hugging Face hub folders for catalog `hubRepoID` only, size + **Clear download cache** with confirmation). Per-package **Delete** stays on **Models**; package Delete does not clear the Hub cache. Clear cache does not uninstall Ready packages.
+5. **Models** — one Parakeet Ultra row with state, size/license, download/cancel/retry/delete; no STT picker or alternative STT offerings (0.4.0 candidate, ADR-016). Already-installed Ultra is reused without download. Without Ultra, explain the explicit download requirement and optional legacy cleanup in Storage. Formatting Off / Light / Smart / Smart+ / Gemma retains Ready-only selection and Make active / Delete controls.
+6. **Storage** — Installed packages (current Ultra/cleanup sizes, Active/Unused, delete unused), optional Retired Dictation Models (known former catalog directories, per-group removal with confirmation) and Download cache (current Hub repos plus the allowlisted retired Parakeet v3 repo). Nothing is removed automatically. Legacy Apple cleanup removes only the app preparation marker; shared system assets and unknown experimental packages remain untouched. Package Delete does not clear Hub cache; cache clear does not uninstall Ready packages.
 7. **Statistics** — toggle to collect local counts (off by default); month stepper (current month default); two estimates (**Would have typed** / **Time saved**) plus **characters** and **completed dictation** counts side by side; **typing speed** (WPM default 50, 1 word = 5 characters, recomputes dictation times only); then **Bindings** rows with per-hotkey successful transform counts (live labels; deleted bindings remain as an orphan row). **Clear statistics** wipes the local JSON. No charts or transcripts. Copy from Capsule is not counted.
 
 No marketing cards, no stat strips. Progress belongs on the model row being downloaded.
@@ -107,7 +107,7 @@ Escape cancel with empty preview, soft silent cancel, and pipeline errors hide t
 1. Settings opens on first launch.
 2. Welcome detail explains local privacy in one sentence.
 3. **Continue** clears `showFirstRun` and selects Setup (or Models if mic + Accessibility already granted).
-4. Recommended STT download CTA lives in the Models pane while that package is not Ready.
+4. The Models pane offers the explicit Ultra download while not Ready; no other STT is offered.
 
 ## Clipboard option
 
@@ -138,3 +138,11 @@ When **Also keep the result on the clipboard** is on: paste at caret still runs,
 - Done means the paste command was sent, not that an external application acknowledged insertion. Statistics count completed dictations with dispatched paste commands, excluding known insertion errors; existing aggregates remain and are not reclassified as verified insertions. Copy does not count.
 - Clipboard restore checks the current change count and preserves a newer copy. An initially empty clipboard is restored as empty; item types and multiple items are preserved. Selection ⌘C fallback observes a short window and cleans up before returning cancellation; concurrent external copies in this window cannot be distinguished from the requested copy by macOS.
 - All existing model choices, Light/Smart/Gemma modes, transform bindings, RU/EN, microphone/meter, Wave Link, live draft, hold-to-talk and opt-in statistics remain available in this version.
+
+## Ultra migration — 0.4.0 Debug candidate
+
+- On launch, old/unknown saved STT ids migrate to Ultra; no model download starts automatically. Without Ultra readiness is Almost and Models offers Download. An already-installed Ultra cache (even without its historical marker) is reused.
+- Existing formatting selection, transform bindings, microphone/meter, Wave Link, clipboard/recovery, RU/EN and opt-in statistics are preserved.
+- Storage exposes known legacy files for explicit, confirmed deletion only. Show package-local Apple preparation metadata without claiming removal of system speech assets. No cleanup of unknown experiments.
+- A user who wants to return to 0.3.10 should retain old weights until the Ultra migration is accepted. Deletion confirmation explains potential re-download for the older app.
+- Debug manual acceptance is separate from the already accepted/released 0.3.10.

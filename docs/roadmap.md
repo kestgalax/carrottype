@@ -8,7 +8,7 @@ Latest published artifact: `CarrotType-0.3.10.dmg` (SHA-256 in `docs/github-rele
 
 **Release acceptance:** `0.3.10 (23)` Debug passed all maintainer manual checks; clean Release DMG verified and [published](https://github.com/kestgalax/carrottype/releases/tag/v0.3.10). [Verification record](debug-review-v0.3.10.md).
 
-**Current focus:** staged product improvements — dictation reliability (`0.3.10`, shipped), Ultra-only STT (`0.4.0`), GitHub app updates (`0.5.0`), setup/settings polish (`0.6.0`), session lifecycle/tests (`0.6.1`). [Execution plan](superpowers/plans/2026-11-09-product-improvements.md). Versions are targets, not published releases. Optional notarization remains trust polish when credentials exist.
+**Current focus:** `0.4.0` Ultra-only dictation Debug candidate (ADR-016): model UI/runtime simplification and safe legacy-file inventory/migration. Next: GitHub app updates (`0.5.0`), setup/settings (`0.6.0`), lifecycle/tests (`0.6.1`). [Execution plan](superpowers/plans/2026-11-09-product-improvements.md). Optional notarization remains separate trust polish.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -121,7 +121,7 @@ Preserve existing useful features throughout these stages. Removing, hiding or r
 
 ## In progress / on branch
 
-- `fix/dictation-reliability` — `0.3.10 (23)` published after Debug acceptance and verified Release packaging; PR integration pending. Next: `0.4.0` Ultra-only STT on a new branch from updated main; its Debug build requires separate user confirmation.
+- `feat/ultra-only-dictation` — M1–M3 implemented as `0.4.0 (24)` Debug candidate; standalone catalog/preference/legacy-storage tests and Debug build passed. [Debug checklist](debug-review-v0.4.0.md): all manual checklist items accepted by the user on 2026-11-10; Release packaging/verification in progress. Prior `0.3.10` release was merged in PR #19.
 
 ## Near-term polish candidates (if release is blocked)
 
