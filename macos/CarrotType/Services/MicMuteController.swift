@@ -8,6 +8,8 @@ import Network
 @MainActor
 final class MicMuteController {
     private var activeSession: Session?
+    /// Serializes begin/end so a parallel kickoff cannot race restore (AppState may not await begin).
+    private var operationChain: Task<Void, Never>?
 
     private struct Session {
         let deviceUID: String
@@ -23,63 +25,19 @@ final class MicMuteController {
     }
 
     /// Snapshot mute and unmute if needed. No-op when already unmuted or unsupported.
+    /// Safe to fire without awaiting: `endDictationRestore` waits for this to finish.
     func beginDictationUnmute(deviceUID: String, deviceName: String) async {
-        await endDictationRestore()
-
-        guard !deviceUID.isEmpty else { return }
-
-        // Prefer Wave Link whenever the selected capture path looks Elgato-related
-        // (raw Wave:3, Stream Mix, MicrophoneFX, etc.) — hardware mute lives on commonWave.
-        if looksLikeWaveFamily(deviceName: deviceName),
-           let wave = await WaveLinkClient.shared.prepareUnmute(preferredName: deviceName) {
-            activeSession = Session(
-                deviceUID: deviceUID,
-                wasMuted: wave.wasMuted,
-                backend: .waveLink,
-                waveDeviceId: wave.deviceId,
-                waveInputId: wave.inputId
-            )
-            if wave.wasMuted {
-                _ = await WaveLinkClient.shared.setInputMuted(
-                    deviceId: wave.deviceId,
-                    inputId: wave.inputId,
-                    muted: false
-                )
-            }
-            return
-        }
-
-        guard let wasMuted = CoreAudioInputMute.isMuted(deviceUID: deviceUID) else { return }
-        activeSession = Session(
-            deviceUID: deviceUID,
-            wasMuted: wasMuted,
-            backend: .coreAudio,
-            waveDeviceId: nil,
-            waveInputId: nil
-        )
-        if wasMuted {
-            _ = CoreAudioInputMute.setMuted(deviceUID: deviceUID, muted: false)
+        await enqueue {
+            await self.performEndRestore()
+            await self.performBeginUnmute(deviceUID: deviceUID, deviceName: deviceName)
         }
     }
 
     /// Restore mute state captured at session start. Safe to call multiple times.
+    /// Waits for any in-flight `beginDictationUnmute` first.
     func endDictationRestore() async {
-        guard let session = activeSession else { return }
-        activeSession = nil
-
-        guard session.wasMuted else { return }
-
-        switch session.backend {
-        case .coreAudio:
-            _ = CoreAudioInputMute.setMuted(deviceUID: session.deviceUID, muted: true)
-        case .waveLink:
-            if let deviceId = session.waveDeviceId, let inputId = session.waveInputId {
-                _ = await WaveLinkClient.shared.setInputMuted(
-                    deviceId: deviceId,
-                    inputId: inputId,
-                    muted: true
-                )
-            }
+        await enqueue {
+            await self.performEndRestore()
         }
     }
 
@@ -102,6 +60,66 @@ final class MicMuteController {
                         muted: true
                     )
                 }
+            }
+        }
+    }
+
+    private func enqueue(_ body: @escaping @MainActor () async -> Void) async {
+        let previous = operationChain
+        let task = Task { @MainActor in
+            await previous?.value
+            await body()
+        }
+        operationChain = task
+        await task.value
+    }
+
+    private func performBeginUnmute(deviceUID: String, deviceName: String) async {
+        guard !deviceUID.isEmpty else { return }
+
+        // Prefer Wave Link whenever the selected capture path looks Elgato-related
+        // (raw Wave:3, Stream Mix, MicrophoneFX, etc.) — hardware mute lives on commonWave.
+        if looksLikeWaveFamily(deviceName: deviceName),
+           let wave = await WaveLinkClient.shared.unmuteForDictation(preferredName: deviceName) {
+            activeSession = Session(
+                deviceUID: deviceUID,
+                wasMuted: wave.wasMuted,
+                backend: .waveLink,
+                waveDeviceId: wave.deviceId,
+                waveInputId: wave.inputId
+            )
+            return
+        }
+
+        guard let wasMuted = CoreAudioInputMute.isMuted(deviceUID: deviceUID) else { return }
+        activeSession = Session(
+            deviceUID: deviceUID,
+            wasMuted: wasMuted,
+            backend: .coreAudio,
+            waveDeviceId: nil,
+            waveInputId: nil
+        )
+        if wasMuted {
+            _ = CoreAudioInputMute.setMuted(deviceUID: deviceUID, muted: false)
+        }
+    }
+
+    private func performEndRestore() async {
+        guard let session = activeSession else { return }
+        activeSession = nil
+
+        guard session.wasMuted else { return }
+
+        switch session.backend {
+        case .coreAudio:
+            _ = CoreAudioInputMute.setMuted(deviceUID: session.deviceUID, muted: true)
+        case .waveLink:
+            if let deviceId = session.waveDeviceId, let inputId = session.waveInputId {
+                _ = await WaveLinkClient.shared.setInputMuted(
+                    deviceId: deviceId,
+                    inputId: inputId,
+                    muted: true
+                )
             }
         }
     }
@@ -200,6 +218,16 @@ enum CoreAudioInputMute {
     }
 }
 
+// MARK: - Port order (pure, testable)
+
+enum WaveLinkPortOrder {
+    /// Prefer the last working port, then the remaining candidates in catalog order (no duplicates).
+    static func prioritized(cached: UInt16?, candidates: [UInt16]) -> [UInt16] {
+        guard let cached, candidates.contains(cached) else { return candidates }
+        return [cached] + candidates.filter { $0 != cached }
+    }
+}
+
 // MARK: - Wave Link (unofficial local JSON-RPC)
 
 /// Minimal Wave Link client for hardware input mute. Protocol reverse-engineered from Stream Deck plugin.
@@ -209,6 +237,8 @@ actor WaveLinkClient {
 
     /// Prefer the live Wave Link 3 range first (observed open on 1884); keep 1824 as legacy fallback.
     private let ports: [UInt16] = Array(1884...1893) + [1824]
+    /// Last port that answered `getApplicationInfo` — avoids multi-port timeouts on warm starts.
+    private var cachedPort: UInt16?
 
     struct UnmutePrep {
         let deviceId: String
@@ -216,7 +246,8 @@ actor WaveLinkClient {
         let wasMuted: Bool
     }
 
-    func prepareUnmute(preferredName: String) async -> UnmutePrep? {
+    /// One WebSocket: discover input + unmute if needed (avoids a second connect before record).
+    func unmuteForDictation(preferredName: String) async -> UnmutePrep? {
         guard let connection = await connectVerified() else { return nil }
         defer { connection.close() }
 
@@ -232,6 +263,20 @@ actor WaveLinkClient {
         guard let match = pickWaveInput(devices: devices, preferredName: preferredName) else {
             return nil
         }
+
+        if match.isMuted {
+            let params: [String: Any] = [
+                "id": match.deviceId,
+                "inputs": [
+                    [
+                        "id": match.inputId,
+                        "isMuted": false,
+                    ],
+                ],
+            ]
+            _ = await connection.request(method: "setInputDevice", params: params)
+        }
+
         return UnmutePrep(deviceId: match.deviceId, inputId: match.inputId, wasMuted: match.isMuted)
     }
 
@@ -293,13 +338,21 @@ actor WaveLinkClient {
 
     /// Connect only to a port that answers `getApplicationInfo` (Wave Link 3 rejects `params: null`).
     private func connectVerified() async -> WaveLinkConnection? {
-        for port in ports {
-            guard await tcpPortOpen(port) else { continue }
-            guard let connection = await WaveLinkConnection.open(port: port) else { continue }
+        for port in WaveLinkPortOrder.prioritized(cached: cachedPort, candidates: ports) {
+            guard await tcpPortOpen(port) else {
+                if cachedPort == port { cachedPort = nil }
+                continue
+            }
+            guard let connection = await WaveLinkConnection.open(port: port) else {
+                if cachedPort == port { cachedPort = nil }
+                continue
+            }
             if await connection.request(method: "getApplicationInfo", params: nil) != nil {
+                cachedPort = port
                 return connection
             }
             connection.close()
+            if cachedPort == port { cachedPort = nil }
         }
         return nil
     }

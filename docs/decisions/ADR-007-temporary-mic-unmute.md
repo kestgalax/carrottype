@@ -20,9 +20,10 @@ Product principles require **explicit** opt-in and human control of when recordi
 
 1. Add an **optional, experimental** Settings toggle next to the input device picker: temporarily unmute for the dictation session (default **off**).
 2. **Product support scope (UX):** Elgato Wave Link only. Settings copy must say the feature is experimental and requires Wave Link running. Do not advertise universal mute control.
-3. On session start (when enabled): snapshot mute state → unmute if muted → record. On every exit path (stop, error, cancel, quit): **restore** the prior mute state (never “always remute”).
+3. On session start (when enabled): **kick off unmute in parallel with** `AVAudioEngine` start (do not block listening on Wave Link RPC). Snapshot mute → unmute if muted. On every exit path (stop, error, cancel, quit): **restore** the prior mute state after any in-flight begin finishes (never “always remute”). First tens–hundreds of ms of audio may still be muted if hardware unmute lags; that is preferred over a cold listening delay.
 4. Backend (implementation detail, not UX promise):
-   - Primary: if Wave Link is reachable **and** the selected input looks like Wave/Elgato/Wave Link → unmute via Wave Link `setInputDevice` on the `commonWave` hardware input.
+   - Primary: if Wave Link is reachable **and** the selected input looks like Wave/Elgato/Wave Link → unmute via Wave Link `setInputDevice` on the `commonWave` hardware input in **one** WebSocket round (discover + unmute).
+   - Cache the last working Wave Link TCP port in-process so warm dictation skips multi-port probe timeouts.
    - Silent fallback: Core Audio mute on the selected device UID when settable (not promised in UI).
    - If neither works → proceed with recording as today; do not crash the session.
 5. Do not keep `AVAudioEngine` awake solely for mute; mute is a HAL / Wave Link property change only (idle policy unchanged).

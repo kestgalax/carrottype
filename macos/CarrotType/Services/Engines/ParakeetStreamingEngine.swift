@@ -12,6 +12,8 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
     private var loadedModels: AsrModels?
     private var language: Language?
     private var samples: [Float] = []
+    /// Once we see real speech, drop any muted/silent prefix for good (full-buffer preview).
+    private var leadingSilenceCompacted = false
     private var previewLoop: Task<Void, Never>?
     private var passInFlight = false
     private var onUpdate: (@Sendable (LiveTranscript) -> Void)?
@@ -24,6 +26,8 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
     private static let previewIntervalNs: UInt64 = 1_000_000_000
     /// Skip ticks until we have a little speech (OpenBot waits on first chunk cadence).
     private static let minPreviewSamples = 8_000 // 0.5 s @ 16 kHz
+    /// Match AudioRecorder soft-silence peak — leading mute (parallel unmute) must not enter ASR.
+    private static let leadingSilencePeak: Float = 0.004
     private static let interimWordCount = 2
 
     func start(
@@ -66,6 +70,7 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         asr = manager
         language = Self.fluidLanguage(from: languageCode)
         samples = []
+        leadingSilenceCompacted = false
         self.onUpdate = onUpdate
 
         previewLoop = Task {
@@ -122,11 +127,34 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
 
     private func appendSamples(_ chunk: [Float]) {
         samples.append(contentsOf: chunk)
+        compactLeadingSilenceIfNeeded()
+    }
+
+    /// Parallel unmute (ADR-007) leaves a muted prefix in the capture fan-out. Full-buffer
+    /// preview re-decodes that prefix every tick → multilingual translit / `<unk>` across the
+    /// whole draft, not only the first words. Drop it once voice appears.
+    private func compactLeadingSilenceIfNeeded() {
+        guard !leadingSilenceCompacted else { return }
+        let trimmed = Self.trimLeadingSilence(samples, peakThreshold: Self.leadingSilencePeak)
+        if trimmed.isEmpty {
+            // Still muted/silent — bound RAM until Wave Link unmute finishes.
+            let maxHold = 16_000 * 2 // 2 s @ 16 kHz
+            if samples.count > maxHold {
+                samples = Array(samples.suffix(maxHold))
+            }
+            return
+        }
+        if trimmed.count < samples.count {
+            samples = trimmed
+        }
+        leadingSilenceCompacted = true
     }
 
     private func runPreviewPassIfNeeded(force: Bool = false) async {
         guard !passInFlight else { return }
         guard let asr else { return }
+        compactLeadingSilenceIfNeeded()
+        guard leadingSilenceCompacted || force else { return }
         let snapshot = samples
         guard force || snapshot.count >= Self.minPreviewSamples else { return }
 
@@ -140,7 +168,7 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
                 decoderState: &decoderState,
                 language: language
             )
-            let trimmed = result.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            let trimmed = Self.sanitizePreviewText(result.text)
             guard !trimmed.isEmpty else { return }
             let split = Self.splitInterimTail(trimmed, interimWords: Self.interimWordCount)
             onUpdate?(LiveTranscript(confirmed: split.body, volatile: split.tail))
@@ -160,6 +188,7 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         previewLoop = nil
         passInFlight = false
         samples = []
+        leadingSilenceCompacted = false
         onUpdate = nil
         let published = asr
         if let published {
@@ -187,6 +216,31 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         let body = words.dropLast(interimWords).joined(separator: " ")
         let tail = words.suffix(interimWords).joined(separator: " ")
         return (body, tail)
+    }
+
+    /// Strip decoder junk tokens that sometimes leak into Capsule draft.
+    static func sanitizePreviewText(_ text: String) -> String {
+        var out = text
+        for token in ["<unk>", "<UNK>", "<pad>", "<PAD>", "<s>", "</s>"] {
+            out = out.replacingOccurrences(of: token, with: " ")
+        }
+        let words = out.split { $0.isWhitespace || $0.isNewline }.map(String.init)
+        // Drop punctuation-only spam tokens (",", "--", "...") from hallucinated passes.
+        let cleaned = words.filter { word in
+            !word.allSatisfy { $0.isPunctuation || $0.isMathSymbol }
+        }
+        return cleaned.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// Keep samples from the first frame above `peakThreshold` (with a tiny pad).
+    static func trimLeadingSilence(_ samples: [Float], peakThreshold: Float) -> [Float] {
+        guard !samples.isEmpty else { return samples }
+        let pad = 1_600 // 100 ms @ 16 kHz
+        guard let firstVoice = samples.firstIndex(where: { abs($0) >= peakThreshold }) else {
+            return []
+        }
+        let start = max(0, firstVoice - pad)
+        return Array(samples[start...])
     }
 
     private static func fluidLanguage(from code: String?) -> Language? {
