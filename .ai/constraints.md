@@ -33,6 +33,7 @@ Only these outbound / network paths are allowed without a new ADR + product-inte
 
 1. **HTTPS model download** — catalog / Hugging Face URLs, triggered by explicit setup/download (see `ModelManager`, ADR-003).
 2. **Localhost Wave Link** — `127.0.0.1` WebSocket/TCP for experimental unmute (ADR-007, `MicMuteController`).
+3. **HTTPS application updates** — explicit checks or opt-in automatic checks/downloads of signed metadata/inline release notes and archives from this project's GitHub Releases (ADR-017), including GitHub HTTPS asset redirects/CDN (`release-assets.githubusercontent.com`, `objects.githubusercontent.com`). Sparkle profiling and JavaScript are disabled; no audio/text/statistics upload. Isolated development staging may serve signed test feeds on loopback only; no production HTTP feed.
 
 Apple SpeechAnalyzer preparation from ADR-008 is retired in the 0.4.0 (ADR-016); no Apple speech asset install is exposed by the current runtime. Existing shared system assets remain untouched.
 

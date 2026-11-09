@@ -84,6 +84,8 @@ struct GeneralSettingsPane: View {
                 }
             }
 
+            AppUpdateSettingsSection(updates: appState.updates, locale: locale)
+
             Section {
                 Picker(L10n.t("language.section", locale: locale), selection: $appState.appLanguage) {
                     ForEach(AppLanguage.allCases) { language in

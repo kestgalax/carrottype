@@ -6,7 +6,29 @@ private let settingsDefaultSize = NSSize(width: 880, height: 680)
 
 @main
 struct CarrotTypeApp: App {
-    @StateObject private var appState = AppState()
+    @NSApplicationDelegateAdaptor(CarrotTypeApplicationDelegate.self) private var applicationDelegate
+    @StateObject private var appState: AppState
+
+    init() {
+        let state: AppState
+        #if DEBUG
+        if Bundle.main.bundleIdentifier == "app.carrottype.macos.update-test" {
+            // Staging bundles never read/write the real installed-model/statistics directory.
+            let root = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("carrottype-update-test", isDirectory: true)
+            state = AppState(
+                modelManager: ModelManager(modelsRoot: root.appendingPathComponent("models")),
+                usageStats: UsageStatsStore(fileURL: root.appendingPathComponent("daily.json"))
+            )
+        } else {
+            state = AppState()
+        }
+        #else
+        state = AppState()
+        #endif
+        _appState = StateObject(wrappedValue: state)
+        applicationDelegate.updates = state.updates
+    }
 
     var body: some Scene {
         MenuBarExtra {

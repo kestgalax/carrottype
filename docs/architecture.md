@@ -71,3 +71,11 @@ Transform hotkey (default ⌥')
 - Microphone and Accessibility permissions are mandatory for Ready.
 - Gatekeeper / notarization affect real-world install UX from GitHub.
 - Large model weights use on-demand download with progress in Setup UI (`docs/specs/ux-setup-status.md`).
+
+## Application updater — 0.5.0 candidate (ADR-017)
+
+`AppUpdateService` owns a single Sparkle 2.10.1 standard updater. Menu, Status Details and General use that instance; settings bind to Sparkle's KVO properties rather than duplicate UserDefaults flags. Checks/download-and-install-on-quit default off; profiling is disabled even for saved preferences. Feed and archives require Ed25519 signatures, verified before extraction; signed-feed failure never expires. Inline plain-text notes avoid a separate web view content origin.
+
+`UpdateInstallationGate` reserves operations synchronously before their Task starts. Dictation holds a reservation across capture, STT, cleanup, paste, cancellation and mute restoration; transforms release on all exits. A pending relaunch resumes only after the last reservation ends and locks new operations before invoking Sparkle's callback. The application delegate synchronously rechecks at termination for resumed/install-on-quit paths. An aborted install clears the lock. Checks/downloads alone do not reserve or block operations. This is a narrow safety boundary, not the deferred session-coordinator refactor.
+
+Stable HTTPS feed is the `appcast.xml` asset of the latest GitHub Release; archives use versioned asset URLs. `prepare-update.py` validates identity/monotonic build/trust settings, compares embedded and Keychain public keys, archives with preserved symlinks, signs and verifies archive/feed. It does not publish. Self-signed signing includes Sparkle installer/XPC/app components inside-out. No model weights in app archives; models, settings and statistics retain their existing locations. Debug-only staging identity uses a separate model/statistics root and preferences domain; native installer smoke does not run microphone capture or verify TCC.

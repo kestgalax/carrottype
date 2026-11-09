@@ -8,7 +8,7 @@ Latest published artifact: `CarrotType-0.4.0.dmg` (SHA-256 in `docs/github-relea
 
 **Release acceptance:** `0.4.0 (24)` Debug accepted by the user on all checklist items on 2026-11-10; clean Release DMG verified and [published](https://github.com/kestgalax/carrottype/releases/tag/v0.4.0). [Verification record](debug-review-v0.4.0.md).
 
-**Current focus:** next is GitHub app updates (`0.5.0`): Sparkle ADR/network gate, signed archives/appcast and in-app update flow. Then setup/settings (`0.6.0`) and lifecycle/tests (`0.6.1`). [Execution plan](superpowers/plans/2026-11-09-product-improvements.md). Optional notarization remains separate trust polish. Each version requires a Debug build and explicit user acceptance before publication.
+**Current focus:** implementing GitHub app updates (`0.5.0 (25)`), ADR-017: opt-in Sparkle checks/downloads, signed archive/feed, deferred installation and isolated staging verification. Debug and isolated native Sparkle A → B installer/signature checks passed. [0.5.0 Debug candidate and manual checklist](debug-review-v0.5.0.md) are ready; native UI/TCC and Release acceptance remain pending. Publication was explicitly authorized on 2026-11-10; Release artifacts are being prepared. Preflight found private repository visibility; the user explicitly authorized making source/history public and the repository is now public, enabling anonymous update downloads. Nothing from 0.5.0 is published. Then setup/settings (`0.6.0`) and lifecycle/tests (`0.6.1`). [Execution plan](superpowers/plans/2026-11-09-product-improvements.md). Optional notarization remains separate trust polish. Each version requires a Debug build and explicit user acceptance before publication.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -114,7 +114,7 @@ Preserve existing useful features throughout these stages. Removing, hiding or r
 
 1. [x] **0.3.10 — Reliability:** clipboard ownership/restore, last-result recovery, visible session errors, robust cleanup helper IPC (R1–R4).
 2. [x] **0.4.0 — Ultra-only dictation:** quality-note Result + catalog ADR, simplified model UI/runtime, explicit migration and optional legacy-weight removal (M1–M3). Qwen/Gemma remain for formatting/transform.
-3. [ ] **0.5.0 — GitHub app updates:** Sparkle ADR + explicit network sinks, signed update archives, appcast, update UI and staging upgrade verification (U1–U3). First updater-enabled installation is manual; publishing is a separate instruction.
+3. [ ] **0.5.0 — GitHub app updates:** Sparkle ADR + explicit network sinks, signed update archives, appcast, update UI and staging upgrade verification (U1–U3). Implementation and isolated native installer/signature checks complete; Debug UI/TCC/manual acceptance and Release packaging still pending. First updater-enabled installation is manual; publishing is a separate instruction.
 4. [ ] **0.6.0 — Setup/settings:** guided readiness and trial dictation, compact transform bindings, visible formatting fallback (X1–X3).
 5. [ ] **0.6.1 — Maintainability:** session lifecycle coordinator and production-code regression tests/CI (C1–C2).
 6. **Optional trust:** when Developer ID exists — sign + `notarytool` + staple (`ops/deploy.md` / `notarize-dmg.sh`); sign both host and helper. Not a prerequisite to begin updater integration; unsigned upgrade/TCC behavior must be tested.
@@ -122,7 +122,7 @@ Preserve existing useful features throughout these stages. Removing, hiding or r
 
 ## In progress / on branch
 
-- No further implementation started. `0.4.0` published after its own Debug acceptance; next stage is `0.5.0` on a new branch from updated main.
+- `feat/github-app-updates`, created from updated main after 0.4.0: 0.5.0 (25) Debug candidate, ADR-017, opt-in settings, signed release preparation and read-only remote asset verifier, operation install barrier, isolated native A → B and error checks passed. Waiting for its own manual acceptance; no 0.5.0 release published.
 
 ## Near-term polish candidates (if release is blocked)
 
@@ -137,7 +137,7 @@ Small, user-visible fixes that do not expand scope:
 - [x] Optional Gemma 4 E2B formatting package (ADR-010) — download / Make active / Delete beside Smart/Smart+.
 - [x] Walkie-talkie / hold-to-talk dictation mode (Settings toggle, default off; same dictation hotkey).
 - [x] Local opt-in time-saved statistics (ADR-013) — Settings → Statistics; month estimates; WPM default 50; per-binding transform counts (shipped in v0.3.0).
-- Sparkle app updates promoted to planned `0.5.0` (U1–U3); Status currently only opens Releases. Developer ID/notarization is recommended separately, not assumed to be required to begin integration.
+- Sparkle app updates implemented as a `0.5.0` Debug candidate (U1–U3), with native check action replacing the old Releases link. Manual acceptance is pending. Developer ID/notarization remains separate.
 
 ## Post-v1 research spikes (no runtime yet)
 

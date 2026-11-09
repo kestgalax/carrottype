@@ -108,6 +108,8 @@
 
 ## Этап 3 — 0.5.0: обновление приложения из GitHub
 
+Статус 2026-11-10: реализация в `feat/github-app-updates`, Debug 0.5.0 (25) подготовлен; production gate tests и настоящий изолированный Sparkle install A → B / негативные проверки прошли. [Ручная проверка](../../debug-review-v0.5.0.md) UI/TCC и Release packaging ещё требуются; версия не опубликована. ADR-017 принят; вместо предложенного Pages feed используется подписанный `appcast.xml` в latest GitHub Release, без отдельного сайта.
+
 Ветка: `feat/github-app-updates`.
 
 ### U1. Решение о доверии и сети
