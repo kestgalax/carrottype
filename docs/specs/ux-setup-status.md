@@ -147,7 +147,7 @@ When **Also keep the result on the clipboard** is on: paste at caret still runs,
 - A user who wants to return to 0.3.10 should retain old weights until the Ultra migration is accepted. Deletion confirmation explains potential re-download for the older app.
 - Debug manual acceptance is separate from the already accepted/released 0.3.10.
 
-## Application updates — 0.5.0 candidate
+## Application updates — 0.5.0
 
 - Menu, Details and General expose the same native Check for updates action, disabled only while Sparkle cannot accept another check. Native Sparkle handles available/no update/network/signature/read-only-location errors.
 - General → App Updates: automatic checks off by default; separate opt-in background download/install-on-quit. Controls observe Sparkle's actual settings (including changes in its dialogs). Turning checks off disables the download control without silently discarding the saved preference.

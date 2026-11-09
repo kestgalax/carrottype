@@ -19,12 +19,12 @@
 - Required signed feed/archive, persistent Keychain key, no profiling/upload; exact dependency pin and documented GitHub sink.
 - Operation reservations and final termination gate prevent an install interrupting active work; no functions removed.
 - Repeatable local signing/release gates and isolated A → B native installer smoke; first install manual, existing external data preserved.
-- Debug/manual UI/TCC and Release packaging acceptance remain required before publication. Automated checks do not mark those pending human gates complete.
+- Debug was delivered and the maintainer explicitly authorized publication. Clean Release packaging and draft/public asset checks passed. Individual UI/TCC results were not enumerated and are not inferred from automated checks; future releases retain their own Debug/manual gate.
 
 ## Verification
 
-- Check: `scripts/verify-app-updates.sh`, real Sparkle `scripts/verify-update-staging.py`, Debug build, reliability/Ultra regressions and AIDOS checks passed. Evidence and pending manual checklist: `docs/debug-review-v0.5.0.md`.
-- Check: `verify-update-release.py` is a read-only draft/public asset gate, to run during actual release preparation; no 0.5.0 remote assets exist yet.
+- Check: `scripts/verify-app-updates.sh`, real Sparkle `scripts/verify-update-staging.py`, Debug build, reliability/Ultra regressions and AIDOS checks passed. Evidence and remaining independent manual UI/TCC limits: `docs/debug-review-v0.5.0.md`.
+- Check: `verify-update-release.py` passed on the draft and published 0.5.0 assets; anonymous stable feed/archive bytes match the verified assets. Native Sparkle accepted the live feed and returned no-update for the current build.
 
 ## Documentation Updates
 

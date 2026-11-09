@@ -122,7 +122,7 @@ Preserve existing useful features throughout these stages. Removing, hiding or r
 
 ## In progress / on branch
 
-- 0.5.0 published from `feat/github-app-updates`; release closeout merges this stage into main. No 0.6.0 implementation has started.
+- 0.5.0 published from `feat/github-app-updates`; release closeout integrates this stage through PR #21. No 0.6.0 implementation has started.
 
 ## Near-term polish candidates (if release is blocked)
 
@@ -137,7 +137,7 @@ Small, user-visible fixes that do not expand scope:
 - [x] Optional Gemma 4 E2B formatting package (ADR-010) — download / Make active / Delete beside Smart/Smart+.
 - [x] Walkie-talkie / hold-to-talk dictation mode (Settings toggle, default off; same dictation hotkey).
 - [x] Local opt-in time-saved statistics (ADR-013) — Settings → Statistics; month estimates; WPM default 50; per-binding transform counts (shipped in v0.3.0).
-- Sparkle app updates implemented as a `0.5.0` Debug candidate (U1–U3), with native check action replacing the old Releases link. Released with the maintainer’s explicit authorization. Developer ID/notarization remains separate.
+- Sparkle app updates shipped in `0.5.0` (U1–U3), with native check action replacing the old Releases link. Released with the maintainer’s explicit authorization. Developer ID/notarization remains separate.
 
 ## Post-v1 research spikes (no runtime yet)
 
