@@ -18,7 +18,7 @@
 - Product intent respected: hotkey → local STT → optional cleanup → paste remains; last-result RAM recovery prevents loss without adding transcript files.
 - Architecture respected: no new engines, dependencies, network sinks or model defaults; helper remains process-per-request.
 - Existing functions preserved: model catalog unchanged; bindings, live draft, Wave Link, input/meter, clipboard option, RU/EN and statistics remain available.
-- Verification evidence present: Debug build and production-code harness passed; user confirmed all manual checklist items in docs/debug-review-v0.3.10.md. Release packaging and signature/hash verification are recorded in release notes when complete.
+- Verification evidence present: Debug build and production-code harness passed; user confirmed all manual checklist items in docs/debug-review-v0.3.10.md. Clean Release build and final DMG integrity/signature/helper checks passed; SHA-256 is recorded in release notes. Finder layout/background were preserved from the checksum-verified previous DMG because local Apple Events authorization is unavailable.
 
 ## ADR Impact
 

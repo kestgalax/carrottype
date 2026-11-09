@@ -1,6 +1,6 @@
 # CarrotType 0.3.10 (23) — Debug для ручной проверки
 
-Статус: Debug-кандидат проверен пользователем; все пункты подтверждены сообщением «по всем — ок». Release DMG готовится к публикации. Ветка: `fix/dictation-reliability`.
+Статус: Debug-кандидат проверен пользователем; все пункты подтверждены сообщением «по всем — ок». Release DMG собран и проверен, готовится публикация. Ветка: `fix/dictation-reliability`.
 
 ## Запуск
 
@@ -36,6 +36,7 @@
 
 ## Автоматическая проверка кандидата
 
+- Clean Release `xcodebuild`: **BUILD SUCCEEDED**. DMG упакован с сохранением окна установщика из проверенного 0.3.9: Finder Apple Events недоступны; оформление и фон сохранены побайтно. DMG checksum/deep signature/helper jail/metallib: passed. SHA-256 записан в `docs/github-release-notes-v0.3.10.md`.
 - Debug `xcodebuild`: **BUILD SUCCEEDED**, macOS arm64, build 23; лог `/tmp/carrottype-0.3.10-debug-build.log`.
 - `bash scripts/verify-dictation-reliability.sh`: passed. Реальный production-код: пустой/rich/multi-item буфер, новая копия, selection stale/cancel, concurrent pipe drains, output cap, missing/early exit helper, SIGPIPE, timeout с SIGTERM-ignore, cancellation/reaping, JSON/version errors.
 - Streaming catalog, live-draft sanitize и Wave Link port checks: passed. Последние два существующих скрипта пока копируют helpers; их общий перенос на production-код остаётся этапу 5.
