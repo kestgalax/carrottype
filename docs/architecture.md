@@ -33,7 +33,7 @@ Transform hotkey (default ⌥')
 | STT runtime | Run active STT package (Parakeet / Whisper / Apple paths); optional Parakeet live draft via `StreamingSTTEngine` (ADR-014) |
 | Cleanup runtime | `off` / `light` heuristics / Qwen3 MLX Smart modes via session-scoped helper process (ADR-009; UI: post-dictation formatting); same helper for selection transform with custom instructions (ADR-012) |
 | Selection text | Read focused selection; transform result shown in Capsule (not auto-paste) |
-| Text insertion | Paste at caret via Accessibility; optional retain-on-clipboard |
+| Text insertion | Paste command via Accessibility; clipboard ownership-aware restore; optional retain-on-clipboard; last completed text recoverable from RAM only (0.3.10 candidate) |
 | Usage stats (ADR-013) | Opt-in local daily buckets (dictation characters/duration/sessions + per-binding transform counts); Settings → Statistics; no upload |
 
 ## Boundaries

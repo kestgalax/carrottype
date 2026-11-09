@@ -29,6 +29,16 @@ Until then, governance markdown checks are the required gate; native build is ve
 
 Run the same AIDOS commands before opening a pull request.
 
+### Dictation reliability regression checks (macOS)
+
+```bash
+bash scripts/verify-dictation-reliability.sh
+```
+
+Compiles production clipboard snapshot, selection fallback, helper transport and protocol code into a temporary harness. Uses named pasteboards (never the general clipboard) and disposable fake helper children. Covers empty/rich/multi-item restore, newer external copy, no-selection/cancel cleanup, concurrent stdout/stderr, output limits, early helper exit/SIGPIPE, timeout escalation, cancellation/reaping, and malformed/versioned responses. No model download or microphone permission is needed.
+
+Every release candidate must also have a successful Debug build delivered to the maintainer for manual testing and explicit confirmation before publishing. Automated checks do not replace that gate.
+
 ## Platform Examples
 
 See `docs/ci-governance.md` in the AIDOS tooling repository for GitHub Actions, GitLab CI, and generic shell examples.

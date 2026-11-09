@@ -10,9 +10,6 @@ struct CarrotTypeSettingsView: View {
     @State private var didApplyInitialSelection = false
 
     private var locale: Locale { appState.effectiveLocale }
-    private var needsStatusDetails: Bool {
-        appState.readiness != .ready
-    }
 
     var body: some View {
         HStack(spacing: 0) {
@@ -35,18 +32,13 @@ struct CarrotTypeSettingsView: View {
         .onDisappear {
             appState.settingsDidDisappear()
         }
-        .onChange(of: appState.readiness) { _, readiness in
-            if readiness == .ready {
-                showStatusDetails = false
-            }
-        }
     }
 
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 10) {
             SettingsStatusHeader(
                 appState: appState,
-                showDetailsLink: needsStatusDetails,
+                showDetailsLink: true,
                 onDetails: {
                     showStatusDetails = true
                 }

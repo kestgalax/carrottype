@@ -21,7 +21,7 @@ Build a macOS background / menu-bar app whose primary loop is:
 3. On-device STT (default Parakeet TDT v3; user-selectable catalog) produces text. Optional live draft (ADR-014) may show adapting interim text in the Status Capsule while speaking (periodic full-buffer Parakeet preview); mic and session WAV start immediately even while Parakeet loads (v0.3.6); paste still happens only after stop via the WAV. Escape cancel with non-empty preview can offer Copy from the Capsule without pasting (v0.3.5).
 4. Optional cleanup / post-dictation formatting (Light heuristics or Qwen3 Smart) formats text without rewriting meaning.
 5. Text is inserted at the current caret in the frontmost app.
-6. Optional: keep the result on the clipboard after paste so ⌘V still works if focus moved.
+6. Optional: keep the result on the clipboard after paste so ⌘V still works if focus moved. Starting with the 0.3.10 candidate, the last completed non-empty dictation is also available to Copy from RAM until replaced, explicitly cleared, or app exit; no transcript history is written to disk. A dispatched paste is not a verified insertion in the receiving app.
 7. UI language follows the system (RU/EN) with an in-app override.
 
 **Secondary loop** (ADR-012): transform **bindings** (hotkey + Translate with a user language pair, or Custom instruction + model) read the current text selection, run an on-device LLM, and show the result in the Status Capsule (Copy / Close, optional direction) without replacing the selection. Fresh default: Translate on ⌥' with pair ru↔en. Uses the same local cleanup packages as Smart formatting; does not require formatting to be active for dictation.

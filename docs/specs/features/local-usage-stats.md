@@ -53,3 +53,7 @@ Users want a private, local sense of how much typing time dictation replaced, wi
 ## Documentation Impact
 
 - ADR-013; architecture, roadmap, ux-setup-status, constraints, workflow ADR list.
+
+## 0.3.10 acknowledgement clarification
+
+Completed dictations count after the paste command is dispatched without a known insertion error. CGEvent does not confirm insertion in the receiving app. Existing aggregates remain unchanged and are not retrospectively verified. Recovery/Copy actions are not counted. See ADR-013.

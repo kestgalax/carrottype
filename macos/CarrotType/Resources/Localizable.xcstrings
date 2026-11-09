@@ -1,6 +1,142 @@
 {
   "sourceLanguage": "ru",
   "strings": {
+    "status.open_models": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть модели"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Models"
+          }
+        }
+      }
+    },
+    "status.open_setup": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть разрешения и микрофон"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Permissions and Microphone"
+          }
+        }
+      }
+    },
+    "status.dismiss_error": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скрыть ошибку"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dismiss Error"
+          }
+        }
+      }
+    },
+    "status.last_error": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Последняя ошибка"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last Error"
+          }
+        }
+      }
+    },
+    "recovery.memory_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Последняя диктовка хранится только в памяти до замены новой, очистки или выхода."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The last dictation stays only in memory until replaced, cleared, or the app quits."
+          }
+        }
+      }
+    },
+    "recovery.paste_failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось вставить — скопируйте текст"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not paste — copy the text"
+          }
+        }
+      }
+    },
+    "recovery.clear_last": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Забыть последнюю диктовку"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear Last Dictation"
+          }
+        }
+      }
+    },
+    "recovery.copy_last": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скопировать последнюю диктовку"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy Last Dictation"
+          }
+        }
+      }
+    },
     "%@ · %@": {
       "localizations": {
         "ru": {
@@ -392,13 +528,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Inserted"
+            "value": "Done"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Вставлено"
+            "value": "Готово"
           }
         }
       }
@@ -443,13 +579,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Writing"
+            "value": "Pasting"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Печатаю"
+            "value": "Вставляю"
           }
         }
       }
@@ -2433,13 +2569,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Counts stay on this Mac. CarrotType does not save the text of dictations."
+            "value": "Counts stay on this Mac. Dictation text is not written to disk."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Счётчики остаются на этом Mac. Текст диктовок не сохраняется."
+            "value": "Счётчики остаются на этом Mac. Текст диктовок не записывается на диск."
           }
         }
       }
@@ -2450,13 +2586,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Turn on collection to estimate time saved from successful dictations."
+            "value": "Turn on collection to estimate time saved from completed dictations."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Включите сбор, чтобы оценивать сэкономленное время по успешным диктовкам."
+            "value": "Включите сбор, чтобы оценивать сэкономленное время по завершённым диктовкам."
           }
         }
       }
@@ -2535,13 +2671,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Estimate from character count and your typing speed, minus recording time. Not how fast you actually type."
+            "value": "Estimate from character count and your typing speed, minus recording time. Completion means the paste command was sent; the receiving app does not acknowledge insertion. This also applies to earlier counts."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Оценка по числу символов и вашей скорости печати минус длительность записи. Это не измерение реальной скорости."
+            "value": "Оценка по числу символов и вашей скорости печати минус длительность записи. Завершение диктовки означает отправку команды вставки; приложение-получатель не подтверждает её. Это относится и к прежним счётчикам."
           }
         }
       }
@@ -2620,13 +2756,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Successful dictations"
+            "value": "Completed Dictations"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Успешных диктовок"
+            "value": "Завершённые диктовки"
           }
         }
       }

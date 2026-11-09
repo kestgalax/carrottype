@@ -6,7 +6,9 @@ Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.9`**: parallel Wa
 
 Latest published artifact: `CarrotType-0.3.9.dmg` (SHA-256 in `docs/github-release-notes-v0.3.9.md`).
 
-**Current focus:** optional Developer ID sign + notarization when credentials exist (`ops/deploy.md`, `macos/scripts/notarize-dmg.sh`) — trust polish only, not a publish blocker.
+**Local candidate:** `0.3.10 (23)` Debug — reliability fixes implemented; maintainer confirmed all manual checks. Release packaging/verification in progress. [Debug review checklist](debug-review-v0.3.10.md). No new release has been published.
+
+**Current focus:** staged product improvements — dictation reliability (`0.3.10`), Ultra-only STT (`0.4.0`), GitHub app updates (`0.5.0`), setup/settings polish (`0.6.0`), session lifecycle/tests (`0.6.1`). [Execution plan](superpowers/plans/2026-11-09-product-improvements.md). Versions are targets, not published releases. Optional notarization remains trust polish when credentials exist.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -104,12 +106,21 @@ Status: **v0.3.9 unsigned DMG published** on GitHub Releases.
 
 ## Next focus (ordered)
 
-1. **Optional trust:** when Developer ID exists — sign + `notarytool` + staple (`ops/deploy.md` / `notarize-dmg.sh`); sign both host and helper.
-2. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
+The task breakdown, files, acceptance criteria, verification and ADR gates are in the [2026-11-09 improvement plan](superpowers/plans/2026-11-09-product-improvements.md).
+
+Preserve existing useful features throughout these stages. Removing, hiding or reducing a feature requires specific user agreement; the agreed Ultra-only STT scope does not authorize removing other capabilities.
+
+1. [ ] **0.3.10 — Reliability:** clipboard ownership/restore, last-result recovery, visible session errors, robust cleanup helper IPC (R1–R4).
+2. [ ] **0.4.0 — Ultra-only dictation:** quality-note Result + catalog ADR, simplified model UI/runtime, explicit migration and optional legacy-weight removal (M1–M3). Qwen/Gemma remain for formatting/transform.
+3. [ ] **0.5.0 — GitHub app updates:** Sparkle ADR + explicit network sinks, signed update archives, appcast, update UI and staging upgrade verification (U1–U3). First updater-enabled installation is manual; publishing is a separate instruction.
+4. [ ] **0.6.0 — Setup/settings:** guided readiness and trial dictation, compact transform bindings, visible formatting fallback (X1–X3).
+5. [ ] **0.6.1 — Maintainability:** session lifecycle coordinator and production-code regression tests/CI (C1–C2).
+6. **Optional trust:** when Developer ID exists — sign + `notarytool` + staple (`ops/deploy.md` / `notarize-dmg.sh`); sign both host and helper. Not a prerequisite to begin updater integration; unsigned upgrade/TCC behavior must be tested.
+7. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 
 ## In progress / on branch
 
-- _(none)_
+- `fix/dictation-reliability` — R1–R4 implemented for `0.3.10 (23)`; Debug build and targeted regression checks passed; user confirmed all manual checks, Release packaging/verification pending. Plan documentation from `docs/staged-improvement-plan` is retained in the working tree. Next action: verify and publish the Release DMG corresponding to the [accepted Debug candidate](debug-review-v0.3.10.md), then start `0.4.0` on a new branch.
 
 ## Near-term polish candidates (if release is blocked)
 
@@ -124,7 +135,7 @@ Small, user-visible fixes that do not expand scope:
 - [x] Optional Gemma 4 E2B formatting package (ADR-010) — download / Make active / Delete beside Smart/Smart+.
 - [x] Walkie-talkie / hold-to-talk dictation mode (Settings toggle, default off; same dictation hotkey).
 - [x] Local opt-in time-saved statistics (ADR-013) — Settings → Statistics; month estimates; WPM default 50; per-binding transform counts (shipped in v0.3.0).
-- Sparkle (or similar) auto-update after Developer ID / public or auth feed — Status currently only opens Releases.
+- Sparkle app updates promoted to planned `0.5.0` (U1–U3); Status currently only opens Releases. Developer ID/notarization is recommended separately, not assumed to be required to begin integration.
 
 ## Post-v1 research spikes (no runtime yet)
 

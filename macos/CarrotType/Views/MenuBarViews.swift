@@ -55,6 +55,22 @@ struct MenuBarContentView: View {
         Text(statusLine)
             .foregroundStyle(.secondary)
 
+        if let error = appState.lastSessionError ?? appState.modelManager.lastErrorMessage {
+            Text(error)
+            Button(L10n.t("menu.open_settings", locale: locale)) {
+                openSettingsAndRefresh()
+            }
+        }
+
+        if appState.lastDictationText != nil {
+            Button(L10n.t("recovery.copy_last", locale: locale)) {
+                appState.copyLastDictation()
+            }
+            Button(L10n.t("recovery.clear_last", locale: locale)) {
+                appState.clearLastDictation()
+            }
+        }
+
         if !appState.remainingHints.isEmpty {
             Menu(String(format: L10n.t("menu.remaining", locale: locale), appState.remainingHints.count)) {
                 ForEach(appState.remainingHints, id: \.self) { hint in

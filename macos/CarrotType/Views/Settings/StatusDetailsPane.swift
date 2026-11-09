@@ -50,9 +50,33 @@ struct StatusDetailsPane: View {
                     }
                 }
 
-                if let error = appState.lastSessionError ?? models.lastErrorMessage {
+                if let error = appState.lastSessionError {
+                    Text(L10n.t("status.last_error", locale: locale))
+                        .font(.headline)
                     Text(error)
                         .foregroundStyle(.red)
+                    Button(L10n.t("status.dismiss_error", locale: locale)) {
+                        appState.dismissSessionError()
+                    }
+                }
+                if let error = models.lastErrorMessage {
+                    Text(error)
+                        .foregroundStyle(.red)
+                    Button(L10n.t("status.open_models", locale: locale), action: onOpenModels)
+                }
+                if appState.lastSessionError != nil {
+                    Button(L10n.t("status.open_setup", locale: locale), action: onOpenSetup)
+                }
+                if appState.lastDictationText != nil {
+                    Button(L10n.t("recovery.copy_last", locale: locale)) {
+                        appState.copyLastDictation()
+                    }
+                    Button(L10n.t("recovery.clear_last", locale: locale)) {
+                        appState.clearLastDictation()
+                    }
+                    Text(L10n.t("recovery.memory_hint", locale: locale))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
 
                 Button(L10n.t("status.check_updates", locale: locale)) {

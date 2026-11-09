@@ -24,6 +24,12 @@ struct SettingsStatusHeader: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
+            if appState.lastSessionError != nil || appState.modelManager.lastErrorMessage != nil {
+                Label(L10n.t("status.last_error", locale: locale), systemImage: "exclamationmark.triangle")
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+            }
+
             if showDetailsLink {
                 Button(L10n.t("status.details", locale: locale), action: onDetails)
                     .buttonStyle(.plain)

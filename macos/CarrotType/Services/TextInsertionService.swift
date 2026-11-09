@@ -29,10 +29,11 @@ enum TextInsertionService {
         }
 
         let pasteboard = NSPasteboard.general
-        let previous = retainInClipboard ? [] : capturePasteboardItems(pasteboard)
+        let previous = ClipboardSnapshot(pasteboard)
 
         pasteboard.clearContents()
         pasteboard.setString(trimmed, forType: .string)
+        let ownedChangeCount = pasteboard.changeCount
 
         postCommandV()
 
@@ -40,32 +41,7 @@ enum TextInsertionService {
 
         // Restore clipboard after the target app has consumed paste (keep window short — ADR-015 / Secure Coding).
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) {
-            restorePasteboardItems(pasteboard, items: previous)
-        }
-    }
-
-    static func capturePasteboardItems(_ pasteboard: NSPasteboard) -> [[String: Data]] {
-        guard let items = pasteboard.pasteboardItems else { return [] }
-        return items.map { item in
-            var map: [String: Data] = [:]
-            for type in item.types {
-                if let data = item.data(forType: type) {
-                    map[type.rawValue] = data
-                }
-            }
-            return map
-        }
-    }
-
-    static func restorePasteboardItems(_ pasteboard: NSPasteboard, items: [[String: Data]]) {
-        guard !items.isEmpty else { return }
-        pasteboard.clearContents()
-        for map in items {
-            let item = NSPasteboardItem()
-            for (type, data) in map {
-                item.setData(data, forType: NSPasteboard.PasteboardType(type))
-            }
-            pasteboard.writeObjects([item])
+            previous.restore(pasteboard, ifUnchangedSince: ownedChangeCount)
         }
     }
 
