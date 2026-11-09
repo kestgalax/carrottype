@@ -53,7 +53,7 @@ Window title: **carrottype**. Default size ~880×680 (min 720×520); window is r
 
 ### Sidebar
 
-- **Status header** (not a pane): Ready / Almost / Blocked + version (`vX.Y.Z`). When Almost/Blocked, **Details…** opens the Status checklist in the detail column (deep-links to Setup / Models). Details remains accessible when Ready (0.3.10 candidate); readiness and the last operation error are displayed separately.
+- **Status header** (not a pane): Ready / Almost / Blocked + version (`vX.Y.Z`). When Almost/Blocked, **Details…** opens the Status checklist in the detail column (deep-links to Setup / Models). Details remains accessible when Ready (0.3.10); readiness and the last operation error are displayed separately.
 - **Panes** (SF Symbols):
   1. **General** (`info.square`) — dictation hotkey, optional Walkie-talkie (hold to talk), retain clipboard, transform selected text **bindings** (hotkey + Translate/Custom + model + language pair), language
   2. **Setup** (`gear`) — Microphone, input device, optional mic meter, optional unmute during dictation (ADR-007), Accessibility
@@ -130,7 +130,7 @@ When **Also keep the result on the clipboard** is on: paste at caret still runs,
 - Colored System Settings–style icon tiles / settings search
 - Third-party settings packages or private API swizzling
 
-## Reliability changes — 0.3.10 Debug candidate
+## Reliability changes — 0.3.10
 
 - Menu → Copy Last Dictation / Clear Last Dictation appear when a completed non-empty dictation is retained. Only one text is held in RAM, until replaced by another completed dictation, explicit clear, or exit. Starting/cancelling a session or a later STT error does not erase it. No transcript files or logs are added.
 - A known insertion error presents the completed text in Copy / Close recovery chrome (existing transform-result panel, dismissed with Escape/new dictation). Other session errors remain readable in the menu and Status Details. A readiness refresh does not dismiss them; a subsequent successful dictation/transform or explicit Dismiss Error does.

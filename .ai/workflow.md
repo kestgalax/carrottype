@@ -4,13 +4,13 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (after v0.3.9)
+## Current phase (after v0.3.10)
 
 Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**. v0.3.9 parallel unmute + live-draft hygiene; Storage download-cache clear in v0.3.8; security hardening (ADR-015) in v0.3.7; live draft (ADR-014) through v0.3.4–v0.3.6.
 
 Next ordered focus:
 
-1. Staged improvements: reliability → Ultra-only dictation → GitHub app updates → setup/settings → lifecycle/tests. Target versions and acceptance criteria: [`2026-11-09-product-improvements.md`](../docs/superpowers/plans/2026-11-09-product-improvements.md). Reliability `0.3.10 (23)` is a local Debug candidate accepted by the user on every manual checklist item; Release packaging is in progress.
+1. Staged improvements: reliability → Ultra-only dictation → GitHub app updates → setup/settings → lifecycle/tests. Target versions and acceptance criteria: [`2026-11-09-product-improvements.md`](../docs/superpowers/plans/2026-11-09-product-improvements.md). Reliability `0.3.10 (23)` was published after the user accepted every Debug manual checklist item and clean Release DMG verification passed. Next: Ultra-only dictation with its own Debug acceptance gate.
 2. Optional later: Developer ID sign + notarize (`ops/deploy.md` / `notarize-dmg.sh`) when credentials exist. Updater integration has its own ADR/network gate and unsigned-upgrade verification; notarization is not a prerequisite to begin it.
 3. Post-v1 research spikes when useful (`docs/research-post-v1-spikes.md`).
 

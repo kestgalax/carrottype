@@ -3,6 +3,7 @@
 ## Metadata
 
 - Task ID: T-002
+- Status: Done — all Debug manual checks accepted; verified Release DMG published as v0.3.10.
 - Title: Clipboard ownership, in-memory recovery, persistent errors and bounded helper IPC
 
 ## Traceability

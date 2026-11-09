@@ -1,6 +1,6 @@
 # CarrotType 0.3.10 (23) — Debug для ручной проверки
 
-Статус: Debug-кандидат проверен пользователем; все пункты подтверждены сообщением «по всем — ок». Release DMG собран и проверен, готовится публикация. Ветка: `fix/dictation-reliability`.
+Статус: Debug-кандидат проверен пользователем; все пункты подтверждены сообщением «по всем — ок». Release DMG собран, проверен и опубликован: https://github.com/kestgalax/carrottype/releases/tag/v0.3.10. Ветка: `fix/dictation-reliability`.
 
 ## Запуск
 

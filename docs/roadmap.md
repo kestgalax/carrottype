@@ -2,13 +2,13 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.9`**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.3.10`**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
-Latest published artifact: `CarrotType-0.3.9.dmg` (SHA-256 in `docs/github-release-notes-v0.3.9.md`).
+Latest published artifact: `CarrotType-0.3.10.dmg` (SHA-256 in `docs/github-release-notes-v0.3.10.md`).
 
-**Local candidate:** `0.3.10 (23)` Debug — reliability fixes implemented; maintainer confirmed all manual checks. Release packaging/verification in progress. [Debug review checklist](debug-review-v0.3.10.md). No new release has been published.
+**Release acceptance:** `0.3.10 (23)` Debug passed all maintainer manual checks; clean Release DMG verified and [published](https://github.com/kestgalax/carrottype/releases/tag/v0.3.10). [Verification record](debug-review-v0.3.10.md).
 
-**Current focus:** staged product improvements — dictation reliability (`0.3.10`), Ultra-only STT (`0.4.0`), GitHub app updates (`0.5.0`), setup/settings polish (`0.6.0`), session lifecycle/tests (`0.6.1`). [Execution plan](superpowers/plans/2026-11-09-product-improvements.md). Versions are targets, not published releases. Optional notarization remains trust polish when credentials exist.
+**Current focus:** staged product improvements — dictation reliability (`0.3.10`, shipped), Ultra-only STT (`0.4.0`), GitHub app updates (`0.5.0`), setup/settings polish (`0.6.0`), session lifecycle/tests (`0.6.1`). [Execution plan](superpowers/plans/2026-11-09-product-improvements.md). Versions are targets, not published releases. Optional notarization remains trust polish when credentials exist.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -100,9 +100,10 @@ Checklist:
 - [x] Publish GitHub Release `v0.3.8` — Storage cache UX + `docs/github-release-notes-v0.3.8.md`.
 - [x] Parallel Wave Link unmute + live-draft language/silence fixes (ADR-007 / ADR-014) — `feat/unmute-live-draft-latency`.
 - [x] Publish GitHub Release `v0.3.9` — unmute latency + live draft hygiene + `docs/github-release-notes-v0.3.9.md`.
+- [x] Publish GitHub Release `v0.3.10` — last-result recovery, clipboard safety, persistent errors, helper transport hardening; all Debug manual checks accepted; verified Release DMG + `docs/github-release-notes-v0.3.10.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate; prep scripts ready, credentials not yet available.
 
-Status: **v0.3.9 unsigned DMG published** on GitHub Releases.
+Status: **v0.3.10 unsigned DMG published** on GitHub Releases.
 
 ## Next focus (ordered)
 
@@ -110,7 +111,7 @@ The task breakdown, files, acceptance criteria, verification and ADR gates are i
 
 Preserve existing useful features throughout these stages. Removing, hiding or reducing a feature requires specific user agreement; the agreed Ultra-only STT scope does not authorize removing other capabilities.
 
-1. [ ] **0.3.10 — Reliability:** clipboard ownership/restore, last-result recovery, visible session errors, robust cleanup helper IPC (R1–R4).
+1. [x] **0.3.10 — Reliability:** clipboard ownership/restore, last-result recovery, visible session errors, robust cleanup helper IPC (R1–R4).
 2. [ ] **0.4.0 — Ultra-only dictation:** quality-note Result + catalog ADR, simplified model UI/runtime, explicit migration and optional legacy-weight removal (M1–M3). Qwen/Gemma remain for formatting/transform.
 3. [ ] **0.5.0 — GitHub app updates:** Sparkle ADR + explicit network sinks, signed update archives, appcast, update UI and staging upgrade verification (U1–U3). First updater-enabled installation is manual; publishing is a separate instruction.
 4. [ ] **0.6.0 — Setup/settings:** guided readiness and trial dictation, compact transform bindings, visible formatting fallback (X1–X3).
@@ -120,7 +121,7 @@ Preserve existing useful features throughout these stages. Removing, hiding or r
 
 ## In progress / on branch
 
-- `fix/dictation-reliability` — R1–R4 implemented for `0.3.10 (23)`; Debug build and targeted regression checks passed; user confirmed all manual checks, Release packaging/verification pending. Plan documentation from `docs/staged-improvement-plan` is retained in the working tree. Next action: verify and publish the Release DMG corresponding to the [accepted Debug candidate](debug-review-v0.3.10.md), then start `0.4.0` on a new branch.
+- `fix/dictation-reliability` — `0.3.10 (23)` published after Debug acceptance and verified Release packaging; PR integration pending. Next: `0.4.0` Ultra-only STT on a new branch from updated main; its Debug build requires separate user confirmation.
 
 ## Near-term polish candidates (if release is blocked)
 
