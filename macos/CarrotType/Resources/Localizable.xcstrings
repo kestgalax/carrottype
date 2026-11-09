@@ -4177,6 +4177,108 @@
           }
         }
       }
+    },
+    "updates.automatic_checks": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for updates automatically"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверять обновления автоматически"
+          }
+        }
+      }
+    },
+    "updates.automatic_downloads": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download updates and install on quit"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скачивать обновления и устанавливать при выходе"
+          }
+        }
+      }
+    },
+    "updates.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates download from GitHub and are verified with a digital signature. Audio, text and statistics are never sent. Installation waits for dictation or text processing to finish."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновления загружаются с GitHub и проверяются по цифровой подписи. Аудио, тексты и статистика не отправляются. Установка дождётся завершения диктовки или обработки текста."
+          }
+        }
+      }
+    },
+    "updates.section": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App Updates"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновления приложения"
+          }
+        }
+      }
+    },
+    "updates.waiting": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update is waiting for your current task"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновление ожидает завершения работы"
+          }
+        }
+      }
+    },
+    "updates.waiting_detail": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finish dictation or wait for text processing, then retry installation or quit."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Завершите диктовку или дождитесь обработки текста, затем повторите установку или выход."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -95,6 +95,9 @@ final class AppState: ObservableObject {
     /// Selection-transform bindings (hotkey + kind + model); persisted via HotkeyService.
     var transformBindings: [TransformBinding] { hotkey.transformBindings }
 
+    let updates = AppUpdateService()
+    private var dictationUpdateReservation: UUID?
+
     let modelManager: ModelManager
     let permissions: PermissionService
     let hotkey: HotkeyService
@@ -420,6 +423,9 @@ final class AppState: ObservableObject {
             return
         }
 
+        guard !updates.installationGate.isBusy, dictationUpdateReservation == nil,
+              let reservation = updates.installationGate.beginOperation() else { return }
+        dictationUpdateReservation = reservation
         if pushToTalkEnabled {
             pttStartInFlight = true
             Task {
@@ -450,7 +456,9 @@ final class AppState: ObservableObject {
         }
         guard let binding = hotkey.binding(id: bindingID) else { return }
         dismissAnyResultCapsule()
-        Task { await runSelectionTransform(binding: binding) }
+        guard !updates.installationGate.isBusy, dictationUpdateReservation == nil,
+              let reservation = updates.installationGate.beginOperation() else { return }
+        Task { await runSelectionTransform(binding: binding, updateReservation: reservation) }
     }
 
     /// Ready MLX modes for the transform model picker.
@@ -601,7 +609,8 @@ final class AppState: ObservableObject {
         }
     }
 
-    private func runSelectionTransform(binding: TransformBinding) async {
+    private func runSelectionTransform(binding: TransformBinding, updateReservation: UUID) async {
+        defer { updates.installationGate.endOperation(updateReservation) }
         let locale = effectiveLocale
 
         guard permissions.accessibilityGranted else {
@@ -714,7 +723,17 @@ final class AppState: ObservableObject {
         return liveDraftStartGeneration
     }
 
+    private func endDictationUpdateReservation() {
+        guard let token = dictationUpdateReservation else { return }
+        dictationUpdateReservation = nil
+        updates.installationGate.endOperation(token)
+    }
+
     private func startDictationSession() async {
+        // Retain the reservation for the entire capture; release on every failed start.
+        defer {
+            if menuBarMode != .recording { endDictationUpdateReservation() }
+        }
         guard readiness == .ready else {
             menuBarMode = .needsSetup
             NSApp.activate(ignoringOtherApps: true)
@@ -820,7 +839,10 @@ final class AppState: ObservableObject {
         if isCancellingDictation { return }
         guard menuBarMode == .recording, !isProcessing else { return }
         isCancellingDictation = true
-        defer { isCancellingDictation = false }
+        defer {
+            isCancellingDictation = false
+            endDictationUpdateReservation()
+        }
 
         let draft = liveDraftSnapshotText()
         let showDraftResult = liveDraftEnabled && activeSTTSupportsStreaming && !draft.isEmpty
@@ -851,7 +873,8 @@ final class AppState: ObservableObject {
     }
 
     private func finishDictationSession() async {
-        guard menuBarMode == .recording, !isProcessing else { return }
+        guard menuBarMode == .recording, !isProcessing, !isCancellingDictation else { return }
+        defer { endDictationUpdateReservation() }
 
         invalidateLiveDraftStart()
 

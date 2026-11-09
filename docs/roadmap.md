@@ -2,13 +2,13 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.4.0`**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.5.0`**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
-Latest published artifact: `CarrotType-0.4.0.dmg` (SHA-256 in `docs/github-release-notes-v0.4.0.md`).
+Latest published artifact: `CarrotType-0.5.0.dmg` (SHA-256 `89eefeffc3eecf97614ffc91c2461a907ae2d3603d52980d37a6dfb0a99c863c`); signed ZIP/appcast hashes in `docs/github-release-notes-v0.5.0.md`.
 
-**Release acceptance:** `0.4.0 (24)` Debug accepted by the user on all checklist items on 2026-11-10; clean Release DMG verified and [published](https://github.com/kestgalax/carrottype/releases/tag/v0.4.0). [Verification record](debug-review-v0.4.0.md).
+**Release acceptance:** 0.5.0 (25) Debug delivered; the user explicitly instructed publication on 2026-11-10 and separately authorized public repository code/history. Release verification and remaining UI/TCC limits: [record](debug-review-v0.5.0.md). Previous 0.4.0 was published after its own manual Debug acceptance.
 
-**Current focus:** next is GitHub app updates (`0.5.0`): Sparkle ADR/network gate, signed archives/appcast and in-app update flow. Then setup/settings (`0.6.0`) and lifecycle/tests (`0.6.1`). [Execution plan](superpowers/plans/2026-11-09-product-improvements.md). Optional notarization remains separate trust polish. Each version requires a Debug build and explicit user acceptance before publication.
+**Current focus:** 0.5.0 (25) GitHub updates is [published](https://github.com/kestgalax/carrottype/releases/tag/v0.5.0): opt-in Sparkle checks/downloads, signed feed/archive and deferred installation (ADR-017). Debug delivery, explicit publication authorization, clean Release packaging, native isolated A → B/negative checks and authenticated draft/anonymous public asset verification completed. Native Sparkle accepted the live public feed and reported no newer version as expected. Individual manual TCC results were not independently established. Next: setup/settings (`0.6.0`), then lifecycle/tests (`0.6.1`). [Execution plan](superpowers/plans/2026-11-09-product-improvements.md). Each future version still requires its own Debug build and explicit acceptance before publication.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -104,7 +104,7 @@ Checklist:
 - [x] Publish GitHub Release `v0.4.0` — Ultra-only STT, explicit preference migration, optional confirmed legacy-file cleanup; Debug manual checks accepted; clean Release DMG verified + `docs/github-release-notes-v0.4.0.md`.
 - [ ] Optional: notarized GitHub Release (Apple Developer ID) — trust polish only, not a publish gate; prep scripts ready, credentials not yet available.
 
-Status: **v0.4.0 unsigned DMG published** on GitHub Releases.
+Status: **v0.5.0 self-signed/unnotarized DMG and signed update assets published** on GitHub Releases.
 
 ## Next focus (ordered)
 
@@ -114,7 +114,7 @@ Preserve existing useful features throughout these stages. Removing, hiding or r
 
 1. [x] **0.3.10 — Reliability:** clipboard ownership/restore, last-result recovery, visible session errors, robust cleanup helper IPC (R1–R4).
 2. [x] **0.4.0 — Ultra-only dictation:** quality-note Result + catalog ADR, simplified model UI/runtime, explicit migration and optional legacy-weight removal (M1–M3). Qwen/Gemma remain for formatting/transform.
-3. [ ] **0.5.0 — GitHub app updates:** Sparkle ADR + explicit network sinks, signed update archives, appcast, update UI and staging upgrade verification (U1–U3). First updater-enabled installation is manual; publishing is a separate instruction.
+3. [x] **0.5.0 — GitHub app updates:** Sparkle ADR + explicit network sinks, signed update archives, appcast, update UI and staging upgrade verification (U1–U3). Published after Debug delivery, explicit publication authorization, clean Release and remote artifact/signature checks; independent manual TCC continuity remains unverified. First updater-enabled installation is manual; publishing is a separate instruction.
 4. [ ] **0.6.0 — Setup/settings:** guided readiness and trial dictation, compact transform bindings, visible formatting fallback (X1–X3).
 5. [ ] **0.6.1 — Maintainability:** session lifecycle coordinator and production-code regression tests/CI (C1–C2).
 6. **Optional trust:** when Developer ID exists — sign + `notarytool` + staple (`ops/deploy.md` / `notarize-dmg.sh`); sign both host and helper. Not a prerequisite to begin updater integration; unsigned upgrade/TCC behavior must be tested.
@@ -122,7 +122,7 @@ Preserve existing useful features throughout these stages. Removing, hiding or r
 
 ## In progress / on branch
 
-- No further implementation started. `0.4.0` published after its own Debug acceptance; next stage is `0.5.0` on a new branch from updated main.
+- 0.5.0 published from `feat/github-app-updates`; release closeout integrates this stage through PR #21. No 0.6.0 implementation has started.
 
 ## Near-term polish candidates (if release is blocked)
 
@@ -137,7 +137,7 @@ Small, user-visible fixes that do not expand scope:
 - [x] Optional Gemma 4 E2B formatting package (ADR-010) — download / Make active / Delete beside Smart/Smart+.
 - [x] Walkie-talkie / hold-to-talk dictation mode (Settings toggle, default off; same dictation hotkey).
 - [x] Local opt-in time-saved statistics (ADR-013) — Settings → Statistics; month estimates; WPM default 50; per-binding transform counts (shipped in v0.3.0).
-- Sparkle app updates promoted to planned `0.5.0` (U1–U3); Status currently only opens Releases. Developer ID/notarization is recommended separately, not assumed to be required to begin integration.
+- Sparkle app updates shipped in `0.5.0` (U1–U3), with native check action replacing the old Releases link. Released with the maintainer’s explicit authorization. Developer ID/notarization remains separate.
 
 ## Post-v1 research spikes (no runtime yet)
 

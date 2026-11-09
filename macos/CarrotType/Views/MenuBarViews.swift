@@ -94,6 +94,8 @@ struct MenuBarContentView: View {
         }
         .keyboardShortcut(",", modifiers: .command)
 
+        CheckForAppUpdatesButton(updates: appState.updates, locale: locale)
+
         Button(L10n.t("menu.quit", locale: locale)) {
             NSApplication.shared.terminate(nil)
         }

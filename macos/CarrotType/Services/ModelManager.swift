@@ -15,7 +15,8 @@ final class ModelManager: ObservableObject {
 
     init(
         catalog: ModelCatalogFile = BundledModelCatalog.load(),
-        fileManager: FileManager = .default
+        fileManager: FileManager = .default,
+        modelsRoot: URL? = nil
     ) {
         self.catalog = catalog
         self.fileManager = fileManager
@@ -23,11 +24,11 @@ final class ModelManager: ObservableObject {
 
         let support = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
             ?? URL(fileURLWithPath: NSTemporaryDirectory())
-        self.modelsRoot = support
+        self.modelsRoot = modelsRoot ?? support
             .appendingPathComponent("carrottype", isDirectory: true)
             .appendingPathComponent("models", isDirectory: true)
 
-        try? fileManager.createDirectory(at: modelsRoot, withIntermediateDirectories: true)
+        try? fileManager.createDirectory(at: self.modelsRoot, withIntermediateDirectories: true)
         refreshStatusesFromDisk()
         restoreSelection()
         refreshLegacySTTPackages()

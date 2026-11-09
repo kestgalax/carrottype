@@ -79,11 +79,7 @@ struct StatusDetailsPane: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Button(L10n.t("status.check_updates", locale: locale)) {
-                    if let url = URL(string: "https://github.com/kestgalax/carrottype/releases") {
-                        NSWorkspace.shared.open(url)
-                    }
-                }
+                CheckForAppUpdatesButton(updates: appState.updates, locale: locale)
             } header: {
                 Text(L10n.t("status.section", locale: locale))
             } footer: {

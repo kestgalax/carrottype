@@ -14,6 +14,9 @@ settings:
     SWIFT_VERSION: "5.0"
     MACOSX_DEPLOYMENT_TARGET: "14.0"
 packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle.git
+    exactVersion: 2.10.1
   FluidAudio:
     url: https://github.com/FluidInference/FluidAudio.git
     from: 0.17.7
@@ -68,6 +71,8 @@ targets:
         codeSign: true
         copy:
           destination: executables
+      - package: Sparkle
+        product: Sparkle
       - package: FluidAudio
         product: FluidAudio
       - package: swift-huggingface
@@ -116,8 +121,17 @@ targets:
         CFBundleName: CarrotType
         CFBundleDisplayName: CarrotType
         CFBundleIconName: AppIcon
-        CFBundleShortVersionString: "0.4.0"
-        CFBundleVersion: "24"
+        CFBundleShortVersionString: "0.5.0"
+        CFBundleVersion: "25"
+        SUFeedURL: https://github.com/kestgalax/carrottype/releases/latest/download/appcast.xml
+        SUPublicEDKey: kyWmWPcxx2NbRMhm2mAHgI58bk92VuFyPLd9wG/kaLc=
+        SUEnableAutomaticChecks: false
+        SUAutomaticallyUpdate: false
+        SUEnableSystemProfiling: false
+        SUEnableJavaScript: false
+        SUVerifyUpdateBeforeExtraction: true
+        SURequireSignedFeed: true
+        SUSignedFeedFailureExpirationInterval: 0
         LSMinimumSystemVersion: "14.0"
         LSUIElement: true
         NSMicrophoneUsageDescription: CarrotType записывает звук с микрофона только пока вы удерживаете или нажимаете горячую клавишу. Аудио обрабатывается локально и никуда не отправляется.

@@ -90,3 +90,10 @@ Statuses: **OK** / **Risk** / **N/A**.
 - `docs/security/supply-chain.md`
 - `.ai/constraints.md`
 - ADR-003, ADR-009, ADR-011, ADR-015
+
+## 0.5.0 updater review (ADR-017)
+
+- One direct dependency, exact Sparkle 2.10.1 pin plus SPM binary checksum; closed sinks explicitly extended for GitHub update downloads.
+- Persistent Keychain Ed25519 key; embedded public key only; signed feed without expiry and verify-before-extraction. No unsigned fallback. System profile and JavaScript disabled.
+- Operation reservations cover queued start through mute restoration/processing; atomic install handoff and termination recheck. Abort unlocks future operations.
+- Targeted production gate tests and isolated real Sparkle installer checks are required. Standard native UI, installed /Applications permissions, DMG/translocation and TCC retention remain manual acceptance checks; do not infer them from headless installer success.
