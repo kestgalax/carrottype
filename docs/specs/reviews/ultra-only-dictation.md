@@ -27,7 +27,7 @@ Follows accepted ADR-016. ADR-003/004/006/008 retain history with supersession n
 
 ## Verification Evidence
 
-- Debug arm64 build 0.4.0 (24): BUILD SUCCEEDED; no app-source changes after the accepted candidate.
+- Debug arm64 build 0.4.0 (24): BUILD SUCCEEDED; no functional changes after the accepted candidate; only a trailing blank line in STTEngineError.swift was normalized during release preparation.
 - `verify-ultra-models.sh`: passed — catalog/fallback, isolated defaults, known legacy layouts, grouped optional deletion, symlink/path boundaries and preserved Ultra/cleanup/unknown files.
 - `verify-model-catalog-streaming.py`, `verify-dictation-reliability.sh`, existing sanitation and Wave Link checks: passed.
 - Debug bundle signature, helper model-path jail, embedded shaders, resource catalog and absence of Whisper framework: verified.
