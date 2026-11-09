@@ -11,25 +11,30 @@ ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "macos/CarrotType/Resources/ModelCatalog.json"
 
 EXPECT_TRUE = {
-    "stt.parakeet-tdt-0.6b-v3",
     "stt.parakeet-ultra",
 }
-EXPECT_FALSE = {
-    "stt.whisper-base-ggml",
-    "stt.whisper-small-ggml",
-    "stt.whisper-large-v3-turbo-q5",
-    "stt.apple-speechanalyzer",
+EXPECT_FALSE: set[str] = set()
+RETIRED = {
+    "stt.parakeet-tdt-0.6b-v3", "stt.whisper-base-ggml", "stt.whisper-small-ggml",
+    "stt.whisper-large-v3-turbo-q5", "stt.apple-speechanalyzer",
 }
 
 
 def main() -> int:
     data = json.loads(CATALOG.read_text(encoding="utf-8"))
-    if data.get("version", 0) < 9:
-        print(f"FAIL: catalog version must be >= 9, got {data.get('version')}", file=sys.stderr)
+    if data.get("version", 0) < 11:
+        print(f"FAIL: catalog version must be >= 11, got {data.get('version')}", file=sys.stderr)
         return 1
 
     packages = {p["id"]: p for p in data["packages"]}
     errors: list[str] = []
+    if RETIRED & packages.keys():
+        errors.append("retired STT must not be offered in the catalog")
+    stt_ids = {pid for pid, pkg in packages.items() if pkg.get("role") == "stt"}
+    if stt_ids != EXPECT_TRUE:
+        errors.append(f"only Ultra STT is allowed, got {sorted(stt_ids)}")
+    if not packages.get("stt.parakeet-ultra", {}).get("recommended"):
+        errors.append("Ultra must be recommended")
 
     for pid in EXPECT_TRUE | EXPECT_FALSE:
         if pid not in packages:

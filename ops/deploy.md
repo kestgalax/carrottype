@@ -82,11 +82,11 @@ Anyone who downloads the DMG from GitHub Releases will still see “Apple cannot
 xattr -dr com.apple.quarantine /Applications/CarrotType.app
 ```
 
-Then grant **Microphone** + **Accessibility**, download an STT model (**Parakeet TDT 0.6B v3** recommended; Whisper packages remain optional).
+Then grant **Microphone** + **Accessibility**, download **Parakeet Ultra** if not already installed (0.4.0, ADR-016). Older model files are preserved and can be removed explicitly in Storage.
 
 ### What not to ship in the DMG
 
-- Whisper / Parakeet / Qwen weights
+- Parakeet / Qwen / Gemma weights (nor retired Whisper files)
 - DerivedData, `.env`, signing private keys
 
 ## Follow-up: Developer ID + notarization (after $99 Apple Developer)

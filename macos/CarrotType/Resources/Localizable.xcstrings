@@ -1,6 +1,91 @@
 {
   "sourceLanguage": "ru",
   "strings": {
+    "storage.legacy_path_rejected": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Файлы не удалены: путь выходит за допустимую папку прежних моделей."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Files were not removed: the path is outside the allowed retired-model folder."
+          }
+        }
+      }
+    },
+    "storage.legacy_confirm_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удалятся только файлы этой прежней модели. Ultra и модели форматирования сохранятся. Для возврата к прежней версии приложения может понадобиться повторное скачивание удалённой модели."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only this retired model’s local files will be removed. Ultra and formatting models stay installed. Returning to an older app version may require downloading the removed model again."
+          }
+        }
+      }
+    },
+    "storage.legacy_confirm": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удалить файлы «%@»?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove %@ files?"
+          }
+        }
+      }
+    },
+    "storage.legacy_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Эти файлы больше не используются и не удаляются автоматически. Удаление необязательно. Для Apple показана только локальная отметка подготовки; системные speech-пакеты не удаляются."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These files are no longer used and are never removed automatically. Removal is optional. Apple lists only the local preparation marker; shared system speech assets are not removed."
+          }
+        }
+      }
+    },
+    "storage.legacy_section": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прежние модели диктовки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retired Dictation Models"
+          }
+        }
+      }
+    },
     "status.open_models": {
       "extractionState": "manual",
       "localizations": {
@@ -3079,13 +3164,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hugging Face keeps a local download cache so re-installing a package can be fast. Clearing it frees disk space but does not remove installed packages. The next Download may need the network again. Only CarrotType catalog repos are cleared — not other apps’ Hub data."
+            "value": "Hugging Face download cache for CarrotType models, including retired Parakeet v3. Clearing it does not remove installed models."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hugging Face хранит локальный кэш, поэтому повторная установка пакета может быть быстрой. Очистка освобождает место, но не удаляет установленные пакеты. Следующее скачивание может снова пойти из сети. Чистятся только репозитории каталога CarrotType — не чужой кэш других приложений."
+            "value": "Кеш скачивания Hugging Face для моделей CarrotType, включая прежний Parakeet v3. Очистка не удаляет установленные модели."
           }
         }
       }
@@ -3385,13 +3470,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only a downloaded model can be set as active."
+            "value": "Dictation uses Parakeet Ultra. An installed copy is reused; otherwise click Download. Downloads never start automatically. Retired models can be removed separately in Storage."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Активной можно сделать только уже скачанную модель."
+            "value": "Для диктовки используется Parakeet Ultra. Если модель уже установлена, повторное скачивание не нужно. Иначе нажмите «Скачать»: загрузка не начинается автоматически. Старые модели можно удалить отдельно в «Хранилище»."
           }
         }
       }
@@ -4048,13 +4133,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Live preview works with Parakeet (v3 or Ultra). With the current model, text appears only after you stop."
+            "value": "Prepare Parakeet Ultra in Models to use live draft."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Предпросмотр во время речи доступен с Parakeet (v3 или Ultra). С текущей моделью текст появится только после остановки."
+            "value": "Для живого текста подготовьте Parakeet Ultra в разделе «Модели»."
           }
         }
       }

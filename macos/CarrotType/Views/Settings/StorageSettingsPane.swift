@@ -4,6 +4,8 @@ struct StorageSettingsPane: View {
     @ObservedObject var appState: AppState
     @ObservedObject var models: ModelManager
     @State private var confirmClearCache = false
+    @State private var legacyToDelete: LegacySTTPackage?
+    @State private var confirmLegacyDelete = false
 
     private var locale: Locale { appState.effectiveLocale }
 
@@ -42,6 +44,27 @@ struct StorageSettingsPane: View {
                 Text(L10n.t("storage.packages_footer", locale: locale))
             }
 
+            if !models.legacySTTPackages.isEmpty {
+                Section {
+                    ForEach(models.legacySTTPackages) { package in
+                        LabeledContent(package.name) {
+                            HStack(spacing: 10) {
+                                Text(ByteCountFormatter.string(fromByteCount: package.bytes, countStyle: .file))
+                                    .foregroundStyle(.secondary)
+                                Button(L10n.t("package.delete", locale: locale), role: .destructive) {
+                                    legacyToDelete = package
+                                    confirmLegacyDelete = true
+                                }
+                            }
+                        }
+                    }
+                } header: {
+                    Text(L10n.t("storage.legacy_section", locale: locale))
+                } footer: {
+                    Text(L10n.t("storage.legacy_footer", locale: locale))
+                }
+            }
+
             Section {
                 LabeledContent(L10n.t("storage.cache_used", locale: locale)) {
                     Text(ByteCountFormatter.string(fromByteCount: cacheBytes, countStyle: .file))
@@ -66,6 +89,21 @@ struct StorageSettingsPane: View {
         .formStyle(.grouped)
         .onAppear {
             models.refreshDownloadCacheBytes()
+            models.refreshLegacySTTPackages()
+        }
+        .confirmationDialog(
+            String(format: L10n.t("storage.legacy_confirm", locale: locale), legacyToDelete?.name ?? ""),
+            isPresented: $confirmLegacyDelete,
+            titleVisibility: .visible,
+            presenting: legacyToDelete
+        ) { package in
+            Button(L10n.t("package.delete", locale: locale), role: .destructive) {
+                models.deleteLegacySTTPackage(package.id)
+                legacyToDelete = nil
+            }
+            Button(L10n.t("package.cancel", locale: locale), role: .cancel) { legacyToDelete = nil }
+        } message: { _ in
+            Text(L10n.t("storage.legacy_confirm_body", locale: locale))
         }
         .confirmationDialog(
             L10n.t("storage.clear_cache_confirm_title", locale: locale),

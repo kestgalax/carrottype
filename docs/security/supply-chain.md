@@ -8,7 +8,6 @@ Pinned in `macos/CarrotType.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/P
 
 | Package | Role | Integrity posture |
 |---------|------|-------------------|
-| WhisperMetalKit | Whisper ggml STT | Catalog `sha256` on ggml files |
 | FluidAudio | Parakeet CoreML STT / live draft | SPM revision pin; HTTPS Hub via library; **no app-level file SHA** |
 | mlx-swift-lm (+ mlx-swift) | Cleanup helper inference | Runs only in `CarrotTypeCleanupHelper` |
 | swift-huggingface | Hub snapshot download for MLX packages | Catalog `hubRevision` (ADR-015) |
@@ -20,22 +19,20 @@ Add or replace a **direct** dependency only with an ADR (or explicit engine ADR 
 
 | Kind | Mechanism |
 |------|-----------|
-| Whisper ggml (single file) | Catalog `sha256`; mismatch → delete + fail |
 | MLX cleanup (Qwen / Gemma Hub snapshot) | Catalog `hubRevision` → `HubClient.downloadSnapshot(revision:)`; `.hub-revision` marker on disk |
 | Parakeet (FluidAudio) | Library version + HTTPS; residual: trust FluidAudio + Hub tip for that library’s download API |
-| Apple SpeechAnalyzer | System `AssetInventory` (ADR-008) |
 
 ## Application Support vs Hub cache
 
 - **Installed packages** live under `~/Library/Application Support/carrottype/models/`. Models → Delete / Storage → Delete unused remove these dirs only.
 - **Download cache** for Hub snapshots also lives under `~/.cache/huggingface/hub/models--…`. Re-download after package Delete can be fast because this cache remains.
-- Settings → **Storage → Clear download cache** removes only catalog `hubRepoID` folders (not the whole Hub tree, not Application Support installs).
+- Settings → **Storage → Clear download cache** removes only catalog `hubRepoID` folders plus the allowlisted retired Parakeet v3 repo cache (not the whole Hub tree, not Application Support installs).
 
 ## Closed network sinks (reminder)
 
 1. HTTPS model download (catalog / Hugging Face), user-triggered.
 2. Localhost Wave Link (`127.0.0.1`) for experimental unmute.
-3. Apple speech asset install when the user prepares SpeechAnalyzer.
+Apple SpeechAnalyzer asset preparation is retired in the 0.4.0 (ADR-016). Existing shared system assets are not removed.
 
 Dictation runtime must not upload audio or transcript.
 
@@ -49,3 +46,7 @@ Dictation runtime must not upload audio or transcript.
 ## Notarization / binary trust
 
 Unsigned Release DMGs are allowed (ADR-011). Developer ID + `notarytool` is optional polish — see `ops/deploy.md`, `ops/notarization.env.example`, `macos/scripts/notarize-dmg.sh`. Do not claim Gatekeeper-clean install without staple evidence.
+
+## 0.4.0 — retired STT packages
+
+ADR-016 removes WhisperMetalKit and Apple SpeechAnalyzer runtime; all remaining SPM pins are unchanged. Ultra uses the existing FluidAudio path and inherits ADR-006 downloader residuals (including path handling). No new download sink or inference runtime. Old STT weights are never removed automatically: LegacySTTStorage inventories fixed known paths and rejects symlink escapes for explicit group deletion. It excludes Ultra, cleanup packages, unknown experiments and shared Apple system assets. Safety checks run only against temporary fixtures.

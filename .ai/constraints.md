@@ -33,7 +33,8 @@ Only these outbound / network paths are allowed without a new ADR + product-inte
 
 1. **HTTPS model download** — catalog / Hugging Face URLs, triggered by explicit setup/download (see `ModelManager`, ADR-003).
 2. **Localhost Wave Link** — `127.0.0.1` WebSocket/TCP for experimental unmute (ADR-007, `MicMuteController`).
-3. **Apple speech asset install** — system `AssetInventory` download when the user taps Prepare for `stt.apple-speechanalyzer` (ADR-008). Audio/transcript stay on-device.
+
+Apple SpeechAnalyzer preparation from ADR-008 is retired in the 0.4.0 (ADR-016); no Apple speech asset install is exposed by the current runtime. Existing shared system assets remain untouched.
 
 Dictation runtime (`DictationPipeline` and engines) must not upload audio or transcript text.
 
@@ -46,7 +47,7 @@ Dictation runtime (`DictationPipeline` and engines) must not upload audio or tra
 
 ### Dependency triage (SPM)
 
-- **Direct** product dependencies (e.g. FluidAudio, WhisperMetalKit, mlx-swift-lm, swift-huggingface, swift-transformers) are conscious risk: add/replace only with an ADR (or explicit coverage in the engine ADR).
+- **Direct** product dependencies (e.g. FluidAudio, mlx-swift-lm, swift-huggingface, swift-transformers) are conscious risk: add/replace only with an ADR (or explicit coverage in the engine ADR).
 - **Transitive** pins in `Package.resolved` are not cleaned “for purity”; do not add a new *direct* dependency without answering: why in the pipeline, any HTTP after install, pinned revision, integrity where applicable (e.g. Whisper SHA-256 in catalog).
 - Do not claim “fully offline / nothing leaves the device” without noting model-download sinks and residual risk from transitive SDKs.
 
@@ -68,4 +69,4 @@ Dictation runtime (`DictationPipeline` and engines) must not upload audio or tra
 - The GitHub repository **may be public** (MIT, ADR-011). Unsigned DMG via GitHub Releases is an allowed distribute path; Gatekeeper install is Right-click → Open.
 - Notarization / Apple Developer ID is **optional later**, not a blocker for public source or unsigned Release downloads. Prep only: `ops/notarization.env.example`, `macos/scripts/notarize-dmg.sh`, `ops/deploy.md`.
 - Soft brand ask (README): forks should attribute CarrotType and not reuse the name/icon — no dual-commercial or registered-trademark requirement.
-- Whisper packages use catalog `sha256`; MLX Hub cleanup packages use catalog `hubRevision` (ADR-015). Helper model paths must stay under Application Support `carrottype/models/`.
+- Current STT is Ultra only (ADR-016); retired Whisper SHA policy remains historical. MLX Hub cleanup packages use catalog `hubRevision` (ADR-015). Helper model paths must stay under Application Support `carrottype/models/`.

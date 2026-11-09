@@ -4,6 +4,8 @@
 
 Accepted
 
+> Current policy for the 0.4.0: [ADR-016](ADR-016-ultra-only-dictation.md) supersedes the STT offerings/default below. Only Parakeet Ultra is offered; historical decisions and cleanup policies remain recorded here.
+
 ## Context
 
 CarrotType already ships Whisper ggml (ADR-004) and Parakeet FluidAudio CoreML (ADR-006). Apple’s Speech framework on macOS 26+ adds `SpeechAnalyzer` / `SpeechTranscriber` with on-device models managed by `AssetInventory`, including Russian (`ru_RU`). Users on Tahoe should be able to try that runtime without replacing Whisper as the recommended default.

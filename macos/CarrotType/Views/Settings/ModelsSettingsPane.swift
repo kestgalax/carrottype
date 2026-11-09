@@ -4,8 +4,6 @@ struct ModelsSettingsPane: View {
     @ObservedObject var appState: AppState
     @ObservedObject var models: ModelManager
 
-    private let recommendedSTTID = BundledModelCatalog.recommendedSTTID
-
     private var locale: Locale { appState.effectiveLocale }
 
     var body: some View {
@@ -18,22 +16,6 @@ struct ModelsSettingsPane: View {
 
     private var sttSection: some View {
         Section {
-            // Prominent CTA only when no STT is installed yet (avoids pushing Parakeet over an already-working model).
-            if models.selectableSTTPackages.isEmpty {
-                recommendedDownloadRow
-            }
-
-            Picker(L10n.t("stt.active", locale: locale), selection: activeSTTBinding) {
-                if models.selectableSTTPackages.isEmpty {
-                    Text(L10n.t("stt.download_below", locale: locale)).tag("")
-                } else {
-                    ForEach(models.selectableSTTPackages) { package in
-                        Text(package.displayName).tag(package.id)
-                    }
-                }
-            }
-            .disabled(models.selectableSTTPackages.isEmpty)
-
             ForEach(models.sttPackages) { package in
                 sttPackageRows(package)
             }
@@ -44,51 +26,15 @@ struct ModelsSettingsPane: View {
         }
     }
 
-    private var activeSTTBinding: Binding<String> {
-        Binding(
-            get: {
-                models.status(for: models.activeSTTID).isReady ? models.activeSTTID : ""
-            },
-            set: { newValue in
-                guard !newValue.isEmpty else { return }
-                models.selectSTT(newValue)
-            }
-        )
-    }
-
-    @ViewBuilder
-    private var recommendedDownloadRow: some View {
-        let status = models.status(for: recommendedSTTID)
-        let package = models.package(id: recommendedSTTID)
-        VStack(alignment: .leading, spacing: 8) {
-            Text(
-                String(
-                    format: L10n.t("stt.recommended", locale: locale),
-                    package?.displayName ?? recommendedSTTID,
-                    package?.approximateSizeLabel ?? ""
-                )
-            )
-            SettingsPackageStatusControls(
-                appState: appState,
-                models: models,
-                id: recommendedSTTID,
-                locale: locale,
-                prominentDownload: true
-            )
-        }
-    }
-
     @ViewBuilder
     private func sttPackageRows(_ package: CatalogPackage) -> some View {
         let status = models.status(for: package.id)
-        let isAppleSpeech = package.runtimeHint == "apple-speechanalyzer"
         VStack(alignment: .leading, spacing: 6) {
             LabeledContent(package.displayName) {
                 Text(
                     SettingsPackageStatusControls.statusLabel(
                         models.status(for: package.id),
-                        locale: locale,
-                        prepareLabel: isAppleSpeech
+                        locale: locale
                     )
                 )
                 .foregroundStyle(.secondary)
@@ -99,19 +45,8 @@ struct ModelsSettingsPane: View {
             Text(package.localizedBlurb(locale: locale))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            if case .failed(let message) = status, isAppleSpeech {
-                Text(message)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
             if status.isReady {
                 HStack {
-                    if models.activeSTTID != package.id {
-                        Button(L10n.t("format.make_active", locale: locale)) {
-                            models.selectSTT(package.id)
-                        }
-                    }
                     Button(L10n.t("package.delete", locale: locale), role: .destructive) {
                         appState.deleteModelPackage(package.id)
                     }
@@ -122,8 +57,7 @@ struct ModelsSettingsPane: View {
                     models: models,
                     id: package.id,
                     locale: locale,
-                    prominentDownload: package.recommended,
-                    prepareLabel: isAppleSpeech
+                    prominentDownload: true
                 )
             }
         }
@@ -236,7 +170,7 @@ struct SettingsPackageStatusControls: View {
 
     var body: some View {
         if let progress = status.downloadProgress {
-            // Same control as STT rows (Whisper / Parakeet).
+            // Shared progress controls for Ultra and cleanup packages.
             ProgressView(value: progress)
             Text(String(format: L10n.t(prepareLabel ? "package.preparing" : "package.downloading", locale: locale), Int(progress * 100)))
                 .font(.caption)

@@ -42,3 +42,12 @@ Every release candidate must also have a successful Debug build delivered to the
 ## Platform Examples
 
 See `docs/ci-governance.md` in the AIDOS tooling repository for GitHub Actions, GitLab CI, and generic shell examples.
+
+### Ultra catalog and legacy storage checks (macOS)
+
+```bash
+bash scripts/verify-ultra-models.sh
+python3 scripts/verify-model-catalog-streaming.py
+```
+
+Compiles production catalog/default-selection/legacy-storage code with temporary UserDefaults suites and model directory fixtures. Covers catalog/fallback consistency, retired/default/unknown preference migration, preserved cleanup choices, legacy inventory, grouped optional deletion and path/symlink safety. Never deletes installed user models.

@@ -47,7 +47,26 @@ Purpose: decide whether to flip catalog `recommended` from Whisper Base to Parak
 
 ## Decision gate
 
-Catalog now keeps:
+Historical catalog through 0.3.10:
 
 - `recommended: true` → `stt.parakeet-tdt-0.6b-v3`
 - Whisper Base / Small / Turbo and Apple SpeechAnalyzer remain optional.
+
+## Result — Ultra-only product decision (0.4.0)
+
+- Date: 2026-11-09.
+- Decision maker/evidence: maintainer explicitly requested only Parakeet Ultra for dictation after evaluating the usefulness of the alternatives. This is a user-directed product choice, not a claim that Ultra outperforms every other model on every input.
+- Selected default and sole offered STT: `stt.parakeet-ultra` (ADR-016).
+- Quantitative RU/EN scores, peak RAM and comparative latency: not supplied; none are invented. The previous 2026-07-24 results above remain historical evidence for the old default.
+- 0.3.10 manual acceptance covers the prior release, not automatic acceptance of 0.4.0. The new Debug gate explicitly includes Ultra RU/EN, mixed language, numbers, pauses, live draft and migration from retired selections. Release remains blocked until that separate confirmation.
+
+### Supplementary local synthetic smoke
+
+Machine: Apple M1 Pro, 16 GB, macOS 27.2. Both models loaded from existing local caches using the pinned FluidAudio API; no microphone/user recordings. Fixtures were produced locally by `say` (Milena/Samantha), 16 kHz signed 16-bit WAV. Cleanup off, a fresh TdtDecoderState per file. Timings measure file transcription only, excluding model/ANE loading and compilation; one observation per phrase is not a performance benchmark.
+
+| Fixture | Parakeet v3 | Ultra |
+|---|---|---|
+| RU: «Завтра в пятнадцать тридцать созвон с командой. Отправь счёт на сумму две тысячи триста рублей.» | «Завтра в 15.30 созван с командой. Отправь счет на сумму 2300 рублей.»; ~0.185 s | Same text; ~0.150 s |
+| EN: “Schedule a call tomorrow at three thirty. Please send the invoice for two thousand dollars.” | “Schedule a call tomorrow at 3 30, please send the invoice for $2,000.”; ~0.108 s | “Schedule a call tomorrow at 3.30. Please send the invoice for $2,000.”; ~0.112 s |
+
+Both preserved the content/numbers on these synthetic samples, with the same RU substitution «созван» for «созвон». No regression observed on this tiny sample; mixed language, noise, long sessions and live human speech still require the 0.4.0 manual gate. Temporary harness/results: `/tmp/carrottype-ultra-quality/` on the development machine.

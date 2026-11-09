@@ -4,6 +4,8 @@
 
 Accepted
 
+> Current policy for the 0.4.0: [ADR-016](ADR-016-ultra-only-dictation.md) supersedes the STT offerings/default below. Only Parakeet Ultra is offered; historical decisions and cleanup policies remain recorded here.
+
 ## Context
 
 ADR-002 selected on-device STT without locking a concrete engine. ADR-003 catalogued Parakeet TDT 0.6B v3 as the preferred RU-friendly default and Qwen3 for Smart cleanup.

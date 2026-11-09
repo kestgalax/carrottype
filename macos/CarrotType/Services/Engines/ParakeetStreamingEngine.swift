@@ -39,14 +39,14 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         let myToken = await cancelInternal(clearModels: true)
         guard startToken == myToken else { throw CancellationError() }
 
-        let kind = ParakeetSTTEngine.PackageKind.resolve(packageID: packageID)
-        guard AsrModels.modelsExist(at: modelDirectory, version: kind.version) else {
+        guard packageID == BundledModelCatalog.parakeetUltraSTTID else { throw STTEngineError.modelMissing }
+        guard AsrModels.modelsExist(at: modelDirectory, version: ParakeetSTTEngine.modelVersion) else {
             throw STTEngineError.modelMissing
         }
 
         let models: AsrModels
         do {
-            models = try await AsrModels.load(from: modelDirectory, version: kind.version)
+            models = try await AsrModels.load(from: modelDirectory, version: ParakeetSTTEngine.modelVersion)
         } catch {
             if startToken != myToken { throw CancellationError() }
             throw error

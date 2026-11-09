@@ -31,10 +31,8 @@ private final class ParakeetStreamingBox: @unchecked Sendable {
 @MainActor
 final class DictationPipeline {
     private let modelManager: ModelManager
-    private let whisper = WhisperSTTEngine()
     private let parakeet = ParakeetSTTEngine()
     private let streamingBox = ParakeetStreamingBox()
-    private let appleSpeech = AppleSpeechSTTEngine()
     private let lightCleanup = LightCleanupEngine()
     private let qwenCleanup = QwenCleanupEngine()
 
@@ -144,7 +142,7 @@ final class DictationPipeline {
         }
 
         if raw == nil {
-            let stt = selectedSTTEngine()
+            let stt = parakeet
             let modelPath = modelManager.selectedSTTModelPath()
             raw = try await stt.transcribe(audioURL: audioURL, modelPath: modelPath)
         }
@@ -189,22 +187,9 @@ final class DictationPipeline {
 
     func unloadAll() async {
         isLiveDraftActive = false
-        await whisper.unload()
         await parakeet.unload()
         await parakeetStreaming.unload()
-        await appleSpeech.unload()
         await qwenCleanup.unload()
-    }
-
-    private func selectedSTTEngine() -> STTEngine {
-        let id = modelManager.activeSTTID
-        if id == BundledModelCatalog.appleSpeechSTTID || id.hasPrefix("stt.apple-speechanalyzer") {
-            return appleSpeech
-        }
-        if id.hasPrefix("stt.parakeet") {
-            return parakeet
-        }
-        return whisper
     }
 
     private func selectedCleanupEngine(for mode: CleanupMode) -> CleanupEngine {
