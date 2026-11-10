@@ -35,6 +35,10 @@ Parakeet v3 как ещё один похожий пакет и English-only м�
 
 Размер Qwen ASR 0.6B уже больше приблизительных 630 MB Ultra в текущем каталоге; не рекламировать его как меньшую загрузку относительно Ultra. На сегодня API обозначает Qwen snapshots Apache-2.0 и Redux CC-BY-4.0; перед включением проверить реальные license/attribution файлы и лицензию самого SDK.
 
+## Происхождение и безопасность до интеграции
+
+По вопросу пользователя выполнена [предварительная проверка стороннего порта/весов](2026-11-10-gigaam-provenance-safety.md). Kruatech — отдельный publisher от оригинальной GigaAM; source_revision в manifest — имя e2e_rnnt, не исходный commit. Конверсия/веса независимо не подтверждены. В SDK синтетически подтверждено отсутствие model-path confinement; parser требует bounds/alloc review. Typecheck не security acceptance, обычный helper не sandbox. В S1 включить provenance/reproducible conversion и закрытие загрузочных границ перед использованием; pinned hashes сами по себе не доказывают равенство оригиналу. Веса не скачивались.
+
 ## Проверка архитектурного соответствия
 
 По дополнительному запросу пользователя выполнен [static/API аудит GigaAM](2026-11-10-gigaam-architecture-fit.md): 29 актуальных SDK исходников typecheck PASS с существующими MLX-модулями приложения, macOS 14 и MLX 0.31.6 совместимы по manifest. Основной pipeline сохраняется, но нужны STT routing/catalog policy и helper/cancel/preview адаптация. Это не полный build/link/inference и не доказательство latency/качества; приложение не изменено.
