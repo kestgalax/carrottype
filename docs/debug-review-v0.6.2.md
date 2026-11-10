@@ -1,6 +1,6 @@
 # Debug 0.6.2 (28): lifecycle и проверки
 
-Статус: C1–C2 реализованы в `refactor/dictation-session-lifecycle` от main после 0.6.1. Локальный arm64 Debug и production checks проходят. Ручное принятие и публикация 0.6.2 ещё не разрешены. 0.7.0 UI/UX/logo не начат; текущие интерфейс/иконка сохранены.
+Статус: C1–C2 реализованы в `refactor/dictation-session-lifecycle` от main после 0.6.1. Локальный arm64 Debug и production checks проходят. После доставки Debug и краткого чеклиста пользователь разрешил публикацию: «публикуй» (2026-11-10). Индивидуальные результаты ручных проверок не перечислены; Release-проверки в процессе. 0.7.0 UI/UX/logo не начат; текущие интерфейс/иконка сохранены.
 
 ## Сборка
 
@@ -33,4 +33,10 @@
 - `.github/workflows/macos.yml`: pinned checkout/AIDOS, read-only token, actual regression suite и unsigned arm64 Debug на совместимом Xcode 27; без моделей, микрофона, ключей и публикации. Удалённый запуск не выполнен: GitHub отклонил push workflow из-за отсутствия scope `workflow` у текущего OAuth-токена; подключённая интеграция также вернула `403 Resource not accessible by integration`. Ветка и коммиты сохранены локально; remote branch/PR/run не созданы. YAML прошёл локальный синтаксический разбор; это не считается успешным CI.
 - Native микрофон/права, настоящий cold CoreML/unmute/VoiceOver/meter и поведение после замены остаются ручными. Реальные пользовательские данные/модели/статистика не удалялись. Новые движки, зависимости и network sink не добавлены; offline dictation после установки моделей ожидается без сети, полный независимый network audit не выполнялся.
 
-Публиковать только после принятия этой Debug-версии пользователем. Release/DMG/production ZIP/appcast для 0.6.2 пока не готовились.
+Разрешение публикации получено после доставки Debug. Чистая Release-сборка и проверка DMG/production ZIP/appcast начаты; до их завершения версия не считается опубликованной.
+
+## Release preparation after authorization — 2026-11-10
+
+Maintainer instructed «публикуй» after the delivered Debug and focused lifecycle checklist. Exact pinned Sparkle native checks passed in `dist/CarrotType-0.6.2-update-acceptance`: unavailable feed, modified signed feed, corrupted archive, valid discovery, isolated synthetic A 0.6.1 (27) → B 0.6.2 (28), no-new-version and external fixtures/signatures/helper/metallib. These A/B fixtures share the candidate code; no production app or user data was installed/replaced. Updater gate and production release-notes tests passed again. Clean Release/DMG and draft/public verification are in progress; no remote CI success is claimed.
+
+Clean Release arm64 **BUILD SUCCEEDED** in fresh temporary DerivedData. Signed `dist/CarrotType-0.6.2-Release/CarrotType.app`; strict app/nested signatures, helper outside-model-root rejection, matching note metadata, shaders and no bundled weights passed. Checksum-verified 0.6.1 DMG filesystem template retained exact `.DS_Store`/background; final 0.6.2 DMG integrity and read-only mounted app verified. Production ZIP/appcast signed/verified locally; hashes in `docs/github-release-notes-v0.6.2.md`. Pending: remote source/workflow permission, draft/public verification and stable publication.
