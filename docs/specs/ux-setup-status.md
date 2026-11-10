@@ -65,7 +65,7 @@ Default pane after open (post first-run): **General** if Ready, else **Setup**.
 
 ### Detail panes (one job each)
 
-1. **Welcome** (only while `showFirstRun`) — one privacy sentence + **Continue**; then navigate to Setup (or Models if permissions already OK)
+1. **Welcome** (only while `showFirstRun`) — privacy sentence, live four-step progress + **Continue**; always navigate to Setup, including the local trial when already Ready (0.6.0)
 2. **Status Details** (via Details… at every readiness state) — readiness, remaining hint buttons, last session / model error, **Check for updates…** (native Sparkle in 0.5.0; available regardless of readiness)
 3. **General** — dictation hotkey capture + optional **Walkie-talkie (hold to talk)** (off by default: press starts, press again commits; on: **hold** records, **release** commits — repeat press does not commit) + optional **Also keep the result on the clipboard** + optional **Show text while you speak** (ADR-014, off by default; disabled when active STT `supportsStreaming` is false; Capsule grows with adapting preview text); while recording, **Escape** cancels (no STT/paste); silent/too-short finish is a soft cancel; **Transform selected text** bindings list (max 5): each row has hotkey (default first binding **⌥'**), kind Translate/Custom, Ready Smart/Smart+/Gemma model, language pair for Translate or instruction editor for Custom (ADR-012); Language System / Russian / English (must not remount Settings or stop the optional mic meter)
 4. **Setup** — Microphone, input device picker, Accessibility; optional **Show microphone meter** (off by default); optional **Unmute mic during dictation (experimental)** (off by default — ADR-007); tip to remove/re-add the app if Accessibility status is stuck
@@ -106,8 +106,8 @@ Escape cancel with empty preview, soft silent cancel, and pipeline errors hide t
 
 1. Settings opens on first launch.
 2. Welcome detail explains local privacy in one sentence.
-3. **Continue** clears `showFirstRun` and selects Setup (or Models if mic + Accessibility already granted).
-4. The Models pane offers the explicit Ultra download while not Ready; no other STT is offered.
+3. **Continue** clears only `showFirstRun` and selects Setup. Readiness/progress still derives from actual permissions, Ultra and trial completion.
+4. Setup and Models offer the explicit Ultra download while not Ready; installed Ultra is reused. No other STT is offered.
 
 ## Clipboard option
 
@@ -154,3 +154,12 @@ When **Also keep the result on the clipboard** is on: paste at caret still runs,
 - A requested restart waits for capture/processing/cancellation to finish; General displays that wait. At install handoff hotkeys cannot start another operation. Aborted installation releases that lock. Background downloading does not stop dictation or selection transforms. Downloaded automatic updates install on quit; no forced background restart.
 - Models, language, hotkeys, clipboard option, Wave Link, formatting, bindings and statistics are retained outside the replaceable app. Last dictation recovery is still RAM-only and ends at app exit. First updater-enabled version is installed manually. Current self-signed downloads still need the Gatekeeper steps; permissions may need re-granting after an update.
 - Before first publication the production feed endpoint does not yet exist; the regular Debug build may correctly report a network/feed error. Use the isolated signed staging feed to verify A → B, never publish a dummy release for a test.
+
+## Setup/settings — 0.6.0 implementation contract (X1–X3)
+
+- Setup shows four ordered steps: microphone, Accessibility, Ultra, local trial. Readiness still uses the three existing requirements; completing Welcome is not Ready. A successful trial persists only a completion Boolean, never its transcript. Existing users can run the same trial from Setup; no automatic recording/download on navigation.
+- The trial starts only with an explicit button. It uses the existing recorder/STT/formatting/mute path and updater reservation, but delivers text only into a RAM-backed field in Settings. It never calls caret insertion, modifies the system clipboard, replaces Last Dictation or increments usage counts. Finish/Cancel are explicit; Escape cancels capture. Leaving Setup cancels capture or discards a processing result. The trial is controlled by Start/Finish buttons even if hold-to-talk is enabled; the dictation shortcut can also finish the active trial, and its key-up does not stop the trial; normal hotkey behavior is preserved outside a trial.
+- Setup reuses permission actions, input picker/meter/Wave Link and model download/cancel/retry controls. Progress and next-step guidance update as permissions/model readiness change. Setup remains accessible after Welcome and after relaunch, including denied/offline/download-error states. Language changes update copy without remounting Settings.
+- Transform bindings use disclosure rows with action, chord, language pair and model summary. All existing editing controls remain inside; newly added rows expand. A missing saved model remains visibly selected/unavailable; the UI explains the same fallback the runtime resolves rather than displaying a fictitious selection. Models links navigate to the actual Models pane. No download starts from selecting a fallback or visiting Models. An explicitly saved empty bindings list remains empty after relaunch. Capturing a hotkey temporarily unregisters app chords so conflicting chords reach the local editor; apply/conflict/cancel and leaving General restore registration without triggering dictation.
+- Dictation pipeline reports requested/actual formatting mode and a safe fallback reason. Missing or failing Smart/Smart+/Gemma preserves the transcription via Light. Capsule briefly says basic formatting was applied; Details retains actual-mode information for the last completed dictation. No helper error, prompt or transcript is added to logs or disk. Trial formatting information remains within the trial. Stats/recovery remain counted once only for the normal paste-dispatch path.
+- Scope stays within existing ADR-005/009/010/012/014/016/017. No new inference runtime, dependencies, download sink or updater trust changes. Full lifecycle coordinator work remains 0.6.1.

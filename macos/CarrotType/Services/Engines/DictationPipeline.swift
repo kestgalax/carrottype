@@ -11,16 +11,6 @@ protocol STTEngine: Sendable {
     func unload() async
 }
 
-protocol CleanupEngine: Sendable {
-    func cleanup(
-        text: String,
-        mode: CleanupMode,
-        modelDirectory: URL?,
-        instructions: String?
-    ) async throws -> String
-    func unload() async
-}
-
 /// Holds the streaming actor so the audio tap can call `feed` without hopping to the main actor.
 private final class ParakeetStreamingBox: @unchecked Sendable {
     let engine = ParakeetStreamingEngine()
@@ -90,7 +80,7 @@ final class DictationPipeline {
     func run(
         audioURL: URL,
         onPhase: @escaping @Sendable (DictationPhase) -> Void
-    ) async throws -> String {
+    ) async throws -> FormattedDictation {
         try await run(
             audioURL: audioURL,
             useLiveDraftResult: false,
@@ -106,7 +96,9 @@ final class DictationPipeline {
         useLiveDraftResult: Bool,
         offlineSecondPass: Bool,
         onPhase: @escaping @Sendable (DictationPhase) -> Void
-    ) async throws -> String {
+    ) async throws -> FormattedDictation {
+        let mode = modelManager.cleanupMode
+        let directory = modelManager.cleanupModelDirectory(for: mode)
         onPhase(.transcribing)
 
         var raw: String?
@@ -152,19 +144,10 @@ final class DictationPipeline {
         guard let raw else { throw STTEngineError.emptyResult }
 
         onPhase(.cleaning)
-        let mode = modelManager.cleanupMode
-        if mode.usesMLXHelper, modelManager.cleanupModelDirectory() == nil {
-            // Package still downloading / missing — keep STT result via Light (download offered on select).
-            return try await lightCleanup.cleanup(text: raw, mode: .light, modelDirectory: nil, instructions: nil)
-        }
-        do {
-            let directory = modelManager.cleanupModelDirectory()
-            return try await selectedCleanupEngine(for: mode)
-                .cleanup(text: raw, mode: mode, modelDirectory: directory, instructions: nil)
-        } catch {
-            // Never lose the STT result if Smart/Gemma cleanup fails.
-            return try await lightCleanup.cleanup(text: raw, mode: .light, modelDirectory: nil, instructions: nil)
-        }
+        return try await DictationFormatting.perform(
+            text: raw, mode: mode, directory: directory,
+            engine: selectedCleanupEngine(for: mode), lightEngine: lightCleanup
+        )
     }
 
     /// Selection transform (ADR-012): custom instructions + explicit MLX mode/package.

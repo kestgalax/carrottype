@@ -18,6 +18,16 @@ final class AppState: ObservableObject {
     @Published private(set) var transformResultDirection: String?
     /// Brief Copy-button feedback while result capsule is open.
     @Published private(set) var transformResultCopiedFeedback = false
+    @Published private(set) var isSetupTrialActive = false
+    @Published var setupTrialText = ""
+    @Published private(set) var setupTrialFormatting: FormattingOutcome?
+    @Published private(set) var hasCompletedSetupTrial: Bool
+    @Published private(set) var lastFormattingOutcome: FormattingOutcome?
+    @Published private(set) var isSetupTrialCancelling = false
+    private var setupTrialTask: Task<Void, Never>?
+    private var setupTrialFinishRequested = false
+    private let setupDefaults: UserDefaults
+    private var didPresentFirstRunThisLaunch = false
     @Published var showFirstRun: Bool
     @Published var lastSessionError: String?
     /// One completed dictation in RAM only; never persisted or cleared by a cancelled next session.
@@ -155,6 +165,8 @@ final class AppState: ObservableObject {
         self.audioLevel = audioLevel
         self.pipeline = DictationPipeline(modelManager: modelManager)
         self.usageStats = usageStats ?? UsageStatsStore()
+        self.setupDefaults = defaults
+        self.hasCompletedSetupTrial = defaults.bool(forKey: "carrottype.didCompleteSetupTrial")
         self.showFirstRun = !defaults.bool(forKey: "carrottype.didCompleteFirstRun")
         if let raw = defaults.string(forKey: AppLanguage.defaultsKey),
            let language = AppLanguage(rawValue: raw) {
@@ -326,10 +338,58 @@ final class AppState: ObservableObject {
         }
     }
 
-    func completeFirstRun(defaults: UserDefaults = .standard) {
-        defaults.set(true, forKey: "carrottype.didCompleteFirstRun")
+    func takeFirstRunPresentationRequest() -> Bool {
+        guard showFirstRun, !didPresentFirstRunThisLaunch else { return false }
+        didPresentFirstRunThisLaunch = true
+        return true
+    }
+
+    func completeFirstRun(defaults: UserDefaults? = nil) {
+        (defaults ?? setupDefaults).set(true, forKey: "carrottype.didCompleteFirstRun")
         showFirstRun = false
         refreshMenuBarMode()
+    }
+
+    var setupProgress: SetupProgress {
+        SetupProgress(microphone: permissions.microphoneGranted,
+                      accessibility: permissions.accessibilityGranted,
+                      model: modelManager.activeSTTStatus == .ready, trial: hasCompletedSetupTrial)
+    }
+
+    var canStartSetupTrial: Bool {
+        readiness == .ready && !updates.installationGate.isBusy && !updates.installationGate.isInstalling
+    }
+
+    func startSetupTrial() {
+        guard readiness == .ready, !updates.installationGate.isBusy,
+              dictationUpdateReservation == nil,
+              let reservation = updates.installationGate.beginOperation() else { return }
+        dictationUpdateReservation = reservation
+        isSetupTrialActive = true
+        isSetupTrialCancelling = false
+        setupTrialFinishRequested = false
+        setupTrialText = ""
+        setupTrialFormatting = nil
+        dismissAnyResultCapsule()
+        setupTrialTask = Task { await startDictationSession() }
+    }
+
+    func finishSetupTrial() {
+        guard isSetupTrialActive, !isSetupTrialCancelling, !setupTrialFinishRequested,
+              menuBarMode == .recording else { return }
+        setupTrialFinishRequested = true
+        setupTrialTask = Task { await finishDictationSession() }
+    }
+
+    func cancelSetupTrial() {
+        guard isSetupTrialActive, !isSetupTrialCancelling else { return }
+        isSetupTrialCancelling = true
+        setupTrialTask?.cancel()
+        // During processing keep the operation reservation until cleanup has completed,
+        // and discard its result. The destination never changes to an external caret.
+        if menuBarMode == .recording {
+            Task { await cancelDictationSession() }
+        }
     }
 
     func refreshPermissions() {
@@ -368,6 +428,7 @@ final class AppState: ObservableObject {
         // Ignore intermediate disappear from SwiftUI remounts while Settings stays open.
         guard settingsAppearanceCount == 0 else { return }
         settingsVisible = false
+        cancelSetupTrial()
         micMeterEnabled = false
         stopInputMeter()
     }
@@ -399,6 +460,10 @@ final class AppState: ObservableObject {
     /// Toggle (default): press starts, press again commits.
     /// Walkie-talkie: hold records, release commits; repeat press while holding is ignored.
     private func handleHotkeyPressed() {
+        if isSetupTrialActive {
+            if menuBarMode == .recording { finishSetupTrial() }
+            return
+        }
         dismissAnyResultCapsule()
 
         if isProcessing || menuBarMode == .processing || menuBarMode == .cleanup {
@@ -439,7 +504,7 @@ final class AppState: ObservableObject {
 
     /// Walkie-talkie only: release commits (or cancels if the session never got a hold).
     private func handleHotkeyReleased() {
-        guard pushToTalkEnabled else { return }
+        guard pushToTalkEnabled, !isSetupTrialActive else { return }
         pttKeyHeld = false
 
         if isProcessing || menuBarMode == .processing || menuBarMode == .cleanup {
@@ -620,19 +685,18 @@ final class AppState: ObservableObject {
             return
         }
 
-        var mode = binding.cleanupMode
-        if !mode.usesMLXHelper || !modelManager.isCleanupPackageReady(for: mode) {
-            if let fallback = selectableTransformModes.first {
-                mode = fallback
-                var fixed = binding
-                fixed.cleanupMode = fallback
-                updateTransformBinding(fixed)
-            } else {
-                lastSessionError = L10n.t("error.transform_model_missing", locale: locale)
-                menuBarMode = .error
-                refreshMenuBarMode()
-                return
-            }
+        guard let mode = TransformModelSelection.resolve(
+            requested: binding.cleanupMode, available: selectableTransformModes
+        ) else {
+            lastSessionError = L10n.t("error.transform_model_missing", locale: locale)
+            menuBarMode = .error
+            refreshMenuBarMode()
+            return
+        }
+        if mode != binding.cleanupMode {
+            var fixed = binding
+            fixed.cleanupMode = mode
+            updateTransformBinding(fixed)
         }
 
         guard let modelDirectory = modelManager.cleanupModelDirectory(for: mode) else {
@@ -726,6 +790,10 @@ final class AppState: ObservableObject {
     private func endDictationUpdateReservation() {
         guard let token = dictationUpdateReservation else { return }
         dictationUpdateReservation = nil
+        isSetupTrialActive = false
+        isSetupTrialCancelling = false
+        setupTrialTask = nil
+        setupTrialFinishRequested = false
         updates.installationGate.endOperation(token)
     }
 
@@ -734,6 +802,7 @@ final class AppState: ObservableObject {
         defer {
             if menuBarMode != .recording { endDictationUpdateReservation() }
         }
+        guard !isSetupTrialCancelling else { return }
         guard readiness == .ready else {
             menuBarMode = .needsSetup
             NSApp.activate(ignoringOtherApps: true)
@@ -741,7 +810,7 @@ final class AppState: ObservableObject {
         }
         guard menuBarMode != .recording, !isProcessing else { return }
 
-        if pushToTalkEnabled, !pttKeyHeld {
+        if pushToTalkEnabled, !isSetupTrialActive, !pttKeyHeld {
             return
         }
 
@@ -763,7 +832,7 @@ final class AppState: ObservableObject {
             unmuteTask = nil
         }
 
-        if pushToTalkEnabled, !pttKeyHeld {
+        if pushToTalkEnabled, !isSetupTrialActive, !pttKeyHeld {
             await micMute.endDictationRestore()
             return
         }
@@ -812,7 +881,7 @@ final class AppState: ObservableObject {
                 }
             }
 
-            if pushToTalkEnabled {
+            if pushToTalkEnabled, !isSetupTrialActive {
                 hotkey.startPushToTalkReleaseMonitor()
                 if !pttKeyHeld {
                     await cancelDictationSession()
@@ -825,6 +894,11 @@ final class AppState: ObservableObject {
             await pipeline.cancelLiveDraft()
             clearLiveDraftText()
             await micMute.endDictationRestore()
+            if isSetupTrialActive, isSetupTrialCancelling {
+                clearCapsulePhase()
+                menuBarMode = .idle
+                return
+            }
             lastSessionError = error.localizedDescription
             clearCapsulePhase()
             menuBarMode = .error
@@ -845,7 +919,7 @@ final class AppState: ObservableObject {
         }
 
         let draft = liveDraftSnapshotText()
-        let showDraftResult = liveDraftEnabled && activeSTTSupportsStreaming && !draft.isEmpty
+        let showDraftResult = !isSetupTrialActive && liveDraftEnabled && activeSTTSupportsStreaming && !draft.isEmpty
 
         hotkey.stopPushToTalkReleaseMonitor()
         // Keep Escape registered if we will show liveDraftResult.
@@ -875,6 +949,8 @@ final class AppState: ObservableObject {
     private func finishDictationSession() async {
         guard menuBarMode == .recording, !isProcessing, !isCancellingDictation else { return }
         defer { endDictationUpdateReservation() }
+        let destination: DictationDelivery = isSetupTrialActive ? .setupTrial : .caret
+        let phaseReservation = dictationUpdateReservation
 
         invalidateLiveDraftStart()
 
@@ -928,13 +1004,15 @@ final class AppState: ObservableObject {
         defer { try? FileManager.default.removeItem(at: audioURL) }
 
         do {
-            let cleaned = try await pipeline.run(
+            let result = try await pipeline.run(
                 audioURL: audioURL,
                 useLiveDraftResult: false,
                 offlineSecondPass: false,
                 onPhase: { [weak self] phase in
                     Task { @MainActor in
-                        guard let self else { return }
+                        guard let self, let phaseReservation,
+                              self.dictationUpdateReservation == phaseReservation,
+                              self.isProcessing else { return }
                         switch phase {
                         case .transcribing:
                             self.clearLiveDraftText()
@@ -948,13 +1026,28 @@ final class AppState: ObservableObject {
                 }
             )
             clearLiveDraftText()
-            let text = cleaned.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !text.isEmpty { lastDictationText = text }
+            if isSetupTrialActive, isSetupTrialCancelling {
+                clearCapsulePhase()
+                menuBarMode = .idle
+                return
+            }
+            let text = result.text.trimmingCharacters(in: .whitespacesAndNewlines)
             do {
-                try TextInsertionService.insertAtCaret(
-                    cleaned,
-                    retainInClipboard: retainDictationInClipboard
-                )
+                try destination.deliver(result, atCaret: { completed in
+                    if !text.isEmpty { lastDictationText = text }
+                    lastFormattingOutcome = completed.formatting
+                    try TextInsertionService.insertAtCaret(
+                        completed.text, retainInClipboard: retainDictationInClipboard
+                    )
+                    recordUsageIfEnabled(text: completed.text, recordingDuration: recordingDuration)
+                }, inTrial: { completed in
+                    setupTrialText = completed.text
+                    setupTrialFormatting = completed.formatting
+                    if !text.isEmpty {
+                        hasCompletedSetupTrial = true
+                        setupDefaults.set(true, forKey: "carrottype.didCompleteSetupTrial")
+                    }
+                })
             } catch {
                 lastSessionError = error.localizedDescription
                 clearCapsulePhase()
@@ -965,12 +1058,20 @@ final class AppState: ObservableObject {
                 }
                 return
             }
-            recordUsageIfEnabled(text: cleaned, recordingDuration: recordingDuration)
             lastSessionError = nil
             menuBarMode = .idle
-            await presentSuccessCapsuleSequence()
+            if isSetupTrialActive {
+                clearCapsulePhase()
+            } else {
+                await presentSuccessCapsuleSequence(usedFormattingFallback: result.formatting.usedFallback)
+            }
         } catch {
             clearLiveDraftText()
+            if isSetupTrialActive, isSetupTrialCancelling {
+                clearCapsulePhase()
+                menuBarMode = .idle
+                return
+            }
             lastSessionError = error.localizedDescription
             clearCapsulePhase()
             menuBarMode = .error
@@ -1027,13 +1128,13 @@ final class AppState: ObservableObject {
     }
 
     /// Command dispatched, then Done. CGEvent cannot acknowledge insertion in another app.
-    private func presentSuccessCapsuleSequence() async {
+    private func presentSuccessCapsuleSequence(usedFormattingFallback: Bool) async {
         let token = UUID()
         capsuleSequenceToken = token
         capsulePhase = .writing
         try? await Task.sleep(nanoseconds: 350_000_000)
         guard capsuleSequenceToken == token else { return }
-        capsulePhase = .inserted
+        capsulePhase = usedFormattingFallback ? .formattingFallback : .inserted
         try? await Task.sleep(nanoseconds: 1_000_000_000)
         guard capsuleSequenceToken == token else { return }
         capsulePhase = nil

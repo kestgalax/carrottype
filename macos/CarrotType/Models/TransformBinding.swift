@@ -98,8 +98,7 @@ enum TransformBindingsStore {
         preferredCleanupMode: CleanupMode = .smart
     ) -> [TransformBinding] {
         if let data = defaults.data(forKey: defaultsKey),
-           var decoded = try? JSONDecoder().decode([TransformBinding].self, from: data),
-           !decoded.isEmpty {
+           var decoded = try? JSONDecoder().decode([TransformBinding].self, from: data) {
             for i in decoded.indices {
                 decoded[i].ensureDistinctLanguages()
                 if !decoded[i].cleanupMode.usesMLXHelper {

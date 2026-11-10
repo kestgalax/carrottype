@@ -9,6 +9,9 @@ struct SetupSettingsPane: View {
     var body: some View {
         Form {
             Section {
+                SetupProgressView(appState: appState)
+            }
+            Section {
                 LabeledContent {
                     switch permissions.microphoneAuthorization {
                     case .authorized:
@@ -119,8 +122,24 @@ struct SetupSettingsPane: View {
             } header: {
                 Text(L10n.t("permissions.section", locale: locale))
             }
+            Section {
+                if let package = appState.modelManager.sttPackages.first {
+                    LabeledContent(package.displayName) {
+                        Text(SettingsPackageStatusControls.statusLabel(appState.modelManager.status(for: package.id), locale: locale))
+                            .foregroundStyle(.secondary)
+                    }
+                    if appState.modelManager.status(for: package.id) != .ready {
+                        SettingsPackageStatusControls(appState: appState, models: appState.modelManager,
+                            id: package.id, locale: locale, prominentDownload: true)
+                    }
+                }
+            } header: {
+                Text(L10n.t("setup.step.model", locale: locale))
+            }
+            SetupTrialSection(appState: appState)
         }
         .formStyle(.grouped)
+        .onDisappear { appState.cancelSetupTrial() }
     }
 
     private var audioInputBinding: Binding<String> {
