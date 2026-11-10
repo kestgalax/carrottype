@@ -4,7 +4,7 @@
 
 - Task ID: uiux-and-brand-refresh
 - Title: Audit the product experience, discuss directions and implement the selected interface/logo
-- Status: Planned, 2026-11-10; target 0.7.0 after 0.6.1/0.6.2
+- Status: interface A + logo A explicitly selected; D3 implemented on `feat/native-ui-brand-0.7` from main after PR #24; Debug 0.7.0 (29) accepted; final carrot-microphone A selected and publication explicitly authorized; stable/latest released after clean Release and local/draft/public verification
 
 ## Traceability
 
@@ -17,7 +17,7 @@
 
 ## Scope
 
-D1: audit actual screens and complete journeys, preserve strengths/features, prioritize findings by user effect and cost. D2: present 2–3 visual directions on comparable screens and 3 distinct logo concepts; discuss the preferred direction with the maintainer before replacement. D3: implement only the selected scope in small changes on a new main-based branch, with a Debug review before release. This planning task does not perform the audit, design the logo or change runtime/UI assets.
+D1: audit actual screens and complete journeys, preserve strengths/features, prioritize findings by user effect and cost. D2: present 2–3 visual directions on comparable screens and 3 distinct logo concepts; discuss the preferred direction with the maintainer before replacement. D3: implement only the selected scope in small changes on a new main-based branch, with a Debug review before release. Current progress: preliminary code/resource audit and comparable HTML/SVG concepts are available; native walkthrough is incomplete and no shipping UI/assets were changed.
 
 Audit first-run/permissions/model download, everyday dictation/Capsule/cancel/recovery, trial, settings/navigation/formatting/bindings, Storage, stats and updates. Check terminology, density, hierarchy, feedback, keyboard/VoiceOver, RU/EN, light/dark and minimum window. Record evidence and distinguish hypotheses from observed failures.
 
@@ -51,3 +51,22 @@ Likely files: dated audit/design brief and decision in docs, selected SwiftUI Vi
 ## ADR Impact
 
 No ADR impact. Follows accepted ADR-002 and ADR-011; existing product/runtime/update decisions remain. A later proposal changing runtime, architecture, network or update trust requires its own ADR before implementation.
+
+## D1/D2 deliverables — 2026-11-10
+
+- `docs/2026-11-10-uiux-audit.md`: evidence-labelled strengths/findings, preservation matrix, priorities/cost and native observation limits.
+- `docs/design/0.7.0/directions.html`: same Settings/Capsule/What’s New content in three directions, light/dark and minimum-size approximation; three editable logo concepts with 16/18/32 px monochrome previews.
+- `docs/design/0.7.0/README.md` and `decision.md`: provenance, confirmed OpenBot/Grok Bot links, recommendation and unresolved selection.
+- Current native GUI acquisition timed out; no complete native/VoiceOver/scenario QA claim. Runtime, installed app, icons and version metadata remain unchanged; no new Debug/release at this design-review point. D3 waits for the requested design discussion/selection.
+
+## D3 selected implementation — 2026-11-10
+
+Maintainer chose A for both interface and logo. Decision: `docs/design/0.7.0/decision.md`. Implemented limited native shell/style, same five destinations, shared General/Models formatting selector, A1–A5 accessibility/confirmation improvements, concise localized hints and original vector/native icon exports. All useful functions and runtime/trust policy retained. Sources: `macos/Brand/`, `AppStyle.swift`, affected Views/localizations; existing icon preserved in archive/history. Actual production SwiftUI rendered offscreen in isolated fixture profile, not a full native walkthrough. Debug/evidence/limits: `docs/debug-review-v0.7.0.md`. Separate manual/publication gate remains.
+
+D3 verification closeout: signed real-identity Debug 0.7.0 (29), local regressions/native offscreen/resource/signature checks and [hosted app CI](https://github.com/kestgalax/carrottype/actions/runs/42824162527) passed (source `122afdb`). Hosted private-tooling governance explicitly skipped, local governance passed. Await this version’s manual acceptance; no release published.
+
+Final selection after Debug review: original carrot-microphone A from `microphone-concepts/comparison-round2.html`, not the earlier plain carrot. Maintainer explicitly authorized publication. Final source/tag `2bb5555` / `v0.7.0`, PR #25; updated notes/assets, signed Debug, refreshed offscreen fixture rendering, local governance and isolated native A28→B29 update acceptance passed. Full manual/device/TCC limits remain. Release/draft/public checks are recorded in the release evidence before closeout.
+
+## 0.7.0 published — 2026-11-10
+
+Maintainer accepted Debug UI and explicitly selected the original carrot-microphone A from the second comparison, then authorized publication: «оставляем изначальный / согласен / публикуй тогда версию». Stable/latest **0.7.0 (29)** published from tag/source `v0.7.0` / `2bb5555`, PR #25. Final signed Debug and fresh clean Release/DMG pass; signed ZIP/feed and downloaded draft/public assets pass signatures, metadata, lengths, URLs and exact local byte hashes. Anonymous stable feed/archive match. Native Sparkle probe using isolated build-28 host found the live update without installation. Isolated candidate-code A28→B29 installer and negative scenarios passed; not independent historical-binary/TCC proof. Final-source hosted app CI passed (runs `42828743848` and `42828835461`); private hosted AIDOS explicitly skipped, local validate/trace/review passed. No user installation/data replacement, key export, new engine/dependency/trust or feature removal. Full independent device/VoiceOver/TCC/network checks remain unverified. Artifact hashes: `docs/github-release-notes-v0.7.0.md`; acceptance/limits: `docs/debug-review-v0.7.0.md`. Next: collect feedback; no further implementation stage selected. Later releases retain their own Debug/manual/publication gate.

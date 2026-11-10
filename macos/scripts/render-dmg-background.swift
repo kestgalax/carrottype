@@ -15,7 +15,7 @@ struct Layout {
     var appsY = 200
     var bgHex = "F1F2EF"
     var inkHex = "1D1D1F"
-    var accentHex = "FE6C19"
+    var accentHex = "D0632F"
     var headline = "To install, drag CarrotType to Applications"
     var emphasis = "drag"
     var headlineSize: CGFloat = 26

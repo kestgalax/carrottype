@@ -4,7 +4,7 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (after v0.6.1)
+## Current phase (after v0.7.0)
 
 Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**; preflight found private visibility on 2026-11-10, then the maintainer explicitly authorized public code/history and the change was applied/verified. v0.3.9 parallel unmute + live-draft hygiene; Storage download-cache clear in v0.3.8; security hardening (ADR-015) in v0.3.7; live draft (ADR-014) through v0.3.4–v0.3.6.
 
@@ -76,3 +76,19 @@ GitHub authorization restored (`workflow`), source branch/tag pushed and PR #24 
 ## 0.6.2 published — 2026-11-10
 
 After Debug delivery/focused checklist, maintainer instructed «публикуй». 0.6.2 (28) stable/latest published from tag/source `14dacf3`, PR #24. Clean Release/DMG and signed local/downloaded draft/public assets passed; anonymous latest feed/archive matched, native isolated build-27 discovery found the update. No installation/TCC continuity claim or key export. Workflow access restored. First hosted CI failed on private AIDOS checkout; CI-only fix allows app checks/build independently and explicitly skips hosted governance without a narrow read-only secret. Local governance passed, hosted regressions and Debug compilation passed (run `42815581126`, commit `0e69d52`). Next: separate 0.7.0 UI/UX/logo options/discussion before replacement; later releases retain their own Debug/publication gate.
+
+## 0.7.0 D1/D2 exploration — 2026-11-10
+
+User requested next stage after 0.6.2. New branch `design/uiux-and-brand-0.7` from merged main `a68123a`. Confirmed references: https://openbot.run/ and https://x.ai/bot (Grok Bot, correcting earlier GrogBot spelling). Preliminary evidence-labelled code/resource audit at `docs/2026-11-10-uiux-audit.md`; comparable HTML directions and original editable SVG logo concepts at `docs/design/0.7.0/`. Native GUI acquisition timed out, no full native/VoiceOver/cold model walkthrough claimed. Recommendation: native interface A, logo A/B small-size comparison; not a selected decision. Discuss directions/scope before D3, as explicitly requested by user. Preserve all useful functions; no runtime/assets/version change, Debug or publication at this design-review point.
+
+## 0.7.0 A/A selection and implementation — 2026-11-10
+
+Maintainer explicitly selected interface A + logo A. New main-based `feat/native-ui-brand-0.7` retains exploration. Native headings/sidebar/style, same five destinations, shared General formatting source, accessible language/navigation/motion/contrast, deletion/stat confirmations and original vector/PNG/template logo implemented. No useful feature/runtime/trust/identity change; old icon archived/history kept. Local Debug/regressions and actual offscreen SwiftUI RU/EN/light/dark/minimum fixture rendering pass; full native/VoiceOver/device/dialog walkthrough remains unverified. Final signed Debug 0.7.0 (29) delivery/manual/publication gate pending; no permission to publish inferred from design acceptance. Details: `docs/debug-review-v0.7.0.md`, selected decision and `macos/Brand/README.md`.
+
+0.7.0 Debug delivery: final arm64 build and production regressions passed; signed real-identity Debug in `dist/CarrotType-0.7.0-Debug/CarrotType.app`, deep/resource/metadata checks passed. Native template verified 18×18pt/isTemplate, deterministic exports and archived old master verified. Offscreen RU/EN/light/dark/minimum screenshots retained under `dist/CarrotType-0.7.0-Native-Review`; not interactive/VoiceOver/device/TCC QA. Hosted CI follows source push; separate manual acceptance and publication authorization still required.
+
+0.7.0 hosted app verification passed: https://github.com/kestgalax/carrottype/actions/runs/42824162527, source `122afdb` (production regressions, brand assets, Debug arm64). Hosted AIDOS explicitly skipped; local governance passed. Final signed Debug delivered; manual approval/publication remain pending. Follow-up closeout edits are documentation only.
+
+## 0.7.0 published — 2026-11-10
+
+Maintainer accepted Debug UI and explicitly selected the original carrot-microphone A from the second comparison, then authorized publication: «оставляем изначальный / согласен / публикуй тогда версию». Stable/latest **0.7.0 (29)** published from tag/source `v0.7.0` / `2bb5555`, PR #25. Final signed Debug and fresh clean Release/DMG pass; signed ZIP/feed and downloaded draft/public assets pass signatures, metadata, lengths, URLs and exact local byte hashes. Anonymous stable feed/archive match. Native Sparkle probe using isolated build-28 host found the live update without installation. Isolated candidate-code A28→B29 installer and negative scenarios passed; not independent historical-binary/TCC proof. Final-source hosted app CI passed (runs `42828743848` and `42828835461`); private hosted AIDOS explicitly skipped, local validate/trace/review passed. No user installation/data replacement, key export, new engine/dependency/trust or feature removal. Full independent device/VoiceOver/TCC/network checks remain unverified. Artifact hashes: `docs/github-release-notes-v0.7.0.md`; acceptance/limits: `docs/debug-review-v0.7.0.md`. Next: collect feedback; no further implementation stage selected. Later releases retain their own Debug/manual/publication gate.

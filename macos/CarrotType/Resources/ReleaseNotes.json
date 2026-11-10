@@ -1,22 +1,31 @@
 {
   "schemaVersion": 1,
-  "version": "0.6.2",
-  "build": "28",
+  "version": "0.7.0",
+  "build": "29",
   "date": "2026-11-10",
   "localizations": {
     "en": {
-      "summary": "More dependable sessions, with the same dictation workflow.",
+      "summary": "The same dictation workflow, with clearer native settings.",
       "sections": [
+        {
+          "kind": "new",
+          "items": [
+            {
+              "title": "A new CarrotType mark.",
+              "detail": "A carrot-shaped microphone and a monochrome idle menu-bar icon."
+            }
+          ]
+        },
         {
           "kind": "improved",
           "items": [
             {
-              "title": "One owner for every recording.",
-              "detail": "Starting, stopping and cancellation share a single teardown, including microphone mute restoration and temporary audio cleanup."
+              "title": "Dictation settings together.",
+              "detail": "Formatting is available in General; all models and package controls remain in Models."
             },
             {
-              "title": "Settings stay consistent for the whole recording.",
-              "detail": "Model, formatting and microphone choices are captured at session start. Changes apply to the next session."
+              "title": "A calmer native interface.",
+              "detail": "Consistent headings, a warm accent, status and What’s New in the sidebar."
             }
           ]
         },
@@ -24,26 +33,39 @@
           "kind": "fixed",
           "items": [
             {
-              "title": "Model cleanup waits for the active operation.",
-              "detail": "A previous unload cannot interrupt a new session; deleting packages while the pipeline is busy asks you to retry later."
+              "title": "More accessible controls.",
+              "detail": "Language-picker labels, selected navigation, Reduce Motion support and readable live-draft tail words."
+            },
+            {
+              "title": "Confirm before deleting.",
+              "detail": "Installed model deletion, unused-package deletion and statistics clearing now require confirmation."
             }
           ]
         }
       ]
     },
     "ru": {
-      "summary": "Более надёжные сессии с привычным сценарием диктовки.",
+      "summary": "Знакомая диктовка в более ясном нативном интерфейсе.",
       "sections": [
+        {
+          "kind": "new",
+          "items": [
+            {
+              "title": "Новый знак CarrotType.",
+              "detail": "Морковка-микрофон и монохромный значок в режиме ожидания."
+            }
+          ]
+        },
         {
           "kind": "improved",
           "items": [
             {
-              "title": "Единое управление каждой записью.",
-              "detail": "Запуск, остановка и отмена завершаются одной очисткой: восстановлением mute и удалением временного аудио."
+              "title": "Настройки диктовки собраны вместе.",
+              "detail": "Форматирование доступно в Основных; все модели и их управление остаются в разделе Модели."
             },
             {
-              "title": "Настройки согласованы на протяжении записи.",
-              "detail": "Модель, форматирование и микрофон фиксируются при старте. Изменения применяются к следующей сессии."
+              "title": "Спокойное нативное оформление.",
+              "detail": "Единые заголовки, тёплый акцент, статус и «Что нового» в боковой панели."
             }
           ]
         },
@@ -51,8 +73,12 @@
           "kind": "fixed",
           "items": [
             {
-              "title": "Очистка моделей ждёт завершения операции.",
-              "detail": "Выгрузка предыдущей сессии не прерывает новую. При занятом конвейере удаление пакетов предлагает повторить попытку позже."
+              "title": "Более доступное управление.",
+              "detail": "Подписи языковых списков, выбранный раздел, Reduce Motion и читаемые последние слова live draft."
+            },
+            {
+              "title": "Подтверждение перед удалением.",
+              "detail": "Удаление установленных моделей, неиспользуемых пакетов и очистка статистики требуют подтверждения."
             }
           ]
         }

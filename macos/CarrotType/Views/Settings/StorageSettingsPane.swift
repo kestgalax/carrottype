@@ -4,6 +4,8 @@ struct StorageSettingsPane: View {
     @ObservedObject var appState: AppState
     @ObservedObject var models: ModelManager
     @State private var confirmClearCache = false
+    @State private var confirmDeleteUnused = false
+    @State private var unusedDescription = ""
     @State private var legacyToDelete: LegacySTTPackage?
     @State private var confirmLegacyDelete = false
 
@@ -35,7 +37,10 @@ struct StorageSettingsPane: View {
                 }
 
                 Button(L10n.t("storage.delete_unused", locale: locale), role: .destructive) {
-                    appState.deleteUnusedModelPackages()
+                    unusedDescription = footprints.filter { !models.isActiveInstalledPackage($0.id) }
+                        .map { "\($0.displayName) · \(ByteCountFormatter.string(fromByteCount: $0.bytes, countStyle: .file))" }
+                        .joined(separator: "\n")
+                    confirmDeleteUnused = true
                 }
                 .disabled(!hasUnusedPackages)
             } header: {
@@ -90,6 +95,17 @@ struct StorageSettingsPane: View {
         .onAppear {
             models.refreshDownloadCacheBytes()
             models.refreshLegacySTTPackages()
+        }
+        .confirmationDialog(
+            L10n.t("storage.delete_unused_confirm_title", locale: locale),
+            isPresented: $confirmDeleteUnused, titleVisibility: .visible
+        ) {
+            Button(L10n.t("storage.delete_unused", locale: locale), role: .destructive) {
+                appState.deleteUnusedModelPackages()
+            }
+            Button(L10n.t("package.cancel", locale: locale), role: .cancel) {}
+        } message: {
+            Text(unusedDescription + "\n\n" + L10n.t("storage.delete_unused_confirm_body", locale: locale))
         }
         .confirmationDialog(
             String(format: L10n.t("storage.legacy_confirm", locale: locale), legacyToDelete?.name ?? ""),

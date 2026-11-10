@@ -12,12 +12,24 @@ struct Checks {
         let build = info["CFBundleVersion"] as! String
         let notes = try ReleaseNotes.decode(source, version: version, build: build)
         precondition(notes.content(locale: Locale(identifier: "de"))?.summary == notes.localizations["en"]?.summary)
-        precondition(notes.content(locale: Locale(identifier: "ru"))?.visibleSections.count == 2)
+        precondition(notes.content(locale: Locale(identifier: "ru")) != nil)
         do {
             _ = try ReleaseNotes.decode(source, version: version, build: "999999999")
             fatalError("Mismatched build accepted")
         } catch {}
         var json = try JSONSerialization.jsonObject(with: source) as! [String: Any]
+        // Controlled empty-section fixture, independent of the current release's sections.
+        var emptyFixture = json
+        var localizations = emptyFixture["localizations"] as! [String: Any]
+        var russian = localizations["ru"] as! [String: Any]
+        russian["sections"] = [
+            ["kind": "new", "items": []],
+            ["kind": "fixed", "items": [["title": "Kept section"]]]
+        ]
+        localizations["ru"] = russian
+        emptyFixture["localizations"] = localizations
+        let decoded = try ReleaseNotes.decode(JSONSerialization.data(withJSONObject: emptyFixture), version: version, build: build)
+        precondition(decoded.content(locale: Locale(identifier: "ru"))?.visibleSections.map(\.id) == ["fixed"])
         json["date"] = "2026-02-31"
         do {
             _ = try ReleaseNotes.decode(JSONSerialization.data(withJSONObject: json), version: version, build: build)

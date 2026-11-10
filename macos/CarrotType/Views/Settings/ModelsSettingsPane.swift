@@ -47,9 +47,7 @@ struct ModelsSettingsPane: View {
                 .foregroundStyle(.secondary)
             if status.isReady {
                 HStack {
-                    Button(L10n.t("package.delete", locale: locale), role: .destructive) {
-                        appState.deleteModelPackage(package.id)
-                    }
+                    DeleteModelPackageButton(appState: appState, packageID: package.id, locale: locale)
                 }
             } else {
                 SettingsPackageStatusControls(
@@ -136,9 +134,7 @@ struct ModelsSettingsPane: View {
                             models.selectCleanup(mode)
                         }
                     }
-                    Button(L10n.t("package.delete", locale: locale), role: .destructive) {
-                        appState.deleteModelPackage(packageID)
-                    }
+                    DeleteModelPackageButton(appState: appState, packageID: packageID, locale: locale)
                 }
             } else {
                 SettingsPackageStatusControls(
@@ -197,9 +193,7 @@ struct SettingsPackageStatusControls: View {
             case .ready:
                 Label(L10n.t("package.ready", locale: locale), systemImage: "checkmark.circle.fill")
                     .foregroundStyle(.green)
-                Button(L10n.t("package.delete", locale: locale), role: .destructive) {
-                    appState.deleteModelPackage(id)
-                }
+                DeleteModelPackageButton(appState: appState, packageID: id, locale: locale)
             case .failed:
                 Button(L10n.t("package.retry", locale: locale)) {
                     models.download(id)
@@ -236,5 +230,31 @@ struct SettingsPackageStatusControls: View {
         case .unavailable:
             return L10n.t("package.soon", locale: locale)
         }
+    }
+}
+
+/// Confirmation precedes the existing maintenance gate; Cancel performs no deletion/unload.
+private struct DeleteModelPackageButton: View {
+    @ObservedObject var appState: AppState
+    let packageID: String
+    let locale: Locale
+    @State private var isConfirming = false
+
+    private var package: CatalogPackage? { appState.modelManager.package(id: packageID) }
+
+    var body: some View {
+        Button(L10n.t("package.delete", locale: locale), role: .destructive) { isConfirming = true }
+            .confirmationDialog(
+                String(format: L10n.t("package.delete_confirm_title", locale: locale), package?.displayName ?? packageID),
+                isPresented: $isConfirming, titleVisibility: .visible
+            ) {
+                Button(L10n.t("package.delete", locale: locale), role: .destructive) {
+                    appState.deleteModelPackage(packageID)
+                }
+                Button(L10n.t("package.cancel", locale: locale), role: .cancel) {}
+            } message: {
+                Text(String(format: L10n.t("package.delete_confirm_body", locale: locale), package?.approximateSizeLabel ?? "—")
+                     + "\n\n" + L10n.t(package?.role == .stt ? "package.delete_stt_effect" : "package.delete_cleanup_effect", locale: locale))
+            }
     }
 }

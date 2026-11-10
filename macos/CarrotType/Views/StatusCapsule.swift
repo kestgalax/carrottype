@@ -332,6 +332,8 @@ struct StatusCapsuleView: View {
     var onCopy: () -> Void
     var onClose: () -> Void
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorSchemeContrast) private var colorContrast
     @State private var pulse = false
 
     private var liveDraftCombined: String {
@@ -363,14 +365,21 @@ struct StatusCapsuleView: View {
             RoundedRectangle(cornerRadius: islandCornerRadius, style: .continuous)
                 .fill(Color.black)
         }
-        .onAppear {
-            withAnimation(.easeInOut(duration: 0.7).repeatForever(autoreverses: true)) {
-                pulse = true
-            }
+        .onAppear { updatePulse() }
+        .onChange(of: reduceMotion) { _, _ in updatePulse() }
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.18), value: phase)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.12), value: liveConfirmed)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.12), value: liveVolatile)
+    }
+
+    private func updatePulse() {
+        // Reset the old repeating animation when the system setting changes live.
+        var reset = Transaction(animation: nil)
+        reset.disablesAnimations = true
+        withTransaction(reset) { pulse = false }
+        if !reduceMotion {
+            withAnimation(.easeInOut(duration: 0.7).repeatForever(autoreverses: true)) { pulse = true }
         }
-        .animation(.easeInOut(duration: 0.18), value: phase)
-        .animation(.easeInOut(duration: 0.12), value: liveConfirmed)
-        .animation(.easeInOut(duration: 0.12), value: liveVolatile)
     }
 
     private var islandCornerRadius: CGFloat {
@@ -405,7 +414,7 @@ struct StatusCapsuleView: View {
         let spacer = liveConfirmed.isEmpty || liveVolatile.isEmpty ? "" : " "
         return (
             Text(liveConfirmed).foregroundStyle(.white.opacity(0.95))
-                + Text(spacer + liveVolatile).foregroundStyle(.white.opacity(0.42))
+                + Text(spacer + liveVolatile).foregroundStyle(.white.opacity(colorContrast == .increased ? 0.85 : 0.65))
         )
         .font(.system(size: 12, weight: .regular, design: .rounded))
         .multilineTextAlignment(.leading)
