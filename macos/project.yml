@@ -121,8 +121,8 @@ targets:
         CFBundleName: CarrotType
         CFBundleDisplayName: CarrotType
         CFBundleIconName: AppIcon
-        CFBundleShortVersionString: "0.5.0"
-        CFBundleVersion: "25"
+        CFBundleShortVersionString: "0.6.0"
+        CFBundleVersion: "26"
         SUFeedURL: https://github.com/kestgalax/carrottype/releases/latest/download/appcast.xml
         SUPublicEDKey: kyWmWPcxx2NbRMhm2mAHgI58bk92VuFyPLd9wG/kaLc=
         SUEnableAutomaticChecks: false
@@ -134,5 +134,5 @@ targets:
         SUSignedFeedFailureExpirationInterval: 0
         LSMinimumSystemVersion: "14.0"
         LSUIElement: true
-        NSMicrophoneUsageDescription: CarrotType записывает звук с микрофона только пока вы удерживаете или нажимаете горячую клавишу. Аудио обрабатывается локально и никуда не отправляется.
+        NSMicrophoneUsageDescription: "CarrotType записывает звук только по вашему действию: горячей клавише или кнопке пробной диктовки. Аудио обрабатывается локально и никуда не отправляется."
         NSPrincipalClass: NSApplication

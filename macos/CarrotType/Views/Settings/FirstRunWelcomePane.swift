@@ -12,6 +12,8 @@ struct FirstRunWelcomePane: View {
                 Text(L10n.t("first_run.body", locale: locale))
                     .foregroundStyle(.secondary)
 
+                SetupProgressView(appState: appState)
+
                 Button(L10n.t("first_run.continue", locale: locale)) {
                     appState.refreshPermissions()
                     appState.completeFirstRun()

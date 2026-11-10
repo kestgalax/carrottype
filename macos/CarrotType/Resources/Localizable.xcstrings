@@ -4279,6 +4279,431 @@
           }
         }
       }
+    },
+    "setup.progress": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройка: %d из 4 шагов"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup: %d of 4 steps"
+          }
+        }
+      }
+    },
+    "setup.step.model": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Модель Parakeet Ultra"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parakeet Ultra model"
+          }
+        }
+      }
+    },
+    "setup.step.trial": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пробная диктовка"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try dictation"
+          }
+        }
+      }
+    },
+    "setup.next.0": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрешите доступ к микрофону ниже. Запись начнётся только по вашему действию."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow microphone access below. Recording starts only when you choose."
+          }
+        }
+      }
+    },
+    "setup.next.1": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Включите CarrotType в Универсальном доступе, затем вернитесь сюда."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable CarrotType in Accessibility, then return here."
+          }
+        }
+      }
+    },
+    "setup.next.2": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скачайте Ultra ниже. Уже установленная модель не требует повторной загрузки."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download Ultra below. An installed model does not need to download again."
+          }
+        }
+      }
+    },
+    "setup.next.3": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Всё готово. Попробуйте диктовку в поле ниже."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything is ready. Try dictation in the field below."
+          }
+        }
+      }
+    },
+    "setup.finished": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройка завершена. Пробу можно повторить в любой момент."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup complete. You can repeat the trial anytime."
+          }
+        }
+      }
+    },
+    "setup.trial_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нажмите «Начать», произнесите короткую фразу и завершите запись. Текст появится только здесь и не сохранится после выхода."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Start, say a short phrase, then finish recording. Text appears only here and is cleared when you quit."
+          }
+        }
+      }
+    },
+    "setup.trial_start": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Начать пробную диктовку"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start trial dictation"
+          }
+        }
+      }
+    },
+    "setup.trial_stop": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Завершить запись"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finish recording"
+          }
+        }
+      }
+    },
+    "setup.trial_processing": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обрабатываю пробную диктовку…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Processing trial dictation…"
+          }
+        }
+      }
+    },
+    "setup.trial_not_ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сначала разрешите микрофон и Универсальный доступ и установите Ultra."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First allow Microphone and Accessibility and install Ultra."
+          }
+        }
+      }
+    },
+    "setup.trial_result": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Результат пробной диктовки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trial dictation result"
+          }
+        }
+      }
+    },
+    "setup.trial_hotkey_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В пробе запись управляется кнопками, Escape отменяет. После пробы проверьте %@ в своём редакторе. Проба не меняет буфер обмена и не учитывается в статистике."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use buttons to control the trial; Escape cancels recording. Afterwards, test %@ in your editor. The trial does not change your clipboard or count in statistics."
+          }
+        }
+      }
+    },
+    "format.fallback_applied": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Применено базовое форматирование"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Basic formatting applied"
+          }
+        }
+      }
+    },
+    "format.actual": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Применено: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Applied: %@"
+          }
+        }
+      }
+    },
+    "format.last_dictation": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Форматирование последней диктовки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last dictation formatting"
+          }
+        }
+      }
+    },
+    "format.fallback_missing": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Модель %@ недоступна. Текст сохранён с базовым форматированием."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The %@ model is unavailable. Your text was kept with basic formatting."
+          }
+        }
+      }
+    },
+    "format.fallback_failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось применить %@. Текст сохранён с базовым форматированием."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not apply %@. Your text was kept with basic formatting."
+          }
+        }
+      }
+    },
+    "transform.model_unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — недоступна"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — unavailable"
+          }
+        }
+      }
+    },
+    "transform.model_fallback": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Модель %@ недоступна. При запуске будет использована %@."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The %@ model is unavailable. The next run will use %@."
+          }
+        }
+      }
+    },
+    "transform.instruction_required": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Введите инструкцию для этого действия."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter an instruction for this action."
+          }
+        }
+      }
+    },
+    "transform.instruction_label": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Инструкция для выделенного текста"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instruction for selected text"
+          }
+        }
+      }
+    },
+    "setup.trial_cancelling": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отменяю пробную диктовку…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelling trial dictation…"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

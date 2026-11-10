@@ -172,6 +172,7 @@ final class HotkeyService: ObservableObject {
     @Published private(set) var lastConflictTarget: HotkeyCaptureTarget?
 
     private let defaults: UserDefaults
+    private let registersGlobalHotkeys: Bool
     private var hotKeyRef: EventHotKeyRef?
     private var transformHotKeyRefs: [EventHotKeyRef?] = []
     private var transformCarbonIDByBindingID: [UUID: UInt32] = [:]
@@ -188,8 +189,9 @@ final class HotkeyService: ObservableObject {
     private let hotKeyID = EventHotKeyID(signature: OSType(0x43525450), id: 1) // 'CRTP'
     private let escapeHotKeyID = EventHotKeyID(signature: OSType(0x43525450), id: 2)
 
-    init(defaults: UserDefaults = .standard) {
+    init(defaults: UserDefaults = .standard, registersGlobalHotkeys: Bool = true) {
         self.defaults = defaults
+        self.registersGlobalHotkeys = registersGlobalHotkeys
         let dictation: KeyChord
         if let data = defaults.data(forKey: Keys.dictationChord),
            let saved = try? JSONDecoder().decode(KeyChord.self, from: data) {
@@ -224,6 +226,7 @@ final class HotkeyService: ObservableObject {
     }
 
     func handleCarbonHotkeyPressed() {
+        guard !isRecording else { return }
         onHotkey?()
     }
 
@@ -263,6 +266,7 @@ final class HotkeyService: ObservableObject {
     }
 
     func handleCarbonTransformHotkey(carbonID: UInt32) {
+        guard !isRecording else { return }
         guard let bindingID = transformCarbonIDByBindingID.first(where: { $0.value == carbonID })?.key else {
             return
         }
@@ -298,6 +302,8 @@ final class HotkeyService: ObservableObject {
 
     func startRecording(for target: HotkeyCaptureTarget = .dictation) {
         stopRecordingMonitor()
+        // Let the local monitor receive even a chord already registered by this app.
+        unregisterGlobalHotkey()
         lastCaptureConflict = false
         lastConflictTarget = nil
         captureTarget = target
@@ -318,9 +324,11 @@ final class HotkeyService: ObservableObject {
         stopRecordingMonitor()
         isRecording = false
         captureTarget = nil
+        registerGlobalHotkey()
     }
 
     func apply(_ chord: KeyChord, for target: HotkeyCaptureTarget) {
+        defer { registerGlobalHotkey() }
         stopRecordingMonitor()
         isRecording = false
         captureTarget = nil
@@ -336,7 +344,6 @@ final class HotkeyService: ObservableObject {
             lastConflictTarget = nil
             self.chord = chord
             persistDictation(chord)
-            registerGlobalHotkey()
         case .transformBinding(let id):
             if chord == self.chord || transformBindings.contains(where: { $0.id != id && $0.chord == chord }) {
                 lastCaptureConflict = true
@@ -348,7 +355,6 @@ final class HotkeyService: ObservableObject {
             guard let index = transformBindings.firstIndex(where: { $0.id == id }) else { return }
             transformBindings[index].chord = chord
             TransformBindingsStore.save(transformBindings, defaults: defaults)
-            registerGlobalHotkey()
             objectWillChange.send()
         }
     }
@@ -363,6 +369,7 @@ final class HotkeyService: ObservableObject {
 
     func registerGlobalHotkey() {
         unregisterGlobalHotkey()
+        guard registersGlobalHotkeys else { return }
         installHandlerIfNeeded()
 
         var dictationRef: EventHotKeyRef?

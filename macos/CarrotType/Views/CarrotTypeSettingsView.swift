@@ -101,7 +101,10 @@ struct CarrotTypeSettingsView: View {
         } else {
             switch selection {
             case .general:
-                GeneralSettingsPane(appState: appState, hotkey: appState.hotkey)
+                GeneralSettingsPane(appState: appState, hotkey: appState.hotkey, onOpenModels: {
+                    selection = .models
+                    showStatusDetails = false
+                })
             case .setup:
                 SetupSettingsPane(appState: appState, permissions: appState.permissions)
             case .models:
@@ -118,9 +121,7 @@ struct CarrotTypeSettingsView: View {
     }
 
     private var paneAfterFirstRun: SettingsPane {
-        let permissionsOK = appState.permissions.microphoneGranted
-            && appState.permissions.accessibilityGranted
-        return permissionsOK ? .models : .setup
+        .setup
     }
 
     private var defaultPane: SettingsPane {

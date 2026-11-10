@@ -79,6 +79,10 @@ struct StatusDetailsPane: View {
                         .foregroundStyle(.secondary)
                 }
 
+                if let outcome = appState.lastFormattingOutcome {
+                    Text(L10n.t("format.last_dictation", locale: locale)).font(.headline)
+                    FormattingOutcomeView(outcome: outcome, locale: locale)
+                }
                 CheckForAppUpdatesButton(updates: appState.updates, locale: locale)
             } header: {
                 Text(L10n.t("status.section", locale: locale))

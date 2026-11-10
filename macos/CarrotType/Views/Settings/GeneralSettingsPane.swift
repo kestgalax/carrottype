@@ -3,6 +3,8 @@ import SwiftUI
 struct GeneralSettingsPane: View {
     @ObservedObject var appState: AppState
     @ObservedObject var hotkey: HotkeyService
+    let onOpenModels: () -> Void
+    @State private var expandedBindingIDs = Set<UUID>()
 
     private var locale: Locale { appState.effectiveLocale }
 
@@ -62,18 +64,28 @@ struct GeneralSettingsPane: View {
                         appState: appState,
                         hotkey: hotkey,
                         binding: binding,
-                        locale: locale
+                        locale: locale,
+                        expanded: Binding(
+                            get: { expandedBindingIDs.contains(binding.id) },
+                            set: { if $0 { expandedBindingIDs.insert(binding.id) } else { expandedBindingIDs.remove(binding.id) } }
+                        ),
+                        onOpenModels: onOpenModels
                     )
                 }
 
                 Button(L10n.t("transform.binding_add", locale: locale)) {
+                    let count = appState.transformBindings.count
                     appState.addTransformBinding()
+                    if appState.transformBindings.count > count, let added = appState.transformBindings.last {
+                        expandedBindingIDs.insert(added.id)
+                    }
                 }
                 .disabled(!appState.canAddTransformBinding)
 
                 if appState.selectableTransformModes.isEmpty {
                     Text(L10n.t("transform.model_none", locale: locale))
                         .foregroundStyle(.secondary)
+                    Button(L10n.t("status.open_models", locale: locale), action: onOpenModels)
                 }
             } header: {
                 Text(L10n.t("transform.section", locale: locale))
@@ -99,6 +111,9 @@ struct GeneralSettingsPane: View {
             }
         }
         .formStyle(.grouped)
+        .onDisappear {
+            if hotkey.isRecording { hotkey.cancelRecording() }
+        }
     }
 }
 
@@ -107,8 +122,43 @@ private struct TransformBindingEditor: View {
     @ObservedObject var hotkey: HotkeyService
     let binding: TransformBinding
     let locale: Locale
+    @Binding var expanded: Bool
+    let onOpenModels: () -> Void
 
     var body: some View {
+        DisclosureGroup(isExpanded: $expanded) {
+            editor.padding(.top, 8)
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(current.kind.title(locale: locale))
+                    Text(current.kind == .translate
+                         ? "\(TransformLanguageCatalog.shortLabel(code: current.languageA)) ↔ \(TransformLanguageCatalog.shortLabel(code: current.languageB))"
+                         : (current.customInstruction.isEmpty ? L10n.t("transform.instruction_required", locale: locale) : current.customInstruction))
+                        .font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                }
+                Spacer(minLength: 8)
+                VStack(alignment: .trailing, spacing: 3) {
+                    Text(current.chord.displayString).monospaced()
+                    Text(current.cleanupMode.title(locale: locale)).font(.caption).foregroundStyle(.secondary)
+                }
+                if !appState.selectableTransformModes.contains(current.cleanupMode) {
+                    Image(systemName: "exclamationmark.circle").foregroundStyle(.orange)
+                }
+            }
+            .padding(.vertical, 4)
+        }
+        .onChange(of: expanded) { _, isExpanded in
+            if !isExpanded { cancelHotkeyCaptureIfNeeded() }
+        }
+        .onDisappear { cancelHotkeyCaptureIfNeeded() }
+    }
+
+    private func cancelHotkeyCaptureIfNeeded() {
+        if hotkey.captureTarget == .transformBinding(binding.id) { hotkey.cancelRecording() }
+    }
+
+    private var editor: some View {
         VStack(alignment: .leading, spacing: 10) {
             HotkeySettingsRow(
                 hotkey: hotkey,
@@ -122,19 +172,27 @@ private struct TransformBindingEditor: View {
                 }
             }
 
-            if appState.selectableTransformModes.isEmpty {
-                Text(L10n.t("transform.model_none", locale: locale))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            } else {
-                Picker(L10n.t("transform.model", locale: locale), selection: modeBinding) {
-                    ForEach(appState.selectableTransformModes) { mode in
-                        Text(mode.title(locale: locale)).tag(mode)
-                    }
+            Picker(L10n.t("transform.model", locale: locale), selection: modeBinding) {
+                if !appState.selectableTransformModes.contains(current.cleanupMode) {
+                    Text(String(format: L10n.t("transform.model_unavailable", locale: locale), current.cleanupMode.title(locale: locale)))
+                        .tag(current.cleanupMode)
+                        .disabled(true)
+                }
+                ForEach(appState.selectableTransformModes) { mode in
+                    Text(mode.title(locale: locale)).tag(mode)
                 }
             }
+            if !appState.selectableTransformModes.contains(current.cleanupMode) {
+                if let fallback = TransformModelSelection.resolve(requested: current.cleanupMode, available: appState.selectableTransformModes) {
+                    Text(String(format: L10n.t("transform.model_fallback", locale: locale), current.cleanupMode.title(locale: locale), fallback.title(locale: locale)))
+                        .font(.caption).foregroundStyle(.secondary)
+                } else {
+                    Text(L10n.t("transform.model_none", locale: locale)).font(.caption).foregroundStyle(.secondary)
+                }
+                Button(L10n.t("status.open_models", locale: locale), action: onOpenModels)
+            }
 
-            if binding.kind == .translate {
+            if current.kind == .translate {
                 HStack(spacing: 8) {
                     Picker("", selection: languageABinding) {
                         ForEach(TransformLanguageCatalog.codes, id: \.self) { code in
@@ -157,6 +215,11 @@ private struct TransformBindingEditor: View {
                 TextEditor(text: customInstructionBinding)
                     .font(.body)
                     .frame(minHeight: 56, maxHeight: 100)
+                    .accessibilityLabel(L10n.t("transform.instruction_label", locale: locale))
+                if current.customInstruction.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Text(L10n.t("transform.instruction_required", locale: locale))
+                        .font(.caption).foregroundStyle(.orange)
+                }
             }
 
             HStack {
@@ -182,11 +245,7 @@ private struct TransformBindingEditor: View {
 
     private var modeBinding: Binding<CleanupMode> {
         Binding(
-            get: {
-                let modes = appState.selectableTransformModes
-                if modes.contains(current.cleanupMode) { return current.cleanupMode }
-                return modes.first ?? .smart
-            },
+            get: { current.cleanupMode },
             set: { mode in
                 var next = current
                 next.cleanupMode = mode

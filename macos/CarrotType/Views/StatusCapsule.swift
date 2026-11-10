@@ -9,6 +9,7 @@ enum StatusCapsulePhase: Equatable {
     case understanding
     case writing
     case inserted
+    case formattingFallback
     case transformResult
     case liveDraftResult
     case dictationRecovery
@@ -231,6 +232,9 @@ struct StatusCapsuleGeometry {
         hasLiveDraft: Bool = false,
         liveDraftText: String = ""
     ) -> NSSize {
+        if phase == .formattingFallback {
+            return NSSize(width: max(notchWidth + 24, 320), height: contentTopInset + visibleDrop)
+        }
         if phase.isResult {
             let width: CGFloat = hasNotch ? max(notchWidth + 24, 360) : 360
             let height = contentTopInset + 200
@@ -502,6 +506,10 @@ struct StatusCapsuleView: View {
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.95))
                 label(L10n.t("capsule.inserted", locale: locale))
+            case .formattingFallback:
+                Image(systemName: "checkmark")
+                    .font(.system(size: 11, weight: .semibold))
+                label(L10n.t("format.fallback_applied", locale: locale))
             case .transformResult, .liveDraftResult, .dictationRecovery:
                 EmptyView()
             }

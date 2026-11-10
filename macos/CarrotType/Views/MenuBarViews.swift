@@ -3,6 +3,7 @@ import SwiftUI
 
 struct MenuBarLabelView: View {
     @EnvironmentObject private var appState: AppState
+    @Environment(\.openSettings) private var openSettings
 
     private var locale: Locale { appState.effectiveLocale }
 
@@ -11,6 +12,13 @@ struct MenuBarLabelView: View {
             .symbolRenderingMode(.hierarchical)
             .foregroundStyle(iconColor)
             .accessibilityLabel(Text(accessibilityLabel))
+            .onAppear {
+                guard appState.takeFirstRunPresentationRequest() else { return }
+                DispatchQueue.main.async {
+                    openSettings()
+                    NSApp.activate(ignoringOtherApps: true)
+                }
+            }
     }
 
     private var iconColor: Color {

@@ -59,6 +59,10 @@ Maintainability of a small app shell > Premature multi-platform abstraction
 - First successful end-to-end carrottype session is documented and reproducible.
 - Setup UI makes readiness, active STT, and formatting mode obvious without rebuilding the app.
 
+## Setup trial (0.6.0)
+
+Setup guides microphone → Accessibility → Ultra → an optional local trial. Ready still uses the existing permissions/model requirements. The trial is explicitly started/stopped/cancelled by the user, runs on-device, and delivers its final text in Settings rather than at an external caret. It does not automatically change clipboard, Last Dictation or usage statistics. Only completion Boolean persists; trial text stays in RAM. Ordinary dictation and selection transforms retain their existing behavior.
+
 ## Application updates (0.5.0, ADR-017)
 
 Manual in-app checks and opt-in automatic checks/downloads use signed GitHub Release assets. Dictation remains local and independent of update availability. Installation waits for active dictation/text processing, preserves external model/settings/statistics storage, and does not force a background restart. No profiling or transcript upload. The first updater-enabled installation is manual; notarization remains separate.

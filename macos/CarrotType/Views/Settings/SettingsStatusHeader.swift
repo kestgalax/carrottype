@@ -30,6 +30,11 @@ struct SettingsStatusHeader: View {
                     .foregroundStyle(.orange)
             }
 
+            if !appState.hasCompletedSetupTrial {
+                Text(String(format: L10n.t("setup.progress", locale: locale), appState.setupProgress.completedCount))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             if showDetailsLink {
                 Button(L10n.t("status.details", locale: locale), action: onDetails)
                     .buttonStyle(.plain)
