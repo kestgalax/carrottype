@@ -12,6 +12,7 @@ struct ModelsSettingsPane: View {
             cleanupSection
         }
         .formStyle(.grouped)
+        .scrollIndicators(.never)
     }
 
     private var sttSection: some View {

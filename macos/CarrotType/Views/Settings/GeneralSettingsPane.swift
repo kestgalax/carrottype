@@ -110,6 +110,7 @@ struct GeneralSettingsPane: View {
             }
         }
         .formStyle(.grouped)
+        .scrollIndicators(.never)
         .onDisappear {
             if hotkey.isRecording { hotkey.cancelRecording() }
         }
@@ -212,6 +213,7 @@ private struct TransformBindingEditor: View {
                 }
             } else {
                 TextEditor(text: customInstructionBinding)
+                    .scrollIndicators(.automatic)
                     .font(.body)
                     .frame(minHeight: 56, maxHeight: 100)
                     .accessibilityLabel(L10n.t("transform.instruction_label", locale: locale))

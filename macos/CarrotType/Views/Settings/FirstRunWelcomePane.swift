@@ -27,5 +27,6 @@ struct FirstRunWelcomePane: View {
             }
         }
         .formStyle(.grouped)
+        .scrollIndicators(.never)
     }
 }

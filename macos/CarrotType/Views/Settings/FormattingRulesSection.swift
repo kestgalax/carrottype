@@ -22,6 +22,7 @@ struct FormattingRulesSection: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(t("rules.custom"))
                     TextEditor(text: $appState.dictationRules.customRules)
+                        .scrollIndicators(.automatic)
                         .font(.body).frame(height: 64)
                         .accessibilityLabel(t("rules.custom"))
                     Text(t("rules.examples")).font(.caption).foregroundStyle(.secondary)
@@ -43,6 +44,7 @@ struct FormattingRulesSection: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(t("rules.trial_hint")).font(.caption).foregroundStyle(.secondary)
                     TextEditor(text: $trialInput).frame(height: 78)
+                        .scrollIndicators(.automatic)
                         .accessibilityLabel(t("rules.trial_input"))
                         .disabled(appState.isFormattingTrialRunning)
                         .onChange(of: trialInput) { _, value in

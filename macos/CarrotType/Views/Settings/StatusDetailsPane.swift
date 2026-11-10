@@ -99,6 +99,7 @@ struct StatusDetailsPane: View {
             }
         }
         .formStyle(.grouped)
+        .scrollIndicators(.never)
     }
 
     private var appVersionLabel: String {
