@@ -9,13 +9,14 @@ struct DictationRules: Codable, Equatable, Sendable {
     var customRules = ""
     var removedWords = ""
     var lowercase = false
+    var lowercaseFirstLetter = false
     var omitFinalPeriod = false
     var businessStyle = false
 
     init() {}
     enum CodingKeys: String, CodingKey {
         case removeFillers, removeRepetitions, applySelfCorrections, paragraphs, customRules
-        case removedWords, lowercase, omitFinalPeriod, businessStyle
+        case removedWords, lowercase, lowercaseFirstLetter, omitFinalPeriod, businessStyle
     }
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -26,6 +27,7 @@ struct DictationRules: Codable, Equatable, Sendable {
         customRules = try c.decodeIfPresent(String.self, forKey: .customRules) ?? ""
         removedWords = try c.decodeIfPresent(String.self, forKey: .removedWords) ?? ""
         lowercase = try c.decodeIfPresent(Bool.self, forKey: .lowercase) ?? false
+        lowercaseFirstLetter = try c.decodeIfPresent(Bool.self, forKey: .lowercaseFirstLetter) ?? false
         omitFinalPeriod = try c.decodeIfPresent(Bool.self, forKey: .omitFinalPeriod) ?? false
         businessStyle = try c.decodeIfPresent(Bool.self, forKey: .businessStyle) ?? false
     }
@@ -64,7 +66,7 @@ enum ExactDictationRules {
     }
 
     static func enabled(_ rules: DictationRules) -> Bool {
-        rules.lowercase || rules.omitFinalPeriod || !words(rules).isEmpty
+        rules.lowercase || rules.lowercaseFirstLetter || rules.omitFinalPeriod || !words(rules).isEmpty
     }
 
     private static func mapProse(_ text: String, _ transform: (String) -> String) -> String {
@@ -100,8 +102,20 @@ enum ExactDictationRules {
         guard enabled(rules) else { return text }
         var result = removeWords(text, rules: rules)
         if rules.lowercase { result = mapProse(result) { $0.lowercased() } }
+        else if rules.lowercaseFirstLetter { result = lowercasingFirstLetter(result) }
         if rules.omitFinalPeriod { result = removingFinalPeriod(result) }
         return result
+    }
+
+    private static func lowercasingFirstLetter(_ text: String) -> String {
+        guard let index = text.firstIndex(where: { $0.isLetter }) else { return text }
+        let range = index..<text.index(after: index)
+        let offset = NSRange(range, in: text)
+        let regex = try! NSRegularExpression(pattern: protectedPattern)
+        // A leading code/URL/identifier is data: do not change it or skip ahead to a later sentence.
+        guard !regex.matches(in: text, range: NSRange(text.startIndex..., in: text))
+            .contains(where: { $0.range.location <= offset.location }) else { return text }
+        return text.replacingCharacters(in: range, with: String(text[index]).lowercased())
     }
 
     private static func removingFinalPeriod(_ text: String) -> String {

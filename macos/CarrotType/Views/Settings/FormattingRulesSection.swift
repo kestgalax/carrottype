@@ -19,6 +19,10 @@ struct FormattingRulesSection: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Toggle(t("rules.lowercase"), isOn: $appState.dictationRules.lowercase)
+            Toggle(t("rules.first_lowercase"), isOn: $appState.dictationRules.lowercaseFirstLetter)
+                .disabled(appState.dictationRules.lowercase)
+            Text(t(appState.dictationRules.lowercase ? "rules.first_lowercase_covered" : "rules.first_lowercase_hint"))
+                .font(.caption).foregroundStyle(.secondary)
             Toggle(t("rules.final_period"), isOn: $appState.dictationRules.omitFinalPeriod)
             Text(t("rules.punctuation_hint")).font(.caption).foregroundStyle(.secondary)
             if usesModel {

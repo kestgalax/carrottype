@@ -202,3 +202,6 @@ Appearance and language contains independent System/Light/Dark and System/RU/EN 
 ### 0.8.0 exact-control review
 
 General distinguishes exact controls (always-remove word list, lowercase prose, omit final sentence period) from model preferences/experimental business tone. Exact controls remain visible and opt-in under Off/Light, with protected-fragment/punctuation guidance and the effective validated word list. Existing model preferences remain visible when a model is selected, with free text preserved. Reset resets all dictation preferences, not theme or models. Trial/Setup/Details share actual mode, typed fallback reason, exact-controls status and separate tone status; unchanged wording is not reported as a business rewrite. Failed/inactive tone does not prevent exact controls. Settings outer scrolling stays hidden/functional; text-editor scrolling remains automatic. Defaults do not enable any new exact/style behavior.
+
+
+First-letter opt-in: “Первое предложение со строчной буквы” sits beside full-prose lowercase. It lowercases only the first letter, preserving all remaining case; full lowercase takes precedence and disables the redundant toggle without clearing it. Caption explains protected starts and precedence. Missing old preferences default false; this runs after model/Light/Off through the common exact stage.

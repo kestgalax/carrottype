@@ -1,7 +1,15 @@
 # Debug review — CarrotType 0.8.0 (30)
 
 
-## Current: exact-control rework Debug
+## Current: first-sentence lowercase Debug
+
+App: `dist/.builds.noindex/CarrotType-0.8.0-First-Lowercase/CarrotType.app`. Quit the previous instance before opening this one. Version/build 0.8.0/30 unchanged; existing development signature deep/strict checked. No new ZIP: earlier archives predate this control. Installed app and potentially running earlier review bundles remain untouched.
+
+Focused manual check: disable full-prose lowercase, enable **Первое предложение со строчной буквы**. `Привет, Анна. Проверим CarrotType.` must become `привет, Анна. Проверим CarrotType.` in trial and ordinary dictation. With full-prose lowercase enabled, the first-letter switch is redundant/disabled while its preference is retained. Protected code/link starts remain unchanged.
+
+Verification: `/tmp/ct080-first-letter-build.log` arm64 Debug succeeded; `/tmp/ct080-first-letter-rules.log` covers migration/default/persistence, RU/EN, quotation/newline/emoji/digits, protected starts, idempotence, combined controls, precedence and Off/Light/fallback. Actual AppState checks are recorded in `/tmp/ct080-first-letter-native.log`. No model prompt/weights/runtime/transform change, so prior tone failures remain open; not release-ready or authorized for publication. Prior-source d02c1e4 hosted CI passed: [42888614542](https://github.com/kestgalax/carrottype/actions/runs/42888614542), [42888536100](https://github.com/kestgalax/carrottype/actions/runs/42888536100). Addition-source hosted CI is separate/pending.
+
+## Earlier: exact-control rework Debug
 
 Branch `feat/deterministic-formatting-0.8` (main-based, earlier 0.8 work retained). **R1/R2 implemented for manual review; business-tone acceptance failed/open. Not release-ready or published.** The older delivery descriptions/checklists below are historical and superseded by this section.
 

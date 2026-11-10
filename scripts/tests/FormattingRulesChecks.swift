@@ -33,7 +33,7 @@ actor TypedFailureEngine: CleanupEngine {
         defaults.set(legacy, forKey: DictationRules.defaultsKey)
         let migrated = DictationRules.load(defaults: defaults)
         precondition(!migrated.removeFillers && migrated.paragraphs && migrated.customRules == "keep my rules")
-        precondition(!migrated.lowercase && !migrated.omitFinalPeriod && migrated.removedWords.isEmpty && !migrated.businessStyle)
+        precondition(!migrated.lowercase && !migrated.lowercaseFirstLetter && !migrated.omitFinalPeriod && migrated.removedWords.isEmpty && !migrated.businessStyle)
         defaults.removeObject(forKey: DictationRules.defaultsKey)
         defaults.set(Data("invalid".utf8), forKey: DictationRules.defaultsKey)
         precondition(DictationRules.load(defaults: defaults) == DictationRules())
@@ -61,6 +61,10 @@ actor TypedFailureEngine: CleanupEngine {
         exact.lowercase = true; exact.omitFinalPeriod = true
         exact.save(defaults: defaults)
         precondition(DictationRules.load(defaults: defaults) == exact)
+        var priorExactPayload = try JSONSerialization.jsonObject(with: JSONEncoder().encode(exact)) as! [String: Any]
+        priorExactPayload.removeValue(forKey: "lowercaseFirstLetter")
+        let priorExact = try JSONDecoder().decode(DictationRules.self, from: JSONSerialization.data(withJSONObject: priorExactPayload))
+        precondition(priorExact == exact) // Earlier 0.8 exact preferences survive the added key.
         let exactCases: [(String, String)] = [
             ("Ну, Нам нужен Отчёт. Это Последняя Фраза.", "нам нужен отчёт. это последняя фраза"),
             ("НУ нужен ну отчёт!", "нужен отчёт!"),
@@ -90,6 +94,44 @@ actor TypedFailureEngine: CleanupEngine {
             precondition(ExactDictationRules.apply(actual, rules: exact) == actual, "Must be idempotent")
         }
         precondition(ExactDictationRules.apply("Raw  Text.", rules: DictationRules()) == "Raw  Text.")
+        var firstOnly = DictationRules()
+        firstOnly.lowercaseFirstLetter = true
+        firstOnly.save(defaults: defaults)
+        precondition(DictationRules.load(defaults: defaults) == firstOnly)
+        for (source, expected) in [
+            ("Привет, Анна. Проверим CarrotType.", "привет, Анна. Проверим CarrotType."),
+            ("  «Привет, Анна!»\nСледующая Строка.", "  «привет, Анна!»\nСледующая Строка."),
+            ("…Hello Jane. Next Sentence!", "…hello Jane. Next Sentence!"),
+            ("123 — Привет, Анна.", "123 — привет, Анна."),
+            ("🌱 Привет, Анна.", "🌱 привет, Анна."),
+            ("Уже строчная.", "уже строчная."),
+            ("привет, Анна.", "привет, Анна."),
+            ("", ""), ("123…", "123…"),
+            ("https://EXAMPLE.com/Path Затем Текст.", "https://EXAMPLE.com/Path Затем Текст."),
+            ("User@Example.COM Затем Текст.", "User@Example.COM Затем Текст."),
+            ("File.Name Затем Текст.", "File.Name Затем Текст."),
+            ("`let X = 1` Затем Текст.", "`let X = 1` Затем Текст."),
+            ("`123` Затем Текст.", "`123` Затем Текст."),
+            ("```swift\nlet X = 1\n```\nТекст.", "```swift\nlet X = 1\n```\nТекст.")
+        ] {
+            let actual = ExactDictationRules.apply(source, rules: firstOnly)
+            precondition(actual == expected, "First-letter mismatch: \(source) → \(actual)")
+            precondition(ExactDictationRules.apply(actual, rules: firstOnly) == actual)
+        }
+        for mode in [CleanupMode.off, .light, .gemma] {
+            let result = try await DictationFormatting.perform(text: "Привет, Анна. Проверим CarrotType.", mode: mode,
+                directory: nil, engine: LightCleanupEngine(), lightEngine: LightCleanupEngine(), rules: firstOnly)
+            precondition(result.text == "привет, Анна. Проверим CarrotType." && result.formatting.exactRulesApplied)
+        }
+        let firstAfterModel = try await DictationFormatting.perform(text: "привет Анна", mode: .gemma,
+            directory: URL(fileURLWithPath: "/fixture"), engine: RuleEngine("Привет, Анна. Проверим CarrotType."),
+            lightEngine: LightCleanupEngine(), rules: firstOnly)
+        precondition(firstAfterModel.text == "привет, Анна. Проверим CarrotType.")
+        firstOnly.removedWords = "ну"; firstOnly.omitFinalPeriod = true
+        precondition(ExactDictationRules.apply("Ну, Привет, Анна. Проверим CarrotType.", rules: firstOnly) == "привет, Анна. Проверим CarrotType")
+        firstOnly.lowercase = true
+        precondition(ExactDictationRules.apply("Привет, Анна. Проверим CarrotType.", rules: firstOnly) == "привет, анна. проверим carrottype")
+        print("PASS first-letter rule: persistence/default migration, RU/EN/quotes/emoji/newlines/protected starts, idempotence, Off/Light/fallback, combined rules and full-lowercase precedence")
         for mode in [CleanupMode.off, .light, .gemma] {
             let result = try await DictationFormatting.perform(text: "Ну, Нужен Отчёт.", mode: mode,
                 directory: nil, engine: LightCleanupEngine(), lightEngine: LightCleanupEngine(), rules: exact)

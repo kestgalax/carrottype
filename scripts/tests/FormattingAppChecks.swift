@@ -135,6 +135,20 @@ private struct ThemeReadingView: View {
         }
         state.dictationRules = DictationRules()
         print("PASS actual AppState exact rules: Off/Light/failing-model share final controls, stage outcome and preserved lease")
+        var firstLetter = DictationRules()
+        firstLetter.lowercaseFirstLetter = true
+        state.dictationRules = firstLetter
+        state.modelManager.selectCleanup(.light)
+        state.runFormattingTrial("Привет, Анна. Проверим CarrotType.")
+        let firstDeadline = Date().addingTimeInterval(10)
+        while state.isFormattingTrialRunning && Date() < firstDeadline { RunLoop.main.run(until: Date().addingTimeInterval(0.03)) }
+        precondition(!state.isFormattingTrialRunning && !state.updates.installationGate.isBusy)
+        precondition(state.formattingTrialResult == "привет, Анна. Проверим CarrotType.")
+        precondition(state.formattingTrialOutcome?.exactRulesApplied == true)
+        precondition(DictationRules.load(defaults: defaults).lowercaseFirstLetter)
+        state.clearFormattingTrial()
+        state.dictationRules = DictationRules()
+        print("PASS actual first-letter trial: persisted switch, only initial letter changes, rest of case preserved")
         // Missing/invalid local fixture model must fall back, never publish partial output.
         state.modelManager.selectCleanup(.gemma)
         state.runFormattingTrial("Ну ты и молодец")

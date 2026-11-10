@@ -6054,6 +6054,57 @@
           }
         }
       }
+    },
+    "rules.first_lowercase": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start the first sentence with lowercase"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Первое предложение со строчной буквы"
+          }
+        }
+      }
+    },
+    "rules.first_lowercase_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changes only the first letter of the text; the rest keeps its case. A leading code fragment, link or technical identifier stays unchanged."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Меняется только первая буква текста, остальной регистр сохраняется. Если текст начинается с кода, ссылки или технического идентификатора, начало не меняется."
+          }
+        }
+      }
+    },
+    "rules.first_lowercase_covered": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Already covered by lowercase prose above."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уже учтено настройкой всех строчных букв выше."
+          }
+        }
+      }
     }
   },
   "version": "1.0"
