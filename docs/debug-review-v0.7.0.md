@@ -1,6 +1,6 @@
 # Debug 0.7.0 (29): native A + Carrot A
 
-Maintainer selected interface A and logo A on 2026-11-10. Implementation: `feat/native-ui-brand-0.7`, from main after PR #24, exploration preserved. This is Debug delivery, **not publication authorization**. Latest stable remains 0.6.2 (28).
+Maintainer selected interface A and logo A on 2026-11-10. Implementation: `feat/native-ui-brand-0.7`, from main after PR #24, exploration preserved. Initially delivered for Debug review; subsequently accepted with final carrot-microphone A and explicitly authorized for publication. **Stable/latest 0.7.0 (29) is published**; final acceptance and release evidence below.
 
 ## Changes
 
@@ -29,3 +29,19 @@ Close other copies, then open `dist/CarrotType-0.7.0-Debug/CarrotType.app`. It u
 No Release/DMG/production update feed for 0.7.0 is published. Wait for this Debug version’s explicit acceptance before shipping.
 
 Delivery checks: deterministic native PNG regeneration, byte-identical legacy 1024px archive versus tag v0.6.2, RU/EN literal view-key coverage, brand validation and AIDOS validate/trace/review/diff checks passed. Full native offscreen images use the final built app code with isolated fixture-only switches enabled, no production defaults or user files modified. Hosted app regression/brand checks and Debug arm64 build passed on source commit `122afdb` ([run 42824162527](https://github.com/kestgalax/carrottype/actions/runs/42824162527)); hosted governance was explicitly skipped without private AIDOS access, local AIDOS validate/trace/review passed.
+
+## Final icon acceptance / publication authorization
+
+After Debug review the maintainer retained original carrot-microphone A from the subsequent concept comparison and explicitly instructed «оставляем изначальный / согласен / публикуй тогда версию». This supersedes the early plain carrot asset, while retaining the reviewed native UI. Final resource-only change and matching notes passed regenerated SVG/PNG checks, signed Debug rebuild/deep verification and refreshed production SwiftUI offscreen fixtures. Final Debug remains at the linked path; earlier plain-carrot copy retained separately in ignored dist. Individual device/TCC/manual dialog results were not enumerated; no additional manual acceptance is claimed. This version’s publication gate is satisfied.
+
+Final isolated native updater acceptance passed using candidate-code fixtures A build 28 → B build 29, unique staging identity/roots: unavailable/tampered feed/corrupt ZIP rejected, native installation and no-new-version behavior passed; external fixture files, helper/shaders and strict signatures retained. This is not an installation of the actual historical 0.6.2 binary or independent TCC continuity proof. User application/preferences/models were not replaced. Clean production Release/DMG and downloaded signed-assets verification remain release gates.
+
+## Release packaging / draft gate
+
+Clean Release succeeded from fresh temporary DerivedData using the committed resolved packages; source/tag `2bb5555` / `v0.7.0`. Release is signed inside-out with CarrotType Development and passes deep/strict verification, exact bundled notes, helper model-path rejection, shader presence and no bundled model weights. Verified 0.6.2 DMG filesystem template retained `.DS_Store` (`168249954ca4048d6c8970609563ddb655cc62c7c3ff2189ddc8fb4bce55ed84`) and Applications symlink; updated accent background written in place preserving its file identity (`80495495b97af5f0b3dd8312a15a72f7c849f7c16c81d71ad0a4a22b62f8d64c`). Final DMG integrity/read-only app checks passed. No Finder automation permission or installed-app change.
+
+Signed production ZIP/feed prepared and verified without key export. Downloaded draft DMG/ZIP/feed bytes match local hashes/lengths; read-only remote verifier passed identity, monotonic version, URLs and signatures. ZIP extraction preserves strict component signatures and exact final binaries, icon, notes and compiled assets. Checksums in release notes. Hosted final-source compilation and public stable endpoint remain required before closeout.
+
+## 0.7.0 published — 2026-11-10
+
+Maintainer accepted Debug UI and explicitly selected the original carrot-microphone A from the second comparison, then authorized publication: «оставляем изначальный / согласен / публикуй тогда версию». Stable/latest **0.7.0 (29)** published from tag/source `v0.7.0` / `2bb5555`, PR #25. Final signed Debug and fresh clean Release/DMG pass; signed ZIP/feed and downloaded draft/public assets pass signatures, metadata, lengths, URLs and exact local byte hashes. Anonymous stable feed/archive match. Native Sparkle probe using isolated build-28 host found the live update without installation. Isolated candidate-code A28→B29 installer and negative scenarios passed; not independent historical-binary/TCC proof. Final-source hosted app CI passed (runs `42828743848` and `42828835461`); private hosted AIDOS explicitly skipped, local validate/trace/review passed. No user installation/data replacement, key export, new engine/dependency/trust or feature removal. Full independent device/VoiceOver/TCC/network checks remain unverified. Artifact hashes: `docs/github-release-notes-v0.7.0.md`; acceptance/limits: `docs/debug-review-v0.7.0.md`. Next: collect feedback; no further implementation stage selected. Later releases retain their own Debug/manual/publication gate.

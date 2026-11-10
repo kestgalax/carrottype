@@ -4,7 +4,7 @@
 
 - Task ID: uiux-and-brand-refresh
 - Title: Audit the product experience, discuss directions and implement the selected interface/logo
-- Status: interface A + logo A explicitly selected; D3 implemented on `feat/native-ui-brand-0.7` from main after PR #24; Debug 0.7.0 (29) local verification/delivery, manual acceptance pending
+- Status: interface A + logo A explicitly selected; D3 implemented on `feat/native-ui-brand-0.7` from main after PR #24; Debug 0.7.0 (29) accepted; final carrot-microphone A selected and publication explicitly authorized; stable/latest released after clean Release and local/draft/public verification
 
 ## Traceability
 
@@ -64,3 +64,9 @@ No ADR impact. Follows accepted ADR-002 and ADR-011; existing product/runtime/up
 Maintainer chose A for both interface and logo. Decision: `docs/design/0.7.0/decision.md`. Implemented limited native shell/style, same five destinations, shared General/Models formatting selector, A1–A5 accessibility/confirmation improvements, concise localized hints and original vector/native icon exports. All useful functions and runtime/trust policy retained. Sources: `macos/Brand/`, `AppStyle.swift`, affected Views/localizations; existing icon preserved in archive/history. Actual production SwiftUI rendered offscreen in isolated fixture profile, not a full native walkthrough. Debug/evidence/limits: `docs/debug-review-v0.7.0.md`. Separate manual/publication gate remains.
 
 D3 verification closeout: signed real-identity Debug 0.7.0 (29), local regressions/native offscreen/resource/signature checks and [hosted app CI](https://github.com/kestgalax/carrottype/actions/runs/42824162527) passed (source `122afdb`). Hosted private-tooling governance explicitly skipped, local governance passed. Await this version’s manual acceptance; no release published.
+
+Final selection after Debug review: original carrot-microphone A from `microphone-concepts/comparison-round2.html`, not the earlier plain carrot. Maintainer explicitly authorized publication. Final source/tag `2bb5555` / `v0.7.0`, PR #25; updated notes/assets, signed Debug, refreshed offscreen fixture rendering, local governance and isolated native A28→B29 update acceptance passed. Full manual/device/TCC limits remain. Release/draft/public checks are recorded in the release evidence before closeout.
+
+## 0.7.0 published — 2026-11-10
+
+Maintainer accepted Debug UI and explicitly selected the original carrot-microphone A from the second comparison, then authorized publication: «оставляем изначальный / согласен / публикуй тогда версию». Stable/latest **0.7.0 (29)** published from tag/source `v0.7.0` / `2bb5555`, PR #25. Final signed Debug and fresh clean Release/DMG pass; signed ZIP/feed and downloaded draft/public assets pass signatures, metadata, lengths, URLs and exact local byte hashes. Anonymous stable feed/archive match. Native Sparkle probe using isolated build-28 host found the live update without installation. Isolated candidate-code A28→B29 installer and negative scenarios passed; not independent historical-binary/TCC proof. Final-source hosted app CI passed (runs `42828743848` and `42828835461`); private hosted AIDOS explicitly skipped, local validate/trace/review passed. No user installation/data replacement, key export, new engine/dependency/trust or feature removal. Full independent device/VoiceOver/TCC/network checks remain unverified. Artifact hashes: `docs/github-release-notes-v0.7.0.md`; acceptance/limits: `docs/debug-review-v0.7.0.md`. Next: collect feedback; no further implementation stage selected. Later releases retain their own Debug/manual/publication gate.

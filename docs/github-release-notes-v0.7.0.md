@@ -1,5 +1,3 @@
-Draft — Debug 0.7.0 (29) delivered for manual acceptance; not published. Content generated from bundled ReleaseNotes.json.
-
 # CarrotType 0.7.0
 
 2026-11-10
@@ -8,7 +6,7 @@ Draft — Debug 0.7.0 (29) delivered for manual acceptance; not published. Conte
 
 ## Новое
 
-- Новый знак CarrotType\. Простая геометричная морковь и монохромный значок в режиме ожидания\.
+- Новый знак CarrotType\. Морковка\-микрофон и монохромный значок в режиме ожидания\.
 
 ## Улучшено
 
@@ -20,4 +18,20 @@ Draft — Debug 0.7.0 (29) delivered for manual acceptance; not published. Conte
 - Более доступное управление\. Подписи языковых списков, выбранный раздел, Reduce Motion и читаемые последние слова live draft\.
 - Подтверждение перед удалением\. Удаление установленных моделей, неиспользуемых пакетов и очистка статистики требуют подтверждения\.
 
-Self-signed CarrotType Development, not Developer ID/notarized. No production update assets published. Evidence/limits: `docs/debug-review-v0.7.0.md`. Publication requires this version’s explicit acceptance.
+## Установка
+
+Обновитесь через «Проверить обновления» в CarrotType или скачайте DMG и перенесите приложение в «Программы». Модели, настройки и статистика сохраняются.
+
+Сборка подписана локальной CarrotType Development, но не Developer ID и не нотаризована. При первом скачивании macOS может потребовать: Системные настройки → Конфиденциальность и безопасность → «Всё равно открыть».
+
+## Проверка выпуска
+
+Clean Release arm64 и DMG проверены локально; приложение и updater подписаны. Исходники: `v0.7.0` / `2bb5555`, PR #25. Подписи и контрольные суммы скачанных файлов черновика и публичного релиза проверены; публичный канал обновлений работает без авторизации. [GitHub Actions](https://github.com/kestgalax/carrottype/actions/runs/42828835461): тесты и Debug arm64 прошли. Изолированный Sparkle обнаружил обновление с build 28; установка A28→B29 проверена на тестовых копиях. Независимая полная проверка TCC, устройств, VoiceOver и сети не заявляется.
+
+## SHA-256
+
+| Файл | Байт | SHA-256 |
+|---|---:|---|
+| `CarrotType-0.7.0.dmg` | 23626210 | `4dc08cdda9958cf3438f3c55a72e39c513488dbceb99f17b6f3b7af6cbfe6a8d` |
+| `CarrotType-0.7.0-29.zip` | 23584510 | `856f128c9dd68f51227a1554676189e6bd5d28c705a55ce3fe8de68f2201649a` |
+| `appcast.xml` | 8062 | `15d5c915f16088030bcbdbfd4e76dc970601a50e89eec2816bd69c3ff84c7c0b` |

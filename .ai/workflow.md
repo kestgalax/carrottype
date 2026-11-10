@@ -4,7 +4,7 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (after v0.6.1)
+## Current phase (after v0.7.0)
 
 Unsigned DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**; preflight found private visibility on 2026-11-10, then the maintainer explicitly authorized public code/history and the change was applied/verified. v0.3.9 parallel unmute + live-draft hygiene; Storage download-cache clear in v0.3.8; security hardening (ADR-015) in v0.3.7; live draft (ADR-014) through v0.3.4–v0.3.6.
 
@@ -88,3 +88,7 @@ Maintainer explicitly selected interface A + logo A. New main-based `feat/native
 0.7.0 Debug delivery: final arm64 build and production regressions passed; signed real-identity Debug in `dist/CarrotType-0.7.0-Debug/CarrotType.app`, deep/resource/metadata checks passed. Native template verified 18×18pt/isTemplate, deterministic exports and archived old master verified. Offscreen RU/EN/light/dark/minimum screenshots retained under `dist/CarrotType-0.7.0-Native-Review`; not interactive/VoiceOver/device/TCC QA. Hosted CI follows source push; separate manual acceptance and publication authorization still required.
 
 0.7.0 hosted app verification passed: https://github.com/kestgalax/carrottype/actions/runs/42824162527, source `122afdb` (production regressions, brand assets, Debug arm64). Hosted AIDOS explicitly skipped; local governance passed. Final signed Debug delivered; manual approval/publication remain pending. Follow-up closeout edits are documentation only.
+
+## 0.7.0 published — 2026-11-10
+
+Maintainer accepted Debug UI and explicitly selected the original carrot-microphone A from the second comparison, then authorized publication: «оставляем изначальный / согласен / публикуй тогда версию». Stable/latest **0.7.0 (29)** published from tag/source `v0.7.0` / `2bb5555`, PR #25. Final signed Debug and fresh clean Release/DMG pass; signed ZIP/feed and downloaded draft/public assets pass signatures, metadata, lengths, URLs and exact local byte hashes. Anonymous stable feed/archive match. Native Sparkle probe using isolated build-28 host found the live update without installation. Isolated candidate-code A28→B29 installer and negative scenarios passed; not independent historical-binary/TCC proof. Final-source hosted app CI passed (runs `42828743848` and `42828835461`); private hosted AIDOS explicitly skipped, local validate/trace/review passed. No user installation/data replacement, key export, new engine/dependency/trust or feature removal. Full independent device/VoiceOver/TCC/network checks remain unverified. Artifact hashes: `docs/github-release-notes-v0.7.0.md`; acceptance/limits: `docs/debug-review-v0.7.0.md`. Next: collect feedback; no further implementation stage selected. Later releases retain their own Debug/manual/publication gate.

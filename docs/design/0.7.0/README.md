@@ -23,3 +23,7 @@ The initial comparison offered independent A/B/C interface and logo choices. The
 ## Preview verification
 
 WebKit/Playwright: 36 direction/screen/theme/width combinations passed, no JS errors or horizontal content overflow; notes footer stays visible. Screenshots inspected for light/minimum, dark notes/Capsule and mobile rendering. Browser-only evidence retained under ignored `dist/CarrotType-0.7.0-Design-Review/`; no native app QA claim.
+
+## Final published selection
+
+The earlier plain carrot above is historical. After native Debug review, the maintainer requested microphone/key variants, reviewed both comparisons under `microphone-concepts/`, and explicitly retained original carrot-microphone A (`round2-a-*`, also unchanged as `round3-a-*`). Final editable filled-outline masters in `macos/Brand/`; selected native interface A retained. Released as 0.7.0 (29) after explicit publication authorization and verified signed artifacts; decision/evidence linked above.
