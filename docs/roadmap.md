@@ -124,7 +124,7 @@ Preserve existing useful features throughout these stages. Removing, hiding or r
 
 ## In progress / on branch
 
-- `feat/native-ui-brand-0.7` from main after merged PR #24, exploration retained: A/A selected, native UI/brand changes implemented as Debug 0.7.0 (29). Existing features preserved; local regression/build and isolated offscreen render checks pass. Final signed Debug verified; this version’s manual/publication gate pending. The original design branch preserves the initial comparison.
+- `feat/native-ui-brand-0.7` from main after merged PR #24, exploration retained: A/A selected, native UI/brand changes implemented as Debug 0.7.0 (29). Existing features preserved; local regression/build and isolated offscreen render checks pass. Final signed Debug and hosted app checks/build verified (run `42824162527`, source `122afdb`); this version’s manual/publication gate pending. The original design branch preserves the initial comparison.
 
 - `refactor/dictation-session-lifecycle`, PR #24 merged: 0.6.2 (28) published from tag `14dacf3` after authorized Debug and verified Release/assets. CI-only correction handles private AIDOS without publishing tooling or installing broad credentials; hosted app checks and Debug compile passed (run `42815581126`). Next: 0.7.0 UI/UX/logo discussion.
 
