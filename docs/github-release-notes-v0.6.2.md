@@ -25,12 +25,12 @@ If Gatekeeper blocks the manually downloaded app, attempt to open it in Finder, 
 
 - Signed Debug delivered before explicit publication authorization; individual manual results were not enumerated. Production lifecycle/streaming epoch checks and existing reliability/setup/Ultra/update/notes/catalog regressions passed locally, including targeted mutations in temporary source copies.
 - Exact pinned Sparkle native isolated A 27 → B 28, unavailable/tampered feed/corrupt archive/no-update and external fixture/signature/helper/metallib checks passed. Staging A/B share candidate code. No user app/models/settings were replaced.
-- GitHub workflow authorization is restored. The first hosted run failed because AIDOS is private; the PR corrects this CI configuration without changing app source. App regressions/build run independently; hosted AIDOS checks require a separate read-only secret and are explicitly skipped without it. Local governance passed. Hosted app verification is in progress.
+- GitHub workflow authorization is restored. The first hosted run failed because AIDOS is private; the PR corrects this CI configuration without changing app source. App regressions/build run independently; hosted AIDOS checks require a separate read-only secret and are explicitly skipped without it. Local governance passed. Hosted app regressions and Debug arm64 compilation passed ([CI run](https://github.com/kestgalax/carrottype/actions/runs/42815581126), app/CI commit `0e69d52`).
 - Ed25519 does not replace Gatekeeper/notarization. Real cold model/microphone/Wave Link and independent permission continuity/network audit retain the manual limitations documented in the checklist. No new engines, dependencies, network sink or feature removals; private signing key stays in Keychain.
 
 [Debug acceptance and release evidence](debug-review-v0.6.2.md) · [Update trust](decisions/ADR-017-github-app-updates.md)
 
-## Verified local artifacts
+## Verified artifacts
 
 | Asset | Bytes | SHA-256 |
 | --- | ---: | --- |
@@ -38,4 +38,4 @@ If Gatekeeper blocks the manually downloaded app, attempt to open it in Finder, 
 | CarrotType-0.6.2-28.zip | 23658152 | `5520e6e928d27a15446d30055d6a41a1094a04a40caf3850dcca3c31c8cfd592` |
 | appcast.xml | 7274 | `f25ec686077eb4ba2ff1fe33a6a773f4d1adf7f3fe47bb3904f95cec9bcb4c2b` |
 
-Fresh clean Release arm64, strict nested code signatures, helper path-jail rejection, bundled notes, MLX shaders and no bundled model weights verified. DMG integrity and unchanged installer layout/background from checksum-verified 0.6.1 template passed. ZIP/feed signatures verified locally. Draft/public verification follows before publication.
+Fresh clean Release arm64, strict nested code signatures, helper path-jail rejection, bundled notes, MLX shaders and no bundled model weights verified. DMG integrity and unchanged installer layout/background from checksum-verified 0.6.1 template passed. ZIP/feed signatures verified locally. Downloaded draft assets matched local bytes; signatures, identity, lengths and versioned URLs passed. After stable/latest publication, downloaded public signatures/length/identity/URL and anonymous feed/archive checks passed. Native Sparkle probe from isolated build 27 found the update; no user installation was launched.

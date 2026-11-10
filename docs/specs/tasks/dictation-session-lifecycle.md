@@ -5,7 +5,7 @@
 - Task ID: dictation-session-lifecycle
 - Title: Extract recording ownership, pin engine settings and serialize teardown
 - Target: 0.6.2 (28), branch `refactor/dictation-session-lifecycle` from main after 0.6.1
-- Status: implemented; signed Debug and local verification complete; Debug delivered and publication authorized; Release verification and remote CI pending; not published
+- Status: published as 0.6.2 (28); hosted app regression checks and Debug compilation passed (run `42815581126`); local governance passed, hosted private AIDOS checks explicitly skipped
 
 ## Traceability
 
@@ -52,4 +52,8 @@ Review found that the streaming actor read its mutable `onUpdate` after an await
 
 ## Delivery and remote CI limit
 
-Signed Debug 0.6.2 (28) is at `dist/CarrotType-0.6.2-Debug/CarrotType.app`; local full regression suite, production mutation checks and arm64 Debug compilation passed. Checklist: `docs/debug-review-v0.6.2.md`. GitHub rejected workflow push because the OAuth token lacks `workflow` scope; connected integration writes also returned 403. Commits remain local, no remote branch/PR/run was created. Remote CI remains pending. Maintainer subsequently authorized publication after Debug delivery («публикуй»); clean Release and artifact verification are in progress.
+At initial Debug delivery (historical status): signed Debug 0.6.2 (28) was at `dist/CarrotType-0.6.2-Debug/CarrotType.app`; local full regression suite, production mutation checks and arm64 Debug compilation passed. Checklist: `docs/debug-review-v0.6.2.md`. GitHub rejected workflow push because the OAuth token lacks `workflow` scope; connected integration writes also returned 403. At that time commits remained local and no remote branch/PR/run existed. Authorization was later restored; final publication and CI results are recorded below. Maintainer subsequently authorized publication after Debug delivery («публикуй»); clean Release and artifact verification subsequently passed (see Publication).
+
+## Publication
+
+0.6.2 (28) stable/latest published after explicit authorization, clean Release and signed local/draft/public asset verification. Tag/source `14dacf3`, PR #24. CI-only correction after the tag separates app regression/build from private AIDOS access; no accepted/built app source changes. Hosted regressions and Debug compilation passed (run `42815581126`); local governance passed and hosted governance skipped explicitly. Evidence and limits: `docs/debug-review-v0.6.2.md`. Next: 0.7.0 UI/UX/logo exploration.

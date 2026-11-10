@@ -13,7 +13,7 @@ This project uses AIDOS governance checks through the cloned AIDOS tooling repos
 2. `npm run aidos:trace`
 3. `npm run aidos:review`
 
-## macOS build (optional / later)
+## macOS build
 
 When a CI macOS runner with full Xcode is available:
 
@@ -23,7 +23,7 @@ xcodegen generate
 xcodebuild -project CarrotType.xcodeproj -scheme CarrotType -configuration Debug build
 ```
 
-Until then, governance markdown checks are the required gate; native build is verified locally by developers with Xcode.
+Native builds are now verified locally and by the workflow below. Governance markdown checks remain required locally; hosted private-tooling availability is described below.
 
 ## Local Pre-Commit Option
 
@@ -69,3 +69,5 @@ The same lifecycle harness additionally compiles **the actual** `ParakeetStreami
 ### Private AIDOS access
 
 AIDOS is private (verified 2026-11-10); the first hosted run failed at its checkout before tests. The app regression/build steps now run independently. Hosted governance runs only when the maintainer provisions a narrowly scoped `AIDOS_READ_TOKEN` Actions secret with read access to that repository; credentials are not persisted. Without it the workflow emits an explicit warning and skips only AIDOS checkout/governance, so a green app build does not imply hosted governance passed. Local validate/trace/review evidence remains required. Never put a personal broad-scope token in workflow code or publish/copy private tooling to make CI pass. The first 0.6.2 tag preserves the original workflow; the PR contains this CI-only correction without changing the accepted/built app source.
+
+Hosted app verification passed on commit `0e69d52`: [run 42815581126](https://github.com/kestgalax/carrottype/actions/runs/42815581126), production regression suite and unsigned Debug arm64 build. AIDOS checkout/governance were explicitly skipped because no private-tooling secret was configured; local validate/trace/review passed. Release closeout edits after that run change documentation only and do not change the tested app or workflow.

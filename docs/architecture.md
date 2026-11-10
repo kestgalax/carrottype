@@ -100,7 +100,7 @@ General and Details reuse `WhatsNewButton` and a native scrollable `ReleaseNotes
 
 Debug staging accepts only `app.carrottype.macos.update-test[.<run-id>]`; unique run/scenario identities prevent native resume state from contaminating other tests. Debug profile roots derive from these identities, outside production data; production bundle validation still requires the exact real ID. A/B fixtures use signed copies of the Debug candidate with different builds and matching note metadata; they prove the native installer, not independent TCC continuity or the behavior of a historically compiled app.
 
-## Session ownership — 0.6.2 candidate
+## Session ownership — 0.6.2
 
 `DictationSessionCoordinator<Configuration, Output>` owns a single main-actor lifecycle: idle → starting → recording → transcribing/cleaning → finishing → idle, or cancelling → idle. It reserves the shared install gate synchronously before creating a task. Recorder/mute/preview adapters are created with the coordinator; AppState handles published presentation and existing caret/trial/recovery/statistics delivery only. Each start captures a value configuration (model ID/path, formatting mode/directory, microphone and active shortcut/live-draft choices). Clipboard/statistics opt-ins retain their live delivery-time semantics.
 

@@ -1,6 +1,6 @@
 # Debug 0.6.2 (28): lifecycle и проверки
 
-Статус: C1–C2 реализованы в `refactor/dictation-session-lifecycle` от main после 0.6.1. Локальный arm64 Debug и production checks проходят. После доставки Debug и краткого чеклиста пользователь разрешил публикацию: «публикуй» (2026-11-10). Индивидуальные результаты ручных проверок не перечислены; Release-проверки в процессе. 0.7.0 UI/UX/logo не начат; текущие интерфейс/иконка сохранены.
+Статус: C1–C2 реализованы в `refactor/dictation-session-lifecycle` от main после 0.6.1. Локальный arm64 Debug и production checks проходят. После доставки Debug и краткого чеклиста пользователь разрешил публикацию: «публикуй» (2026-11-10). Индивидуальные результаты ручных проверок не перечислены. Release и signed assets проверены, 0.6.2 опубликована stable/latest; итог ниже. 0.7.0 UI/UX/logo не начат; текущие интерфейс/иконка сохранены.
 
 ## Сборка
 
@@ -42,3 +42,7 @@ Maintainer instructed «публикуй» after the delivered Debug and focused
 Clean Release arm64 **BUILD SUCCEEDED** in fresh temporary DerivedData. Signed `dist/CarrotType-0.6.2-Release/CarrotType.app`; strict app/nested signatures, helper outside-model-root rejection, matching note metadata, shaders and no bundled weights passed. Checksum-verified 0.6.1 DMG filesystem template retained exact `.DS_Store`/background; final 0.6.2 DMG integrity and read-only mounted app verified. Production ZIP/appcast signed/verified locally; hashes in `docs/github-release-notes-v0.6.2.md`. Pending: remote source/workflow permission, draft/public verification and stable publication.
 
 GitHub authorization restored (`workflow`), source branch/tag pushed and PR #24 created. First hosted run 42815277135 failed before tests because AIDOS is private. CI-only correction separates app regression/build from optional private-tooling checkout: no new secret installed, explicit skip/warning for hosted AIDOS without a narrowly scoped read token. Local governance passed. Release app source/accepted Debug and signed artifacts are unchanged; tag 14dacf3 retains the original workflow. Draft asset verification in progress.
+
+## Published — 2026-11-10
+
+Stable/latest **0.6.2 (28)** published from tag/source `14dacf3`; PR #24 includes a later CI-only correction, app source unchanged. All downloaded draft bytes matched local files. Draft/public signatures, lengths, metadata and versioned URLs passed; anonymous stable feed/archive matched. Native pinned Sparkle probe from isolated build-27 host reported `Update available!` without installation. Private key stayed in Keychain; installed app and user models/data untouched. Local production tests, mutation checks, Debug/clean Release and governance passed. Hosted app regressions and Debug arm64 compilation passed ([CI run](https://github.com/kestgalax/carrottype/actions/runs/42815581126), app/CI commit `0e69d52`). Hosted AIDOS is explicitly skipped without a separate read-only tooling secret; it is not counted as a hosted pass. Remaining independent microphone/TCC/GUI/network limits above still apply.
