@@ -25,7 +25,7 @@ If Gatekeeper blocks the manually downloaded app, attempt to open it in Finder, 
 
 - Signed Debug delivered before explicit publication authorization; individual manual results were not enumerated. Production lifecycle/streaming epoch checks and existing reliability/setup/Ultra/update/notes/catalog regressions passed locally, including targeted mutations in temporary source copies.
 - Exact pinned Sparkle native isolated A 27 → B 28, unavailable/tampered feed/corrupt archive/no-update and external fixture/signature/helper/metallib checks passed. Staging A/B share candidate code. No user app/models/settings were replaced.
-- Remote CI has not run: GitHub rejected workflow push because the current OAuth token lacks `workflow` scope. Workflow is prepared locally; local passing checks are not reported as hosted CI success.
+- GitHub workflow authorization is restored. The first hosted run failed because AIDOS is private; the PR corrects this CI configuration without changing app source. App regressions/build run independently; hosted AIDOS checks require a separate read-only secret and are explicitly skipped without it. Local governance passed. Hosted app verification is in progress.
 - Ed25519 does not replace Gatekeeper/notarization. Real cold model/microphone/Wave Link and independent permission continuity/network audit retain the manual limitations documented in the checklist. No new engines, dependencies, network sink or feature removals; private signing key stays in Keychain.
 
 [Debug acceptance and release evidence](debug-review-v0.6.2.md) · [Update trust](decisions/ADR-017-github-app-updates.md)

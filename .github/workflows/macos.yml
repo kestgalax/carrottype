@@ -20,15 +20,29 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
+      - name: Check optional private governance access
+        id: governance-access
+        env:
+          AIDOS_READ_TOKEN: ${{ secrets.AIDOS_READ_TOKEN }}
+        run: |
+          if [ -n "$AIDOS_READ_TOKEN" ]; then
+            echo 'available=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'available=false' >> "$GITHUB_OUTPUT"
+            echo '::warning::Private AIDOS tooling is unavailable. Hosted governance is skipped; require local validate/trace/review evidence. App checks and build still run.'
+          fi
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        if: steps.governance-access.outputs.available == 'true'
         with:
           repository: kestgalax/AIDOS
+          token: ${{ secrets.AIDOS_READ_TOKEN }}
           ref: 832909433d28a2e080be6d7e405475d3d08dc009
           path: .aidos
           persist-credentials: false
       - name: Select runner Xcode
         run: printf 'DEVELOPER_DIR=%s\n' "$(xcode-select -p)" >> "$GITHUB_ENV"
       - name: Governance
+        if: steps.governance-access.outputs.available == 'true'
         run: |
           npm run aidos:validate
           npm run aidos:trace

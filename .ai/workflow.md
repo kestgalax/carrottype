@@ -70,3 +70,5 @@ C1–C2 on `refactor/dictation-session-lifecycle` from main after PR #23. Debug 
 ## 0.6.2 release authorization — 2026-11-10
 
 After signed Debug delivery and the focused lifecycle checklist, maintainer instructed «публикуй». This satisfies this version’s publication authorization; individual manual results were not enumerated. Prepare clean Release/DMG and verify signed local/draft/public assets before stable publication. Remote CI remains unexecuted until GitHub workflow access is restored. No authorization for later versions is inferred.
+
+GitHub authorization restored (`workflow`), source branch/tag pushed and PR #24 created. First hosted run 42815277135 failed before tests because AIDOS is private. CI-only correction separates app regression/build from optional private-tooling checkout: no new secret installed, explicit skip/warning for hosted AIDOS without a narrowly scoped read token. Local governance passed. Release app source/accepted Debug and signed artifacts are unchanged; tag 14dacf3 retains the original workflow. Draft asset verification in progress.
