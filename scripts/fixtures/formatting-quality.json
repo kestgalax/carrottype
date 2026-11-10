@@ -1,0 +1,76 @@
+[
+  {
+    "id": "hesitation",
+    "text": "эм привет как дела"
+  },
+  {
+    "id": "rules-off",
+    "text": "эм привет как дела",
+    "rules": {
+      "removeFillers": false,
+      "removeRepetitions": false,
+      "applySelfCorrections": false
+    }
+  },
+  {
+    "id": "correction",
+    "text": "эм во вторник нет в среду"
+  },
+  {
+    "id": "names-correction",
+    "text": "эм завтра встретимся с Анной нет с Марией обсудим CarrotType"
+  },
+  {
+    "id": "numbers-negation",
+    "text": "я не согласен на 15 процентов напиши Марии до 17:30"
+  },
+  {
+    "id": "custom-term",
+    "text": "сегодня мы проверяем керроттайп",
+    "rules": {
+      "customRules": "Пиши название приложения керроттайп как CarrotType."
+    }
+  },
+  {
+    "id": "paragraphs",
+    "text": "обсудим бюджет на встрече завтра первая тема расходы на оборудование вторая тема план найма на следующий год",
+    "rules": {
+      "paragraphs": true
+    }
+  },
+  {
+    "id": "english",
+    "text": "um I like this design because it is simple"
+  },
+  {
+    "id": "outer-quotes",
+    "text": "\"I like this design.\""
+  },
+  {
+    "id": "inner-quotes",
+    "text": "Он сказал «я не согласен» и ушёл"
+  },
+  {
+    "id": "code",
+    "text": "```swift\nlet x = 1\n```"
+  },
+  {
+    "id": "url",
+    "text": "открой https://example.com/CarrotType и не меняй 25 процентов"
+  },
+  {
+    "id": "question",
+    "text": "сколько будет два плюс два"
+  },
+  {
+    "id": "long-limit",
+    "text": "Это длинный пример русской диктовки, который должен быть сохранён целиком. ",
+    "repeat": 1100,
+    "suffix": "Важная последняя фраза: бюджет согласован."
+  },
+  {
+    "id": "transform",
+    "text": "Привет, как дела?",
+    "instructions": "Переведи текст на английский. Верни только перевод."
+  }
+]
