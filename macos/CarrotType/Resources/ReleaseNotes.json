@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "version": "0.6.1",
+  "build": "27",
+  "date": "2026-11-10",
+  "localizations": {
+    "en": {
+      "summary": "Clearer updates, with changes always close at hand.",
+      "sections": [
+        {
+          "kind": "new",
+          "items": [
+            {
+              "title": "What’s New, whenever you need it.",
+              "detail": "Open changes for the installed version from General or Status Details, even offline."
+            }
+          ]
+        },
+        {
+          "kind": "improved",
+          "items": [
+            {
+              "title": "Release notes with room to breathe.",
+              "detail": "Short sections and clearer typography replace a single paragraph in the update window."
+            },
+            {
+              "title": "Version and update controls together.",
+              "detail": "Your automatic-check and download preferences stay where they are."
+            }
+          ]
+        },
+        {
+          "kind": "fixed",
+          "items": []
+        }
+      ]
+    },
+    "ru": {
+      "summary": "Обновления стали понятнее, а список изменений всегда под рукой.",
+      "sections": [
+        {
+          "kind": "new",
+          "items": [
+            {
+              "title": "«Что нового» — в любой момент.",
+              "detail": "Изменения установленной версии доступны в General и Details, даже без интернета."
+            }
+          ]
+        },
+        {
+          "kind": "improved",
+          "items": [
+            {
+              "title": "Список изменений, который удобно читать.",
+              "detail": "Короткие разделы и аккуратная типографика вместо сплошного абзаца в окне обновления."
+            },
+            {
+              "title": "Версия и обновления — рядом.",
+              "detail": "Настройки автоматической проверки и скачивания сохранены на прежнем месте."
+            }
+          ]
+        },
+        {
+          "kind": "fixed",
+          "items": []
+        }
+      ]
+    }
+  }
+}

@@ -18,6 +18,12 @@ struct AppUpdateSettingsSection: View {
 
     var body: some View {
         Section {
+            HStack {
+                Text("CarrotType v\(updates.releaseNotes.version)")
+                    .fontWeight(.medium)
+                Spacer()
+                WhatsNewButton(notes: updates.releaseNotes, locale: locale)
+            }
             Toggle(L10n.t("updates.automatic_checks", locale: locale), isOn: Binding(
                 get: { updates.automaticallyChecks }, set: updates.setAutomaticallyChecks
             ))
