@@ -61,11 +61,12 @@ struct FormattingRulesSection: View {
                     }
                     if let error = appState.formattingTrialError { Text(error).foregroundStyle(.red) }
                     if let result = appState.formattingTrialResult {
-                        Text(t("rules.result")).font(.caption).foregroundStyle(.secondary)
+                        Text(t("rules.result") + (appState.formattingTrialOutcome.map { " · " + $0.actualMode.title(locale: locale) } ?? ""))
+                            .font(.caption).foregroundStyle(.secondary)
                         Text(result.isEmpty ? t("rules.empty") : result)
                             .textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading)
                         if appState.formattingTrialOutcome?.usedFallback == true {
-                            Text(t("rules.fallback")).font(.caption).foregroundStyle(.secondary)
+                            Label(t("rules.fallback"), systemImage: "exclamationmark.triangle").font(.callout).foregroundStyle(.orange)
                         }
                     }
                 }

@@ -32,3 +32,9 @@ No new STT/runtime/network/trust/dependency is introduced; ADR-009 process-per-r
 ## Consequences
 
 New users see fewer models; legacy packages still require explicit deletion. Dictation preferences and theme add small local versioned preferences, without transcript storage. Conservative validation can fall back on otherwise valid edits, and model compliance/semantic fidelity remains imperfect. Qwen comparative quality/latency/RAM and full interactive/system-theme/device checks remain unverified. The per-version signed Debug/manual/publication gate is unchanged.
+
+## Debug feedback: custom rule priority and intent preservation
+
+Maintainer tested Gemma with explicit word removal, final punctuation, lowercase and business tone, and supplied a local evaluation text. Custom presentation/word rules override the generic filler/capitalization defaults; meaning/language/facts/values/code protection stays higher priority. An explicitly requested tone may change wording while retaining facts, questions, intentions and certainty; default/no-custom formatting stays literal. No generic transform instruction replacement or new engine.
+
+Actual AppState text-trial evaluation confirmed delivery of rules but inconsistent model compliance. Broad few-shot style examples contaminated unrelated casing/removal requests and were rejected. Losing an existing question mark is now conservatively rejected to visible Light fallback, to avoid presenting a question as an asserted decision (valid edits can also be rejected). Result UI always names the actual applied mode and makes fallback prominent. These controls do not prove semantic fidelity or make combined/business rules dependable; further quality acceptance is open. User text remains local evaluation input and is not committed as a fixture.

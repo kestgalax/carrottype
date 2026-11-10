@@ -49,3 +49,7 @@ Qwen weights are absent: no Qwen comparative quality/latency/RAM claim. Syntheti
 ## ADR Impact
 
 New ADR required: ADR-018 accepted for narrowed cleanup offerings/compatibility and bounded dictation rules/v3 helper purpose. No new engine/runtime/network/trust; existing ADR-009/012/015/016/017 boundaries retained.
+
+## Custom-rule Debug diagnostic
+
+Maintainer asked to recheck actual Gemma trial against four formatting/tone rules and supplied text. Actual AppState path confirms rules arrive, but combined/style compliance remains unreliable. Prompt priority/content-intent boundaries clarified, question-mark-loss rejection tested, actual-mode/fallback UI made explicit; no generic few-shot contamination retained. [Detailed evidence and unresolved quality](../../2026-11-10-formatting-quality-0.8.0.md). No complete four-rule/business-tone acceptance is claimed, no user message committed, no new engine or implicit download. Signed Debug feedback still precedes any publication.

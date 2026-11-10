@@ -5364,13 +5364,13 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Например: «Пиши CarrotType именно так», «Сохраняй разговорный стиль», «Не переводи технические термины». До 1000 символов. Перевод и переписывание — в действии Custom."
+            "value": "Например: «Всегда удаляй ну», «Только строчные буквы», «Пиши CarrotType именно так». Правила оформления важнее стандартных настроек выше. Смена стиля и сочетания правил могут выполняться неточно — проверьте результат. До 1000 символов. Перевод и сокращение — в действии Custom."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "For example: “Spell CarrotType exactly this way”, “Keep a conversational style”, “Do not translate technical terms”. Up to 1000 characters. Use Custom for translation or rewriting."
+            "value": "For example: “Always remove um”, “Lowercase only”, “Spell CarrotType exactly this way”. Formatting rules override the defaults above. Style changes and combined rules may be unreliable — check the result. Up to 1000 characters. Use Custom for translation or summarizing."
           }
         }
       }

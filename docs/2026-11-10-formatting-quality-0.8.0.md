@@ -37,3 +37,25 @@ python3 scripts/evaluate-formatting.py \
 ```
 
 Use mode smart and its installed directory for a later Qwen comparison; this tool never installs weights. Synthetic text/results written only to the explicitly supplied output. Final local artifact: `dist/.builds.noindex/CarrotType-0.8.0-model-eval-final.json`. See [Debug acceptance/limits](debug-review-v0.8.0.md); no release permission inferred from automated or synthetic checks.
+
+## Maintainer custom-rule diagnostic (Gemma, actual text trial)
+
+The maintainer reported four rules: always remove ну; no final full stop; lowercase only; business style, then provided a Russian message to test. Tested through the actual `AppState.runFormattingTrial` → captured `DictationRules` → `DictationPipeline.formatText` → helper path, not a parallel prompt-only mock. Separate temporary bundle/defaults/stat root, global hotkeys disabled; existing installed Gemma weights read locally. No microphone/clipboard/history/statistics writes, downloads or raw maintainer message committed. Evaluation source/logs with the supplied message remain temporary local inputs only.
+
+Original behavior: individual removal/final-stop/casing instructions reached Gemma and were partly applied; casing also lost other punctuation. The four-rule combination lowercased/removed the final stop, but ignored business tone and lost question marks. A separate synthetic case containing a protected numeric value fell back to Light, which does not interpret free-text preferences. Thus the trial wiring is working, but the result cannot be assumed to reflect successful rule compliance.
+
+Prompt review identified conflicting generic filler/capitalization/no-paraphrase instructions. Preferences now explicitly outrank presentation defaults; only an explicit style request may change wording while retaining facts/intent. Generic few-shot style examples were rejected because they contaminated unrelated casing/removal requests. Original transcript framing and no-custom literal behavior are retained. Existing-question-mark loss is conservatively rejected; the result heading names the actual mode and fallback warning is prominent.
+
+Final observed trial results (single runs, not a benchmark):
+
+| Input/rules | Observed result | Assessment |
+|---|---|---|
+| Maintainer message + all four rules | Gemma, 16.98 s; lowercase, no last full stop; both source questions remain | Business wording still not applied; not a four-rule pass |
+| Synthetic two sentences + no final stop | `Это первое предложение. Это последнее предложение` | Requested final stop removed, interior stop retained |
+| Synthetic casing-only | `привет анна проверим carrottype сегодня` | Lowercase applied but unrequested punctuation lost; partial compliance |
+| Synthetic business-only | Conversational wording retained | Style request not reliably followed |
+| Synthetic combination with protected value | Light fallback, 8.18 s | Model result rejected; custom rules not applied, now clearly labelled |
+
+Word-removal examples succeeded in the diagnostic, but the maintainer message itself has no ну, so it cannot establish that property. The model still does not reliably execute the full combined/style request. Do not present this diagnostic or a safer failure as a successful business-tone fix. A possible follow-up is explicit structured word/case/final-punctuation controls (deterministic application) with model tone separately evaluated; no natural-language regex parser/new model/engine is introduced here.
+
+Synthetic counterparts are added to `scripts/fixtures/formatting-quality.json`; the raw maintainer message is not a repository fixture. Question-intent rejection has production validation checks. Qwen remains absent/unmeasured. Further arbitrary-rule quality acceptance and this version's manual/release gate remain open.

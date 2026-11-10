@@ -60,6 +60,8 @@ actor RuleEngine: CleanupEngine {
         precondition(!DictationIntegrity.accepts(source: "Температура -15", result: "Температура 15"))
         precondition(!DictationIntegrity.accepts(source: "Не более 15%", result: "Не более 15"))
         precondition(!DictationIntegrity.accepts(source: "Это 15", result: "Это 16"))
+        precondition(!DictationIntegrity.accepts(source: "Мы не готовы?", result: "Мы не готовы."))
+        precondition(DictationIntegrity.accepts(source: "Мы не готовы?", result: "мы не готовы?"))
         precondition(!DictationIntegrity.accepts(source: "Я не согласен", result: "Я согласен"))
         precondition(!DictationIntegrity.accepts(source: "\"I like this design.\"", result: "I like this design."))
         precondition(!DictationIntegrity.accepts(source: "um I like this", result: "Ум, I like this"))
@@ -67,7 +69,7 @@ actor RuleEngine: CleanupEngine {
         precondition(!DictationIntegrity.accepts(source: "```swift\nlet x = 1\n```", result: "let x = 1"))
         precondition(!DictationIntegrity.accepts(source: "```swift\nlet X = 1\n```", result: "```swift\nlet x = 1\n```"))
         precondition(DictationIntegrity.accepts(source: "эм я не согласен на 15 процентов", result: "Я не согласен на 15 процентов."))
-        print("PASS conservative output guards: missing/changed numbers, negations, quote/code/URL loss and introduced Cyrillic")
+        print("PASS conservative output guards: missing/changed numbers, negations, question/quote/code/URL loss and introduced Cyrillic")
 
         let request = CleanupHelperRequest(text: "fixture", mode: "smart", modelDirectory: "/fixture",
             purpose: "dictation", dictationRules: rules)
