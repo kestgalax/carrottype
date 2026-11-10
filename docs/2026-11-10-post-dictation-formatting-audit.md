@@ -93,3 +93,7 @@ Off/Light сохраняются — это не дополнительные с
 ## Отложенное исследование диктовки
 
 По последнему запросу пользователя GigaAM v3 отложен **без назначенной версии/срока**. Ранее обсуждавшаяся 0.9.0 больше не является следующим обязательным этапом. [Исследование и проверки сохранены](2026-11-10-dictation-alternatives.md) для возвращения по новому запросу. В 0.8.0 остаются постобработка/правила/тема; новую STT не добавлять и Ultra default не менять.
+
+## Implementation follow-up
+
+Maintainer authorized implementation of the nearest stage. P1–P3 are now implemented on fresh main-based `feat/formatting-rules-theme-0.8`; this document's preceding audit describes the original 0.7 baseline/proposal. [Task](specs/tasks/dictation-rules-and-theme.md), [Debug evidence/manual checks](debug-review-v0.8.0.md), [actual Gemma quality limits](2026-11-10-formatting-quality-0.8.0.md). Qwen absent, no comparative evaluation claim; publication/manual acceptance pending.

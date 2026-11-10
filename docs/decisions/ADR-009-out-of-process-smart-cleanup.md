@@ -44,3 +44,7 @@ XPC alone does not guarantee a flat host: a keep-alive XPC service retains helpe
 ## Transport hardening — 0.3.10 candidate
 
 The process-per-request JSON transport remains unchanged. Parent stdout/stderr readers run concurrently with the child and stdin writer. Each output stream is limited to 4 MiB; stderr is drained without retaining its contents. Timeout (120 s) and task cancellation terminate the child, escalate to SIGKILL after 0.5 s if needed, and reap it before returning. Requests/response text are never logged. Launch is serialized with cancellation so a pre-launch cancel cannot orphan a process. Malformed or incompatible protocol responses fail cleanup; existing dictation Light fallback and transform error policies remain.
+
+## 0.8.0 clarification
+
+[ADR-018](ADR-018-dictation-rules-and-cleanup-catalog.md) narrows new cleanup offerings to Qwen3 0.6B/Gemma while retaining installed Smart+ compatibility, and specifies bounded dictation preferences/v3 helper purpose independent of Translate/Custom. Existing engine/runtime/process/trust decisions remain; historical rationale above is retained.

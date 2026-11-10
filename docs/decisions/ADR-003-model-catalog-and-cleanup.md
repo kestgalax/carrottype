@@ -88,3 +88,7 @@ Smart prompt policy:
 - Licensing (CC-BY-4.0 for Parakeet, Apache-2.0 for Qwen 3, Whisper license) must be surfaced in UI / about.
 - Implementation may use a local MLX/CoreML runtime or sidecar; that engineering choice must preserve “no auth to download” and catalog IDs.
 - Ready-to-carrottype requires: Microphone + Accessibility + at least one Ready STT model.
+
+## 0.8.0 clarification
+
+[ADR-018](ADR-018-dictation-rules-and-cleanup-catalog.md) narrows new cleanup offerings to Qwen3 0.6B/Gemma while retaining installed Smart+ compatibility, and specifies bounded dictation preferences/v3 helper purpose independent of Translate/Custom. Existing engine/runtime/process/trust decisions remain; historical rationale above is retained.

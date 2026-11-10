@@ -8,7 +8,7 @@
 Global hotkey (toggle by default; hold-to-talk only when Walkie-talkie is on)
   → microphone capture (16 kHz mono WAV; optional fan-out to streaming STT)
     → on-device STT (Parakeet Ultra; full-buffer offline live draft when enabled — ADR-014/016)
-  → optional post-dictation formatting (Light / Qwen3 Smart)
+  → optional post-dictation formatting (Light / Qwen3 0.6B / Gemma)
   → insert text at caret in frontmost app
   → optional: keep result on clipboard (no pasteboard restore)
 ```
@@ -61,7 +61,7 @@ Transform hotkey (default ⌥')
 - **Selection transform (ADR-012):** same helper + packages; General **bindings** (hotkey + Translate with user language pair / Custom instruction + model); Translate uses `NLLanguageRecognizer` flip; result in Status Capsule (Copy / Close + optional direction); not required for Ready.
 - Engines are selected through `STTEngine` / `CleanupEngine` adapters (`DictationPipeline`); transform reuses the MLX cleanup engine with non-nil instructions.
 - Live draft (ADR-014): catalog `supportsStreaming` + Settings toggle (default off); Ultra runs ~1 s single-flight **offline** re-transcribes of accumulated PCM for Capsule (OpenBot-style); last two words muted; Capsule grows with text; stop always uses session WAV file STT → cleanup → paste.
-- Settings model UX: Ultra state/download/cancel/retry/delete without an STT picker. Cleanup modes remain Ready-only selectable; Ready-but-inactive Qwen Smart/Smart+/Gemma rows retain **Make active**.
+- Settings model UX: Ultra state/download/cancel/retry/delete without an STT picker. Cleanup modes remain Ready-only selectable; Ready-but-inactive Qwen3 0.6B/Gemma rows retain **Make active**; Smart+ is compatibility-only from 0.8.0 (ADR-018).
 - Idle resource policy: mic meter only when the user enables it in Settings (not on window open); language changes update copy via `L10n` without remounting Settings; permission poll stops when Ready; STT unloads after each session; Smart MLX lives only in the helper process (ADR-009) so host idle stays near cold start.
 - Optional experimental temporary unmute during dictation (ADR-007): Settings toggle framed as Elgato Wave Link only; `MicMuteController` clears mute for the capture window (Wave Link primary; Core Audio silent fallback) and restores prior state when capture ends.
 - Distribution: GitHub Release `.dmg` (`ops/deploy.md`); public repo + MIT (ADR-011); notarization optional later.
@@ -117,3 +117,11 @@ Streaming's own actor is also generation-bound: stop/unload cancels and joins it
 ## Native A presentation — 0.7.0
 
 Limited `AppStyle`/Settings row components keep native macOS Forms and the existing five-pane navigation/window bounds. General formatting observes the same ModelManager and calls the same Ready-only selection path as Models. Confirmation views precede existing deletion/stat actions; they do not reserve/unload/delete on Cancel. Capsule adapts existing animation/text styling to accessibility preferences without changing recording/session delivery. Original SVG brand masters and deterministic native PNG exports supply AppIcon and an 18pt idle menu template; active state symbols retain their meaning. No engine/runtime/dependency/network/trust or data storage change.
+
+## Dictation preferences and theme — 0.8.0 (ADR-018)
+
+New cleanup choices are Qwen3 0.6B and Gemma; Off/Light remain. Smart+ stays catalogued/non-downloadable for already active ready selections, existing binding-specific choices and Storage. Ready status is derived before the download-availability guard, so stopping new downloads does not disable installed legacy models. No new fallback recommends Smart+; files and saved bindings are not migrated/deleted.
+
+`DictationRules` is a bounded local value, captured into `DictationPipelineConfiguration` at session start. Helper protocol v3 carries explicit dictation purpose/rules or independent transform instructions, rejecting mixed contracts. The shared prompt retains literal-cleanup constraints. Actual tokenizer/chat input length and model config determine a bounded output budget; incomplete generation, empty output and conservative protected-literal loss checks fail to visible Light fallback. These checks cannot prove semantic fidelity. Transform prompts/framing/caps retain ADR-012 behavior. Models still run in the same process-per-request helper and exit to release memory.
+
+Formatting's text trial owns the same operation gate through actual formatting and awaited unload; cancellation/quit join it before release. Text/result are RAM-only, no clipboard/paste/Last Dictation/statistics writes. Theme is a separate UserDefaults enum (`carrottype.appTheme`, invalid/absent → System); `NSApplication.appearance` and Settings' preferred scheme apply live without a view identity change. Capsule uses semantic light/dark colors; system menu symbols remain templates. No global macOS appearance change.

@@ -31,3 +31,7 @@ ADR-003 / ADR-005 define post-dictation formatting modes Off / Light / Smart / S
 - **Replace Qwen Smart with Gemma:** rejected; keeps product default and smaller download for most users.
 - **E4B as a second Gemma tier:** deferred; one optional package is enough to validate quality vs size.
 - **New cleanup runtime (llama.cpp / Ollama):** rejected; reuse MLX helper already shipping.
+
+## 0.8.0 clarification
+
+[ADR-018](ADR-018-dictation-rules-and-cleanup-catalog.md) narrows new cleanup offerings to Qwen3 0.6B/Gemma while retaining installed Smart+ compatibility, and specifies bounded dictation preferences/v3 helper purpose independent of Translate/Custom. Existing engine/runtime/process/trust decisions remain; historical rationale above is retained.
