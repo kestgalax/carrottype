@@ -1,0 +1,2 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="128" height="128" aria-hidden="true"><rect x="6" y="6" width="52" height="52" rx="12" fill="#F7F7F9"/><g transform="translate(6.4 6.4) scale(.8)"><path fill="#557B4C" d="M30 18C23 18 20 13 21 9C27 9 31 12 32 16C32 10 36 6 41 7C42 12 38 17 34 19Z"/><path fill="#D0632F" d="M27 20H37C41 20 43 23 42 27L36 43C35 47 29 47 28 43L22 27C21 23 23 20 27 20Z"/>
+<path d="M17 33C17 45 23 51 32 51C41 51 47 45 47 33M32 51V58M26 58H38" fill="none" stroke="#D0632F" stroke-width="4" stroke-linecap="round"/></g></svg>

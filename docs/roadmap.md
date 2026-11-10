@@ -150,3 +150,7 @@ Small, user-visible fixes that do not expand scope:
 
 - **Cleanup:** Sotto LFM2.5-350M MLX (EN dictation cleanup, low rewrite) vs Qwen3 1.7B for RU.
 - **STT quality tier:** Qwen3-ASR 0.6B MLX beside Ultra (research only; new runtime/offerings require an ADR).
+
+### 0.7.0 final brand/release authorization
+
+Maintainer accepted the UI and selected the original carrot-microphone A after a second icon comparison, explicitly instructing «публикуй тогда версию». Plain geometric carrot superseded; concept history retained. Final icon Debug rebuild and clean Release, signed update/DMG verification are in progress before publication. No authorization is inferred for future versions.

@@ -66,3 +66,7 @@ Maintainer explicitly selected interface A + logo A. New main-based `feat/native
 0.7.0 Debug delivery: final arm64 build and production regressions passed; signed real-identity Debug in `dist/CarrotType-0.7.0-Debug/CarrotType.app`, deep/resource/metadata checks passed. Native template verified 18×18pt/isTemplate, deterministic exports and archived old master verified. Offscreen RU/EN/light/dark/minimum screenshots retained under `dist/CarrotType-0.7.0-Native-Review`; not interactive/VoiceOver/device/TCC QA. Hosted CI follows source push; separate manual acceptance and publication authorization still required.
 
 0.7.0 hosted app verification passed: https://github.com/kestgalax/carrottype/actions/runs/42824162527, source `122afdb` (production regressions, brand assets, Debug arm64). Hosted AIDOS explicitly skipped; local governance passed. Final signed Debug delivered; manual approval/publication remain pending. Follow-up closeout edits are documentation only.
+
+## 0.7.0 final logo and release authorization
+
+Maintainer selected original carrot-microphone A (second comparison, not the earlier plain carrot) and explicitly said «оставляем изначальный / согласен / публикуй тогда версию». Final icon assets/notes are rebuilt in Debug before clean Release. User approval/publication gate satisfied for 0.7.0; preserve all prior UI and useful functions. No new runtime/trust decision.
