@@ -22,3 +22,7 @@ Project memory lives in repository artifacts — not in chat transcripts.
 - Prefer updating these files over relying on conversation context.
 - Do not delete ADRs, specs, reviews, or roadmap history unless a human maintainer explicitly instructs it.
 - When correcting outdated status (e.g. public vs private distribution), update roadmap and deploy notes in the same change.
+
+## Planned UI/UX and logo stage — 2026-11-10
+
+Maintainer requested a separate 0.7.0 stage after 0.6.1 update presentation and 0.6.2 lifecycle: audit the real UI/UX, discuss improvements/visual directions and explore a modern minimal logo based on CarrotType/current carrot. References named: OpenBot and GrogBot (confirm exact products during research). Present comparable concepts and discuss before replacing UI/logo; preserve useful features. Task: `docs/specs/tasks/uiux-and-brand-refresh.md`, D1–D3 in staged plan. Planning only; no audit, designs or asset changes claimed. Existing per-version Debug/manual/publication gate remains.

@@ -44,3 +44,7 @@ Next ordered focus:
 - For every version, prepare and verify a Debug build first, provide it to the user for manual testing, and wait for their explicit confirmation before publishing. A successful automated build does not substitute for this user gate (maintainer instruction, 2026-11-09).
 - Build via `macos/scripts/build-release-dmg.sh`; notes in `docs/github-release-notes-v0.1.0.md`.
 - Attach DMG to GitHub Release; do not commit `dist/` to git.
+
+## Planned UI/UX and logo stage — 2026-11-10
+
+Maintainer requested a separate 0.7.0 stage after 0.6.1 update presentation and 0.6.2 lifecycle: audit the real UI/UX, discuss improvements/visual directions and explore a modern minimal logo based on CarrotType/current carrot. References named: OpenBot and GrogBot (confirm exact products during research). Present comparable concepts and discuss before replacing UI/logo; preserve useful features. Task: `docs/specs/tasks/uiux-and-brand-refresh.md`, D1–D3 in staged plan. Planning only; no audit, designs or asset changes claimed. Existing per-version Debug/manual/publication gate remains.
