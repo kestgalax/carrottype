@@ -1,6 +1,6 @@
 # Debug 0.6.1 (27): обновления и «Что нового»
 
-Статус 2026-11-10: N1–N3 реализованы в `feat/update-release-notes-ux` от main с сохранёнными планами 0.6.1/0.6.2/0.7.0. Debug собран и подписан локально. **Ручное принятие 0.6.1 и разрешение публикации ещё не получены**; предыдущие разрешения относятся к прежним релизам. Production DMG/ZIP/appcast/tag/release для 0.6.1 не публиковались.
+Статус 2026-11-10: N1–N3 реализованы в `feat/update-release-notes-ux` от main с сохранёнными планами 0.6.1/0.6.2/0.7.0. Debug собран и подписан локально. **Пользователь принял Debug 0.6.1 и явно разрешил публикацию: «все ок, публикуем» (2026-11-10)**. Результаты отдельных ручных пунктов не перечислялись; ниже сохранены ограничения автоматической проверки. Готовится чистый Release с проверкой production assets.
 
 ## Основная сборка
 
@@ -37,4 +37,8 @@
 
 ## Источник и выпуск
 
-`macos/CarrotType/Resources/ReleaseNotes.json` → native offline sheet / safe inline HTML signed appcast / generated Markdown. Empty sections omitted, text escaped, external assets/JS absent. Runtime при плохих данных показывает полезный fallback, release packaging отвергает несовпадение metadata. Стандартный Sparkle updater и отсрочка установки сохранены. Публикация только после принятия этой Debug-версии пользователем; 0.6.2 lifecycle и 0.7.0 UI/UX/logo ещё не начаты.
+`macos/CarrotType/Resources/ReleaseNotes.json` → native offline sheet / safe inline HTML signed appcast / generated Markdown. Empty sections omitted, text escaped, external assets/JS absent. Runtime при плохих данных показывает полезный fallback, release packaging отвергает несовпадение metadata. Стандартный Sparkle updater и отсрочка установки сохранены. Принятие этой Debug-версии и разрешение публикации получены 2026-11-10. Release-проверки записываются ниже; 0.6.2 lifecycle и 0.7.0 UI/UX/logo ещё не начаты.
+
+## Release preparation — 2026-11-10
+
+After explicit user Debug acceptance, clean Release arm64 built in fresh temporary DerivedData. Deep/strict component signatures, production identity/notes/build/RU+EN resources, helper path jail, MLX shaders, Ultra catalog/no bundled weights and DMG integrity passed. Installer filesystem/layout/background retained from SHA-verified 0.6.0. Production ZIP/appcast signed and verified; both localized HTML descriptions and archived JSON matched the signed Release bundle. Hashes recorded in `github-release-notes-v0.6.1.md`. Remote draft/public gates follow before release closeout; private key not exported.

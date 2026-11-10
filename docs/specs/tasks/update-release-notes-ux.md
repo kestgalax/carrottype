@@ -4,7 +4,7 @@
 
 - Task ID: update-release-notes-ux
 - Title: Readable update notes and persistent access to installed-version changes
-- Status: Implemented as Debug 0.6.1 (27), 2026-11-10; native interactive/manual acceptance and publication pending
+- Status: Implemented as Debug 0.6.1 (27), 2026-11-10; user Debug acceptance and publication authorization received; Release packaging/verification in progress
 - Target: 0.6.1; lifecycle work moves from 0.6.1 to 0.6.2
 
 ## Traceability
@@ -65,4 +65,4 @@ AIDOS validate passed; trace reports Missing Links: None; deterministic review A
 
 N1–N3 implementation is on `feat/update-release-notes-ux`: versioned bundled source, production Swift validation/store and native sheet/buttons, localized HTML/Markdown renderer and signed feed integration. Standard Sparkle/installation code is preserved. English is a required content fallback; stock Sparkle uses system localization, explicit app override applies to our sheet only. First tracking launch quietly initializes; unread badge is only for observed version/build changes.
 
-Debug arm64 build, release-notes/schema/escaping/localization/metadata/tracking checks and existing updater/clipboard/selection/helper/setup regressions passed. Real isolated native installer 26 → 27 plus offline/tampered-feed/corrupt-archive/no-new-version passed; staging profiles now isolate resume state per run/scenario. Native sheet rendered programmatically in RU/EN light/dark for layout inspection; this is not interactive native UI/TCC verification. Orca observation still returns permission_denied despite inventory granted. Detailed Debug checklist/evidence in `docs/debug-review-v0.6.1.md`; no production assets/publication or user acceptance yet.
+Debug arm64 build, release-notes/schema/escaping/localization/metadata/tracking checks and existing updater/clipboard/selection/helper/setup regressions passed. Real isolated native installer 26 → 27 plus offline/tampered-feed/corrupt-archive/no-new-version passed; staging profiles now isolate resume state per run/scenario. Native sheet rendered programmatically in RU/EN light/dark for layout inspection; this is not interactive native UI/TCC verification. Orca observation still returns permission_denied despite inventory granted. Detailed Debug checklist/evidence in `docs/debug-review-v0.6.1.md`; user Debug acceptance and publication authorization received on 2026-11-10; Release packaging/publication in progress.

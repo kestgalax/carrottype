@@ -52,3 +52,7 @@ Maintainer requested a separate 0.7.0 stage after 0.6.1 update presentation and 
 ## 0.6.1 implementation — 2026-11-10
 
 N1–N3 implemented on `feat/update-release-notes-ux`, from main with planning commits retained. Debug 0.6.1 (27) delivered in dist; not published or manually accepted yet. Offline bundled What’s New/native buttons/read-version badge, single localized JSON → signed inline HTML/Markdown and unique per-run/scenario staging identities. No standard updater/gate/trust replacement. Production tests, Debug and isolated native installer/negative checks pass; offscreen production SwiftUI layout inspected, actual GUI observation still permission_denied. Manual checklist/evidence: `docs/debug-review-v0.6.1.md`. Latest stable 0.6.0. Next after acceptance/release: 0.6.2 lifecycle, then 0.7.0 UI/UX/logo discussion. Do not publish without this version’s explicit confirmation.
+
+## 0.6.1 release authorization — 2026-11-10
+
+Maintainer accepted the delivered Debug: «все ок, публикуем». This version’s publication gate is satisfied; clean Release packaging and signed draft/public asset verification are now in progress. Individual manual checklist results were not enumerated; preserve independent GUI/TCC/network limits. No authorization for later version releases is inferred.
