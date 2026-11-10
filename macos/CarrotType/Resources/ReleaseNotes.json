@@ -12,7 +12,7 @@
           "items": [
             {
               "title": "Formatting rules.",
-              "detail": "Choose fillers, repetitions, spoken corrections, paragraphs and additional preferences. Try a sample directly in Settings."
+              "detail": "Exact word removal, lowercase and final-period controls work without a model and survive fallback. Separate model preferences and experimental business tone can be tried on sample text."
             },
             {
               "title": "System, Light or Dark.",
@@ -52,7 +52,7 @@
           "items": [
             {
               "title": "Правила постобработки.",
-              "detail": "Настройте запинки, повторы, самоисправления, абзацы и свои предпочтения. Проверьте результат на тексте прямо в настройках."
+              "detail": "Удаление слов, строчные буквы и последняя точка настраиваются без модели и работают при её отказе. Пожелания модели и экспериментальный деловой стиль можно проверить на тексте."
             },
             {
               "title": "Системная, светлая или тёмная тема.",

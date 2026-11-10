@@ -26,3 +26,12 @@ ADR-018 accepts narrowed offerings, legacy compatibility, bounded dictation pref
 ## Residual Risks / Follow-Up
 
 Qwen absent; no hidden weights download/comparative quality/latency/RAM claim. Gemma self-correction/paragraph preferences remain inconsistent. Protected-literal checks are conservative and incomplete, can fall back on valid edits, cannot prove meaning. Full interactive System/theme/sheets/VoiceOver/device/TCC/network checks remain manual. No signed Release/DMG/feed or publication until maintainer Debug acceptance and separate instruction.
+
+
+## R1–R4 self-review addendum
+
+Scope: exact controls and explicit tone outcome on new main-based `feat/deterministic-formatting-0.8`. Outcome: suitable for signed Debug/manual exact-control review; **request changes / quality decision for business tone before release**. This is self-review, not independent approval.
+
+- ADR-018 updated before implementation; no new engine/model/weights/dependency/network/trust. Old user preferences/custom text and earlier theme/catalog/scroll changes retained. Off's independent exact controls explicitly documented/default off. Transform instructions/localised errors preserved and actual engine contracts tested.
+- Checks: exact legacy decode/bounds/idempotence/protected literals/empty and all fallback reasons, actual AppState lease/theme/compatibility/clipboard/history/stats, normal helper/streaming lifecycle regressions, Debug build, signed bundle/ZIP and local governance. Offscreen UI inspected. Interactive devices/TCC/VoiceOver, Qwen weights and final hosted CI remain unverified/pending.
+- Open blocking quality finding BUS-01: Gemma can retain conversational wording, lose protected content or invent questions. Tone-only question-count rejection catches the supplied observed extra question; exact controls still work on fallback. No semantic guarantee or complete four-rule pass. Experimental/off-by-default UI is disclosure, not resolution. Do not mark 0.8 release-ready on generation/build/fallback success.

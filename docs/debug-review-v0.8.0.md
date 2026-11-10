@@ -1,5 +1,29 @@
 # Debug review — CarrotType 0.8.0 (30)
 
+
+## Current: exact-control rework Debug
+
+Branch `feat/deterministic-formatting-0.8` (main-based, earlier 0.8 work retained). **R1/R2 implemented for manual review; business-tone acceptance failed/open. Not release-ready or published.** The older delivery descriptions/checklists below are historical and superseded by this section.
+
+App: `dist/.builds.noindex/CarrotType-0.8.0-Rules-Fix/CarrotType.app`. Quit the earlier Debug instance, then open this .app directly; no installation/replacement was performed. ZIP: `dist/CarrotType-0.8.0-30-Rules-Debug.zip`; SHA-256 `dd2abeccc9993fa91c0b82a66dde9178cdbbbd8f0ab5c2bec706639c4f85a31b`. Same 0.8.0/30 identity and existing development signing/trust. Existing model/settings files preserved; new controls default disabled/empty. Older free text was not parsed or silently moved into switches.
+
+### Проверить только изменённое
+
+1. General → точные настройки: удалять `ну`, включить строчные и отсутствие последней точки. В режиме Off проверить `Ну, Нам нужен Отчёт. Это Последняя Фраза.` → `нам нужен отчёт. это последняя фраза`. Использовать новые элементы управления; старые строки «Мои правила» для этой пробы не нужны и при Off не выполняются.
+2. На Gemma повторить пробу: точные настройки должны сохраниться и при отклонении модели; статус отдельно сообщает, что произошло с моделью/стилем. Деловой стиль пока экспериментальный: на предоставленном тексте известен отказ проверки, не ожидайте исправления всего сценария.
+3. Одна обычная диктовка в поле ввода с теми же точными настройками: вставка работает, после отмены проверки приложение не остаётся занятым.
+
+### Verification and limits
+
+- Final source build: `/tmp/ct080-rework-final-source.log`, arm64 Debug `BUILD SUCCEEDED`. Signed .app deep/strict verified; bundled identity/version/notes and extracted ZIP verified separately.
+- Exact rules: `/tmp/ct080-rework-verified-rules.log`; legacy preferences, boundaries/protected prose, final punctuation/decimals/abbreviations, idempotence, success/fallback/empty/Off and tone status pass. Setup, reliability/helper transport and session/streaming regressions passed during this rework.
+- Actual native AppState: `/tmp/ct080-rework-final-native.log`; legacy model/bindings/Storage, transform localised-error vs dictation typed errors, repeated System-theme transitions/no remount, exact controls in Off/Light/failing Gemma, gate/cancel/busy and no clipboard/history/stats mutation pass.
+- Production offscreen RU/EN light/dark Settings/General/rules/model/notes/Capsule rendered, relevant rules layout inspected; `/tmp/ct080-rework-ui/`. This is not an interactive device/TCC/VoiceOver walkthrough. Existing outer scrollbar policy unchanged.
+- Opt-in real Gemma AppState observations: `/tmp/ct080-rework-quality-final.log`; five synthetic cases: unchanged wording, two rejections, two edited outputs. No semantic PASS inferred from generation. [Detailed quality limits](2026-11-10-formatting-quality-0.8.0.md). Private supplied text was evaluated only locally and temporary source/logs removed; no downloads or model change. Qwen absent, not evaluated.
+- Local governance validate/trace/review passed. Hosted final-source CI pending; verify its result before any later release. No tag, Release, appcast change or installed-app replacement. Full 0.8 acceptance/publication still pending.
+
+## Earlier 0.8 diagnostic history
+
 Status: implemented on `feat/formatting-rules-theme-0.8`, signed Debug for maintainer review. **Not published**; stable remains 0.7.0. No 0.8.0 manual acceptance/publication authorization yet. [Task/P1–P4](specs/tasks/dictation-rules-and-theme.md), [ADR-018](decisions/ADR-018-dictation-rules-and-cleanup-catalog.md).
 
 ## Коротко проверить вручную

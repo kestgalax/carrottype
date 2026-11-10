@@ -59,3 +59,24 @@ Final observed trial results (single runs, not a benchmark):
 Word-removal examples succeeded in the diagnostic, but the maintainer message itself has no ну, so it cannot establish that property. The model still does not reliably execute the full combined/style request. Do not present this diagnostic or a safer failure as a successful business-tone fix. A possible follow-up is explicit structured word/case/final-punctuation controls (deterministic application) with model tone separately evaluated; no natural-language regex parser/new model/engine is introduced here.
 
 Synthetic counterparts are added to `scripts/fixtures/formatting-quality.json`; the raw maintainer message is not a repository fixture. Question-intent rejection has production validation checks. Qwen remains absent/unmeasured. Further arbitrary-rule quality acceptance and this version's manual/release gate remain open.
+
+
+## R1–R3 rework: exact controls and separately assessed tone
+
+Authorized after the R1–R4 plan on 2026-11-10; branch `feat/deterministic-formatting-0.8` starts from fetched main and retains the unreleased 0.8 commits. No model/runtime/weights/network change.
+
+Exact acceptance cases live in `scripts/tests/FormattingRulesChecks.swift`: standalone/combined whole-word removal, substring/hyphen boundaries, lowercasing, interior vs terminal punctuation, quotations, ellipses, abbreviations, decimals/version numbers, newlines, code/URL/email/identifiers, defaults and idempotence. Same production path tested under Off/Light, model success, missing model and every typed failure; explicit deletion consuming all speech yields empty output without a model call. Old preferences decode with all prior fields/custom text retained and new options disabled. Native AppState checks verify final controls, stage statuses, gate/cancellation, clipboard/history/statistics invariants.
+
+Two bounded business-prompt candidates were compared through actual AppState trial, not transform mock output: initial Russian editor instruction vs English professional-editing instruction in the original-language contract. No few-shot examples, no new model, no guard relaxation. Second candidate retained because it preserved questions in the synthetic RU example and improved the separate held-out professional wording; **neither candidate passes overall tone acceptance**.
+
+| Synthetic case (same installed Gemma) | Candidate 1 | Candidate 2 |
+|---|---|---|
+| Informal project discussion | Rewritten, but omitted greeting (~9.35 s) | Wording effectively unchanged (~8.85 s) |
+| Negative budget, 15 percent | Rewritten (~6.20 s) | Rejected; safe fallback (~6.07 s) |
+| Two product questions | Rejected (~6.00 s) | Wording edited, two questions retained (~6.04 s) |
+| English budget question | Rejected (~6.10 s) | Rejected (~6.01 s) |
+| Held-out RU report/name/time/percent | Rejected (~6.38 s) | Professional wording, name/time/percent/negation/question retained (~6.92 s) |
+
+These single cold-load observations are not latency benchmarks or proof of general semantic fidelity. The retained candidate initially returned an extra question on the private maintainer message (~14.19 s). Tone's guard now rejects invented as well as missing question marks; actual AppState rerun returned Light plus exact controls (~15.13 s), with tone marked failed. The first three requested settings work; **the four-rule scenario is still not accepted**. The private message contains no target word «ну», so deletion is established on synthetic inputs. No private message is stored here or in fixtures.
+
+Reproducible synthetic real-AppState diagnostic: `python3 scripts/verify-formatting-app.py --build-log <successful Debug log> --model-quality`. Opt-in, installed Gemma only, no downloads, isolated temporary preferences/statistics/host identity, no microphone/clipboard writes. `structured-*` fixtures are public synthetic examples; this command prints observations, not a semantic PASS. Qwen is absent/unevaluated. Current UI calls tone experimental and distinguishes unchanged wording, generation and failure. Further product/model-quality decision is required before calling this tone feature release-ready; R3 quality gate remains open.

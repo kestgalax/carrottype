@@ -46,7 +46,7 @@ enum QwenCleanupCore {
             let config = try Data(contentsOf: modelDirectory.appendingPathComponent("config.json"))
             guard let budget = FormattingBudget.outputLimit(sourceTokens: sourceCount,
                 promptTokens: input.text.tokens.size, contextLimit: FormattingBudget.contextLimit(configuration: config))
-            else { throw CoreError.generationFailed }
+            else { throw DictationModelFailure.contextLimit }
             maxTokens = budget
         }
         let params = GenerateParameters(maxTokens: maxTokens, temperature: 0)
@@ -77,15 +77,16 @@ enum QwenCleanupCore {
                 switch event {
                 case .chunk(let text): output += text
                 case .info(let info): completed = info.stopReason == .stop
-                case .toolCall: throw CoreError.generationFailed
+                case .toolCall: throw DictationModelFailure.rejected
                 }
             }
-            guard completed else { throw CoreError.generationFailed }
+            guard completed else { throw DictationModelFailure.incomplete }
             raw = output
         }
         let result = useCustom ? stripModelExtras(raw, isQwen: isQwen) : raw.trimmingCharacters(in: .whitespacesAndNewlines)
-        if result.isEmpty || (!useCustom && !DictationIntegrity.accepts(source: trimmed, result: result)) {
-            throw CoreError.generationFailed
+        if result.isEmpty || (!useCustom && !DictationIntegrity.accepts(source: trimmed, result: result,
+            exactQuestionCount: rules?.businessStyle == true)) {
+            throw DictationModelFailure.rejected
         }
         return result
     }

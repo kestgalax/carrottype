@@ -10,7 +10,21 @@ struct FormattingRulesSection: View {
 
     var body: some View {
         Section {
+            Text(t("rules.exact_title")).font(.headline)
+            Text(t("rules.exact_hint")).font(.caption).foregroundStyle(.secondary)
+            TextField(t("rules.removed_words"), text: $appState.dictationRules.removedWords)
+            Text(t("rules.words_hint")).font(.caption).foregroundStyle(.secondary)
+            if !appState.dictationRules.removedWords.isEmpty {
+                Text(String(format: t("rules.words_active"), ExactDictationRules.words(appState.dictationRules).joined(separator: ", ")))
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            Toggle(t("rules.lowercase"), isOn: $appState.dictationRules.lowercase)
+            Toggle(t("rules.final_period"), isOn: $appState.dictationRules.omitFinalPeriod)
+            Text(t("rules.punctuation_hint")).font(.caption).foregroundStyle(.secondary)
             if usesModel {
+                Text(t("rules.model_title")).font(.headline)
+                Toggle(t("rules.business"), isOn: $appState.dictationRules.businessStyle)
+                Text(t("rules.business_hint")).font(.caption).foregroundStyle(.secondary)
                 Text(t("rules.intent")).font(.caption).foregroundStyle(.secondary)
                 Toggle(t("rules.fillers"), isOn: $appState.dictationRules.removeFillers)
                 Toggle(t("rules.repetitions"), isOn: $appState.dictationRules.removeRepetitions)
@@ -36,10 +50,10 @@ struct FormattingRulesSection: View {
                         Text(appState.dictationRules.customRules).textSelection(.enabled)
                     }
                 }
-                Button(t("rules.reset")) { appState.dictationRules = DictationRules() }
             } else {
                 Text(t("rules.no_model")).font(.caption).foregroundStyle(.secondary)
             }
+            Button(t("rules.reset")) { appState.dictationRules = DictationRules() }
             DisclosureGroup(t("rules.trial"), isExpanded: $showTrial) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(t("rules.trial_hint")).font(.caption).foregroundStyle(.secondary)
@@ -65,8 +79,8 @@ struct FormattingRulesSection: View {
                             .font(.caption).foregroundStyle(.secondary)
                         Text(result.isEmpty ? t("rules.empty") : result)
                             .textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading)
-                        if appState.formattingTrialOutcome?.usedFallback == true {
-                            Label(t("rules.fallback"), systemImage: "exclamationmark.triangle").font(.callout).foregroundStyle(.orange)
+                        if let outcome = appState.formattingTrialOutcome {
+                            FormattingOutcomeView(outcome: outcome, locale: locale)
                         }
                     }
                 }

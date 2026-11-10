@@ -16,6 +16,7 @@ import uuid
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--build-log', type=Path, required=True)
 parser.add_argument('--products', type=Path, default=Path('macos/.derivedData/Build/Products/Debug'))
+parser.add_argument('--model-quality', action='store_true', help='Opt-in real Gemma trial on synthetic fixtures; uses installed weights only, prints observations rather than a semantic pass claim')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 products = args.products.resolve()
@@ -46,10 +47,11 @@ with tempfile.TemporaryDirectory(prefix='carrottype-formatting-') as directory:
     developer = Path(os.environ.get('DEVELOPER_DIR', '/Applications/Xcode.app/Contents/Developer'))
     subprocess.run([str(developer / 'Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc'),
                     '-parse-as-library', '-module-name', 'FormattingAppChecks',
-                    str(root / 'scripts/tests/FormattingAppChecks.swift'), *flags,
+                    str(root / 'scripts/tests' / ('FormattingModelChecks.swift' if args.model_quality else 'FormattingAppChecks.swift')), *flags,
                     str(app / 'Contents/MacOS/CarrotType.debug.dylib'),
                     '-Xlinker', '-rpath', '-Xlinker', str(app / 'Contents/MacOS'),
                     '-Xlinker', '-rpath', '-Xlinker', str(app / 'Contents/Frameworks'),
                     '-o', str(app / 'Contents/MacOS/CarrotType')], check=True, cwd=root / 'macos')
     subprocess.run([str(root / 'macos/scripts/sign-app.sh'), str(app), '-'], check=True)
-    subprocess.run([str(app / 'Contents/MacOS/CarrotType'), str(temporary)], check=True, timeout=60)
+    subprocess.run([str(app / 'Contents/MacOS/CarrotType'), str(temporary), str(root / 'scripts/fixtures/formatting-quality.json')],
+                   check=True, timeout=900 if args.model_quality else 60)

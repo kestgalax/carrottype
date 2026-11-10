@@ -60,6 +60,23 @@ private struct ThemeReadingView: View {
         precondition(state.modelManager.cleanupMode == .light && !state.modelManager.selectableCleanupModes.contains(.smartPlus))
         precondition(state.modelManager.installedPackageFootprints.contains { $0.id == BundledModelCatalog.smartPlusCleanupID })
         print("PASS actual ModelManager/AppState: ready legacy survives restore, binding-specific availability, no new/fallback recommendation, retained Storage")
+        var checkedEngineContracts = false
+        Task {
+            let engine = QwenCleanupEngine()
+            do {
+                _ = try await engine.cleanup(text: "fixture", mode: .gemma, modelDirectory: nil, instructions: "Translate")
+                preconditionFailure("Missing transform model must fail")
+            } catch CleanupEngineError.modelMissing {} catch { preconditionFailure("Transform lost its localised error contract") }
+            do {
+                _ = try await engine.formatDictation(text: "fixture", mode: .gemma, modelDirectory: nil, rules: DictationRules())
+                preconditionFailure("Missing dictation model must fail")
+            } catch DictationModelFailure.modelUnavailable {} catch { preconditionFailure("Dictation lost its typed stage failure") }
+            checkedEngineContracts = true
+        }
+        let contractDeadline = Date().addingTimeInterval(10)
+        while !checkedEngineContracts && Date() < contractDeadline { RunLoop.main.run(until: Date().addingTimeInterval(0.03)) }
+        precondition(checkedEngineContracts)
+        print("PASS actual cleanup engine: independent transform localised-error and dictation typed-failure contracts")
         // Exercise SwiftUI's *observed* scheme in an existing native Settings host,
         // not just the AppKit preference. A nil preference alone missed the reported bug.
         state.appTheme = .system
@@ -102,6 +119,22 @@ private struct ThemeReadingView: View {
         precondition(!FileManager.default.fileExists(atPath: fixture.appendingPathComponent("stats.json").path))
         state.clearFormattingTrial()
         print("PASS actual trial lease, output, no clipboard/history/statistics writes; live theme and rules persistence")
+        var exactRules = DictationRules()
+        exactRules.removedWords = "ну"; exactRules.lowercase = true; exactRules.omitFinalPeriod = true
+        exactRules.businessStyle = true
+        state.dictationRules = exactRules
+        for mode in [CleanupMode.off, .light, .gemma] {
+            state.modelManager.selectCleanup(mode)
+            state.runFormattingTrial("Ну, Нам нужен Отчёт.")
+            let exactDeadline = Date().addingTimeInterval(15)
+            while state.isFormattingTrialRunning && Date() < exactDeadline { RunLoop.main.run(until: Date().addingTimeInterval(0.03)) }
+            precondition(!state.isFormattingTrialRunning && !state.updates.installationGate.isBusy)
+            precondition(state.formattingTrialResult == "нам нужен отчёт" && state.formattingTrialOutcome?.exactRulesApplied == true)
+            precondition(state.formattingTrialOutcome?.style == (mode.usesMLXHelper ? .failed : .unavailable))
+            state.clearFormattingTrial()
+        }
+        state.dictationRules = DictationRules()
+        print("PASS actual AppState exact rules: Off/Light/failing-model share final controls, stage outcome and preserved lease")
         // Missing/invalid local fixture model must fall back, never publish partial output.
         state.modelManager.selectCleanup(.gemma)
         state.runFormattingTrial("Ну ты и молодец")

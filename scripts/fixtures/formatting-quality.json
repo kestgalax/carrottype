@@ -114,5 +114,55 @@
     "rules": {
       "customRules": "1. Всегда удаляй “ну”\n2. Не ставь у последнего предложения точку\n3. Всегда пиши только маленькими буквами\n4. Форматируй в деловом стиле весь текст"
     }
+  },
+  {
+    "id": "structured-business-ru",
+    "text": "Ну привет! Давай завтра обсудим, как у нас там дела с проектом.",
+    "rules": {
+      "removedWords": "ну",
+      "lowercase": true,
+      "omitFinalPeriod": true,
+      "businessStyle": true
+    }
+  },
+  {
+    "id": "structured-values-negative",
+    "text": "Я не согласен с бюджетом 15 процентов. Ну давай обсудим завтра.",
+    "rules": {
+      "removedWords": "ну",
+      "lowercase": true,
+      "omitFinalPeriod": true,
+      "businessStyle": true
+    }
+  },
+  {
+    "id": "structured-questions",
+    "text": "Ну, мы не готовы поддерживать стороннее решение? Что нужно для запуска чата в продукте?",
+    "rules": {
+      "removedWords": "ну",
+      "lowercase": true,
+      "omitFinalPeriod": true,
+      "businessStyle": true
+    }
+  },
+  {
+    "id": "structured-business-en",
+    "text": "Hey Jane, can we chat about the project tomorrow? I am not happy with the 15 percent budget increase.",
+    "rules": {
+      "removedWords": "ну",
+      "lowercase": true,
+      "omitFinalPeriod": true,
+      "businessStyle": true
+    }
+  },
+  {
+    "id": "structured-held-out",
+    "text": "Ну, ребята, тут какая-то ерунда с отчётом. Маша, можешь глянуть до 17:30? Я пока не понимаю, откуда взялись 25 процентов.",
+    "rules": {
+      "removedWords": "ну",
+      "lowercase": true,
+      "omitFinalPeriod": true,
+      "businessStyle": true
+    }
   }
 ]

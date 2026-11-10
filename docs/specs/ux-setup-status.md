@@ -197,3 +197,8 @@ Appearance and language contains independent System/Light/Dark and System/RU/EN 
 0.8.0 maintainer feedback: outer Settings Form scrollbars are always hidden using `.scrollIndicators(.never)`; scrolling itself remains enabled. This applies to all five panes plus Welcome/Details. Nested My Rules/trial/Custom text editors keep automatic native indicators. No global Show Scroll Bars setting is modified.
 
 0.8.0 custom-rule review: distinguish the requested model from the actual trial mode in the result heading. Highlight Light fallback (rules not applied) with an explicit warning. Explain that custom presentation preferences override defaults, and that combined/style instructions may be unreliable. A style request may alter wording while retaining meaning/intent; translation/summarizing remain separate transforms. Do not imply the free-text field is a deterministic rule engine.
+
+
+### 0.8.0 exact-control review
+
+General distinguishes exact controls (always-remove word list, lowercase prose, omit final sentence period) from model preferences/experimental business tone. Exact controls remain visible and opt-in under Off/Light, with protected-fragment/punctuation guidance and the effective validated word list. Existing model preferences remain visible when a model is selected, with free text preserved. Reset resets all dictation preferences, not theme or models. Trial/Setup/Details share actual mode, typed fallback reason, exact-controls status and separate tone status; unchanged wording is not reported as a business rewrite. Failed/inactive tone does not prevent exact controls. Settings outer scrolling stays hidden/functional; text-editor scrolling remains automatic. Defaults do not enable any new exact/style behavior.

@@ -22,6 +22,14 @@ System/Light/Dark is a separate local preference, System default; apply live to 
 
 No new STT/runtime/network/trust/dependency is introduced; ADR-009 process-per-request and signing, ADR-012 transforms and ADR-016 Ultra-only STT remain. GigaAM is deferred. User model deletion/download remains explicit. Future releases retain signed Debug/manual and separate publication authorization.
 
+## Accepted rework — explicit rules and separate tone (2026-11-10)
+
+Maintainer approved the R1–R4 completion plan by instructing «продолжаем тогда?». Extend the existing value contract, preserving saved fields/custom text with defaults for absent new keys. Add opt-in exact whole-word removal (comma/newline-separated words, bounded), lowercase prose, omit final sentence full stop, and separate opt-in business tone. No natural-language rule parser. Off continues to mean no baseline cleanup/model; explicit exact controls apply independently even with Off, clearly labelled in UI. New exact controls default off/empty; business tone remains saved but inactive without a model.
+
+Order: remove explicitly listed whole words before model/base processing, then model or safe Light fallback, then exact controls again. Lowercase prose, including names, but preserve fenced/inline code, URL/email and identifiable technical tokens. Final full-stop removal preserves ?/!, ellipses, decimal/version numbers and recognised abbreviations, and operates inside closing quotation marks. Ambiguous abbreviations may conservatively retain the point; disclose examples. Empty final text never inserts/counts. Exact operations are idempotent. Validation compares model output with the explicitly word-filtered input, so permitted word removal is not rejected as loss.
+
+Business tone uses its own dictation prompt, retaining fact/intent/question/negative/numeric/code constraints and independent transform instructions. No guarantee of semantic fidelity; fixed plus held-out real-model evaluation gates readiness. Report exact-controls completion separately from model generation, unchanged output and model failure. Tone rewriting rejects both removed and invented question marks; ordinary literal cleanup retains its prior ability to punctuate an unpunctuated spoken question. Use typed non-sensitive failure categories (missing, budget, timeout, incomplete, rejected, other); fallback retains exact controls. No transcript logging, engine/weights/runtime/network/trust changes. Signed Debug and manual/publication gates remain.
+
 ## Alternatives
 
 - Delete Smart+ record/runtime/files: rejected, breaks existing active selections/bindings and user preservation requirements. Retain a compatibility-only record instead.
