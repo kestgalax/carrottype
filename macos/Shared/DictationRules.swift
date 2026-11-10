@@ -71,11 +71,11 @@ enum DictationIntegrity {
         }
         // Preserve literal numbers, including dates/times/decimals. Formatting a number into
         // words is intentionally not accepted; neither is inventing a new numeric value.
-        let numbers = #"\p{N}+(?:[.,:/-]\p{N}+)*"#
+        let numbers = #"[-−+]?\p{N}+(?:[.,:/-]\p{N}+)*(?:[ \t]?[%°])?"#
         guard matches(source, numbers) == matches(result, numbers) else { return false }
         let negations = #"(?i)\b(?:не|not|never)\b"#
         guard Set(matches(source, negations).map { $0.lowercased() }) == Set(matches(result, negations).map { $0.lowercased() }) else { return false }
-        for url in matches(source, #"https?://[^\s<>«»\"]+"#) {
+        for url in matches(source, #"(?i)https?://[^\s<>«»\"]+"#) {
             guard result.contains(url) else { return false }
         }
         for code in matches(source, #"(?s)```.*?```"#) {

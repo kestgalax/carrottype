@@ -29,4 +29,6 @@ Qwen3 0.6B is absent: no hidden download, no Qwen/Gemma quality/latency/RAM comp
 
 ## Delivery integrity
 
-Final local signed Debug archive SHA-256: `5d1cb76edb6c65fc21d264ac68e9df54ed656f43b8bc0bee1b8c6fa6637d6167`. Deep/strict signature verification and bundled version/notes/catalog/MLX resources checked. Local governance validate/trace/review passed; [implementation review and residual risks](reviews/2026-11-10-dictation-rules-theme.md).
+Final local signed Debug archive SHA-256: `114c9ef3ccd498e94a572313a9af1f5c3bbd26eb3ad6a89e28e22dcf28687a73`. Deep/strict signature verification and bundled version/notes/catalog/MLX resources checked. Local governance validate/trace/review passed; [implementation review and residual risks](reviews/2026-11-10-dictation-rules-theme.md).
+
+PR: [#26](https://github.com/kestgalax/carrottype/pull/26), draft for Debug review. Initial hosted production regressions passed; clean Debug compile was still running when a final local sign/percent-number guard refinement was made. The final signed Debug was rebuilt, real native checks and numeric-sign/percent regressions passed; final-source hosted CI is pending, not claimed successful. Check current PR status before any release. Hosted AIDOS is explicitly skipped without private tooling; local validate/trace/review passed.

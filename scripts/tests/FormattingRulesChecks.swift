@@ -57,6 +57,8 @@ actor RuleEngine: CleanupEngine {
         print("PASS real Light: meaningful fillers, newlines, quotes/code, unambiguous hesitations and Off preserved")
 
         precondition(!DictationIntegrity.accepts(source: "Не согласен на 15 процентов до 17:30", result: "Не согласен до 17:30"))
+        precondition(!DictationIntegrity.accepts(source: "Температура -15", result: "Температура 15"))
+        precondition(!DictationIntegrity.accepts(source: "Не более 15%", result: "Не более 15"))
         precondition(!DictationIntegrity.accepts(source: "Это 15", result: "Это 16"))
         precondition(!DictationIntegrity.accepts(source: "Я не согласен", result: "Я согласен"))
         precondition(!DictationIntegrity.accepts(source: "\"I like this design.\"", result: "I like this design."))
