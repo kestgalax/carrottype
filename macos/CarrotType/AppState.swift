@@ -38,6 +38,24 @@ final class AppState: ObservableObject {
             UserDefaults.standard.set(appLanguage.rawValue, forKey: AppLanguage.defaultsKey)
         }
     }
+    @Published var appTheme: AppTheme {
+        didSet {
+            setupDefaults.set(appTheme.rawValue, forKey: AppTheme.defaultsKey)
+            NSApplication.shared.appearance = appTheme.appearance
+        }
+    }
+    @Published var dictationRules: DictationRules {
+        didSet {
+            if dictationRules != dictationRules.normalized { dictationRules = dictationRules.normalized }
+            dictationRules.save(defaults: setupDefaults)
+        }
+    }
+    @Published private(set) var isFormattingTrialRunning = false
+    @Published private(set) var formattingTrialResult: String?
+    @Published private(set) var formattingTrialOutcome: FormattingOutcome?
+    @Published private(set) var formattingTrialError: String?
+    private var formattingTrialTask: Task<Void, Never>?
+
     /// When true, dictation result stays on the pasteboard after caret paste.
     @Published var retainDictationInClipboard: Bool {
         didSet {
@@ -156,6 +174,8 @@ final class AppState: ObservableObject {
         self.pipeline = DictationPipeline(modelManager: modelManager)
         self.usageStats = usageStats ?? UsageStatsStore()
         self.setupDefaults = defaults
+        self.appTheme = AppTheme.load(defaults: defaults)
+        self.dictationRules = DictationRules.load(defaults: defaults)
         self.hasCompletedSetupTrial = defaults.bool(forKey: "carrottype.didCompleteSetupTrial")
         self.showFirstRun = !defaults.bool(forKey: "carrottype.didCompleteFirstRun")
         if let raw = defaults.string(forKey: AppLanguage.defaultsKey),
@@ -176,6 +196,7 @@ final class AppState: ObservableObject {
             self.typingSpeedWPM = UsageStatsEstimate.defaultWPM
         }
 
+        NSApplication.shared.appearance = appTheme.appearance
         _ = session
         statusCapsule.attach(appState: self)
         NotificationCenter.default.addObserver(
@@ -470,7 +491,14 @@ final class AppState: ObservableObject {
 
     /// Ready MLX modes for the transform model picker.
     var selectableTransformModes: [CleanupMode] {
-        [.smart, .smartPlus, .gemma].filter { modelManager.isCleanupPackageReady(for: $0) }
+        [.smart, .gemma].filter { modelManager.isCleanupPackageReady(for: $0) }
+    }
+
+    /// Legacy is visible/runnable only for an existing binding already using it.
+    func transformModes(for requested: CleanupMode) -> [CleanupMode] {
+        var modes = selectableTransformModes
+        if requested == .smartPlus, modelManager.isCleanupPackageReady(for: .smartPlus) { modes.append(.smartPlus) }
+        return modes
     }
 
     var canAddTransformBinding: Bool {
@@ -482,7 +510,6 @@ final class AppState: ObservableObject {
     }
 
     private static func preferredTransformCleanupMode(modelManager: ModelManager) -> CleanupMode {
-        if modelManager.isCleanupPackageReady(for: .smartPlus) { return .smartPlus }
         for mode in [CleanupMode.smart, .gemma] where modelManager.isCleanupPackageReady(for: mode) {
             return mode
         }
@@ -631,7 +658,7 @@ final class AppState: ObservableObject {
         }
 
         guard let mode = TransformModelSelection.resolve(
-            requested: binding.cleanupMode, available: selectableTransformModes
+            requested: binding.cleanupMode, available: transformModes(for: binding.cleanupMode)
         ) else {
             lastSessionError = L10n.t("error.transform_model_missing", locale: locale)
             menuBarMode = .error
@@ -732,10 +759,49 @@ final class AppState: ObservableObject {
     }
 
     private func dictationSettings(destination: DictationDelivery) -> SessionSettings {
-        SessionSettings(pipeline: pipeline.snapshotConfiguration(), destination: destination,
+        var configuration = pipeline.snapshotConfiguration()
+        configuration.rules = dictationRules.normalized
+        return SessionSettings(pipeline: configuration, destination: destination,
             deviceUID: audioInput.selectedDeviceID, deviceName: audioInput.selectedDevice?.name ?? "",
             unmute: unmuteMicDuringDictation, liveDraft: liveDraftEnabled && activeSTTSupportsStreaming,
             holdToTalk: destination == .caret && pushToTalkEnabled)
+    }
+
+    var canRunFormattingTrial: Bool {
+        !updates.installationGate.isBusy && !updates.installationGate.isInstalling && !isTerminating
+    }
+
+    /// Text in RAM only. Holds exclusive operation lease through helper teardown.
+    func runFormattingTrial(_ input: String) {
+        guard canRunFormattingTrial, !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              input.count <= 6000, let lease = updates.installationGate.beginOperation() else { return }
+        let mode = modelManager.cleanupMode
+        let directory = modelManager.cleanupModelDirectory()
+        let rules = dictationRules.normalized
+        isFormattingTrialRunning = true
+        formattingTrialResult = nil; formattingTrialError = nil; formattingTrialOutcome = nil
+        formattingTrialTask = Task { [self] in
+            do {
+                let result = try await pipeline.formatText(input, mode: mode, directory: directory, rules: rules)
+                try Task.checkCancellation()
+                formattingTrialResult = result.text
+                formattingTrialOutcome = result.formatting
+            } catch is CancellationError {
+                formattingTrialResult = nil
+            } catch {
+                formattingTrialError = L10n.t("error.cleanup_failed", locale: effectiveLocale)
+            }
+            await pipeline.unloadAll()
+            isFormattingTrialRunning = false
+            formattingTrialTask = nil
+            updates.installationGate.endOperation(lease)
+        }
+    }
+
+    func cancelFormattingTrial() { formattingTrialTask?.cancel() }
+    func clearFormattingTrial() {
+        cancelFormattingTrial()
+        formattingTrialResult = nil; formattingTrialOutcome = nil; formattingTrialError = nil
     }
 
     private func makeSessionCoordinator() -> DictationSessionCoordinator<SessionSettings, FormattedDictation> {
@@ -869,6 +935,13 @@ final class AppState: ObservableObject {
     private func deliverDictation(_ result: FormattedDictation, duration: TimeInterval, configuration: SessionSettings) async {
         clearLiveDraftText()
         let text = result.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if text.isEmpty {
+            if configuration.destination == .setupTrial { setupTrialText = ""; setupTrialFormatting = result.formatting }
+            else { lastFormattingOutcome = result.formatting }
+            menuBarMode = .idle
+            clearCapsulePhase()
+            return
+        }
         do {
             try configuration.destination.deliver(result, atCaret: { completed in
                 if !text.isEmpty { lastDictationText = text }
@@ -908,10 +981,13 @@ final class AppState: ObservableObject {
         session.stopAcceptingOperations()
         session.cancel()
         transformTask?.cancel()
+        formattingTrialTask?.cancel()
+        let formattingTrial = formattingTrialTask
         let transform = transformTask
         terminationTask = Task {
             await session.waitUntilIdle()
             await transform?.value
+            await formattingTrial?.value
             NSApp.reply(toApplicationShouldTerminate: updates.installationGate.prepareForTermination())
         }
         return .terminateLater

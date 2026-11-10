@@ -56,6 +56,7 @@ struct CarrotTypeApp: App {
                     minHeight: settingsMinSize.height,
                     maxHeight: .infinity
                 )
+                .preferredColorScheme(appState.appTheme.colorScheme)
                 .background(SettingsWindowChromeFix())
                 // Avoid remounting Settings on language change: that races onDisappear
                 // (clears settingsVisible / mic meter) with onAppear and breaks the meter.

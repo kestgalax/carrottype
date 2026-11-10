@@ -21,11 +21,20 @@ actor QwenCleanupEngine: CleanupEngine {
     /// Wall-clock budget for cold load + generate (helper is killed on timeout).
     private static let timeoutNanoseconds: UInt64 = 120_000_000_000
 
-    func cleanup(
+    func formatDictation(text: String, mode: CleanupMode, modelDirectory: URL?, rules: DictationRules) async throws -> String {
+        try await run(text: text, mode: mode, modelDirectory: modelDirectory, instructions: nil, rules: rules.normalized)
+    }
+
+    func cleanup(text: String, mode: CleanupMode, modelDirectory: URL?, instructions: String?) async throws -> String {
+        try await run(text: text, mode: mode, modelDirectory: modelDirectory, instructions: instructions, rules: nil)
+    }
+
+    private func run(
         text: String,
         mode: CleanupMode,
         modelDirectory: URL?,
-        instructions: String?
+        instructions: String?,
+        rules: DictationRules?
     ) async throws -> String {
         switch mode {
         case .off:
@@ -49,7 +58,8 @@ actor QwenCleanupEngine: CleanupEngine {
             text: text,
             mode: mode.rawValue,
             modelDirectory: modelDirectory.path,
-            instructions: instructions
+            instructions: instructions,
+            purpose: instructions?.isEmpty == false ? "transform" : "dictation", dictationRules: rules
         )
         let requestData = try JSONEncoder().encode(request)
         let data: Data

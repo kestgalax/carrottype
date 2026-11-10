@@ -47,7 +47,11 @@ do {
     failInvalid()
 }
 
-guard request.v == CleanupHelperProtocol.version || request.v == 1,
+guard request.v == CleanupHelperProtocol.version,
+      request.purpose == "dictation" || request.purpose == "transform",
+      !(request.purpose == "dictation" && request.instructions?.isEmpty == false),
+      !(request.purpose == "transform" && (request.instructions?.isEmpty != false || request.dictationRules != nil)),
+      (request.dictationRules?.customRules.count ?? 0) <= DictationRules.customLimit,
       request.mode == "smart" || request.mode == "smartPlus" || request.mode == "gemma"
 else {
     failInvalid()
@@ -69,7 +73,8 @@ do {
         text: request.text,
         modelDirectory: directory,
         mode: request.mode,
-        instructions: request.instructions
+        instructions: request.instructions,
+        rules: request.dictationRules
     )
     emit(.success(text))
     exit(0)

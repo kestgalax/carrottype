@@ -333,6 +333,9 @@ struct StatusCapsuleView: View {
     var onClose: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
+    private var ink: Color { colorScheme == .dark ? .white : .black }
+    private var paper: Color { colorScheme == .dark ? .black : Color(nsColor: .windowBackgroundColor) }
     @Environment(\.colorSchemeContrast) private var colorContrast
     @State private var pulse = false
 
@@ -363,7 +366,7 @@ struct StatusCapsuleView: View {
         }
         .background {
             RoundedRectangle(cornerRadius: islandCornerRadius, style: .continuous)
-                .fill(Color.black)
+                .fill(paper)
         }
         .onAppear { updatePulse() }
         .onChange(of: reduceMotion) { _, _ in updatePulse() }
@@ -413,8 +416,8 @@ struct StatusCapsuleView: View {
         // Body normal; last ~2 words muted (OpenBot-style interim chrome — not ASR tiers).
         let spacer = liveConfirmed.isEmpty || liveVolatile.isEmpty ? "" : " "
         return (
-            Text(liveConfirmed).foregroundStyle(.white.opacity(0.95))
-                + Text(spacer + liveVolatile).foregroundStyle(.white.opacity(colorContrast == .increased ? 0.85 : 0.65))
+            Text(liveConfirmed).foregroundStyle(ink.opacity(0.95))
+                + Text(spacer + liveVolatile).foregroundStyle(ink.opacity(colorContrast == .increased ? 0.85 : 0.65))
         )
         .font(.system(size: 12, weight: .regular, design: .rounded))
         .multilineTextAlignment(.leading)
@@ -426,13 +429,13 @@ struct StatusCapsuleView: View {
             if let direction, !direction.isEmpty {
                 Text(direction)
                     .font(.system(size: 11, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.55))
+                    .foregroundStyle(ink.opacity(0.55))
             }
 
             ScrollView {
                 Text(resultText)
                     .font(.system(size: 13, weight: .regular, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.95))
+                    .foregroundStyle(ink.opacity(0.95))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .textSelection(.enabled)
             }
@@ -448,12 +451,12 @@ struct StatusCapsuleView: View {
                             : L10n.t("capsule.transform_copy", locale: locale)
                     )
                     .font(.system(size: 12, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.black)
+                    .foregroundStyle(paper)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
                     .background(
                         Capsule(style: .continuous)
-                            .fill(Color.white.opacity(copiedFeedback ? 0.85 : 1.0))
+                            .fill(ink.opacity(copiedFeedback ? 0.85 : 1.0))
                     )
                 }
                 .buttonStyle(.plain)
@@ -463,12 +466,12 @@ struct StatusCapsuleView: View {
                 } label: {
                     Text(L10n.t("capsule.transform_close", locale: locale))
                         .font(.system(size: 12, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.white.opacity(0.95))
+                        .foregroundStyle(ink.opacity(0.95))
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
                         .background(
                             Capsule(style: .continuous)
-                                .strokeBorder(Color.white.opacity(0.35), lineWidth: 1)
+                                .strokeBorder(ink.opacity(0.35), lineWidth: 1)
                         )
                 }
                 .buttonStyle(.plain)
@@ -498,7 +501,7 @@ struct StatusCapsuleView: View {
                     HStack(spacing: 3) {
                         ForEach(0..<3, id: \.self) { index in
                             Circle()
-                                .fill(Color.white.opacity(index == tick ? 1.0 : 0.28))
+                                .fill(ink.opacity(index == tick ? 1.0 : 0.28))
                                 .frame(width: 4, height: 4)
                         }
                     }
@@ -508,12 +511,12 @@ struct StatusCapsuleView: View {
             case .writing:
                 Text("✍")
                     .font(.system(size: 12))
-                    .foregroundStyle(.white.opacity(0.95))
+                    .foregroundStyle(ink.opacity(0.95))
                 label(L10n.t("capsule.writing", locale: locale))
             case .inserted:
                 Image(systemName: "checkmark")
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.95))
+                    .foregroundStyle(ink.opacity(0.95))
                 label(L10n.t("capsule.inserted", locale: locale))
             case .formattingFallback:
                 Image(systemName: "checkmark")
@@ -530,7 +533,7 @@ struct StatusCapsuleView: View {
     private func label(_ text: String) -> some View {
         Text(text)
             .font(.system(size: 12, weight: .semibold, design: .rounded))
-            .foregroundStyle(.white.opacity(0.95))
+            .foregroundStyle(ink.opacity(0.95))
             .lineLimit(1)
     }
 }

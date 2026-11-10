@@ -18,7 +18,7 @@ enum BundledModelCatalog {
     }
 
     static let fallback = ModelCatalogFile(
-        version: 11,
+        version: 12,
         packages: [
             CatalogPackage(
                 id: parakeetUltraSTTID,
@@ -37,7 +37,7 @@ enum BundledModelCatalog {
             CatalogPackage(
                 id: "cleanup.qwen3-0.6b-4bit",
                 role: .cleanup,
-                displayName: "Qwen3 0.6B (Smart)",
+                displayName: "Qwen3 0.6B",
                 approximateBytes: 335_000_000,
                 languagesBlurb: "catalog.blurb.cleanup.qwen3-0.6b-4bit",
                 license: "Apache-2.0",
@@ -51,7 +51,7 @@ enum BundledModelCatalog {
             CatalogPackage(
                 id: "cleanup.qwen3-1.7b-4bit",
                 role: .cleanup,
-                displayName: "Qwen3 1.7B (Smart+)",
+                displayName: "Qwen3 1.7B (legacy)",
                 approximateBytes: 1_000_000_000,
                 languagesBlurb: "catalog.blurb.cleanup.qwen3-1.7b-4bit",
                 license: "Apache-2.0",
@@ -59,7 +59,7 @@ enum BundledModelCatalog {
                 downloadURL: "https://huggingface.co/mlx-community/Qwen3-1.7B-4bit",
                 runtimeHint: "mlx-lm",
                 hubRepoID: "mlx-community/Qwen3-1.7B-4bit",
-                downloadable: true,
+                downloadable: false,
                 hubRevision: "3b1b1768f8f8cf8351c712464f906e86c2b8269e"
             ),
             CatalogPackage(
@@ -68,7 +68,7 @@ enum BundledModelCatalog {
                 displayName: "Gemma 4 E2B",
                 approximateBytes: 3_550_000_000,
                 languagesBlurb: "catalog.blurb.cleanup.gemma4-e2b-4bit",
-                license: "Apache-2.0",
+                license: "Gemma",
                 recommended: false,
                 downloadURL: "https://huggingface.co/mlx-community/gemma-4-e2b-it-4bit",
                 runtimeHint: "mlx-lm",

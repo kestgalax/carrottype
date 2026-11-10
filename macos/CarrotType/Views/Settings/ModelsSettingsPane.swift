@@ -70,7 +70,7 @@ struct ModelsSettingsPane: View {
             }
 
             ForEach(CleanupMode.allCases) { mode in
-                if let packageID = mode.requiredPackageID {
+                if let packageID = mode.requiredPackageID, mode != .smartPlus || models.status(for: packageID).isReady || models.cleanupMode == mode {
                     cleanupPackageRow(mode: mode, packageID: packageID)
                         // Force refresh on progress ticks (same visual path as STT ProgressView).
                         .id("\(packageID)-\(progressTick(for: packageID))")
@@ -122,14 +122,14 @@ struct ModelsSettingsPane: View {
                 Text("\(package.approximateSizeLabel) · \(package.license)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(package.localizedBlurb(locale: locale))
+                Text(mode == .smartPlus ? L10n.t("format.legacy_hint", locale: locale) : package.localizedBlurb(locale: locale))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
             if status.isReady {
                 HStack {
-                    if models.cleanupMode != mode {
+                    if models.cleanupMode != mode && mode != .smartPlus {
                         Button(L10n.t("format.make_active", locale: locale)) {
                             models.selectCleanup(mode)
                         }

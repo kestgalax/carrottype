@@ -404,18 +404,18 @@
       }
     },
     "catalog.blurb.cleanup.qwen3-1.7b-4bit": {
-      "extractionState": "stale",
+      "extractionState": "manual",
       "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MLX · heavy · expect ~1–2 GB RAM while running · Apple Silicon"
-          }
-        },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "MLX · тяжёлая · учитывайте ~1–2 ГБ памяти во время работы · Apple Silicon"
+            "value": "Прежний пакет для совместимости. Новые загрузки не предлагаются; файлы можно удалить в Хранилище с подтверждением."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Legacy compatibility package. No new downloads are offered; remove files with confirmation in Storage."
           }
         }
       }
@@ -574,35 +574,35 @@
       }
     },
     "cleanup.mode.smart": {
-      "extractionState": "stale",
+      "extractionState": "manual",
       "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Smart (Qwen3 0.6B)"
-          }
-        },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smart (Qwen3 0.6B)"
+            "value": "Qwen3 0.6B"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qwen3 0.6B"
           }
         }
       }
     },
     "cleanup.mode.smart_plus": {
-      "extractionState": "stale",
+      "extractionState": "manual",
       "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Smart+ (Qwen3 1.7B)"
-          }
-        },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smart+ (Qwen3 1.7B)"
+            "value": "Qwen3 1.7B (прежняя)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qwen3 1.7B (legacy)"
           }
         }
       }
@@ -1305,18 +1305,18 @@
       }
     },
     "format.footer": {
-      "extractionState": "stale",
+      "extractionState": "manual",
       "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Smart/Smart+/Gemma appear after download. Optional: try Off/Light first — formatting can improve or worsen the text."
-          }
-        },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smart/Smart+/Gemma — после скачивания. Режим необязателен: сначала попробуйте Off/Light — оформление может и улучшить, и ухудшить текст."
+            "value": "Базовая обработка не использует модель. Qwen3 0.6B и Gemma выполняют локальную постобработку; её правила находятся в Основных."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Basic formatting uses no model. Qwen3 0.6B and Gemma provide local formatting; configure rules in General."
           }
         }
       }
@@ -1645,18 +1645,18 @@
       }
     },
     "language.footer": {
-      "extractionState": "stale",
+      "extractionState": "manual",
       "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Defaults to the system language. You can override it here."
-          }
-        },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "По умолчанию — язык системы. Можно переопределить здесь."
+            "value": "Тема и язык выбираются независимо. Системные значения следуют настройкам macOS."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Theme and language are independent. System choices follow macOS settings."
           }
         }
       }
@@ -3963,13 +3963,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Download Smart, Smart+, or Gemma in Models to enable transform."
+            "value": "Download Qwen3 0.6B or Gemma in Models to enable transform."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Скачайте Smart, Smart+ или Gemma в «Модели», чтобы включить преобразование."
+            "value": "Скачайте Qwen3 0.6B или Gemma в «Модели», чтобы включить преобразование."
           }
         }
       }
@@ -3980,13 +3980,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transform selected text (General) uses the same Smart / Smart+ / Gemma packages."
+            "value": "Transform selected text (General) uses the same Qwen3 0.6B / Gemma packages."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Преобразование выделенного текста (Основные) использует те же пакеты Smart / Smart+ / Gemma."
+            "value": "Преобразование выделенного текста (Основные) использует те же пакеты Qwen3 0.6B / Gemma."
           }
         }
       }
@@ -4031,13 +4031,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No transform model ready. Download Smart, Smart+, or Gemma in Settings → Models."
+            "value": "No transform model ready. Download Qwen3 0.6B or Gemma in Settings → Models."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Нет готовой модели для преобразования. Скачайте Smart, Smart+ или Gemma в Настройки → Модели."
+            "value": "Нет готовой модели для преобразования. Скачайте Qwen3 0.6B или Gemma в Настройки → Модели."
           }
         }
       }
@@ -4541,7 +4541,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Применено базовое форматирование"
+            "value": "Применена базовая обработка"
           }
         },
         "en": {
@@ -4592,13 +4592,13 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Модель %@ недоступна. Текст сохранён с базовым форматированием."
+            "value": "Применена базовая обработка: выбранная модель недоступна. Её дополнительные правила не применены."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The %@ model is unavailable. Your text was kept with basic formatting."
+            "value": "Basic formatting applied: the selected model is unavailable. Its additional rules were not applied."
           }
         }
       }
@@ -4609,13 +4609,13 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Не удалось применить %@. Текст сохранён с базовым форматированием."
+            "value": "Применена базовая обработка: модель не смогла завершить постобработку. Её дополнительные правила не применены."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Could not apply %@. Your text was kept with basic formatting."
+            "value": "Basic formatting applied: the model could not complete formatting. Its additional rules were not applied."
           }
         }
       }
@@ -5024,13 +5024,13 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Изменение режима применяется к следующей диктовке. Загрузить и выбрать модели можно в разделе Модели."
+            "value": "Выбирайте модель в разделе Модели. Базовая обработка работает без скачивания; правила модели настраиваются ниже."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Changes apply to the next dictation. Download and manage packages in Models."
+            "value": "Manage packages in Models. Basic formatting needs no download; model rules are below."
           }
         }
       }
@@ -5167,6 +5167,516 @@
           "stringUnit": {
             "state": "translated",
             "value": "If this package is selected for formatting, the mode will switch to Light. Actions using it will use another available model or require a model download."
+          }
+        }
+      }
+    },
+    "format.legacy_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прежняя модель: сохраняется для существующих настроек и действий. Для нового выбора доступны Qwen3 0.6B и Gemma."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Legacy model retained for existing settings and actions. New choices use Qwen3 0.6B and Gemma."
+          }
+        }
+      }
+    },
+    "appearance.section": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Оформление и язык"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appearance and language"
+          }
+        }
+      }
+    },
+    "rules.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Правила постобработки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formatting rules"
+          }
+        }
+      }
+    },
+    "rules.intent": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Задача модели — сохранять смысл, язык, числа и отрицания. Не отвечать на вопросы из диктовки и не добавлять факты."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The model is instructed to preserve meaning, language, numbers and negations, without answering dictated questions or adding facts."
+          }
+        }
+      }
+    },
+    "rules.fillers": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Убирать слова-паразиты"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove fillers"
+          }
+        }
+      }
+    },
+    "rules.repetitions": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Убирать случайные повторы"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove accidental repetitions"
+          }
+        }
+      }
+    },
+    "rules.corrections": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Учитывать самоисправления"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apply spoken self-corrections"
+          }
+        }
+      }
+    },
+    "rules.layout": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Оформление"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Layout"
+          }
+        }
+      }
+    },
+    "rules.preserve": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сохранять структуру"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preserve structure"
+          }
+        }
+      }
+    },
+    "rules.paragraphs": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разбивать на абзацы"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use paragraphs"
+          }
+        }
+      }
+    },
+    "rules.custom": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мои правила"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "My rules"
+          }
+        }
+      }
+    },
+    "rules.examples": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Например: «Пиши CarrotType именно так», «Сохраняй разговорный стиль», «Не переводи технические термины». До 1000 символов. Перевод и переписывание — в действии Custom."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For example: “Spell CarrotType exactly this way”, “Keep a conversational style”, “Do not translate technical terms”. Up to 1000 characters. Use Custom for translation or rewriting."
+          }
+        }
+      }
+    },
+    "rules.summary": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Что учитывает модель"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What the model considers"
+          }
+        }
+      }
+    },
+    "rules.reset": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сбросить правила"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset rules"
+          }
+        }
+      }
+    },
+    "rules.no_model": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дополнительные правила работают только с Qwen или Gemma. Базовая обработка сохраняет переносы и убирает лишь однозначные запинки; произвольные инструкции она не выполняет."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Additional rules require Qwen or Gemma. Basic formatting preserves line breaks and removes only unambiguous hesitations; it does not interpret custom instructions."
+          }
+        }
+      }
+    },
+    "rules.trial": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверить на тексте"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try on text"
+          }
+        }
+      }
+    },
+    "rules.trial_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Введите пример до 6000 символов. Результат останется здесь: без вставки, изменения буфера обмена, истории или статистики."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a sample up to 6000 characters. Results stay here: no paste, clipboard changes, history or statistics."
+          }
+        }
+      }
+    },
+    "rules.trial_input": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Текст для проверки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sample text"
+          }
+        }
+      }
+    },
+    "rules.try": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обработать пример"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format sample"
+          }
+        }
+      }
+    },
+    "rules.cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отменить"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "rules.result": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Результат"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Result"
+          }
+        }
+      }
+    },
+    "rules.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет содержательного текста."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No meaningful text."
+          }
+        }
+      }
+    },
+    "rules.fallback": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Применена базовая обработка. Дополнительные правила модели не применены."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Basic formatting was applied. Additional model rules were not applied."
+          }
+        }
+      }
+    },
+    "rules.next_session": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Изменения правил применяются со следующей записью или пробой. Модель может ошибаться — результат можно проверить на примере."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rule changes apply to the next recording or trial. Models can make mistakes; try a sample to check the result."
+          }
+        }
+      }
+    },
+    "rules.on": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "включено"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "on"
+          }
+        }
+      }
+    },
+    "rules.off": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "выключено"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "off"
+          }
+        }
+      }
+    },
+    "theme.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тема"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Theme"
+          }
+        }
+      }
+    },
+    "theme.system": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Системная"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System"
+          }
+        }
+      }
+    },
+    "theme.light": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Светлая"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light"
+          }
+        }
+      }
+    },
+    "theme.dark": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тёмная"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dark"
           }
         }
       }

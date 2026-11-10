@@ -47,6 +47,8 @@ struct GeneralSettingsPane: View {
 
             GeneralFormattingSection(models: appState.modelManager, locale: locale, onOpenModels: onOpenModels)
 
+            FormattingRulesSection(appState: appState, locale: locale)
+
             Section {
                 if appState.transformBindings.isEmpty {
                     Text(L10n.t("transform.bindings_empty", locale: locale))
@@ -93,13 +95,16 @@ struct GeneralSettingsPane: View {
             AppUpdateSettingsSection(updates: appState.updates, locale: locale)
 
             Section {
+                Picker(L10n.t("theme.title", locale: locale), selection: $appState.appTheme) {
+                    ForEach(AppTheme.allCases) { theme in Text(theme.title(locale: locale)).tag(theme) }
+                }
                 Picker(L10n.t("language.section", locale: locale), selection: $appState.appLanguage) {
                     ForEach(AppLanguage.allCases) { language in
                         Text(language.title(locale: locale)).tag(language)
                     }
                 }
             } header: {
-                Text(L10n.t("language.section", locale: locale))
+                Text(L10n.t("appearance.section", locale: locale))
             } footer: {
                 Text(L10n.t("language.footer", locale: locale))
             }
@@ -136,7 +141,7 @@ private struct TransformBindingEditor: View {
                     Text(current.chord.displayString).monospaced()
                     Text(current.cleanupMode.title(locale: locale)).font(.caption).foregroundStyle(.secondary)
                 }
-                if !appState.selectableTransformModes.contains(current.cleanupMode) {
+                if !appState.transformModes(for: current.cleanupMode).contains(current.cleanupMode) {
                     Image(systemName: "exclamationmark.circle").foregroundStyle(.orange)
                 }
             }
@@ -167,17 +172,17 @@ private struct TransformBindingEditor: View {
             }
 
             Picker(L10n.t("transform.model", locale: locale), selection: modeBinding) {
-                if !appState.selectableTransformModes.contains(current.cleanupMode) {
+                if !appState.transformModes(for: current.cleanupMode).contains(current.cleanupMode) {
                     Text(String(format: L10n.t("transform.model_unavailable", locale: locale), current.cleanupMode.title(locale: locale)))
                         .tag(current.cleanupMode)
                         .disabled(true)
                 }
-                ForEach(appState.selectableTransformModes) { mode in
+                ForEach(appState.transformModes(for: current.cleanupMode)) { mode in
                     Text(mode.title(locale: locale)).tag(mode)
                 }
             }
-            if !appState.selectableTransformModes.contains(current.cleanupMode) {
-                if let fallback = TransformModelSelection.resolve(requested: current.cleanupMode, available: appState.selectableTransformModes) {
+            if !appState.transformModes(for: current.cleanupMode).contains(current.cleanupMode) {
+                if let fallback = TransformModelSelection.resolve(requested: current.cleanupMode, available: appState.transformModes(for: current.cleanupMode)) {
                     Text(String(format: L10n.t("transform.model_fallback", locale: locale), current.cleanupMode.title(locale: locale), fallback.title(locale: locale)))
                         .font(.caption).foregroundStyle(.secondary)
                 } else {

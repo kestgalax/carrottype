@@ -2,7 +2,14 @@ import Foundation
 
 protocol CleanupEngine: Sendable {
     func cleanup(text: String, mode: CleanupMode, modelDirectory: URL?, instructions: String?) async throws -> String
+    func formatDictation(text: String, mode: CleanupMode, modelDirectory: URL?, rules: DictationRules) async throws -> String
     func unload() async
+}
+
+extension CleanupEngine {
+    func formatDictation(text: String, mode: CleanupMode, modelDirectory: URL?, rules: DictationRules) async throws -> String {
+        try await cleanup(text: text, mode: mode, modelDirectory: modelDirectory, instructions: nil)
+    }
 }
 
 enum FormattingFallbackReason: Equatable, Sendable {
@@ -27,7 +34,7 @@ struct FormattedDictation {
 enum DictationFormatting {
     static func perform(
         text: String, mode: CleanupMode, directory: URL?,
-        engine: any CleanupEngine, lightEngine: any CleanupEngine
+        engine: any CleanupEngine, lightEngine: any CleanupEngine, rules: DictationRules = DictationRules()
     ) async throws -> FormattedDictation {
         try Task.checkCancellation()
         var reason: FormattingFallbackReason?
@@ -35,7 +42,7 @@ enum DictationFormatting {
             reason = .modelUnavailable
         } else {
             do {
-                let cleaned = try await engine.cleanup(text: text, mode: mode, modelDirectory: directory, instructions: nil)
+                let cleaned = try await engine.formatDictation(text: text, mode: mode, modelDirectory: directory, rules: rules)
                 try Task.checkCancellation()
                 return FormattedDictation(text: cleaned, formatting: FormattingOutcome(
                     requestedMode: mode, actualMode: mode, fallbackReason: nil

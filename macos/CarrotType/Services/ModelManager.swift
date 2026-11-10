@@ -55,7 +55,7 @@ final class ModelManager: ObservableObject {
 
     /// Cleanup modes available for the active-mode picker (Off/Light always; Smart* when ready).
     var selectableCleanupModes: [CleanupMode] {
-        CleanupMode.allCases.filter { isCleanupPackageReady(for: $0) }
+        CleanupMode.allCases.filter { ($0 != .smartPlus || cleanupMode == .smartPlus) && isCleanupPackageReady(for: $0) }
     }
 
     var activeSTTStatus: PackageInstallStatus {
@@ -124,6 +124,7 @@ final class ModelManager: ObservableObject {
     }
 
     func status(for packageID: String) -> PackageInstallStatus {
+        if statuses[packageID]?.isReady == true { return .ready }
         if let package = package(id: packageID), !package.downloadable {
             return .unavailable(reason: "Runtime ещё не подключён")
         }
@@ -133,6 +134,7 @@ final class ModelManager: ObservableObject {
     func refreshStatusesFromDisk() {
         var next: [String: PackageInstallStatus] = [:]
         for package in catalog.packages {
+            if isReadyOnDisk(package) { next[package.id] = .ready; continue }
             if !package.downloadable {
                 next[package.id] = .unavailable(reason: "Runtime ещё не подключён")
                 continue
@@ -161,7 +163,7 @@ final class ModelManager: ObservableObject {
     }
 
     func selectCleanup(_ mode: CleanupMode) {
-        guard isCleanupPackageReady(for: mode) else {
+        guard (mode != .smartPlus || cleanupMode == .smartPlus), isCleanupPackageReady(for: mode) else {
             lastError = String(
                 format: L10n.t("error.select_cleanup_download_first"),
                 mode.title(locale: L10n.preferredLocale)
@@ -582,7 +584,7 @@ final class ModelManager: ObservableObject {
     }
 
     private func firstReadyCleanupMode(excludingPackageID: String) -> CleanupMode? {
-        for mode in [CleanupMode.smartPlus, .smart, .gemma] {
+        for mode in [CleanupMode.smart, .gemma] {
             guard let id = mode.requiredPackageID, id != excludingPackageID else { continue }
             if isCleanupPackageReady(for: mode) { return mode }
         }

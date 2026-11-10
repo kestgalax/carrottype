@@ -1,18 +1,22 @@
 {
   "schemaVersion": 1,
-  "version": "0.7.0",
-  "build": "29",
+  "version": "0.8.0",
+  "build": "30",
   "date": "2026-11-10",
   "localizations": {
     "en": {
-      "summary": "The same dictation workflow, with clearer native settings.",
+      "summary": "Formatting your way, with a choice of theme.",
       "sections": [
         {
           "kind": "new",
           "items": [
             {
-              "title": "A new CarrotType mark.",
-              "detail": "A carrot-shaped microphone and a monochrome idle menu-bar icon."
+              "title": "Formatting rules.",
+              "detail": "Choose fillers, repetitions, spoken corrections, paragraphs and additional preferences. Try a sample directly in Settings."
+            },
+            {
+              "title": "System, Light or Dark.",
+              "detail": "Theme is independent of language, applies immediately and persists across launches."
             }
           ]
         },
@@ -20,12 +24,8 @@
           "kind": "improved",
           "items": [
             {
-              "title": "Dictation settings together.",
-              "detail": "Formatting is available in General; all models and package controls remain in Models."
-            },
-            {
-              "title": "A calmer native interface.",
-              "detail": "Consistent headings, a warm accent, status and What’s New in the sidebar."
+              "title": "Two offered models.",
+              "detail": "Qwen3 0.6B and Gemma; installed Smart+ remains compatible with existing settings and actions."
             }
           ]
         },
@@ -33,26 +33,30 @@
           "kind": "fixed",
           "items": [
             {
-              "title": "More accessible controls.",
-              "detail": "Language-picker labels, selected navigation, Reduce Motion support and readable live-draft tail words."
+              "title": "Gentler basic formatting.",
+              "detail": "Preserves meaningful words and line breaks."
             },
             {
-              "title": "Confirm before deleting.",
-              "detail": "Installed model deletion, unused-package deletion and statistics clearing now require confirmation."
+              "title": "Reject incomplete model results.",
+              "detail": "Token-aware budgeting rejects incomplete output; detected loss of protected values also uses visible basic-formatting fallback."
             }
           ]
         }
       ]
     },
     "ru": {
-      "summary": "Знакомая диктовка в более ясном нативном интерфейсе.",
+      "summary": "Постобработка по вашим правилам и выбор темы.",
       "sections": [
         {
           "kind": "new",
           "items": [
             {
-              "title": "Новый знак CarrotType.",
-              "detail": "Морковка-микрофон и монохромный значок в режиме ожидания."
+              "title": "Правила постобработки.",
+              "detail": "Настройте запинки, повторы, самоисправления, абзацы и свои предпочтения. Проверьте результат на тексте прямо в настройках."
+            },
+            {
+              "title": "Системная, светлая или тёмная тема.",
+              "detail": "Выбор независим от языка, применяется сразу и сохраняется после перезапуска."
             }
           ]
         },
@@ -60,12 +64,8 @@
           "kind": "improved",
           "items": [
             {
-              "title": "Настройки диктовки собраны вместе.",
-              "detail": "Форматирование доступно в Основных; все модели и их управление остаются в разделе Модели."
-            },
-            {
-              "title": "Спокойное нативное оформление.",
-              "detail": "Единые заголовки, тёплый акцент, статус и «Что нового» в боковой панели."
+              "title": "Две предлагаемые модели.",
+              "detail": "Qwen3 0.6B и Gemma; установленный Smart+ сохраняется для совместимости с существующими настройками и действиями."
             }
           ]
         },
@@ -73,12 +73,12 @@
           "kind": "fixed",
           "items": [
             {
-              "title": "Более доступное управление.",
-              "detail": "Подписи языковых списков, выбранный раздел, Reduce Motion и читаемые последние слова live draft."
+              "title": "Бережная базовая обработка.",
+              "detail": "Сохраняет смысловые слова и переносы строк."
             },
             {
-              "title": "Подтверждение перед удалением.",
-              "detail": "Удаление установленных моделей, неиспользуемых пакетов и очистка статистики требуют подтверждения."
+              "title": "Защита от обрезанного результата модели.",
+              "detail": "Учёт токенов защищает от обрезанного ответа; обнаруженная потеря защищённых значений тоже вызывает видимый переход на базовую обработку."
             }
           ]
         }
