@@ -1,0 +1,40 @@
+# GigaAM v3: совместимость с архитектурой CarrotType
+
+2026-11-10. Запрос пользователя: проверить, можно ли добавить выбранную GigaAM v3 без изменения текущей архитектуры. Активный scope — только Ultra ↔ GigaAM v3, отдельный этап 0.9.0 после 0.8.0. Проверка read-only/static; shipping-код, SPM/версии, пользовательские модели/настройки не изменены, веса не скачивались.
+
+## Вывод
+
+**Существующий основной конвейер сохраняется:** hotkey → AudioRecorder/WAV → STTEngine → DictationFormatting → caret paste. SessionCoordinator, clipboard/recovery, статистика, selection transforms и updater gate уже допускают заменяемую обработку через зависимости. Переписывать приложение или переходить на Python/сервер не требуется.
+
+**Полностью без изменений кода/архитектурного расширения добавить модель нельзя.** Нужны адаптер GigaAM, выбор STT в pipeline, model/storage/Ready policy и решение выполнения MLX вне основного процесса. Это ограниченное расширение существующего паттерна, но новый движок/зависимость требует ADR по правилам репозитория и частичного superseding ADR-016. Проверка исходников/типов не означает готовую интеграцию или проверенное качество/latency.
+
+## Проверенная нативная реализация
+
+- [kruatech/gigaam-v3-mlx](https://github.com/kruatech/gigaam-v3-mlx), зафиксированный текущий commit **`95bd42a4b9a65450a24e1898c7d84b85e0e88509`**; исходный архив 207,843 bytes скачан в отдельную временную папку, без весов. Старую `.tmp/gigaam-src` не изменяли и не использовали как доказательство актуальности — её manifest отличается.
+- [Package.swift на этом commit](https://github.com/kruatech/gigaam-v3-mlx/blob/95bd42a4b9a65450a24e1898c7d84b85e0e88509/Package.swift): Swift tools 5.10, macOS 14, библиотека GigaAMKit, MLX/MLXNN с диапазоном `0.31.3..<0.32.0`, Numerics от 1.0.0. Наш app floor macOS 14, текущий resolved MLX **0.31.6** укладывается в диапазон.
+- **PASS:** все **29** Swift-файлов `Sources/GigaAMKit` прошли `swiftc -typecheck -parse-as-library -swift-version 5` с target/sdk/include/module-map flags из реального Debug compiler invocation CarrotTypeCleanupHelper и существующими Debug MLX/MLXNN/Numerics modules. Exit 0, диагностик нет. Команда и лог локально: `/tmp/carrottype-gigaam-typecheck-command.json`, `/tmp/carrottype-gigaam-typecheck.log`; скрипт проверки `/tmp/carrottype-gigaam-typecheck.py`.
+- Это **не** полный SPM resolve/link/build приложения и не запуск inference. Не проверены упаковка GPU shaders нового target, загрузка весов/численная точность, реальные cancel/unload, память/производительность, long-form, UI/TCC. Перед интеграцией проверять замкнутый resolved graph; не менять MLX на latest только ради стороннего README.
+
+## Совпадение интерфейсов и точечные изменения
+
+| Узел | Что уже есть / что установлено | Что потребуется |
+|---|---|---|
+| STT contract | `Services/Engines/DictationPipeline.swift:9`: async `transcribe(audioURL:modelPath:) -> String`, `unload()`. SDK имеет `transcribe(url:) -> GigaAMResult` и `transcribe(samples:sampleRate:)`. | GigaAM adapter/actor с проверкой локального пути/Ready, извлечением result.text и теми же empty/error/cancellation semantics. Формат аудиозаписи менять не обязательно: SDK содержит загрузчик/ресемплинг. Реальный формат WAV проверить на inference. |
+| Основная оркестрация | `DictationSessionCoordinator<Configuration,Output>` получает capture/process/unload/preview closures и держит gate до teardown. Не знает модель конкретного STT. | Подать выбранный adapter через существующие зависимости/snapshot, не переписывать жизненный цикл и доставку. |
+| Pipeline selection | В `DictationPipeline.run` сейчас буквально `let stt = parakeet`; preview/unload также конкретно Parakeet. | Небольшой switch/registry по snapshot packageID и единый unload выбранного STT, без скрытой замены на Ultra при ошибке GigaAM. Одного протокола STTEngine недостаточно, пока factory/wiring не обобщены. |
+| Каталог/выбор | `ModelManager.sttPackages` фильтрует только Ultra; download/ready/remove распознают Parakeet или MLX **cleanup**. `DictationModelPolicy.restoreSelection` принудительно пишет Ultra. | Отдельный STT runtimeHint/Ready/download/remove/path allowlist, два разрешённых id, восстановление сохранённого выбора и явный selector. Старые неизвестные id по-прежнему мигрируют безопасно. Не использовать cleanupMLX путь вслепую. |
+| Память/выполнение | Нативный GigaAM напрямую импортирует MLX/MLXNN. Текущий host избегает MLX inference; cleanup вынесен в процесс (ADR-009), transport уже умеет timeout/kill/reap. | Сохранить этот принцип: выполнить GigaAM через helper, повторно используя transport-паттерн. Расширить существующий бинарник типизированной STT-операцией либо отдельный target — выбрать в ADR. Чисто in-process adapter проще, но возврат idle RAM после выгрузки не доказан. Новый сервис/XPC/сервер не обязателен. |
+| Отмена | SDK async transcribe внутри вызывает синхронный RNNT decoder. На проверенном commit нет `Task.checkCancellation`/`Task.isCancelled` в SDK. | Обычный `Task.cancel()` не гарантирует своевременную остановку вычислений. Дочерний процесс даёт проверяемый путь terminate/escalate/reap; в in-process варианте нужны кооперативные проверки decoder/нагрузки, это уже патч SDK. Удерживать gate до реального завершения/освобождения. |
+| Live draft | Наш отдельный StreamingSTTEngine принимает PCM и callback; текущая реализация Parakeet периодически перераспознаёт накопленный звук. SDK GigaAM предоставляет batch file/samples, не такой session interface. | Batch adapter покрывает только итог после Stop. Preview потребует отдельного адаптера с контролем частоты/epoch/отмены/нагрузки. Нельзя объявить supportsStreaming только из-за PCM API. Прежде всего сохранить Ultra preview; ограничение GigaAM, если останется, явно показать и согласовать до release. |
+| Длинная речь | В проверенном SDK `chunkDuration` объявлен/сохранён в configuration, но не читается другими исходниками; сам по себе не обеспечивает нарезку/merge. | Проверить long-form фактически, при необходимости ограниченная сегментация по тишине/overlap/merge и тесты границ слов. Историческое предположение «уже есть рабочие chunk 20 s» из локального HTML не считать доказательством. |
+| Postprocessing | Pipeline уже принимает обычную строку STT для Off/Light/Qwen/Gemma, trial/caret delivery разделены. | Сохранять этот контракт; сравнивать raw STT отдельно от cleanup. SDK v3 E2E уже может выдать пунктуацию — избежать дублирования/потери форматирования, не менять пользовательские правила без причины. |
+| Упаковка/доверие | Embedded helper, existing MLX shader bundle, self-signed components, signed app updates уже существуют. | Проверить новую роль/target, helper model/audio path jail, IPC/output/time limits, signature/shaders. Веса отдельно с явной загрузкой; никаких Python, pyannote/HF token или HTTP во время диктовки. Новая trust/distribution схема не нужна. |
+
+## Минимальный безопасный путь
+
+1. Принять bounded research/runtime ADR с GigaAMKit commit/model pin, файловым STT adapter и существующим process-per-operation helper-паттерном. Название/число helper targets выбрать по небольшому diff, без обещания «вообще ничего не меняется».
+2. В изолированном harness проверить полный build/link/shaders, локальную загрузку и несколько разрешённых audio fixtures; только потом inference/quality/latency/memory/cancel/longform comparison из S1/S2. Этот документ закрывает лишь static/API часть S1.
+3. При подтверждённой пользе подключить два Ready STT и snapshot routing, сохранить все существующие функции Ultra. GigaAM preview считать отдельным явно проверяемым подпунктом; не прятать его отсутствие за catalog boolean.
+4. Production regressions, signed Debug 0.9.0, ручное принятие и отдельное разрешение на публикацию. 0.8.0 (cleanup/theme) не расширять этим runtime.
+
+**Ответ на исходный вопрос:** архитектура основного цикла подходит; есть подтверждённый нативный SDK с совместимыми API/версией MLX. Требуется ограниченная интеграция модели, а не перепроектирование основного приложения. Полная совместимость и сохранение всех возможностей GigaAM ещё нуждаются в build/inference проверках.
