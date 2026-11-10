@@ -1,0 +1,73 @@
+name: macOS checks
+on:
+  pull_request:
+  push:
+    branches: [main, 'refactor/**', 'feat/**', 'fix/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: macos-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    # The pinned MLX manifest requires Swift 6.3 (experimentalCGen).
+    runs-on: xcode-27
+    timeout-minutes: 45
+    env:
+      AIDOS_ROOT: ${{ github.workspace }}/.aidos
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Check optional private governance access
+        id: governance-access
+        env:
+          AIDOS_READ_TOKEN: ${{ secrets.AIDOS_READ_TOKEN }}
+        run: |
+          if [ -n "$AIDOS_READ_TOKEN" ]; then
+            echo 'available=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'available=false' >> "$GITHUB_OUTPUT"
+            echo '::warning::Private AIDOS tooling is unavailable. Hosted governance is skipped; require local validate/trace/review evidence. App checks and build still run.'
+          fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        if: steps.governance-access.outputs.available == 'true'
+        with:
+          repository: kestgalax/AIDOS
+          token: ${{ secrets.AIDOS_READ_TOKEN }}
+          ref: 832909433d28a2e080be6d7e405475d3d08dc009
+          path: .aidos
+          persist-credentials: false
+      - name: Select runner Xcode
+        run: printf 'DEVELOPER_DIR=%s\n' "$(xcode-select -p)" >> "$GITHUB_ENV"
+      - name: Governance
+        if: steps.governance-access.outputs.available == 'true'
+        run: |
+          npm run aidos:validate
+          npm run aidos:trace
+          npm run aidos:review
+      - name: Production regression checks (no microphone or models)
+        run: |
+          bash scripts/verify-session-lifecycle.sh
+          bash scripts/verify-dictation-reliability.sh
+          bash scripts/verify-setup-formatting.sh
+          bash scripts/verify-ultra-models.sh
+          bash scripts/verify-app-updates.sh
+          bash scripts/verify-release-notes.sh
+          python3 scripts/verify-model-catalog-streaming.py
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          xcrun swift --version
+          if ! xcrun metal --version; then
+            xcodebuild -downloadComponent MetalToolchain
+          fi
+      - name: Debug arm64 compile (no distribution signing)
+        run: >-
+          xcodebuild -project macos/CarrotType.xcodeproj -scheme CarrotType
+          -configuration Debug -destination 'platform=macOS,arch=arm64'
+          -derivedDataPath "$RUNNER_TEMP/carrottype-build"
+          -onlyUsePackageVersionsFromResolvedFile
+          -skipPackagePluginValidation -skipMacroValidation
+          CODE_SIGNING_ALLOWED=NO COMPILER_INDEX_STORE_ENABLE=NO build

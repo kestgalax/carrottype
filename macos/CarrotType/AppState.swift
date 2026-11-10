@@ -24,8 +24,6 @@ final class AppState: ObservableObject {
     @Published private(set) var hasCompletedSetupTrial: Bool
     @Published private(set) var lastFormattingOutcome: FormattingOutcome?
     @Published private(set) var isSetupTrialCancelling = false
-    private var setupTrialTask: Task<Void, Never>?
-    private var setupTrialFinishRequested = false
     private let setupDefaults: UserDefaults
     private var didPresentFirstRunThisLaunch = false
     @Published var showFirstRun: Bool
@@ -106,7 +104,12 @@ final class AppState: ObservableObject {
     var transformBindings: [TransformBinding] { hotkey.transformBindings }
 
     let updates = AppUpdateService()
-    private var dictationUpdateReservation: UUID?
+    private lazy var session = makeSessionCoordinator()
+    private var restoreMuteOnQuit: (() -> Void)?
+    private var cancelledDraftToPresent: String?
+    private var transformTask: Task<Void, Never>?
+    private var terminationTask: Task<Void, Never>?
+    private var isTerminating = false
 
     let modelManager: ModelManager
     let permissions: PermissionService
@@ -116,33 +119,20 @@ final class AppState: ObservableObject {
     let pipeline: DictationPipeline
     let usageStats: UsageStatsStore
 
-    private let recorder = AudioRecorder()
-    private let micMute = MicMuteController()
     private let statusCapsule = StatusCapsuleController()
     private var cancellables = Set<AnyCancellable>()
     private var isProcessing = false
     private var levelDecayTimer: Timer?
-    private var modelUnloadTask: Task<Void, Never>?
     /// Invalidates in-flight Writing → Inserted sleeps when a new session starts or cancels.
     private var capsuleSequenceToken = UUID()
     /// Clears the temporary "Copied" label on the transform result capsule.
     private var transformCopiedFeedbackTask: Task<Void, Never>?
     /// Hides the live-draft snapshot capsule after 5 seconds.
     private var liveDraftResultDismissTask: Task<Void, Never>?
-    /// Starts live-draft streaming after the recorder is already capturing.
-    private var liveDraftStartTask: Task<Void, Never>?
-    /// Incremented on each dictation start and live-draft cancel. A load task may
-    /// finish after a newer session is streaming; it must not attach or cancel then.
-    private var liveDraftStartGeneration: UInt64 = 0
-    /// True while Escape cancel is tearing down a session, so a second Escape
-    /// cannot snapshot an already-cleared draft and wipe the Copy capsule.
-    private var isCancellingDictation = false
     /// Counts nested Settings appearances so SwiftUI remounts do not clear the mic meter.
     private var settingsAppearanceCount = 0
     /// Walkie-talkie: true while the dictation chord is physically held (set on press, cleared on release).
     private var pttKeyHeld = false
-    /// Walkie-talkie: guards against overlapping async starts on very fast press/release.
-    private var pttStartInFlight = false
 
     init(
         modelManager: ModelManager? = nil,
@@ -186,6 +176,7 @@ final class AppState: ObservableObject {
             self.typingSpeedWPM = UsageStatsEstimate.defaultWPM
         }
 
+        _ = session
         statusCapsule.attach(appState: self)
         NotificationCenter.default.addObserver(
             forName: NSApplication.willTerminateNotification,
@@ -193,14 +184,9 @@ final class AppState: ObservableObject {
             queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
-                self?.micMute.restoreSynchronouslyOnQuit()
+                self?.restoreMuteOnQuit?()
             }
         }
-        recorder.onLivePeak = { [weak self] peak in
-            guard let self else { return }
-            self.recorderLiveLevel = max(peak, self.recorderLiveLevel * 0.55)
-        }
-
         modelManager.objectWillChange
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
@@ -251,7 +237,7 @@ final class AppState: ObservableObject {
             .dropFirst()
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
-                Task { await self?.pipeline.unloadAll() }
+                self?.session.unloadWhenIdle()
             }
             .store(in: &cancellables)
 
@@ -259,7 +245,7 @@ final class AppState: ObservableObject {
             .dropFirst()
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
-                Task { await self?.pipeline.unloadAll() }
+                self?.session.unloadWhenIdle()
             }
             .store(in: &cancellables)
 
@@ -361,35 +347,19 @@ final class AppState: ObservableObject {
     }
 
     func startSetupTrial() {
-        guard readiness == .ready, !updates.installationGate.isBusy,
-              dictationUpdateReservation == nil,
-              let reservation = updates.installationGate.beginOperation() else { return }
-        dictationUpdateReservation = reservation
-        isSetupTrialActive = true
-        isSetupTrialCancelling = false
-        setupTrialFinishRequested = false
-        setupTrialText = ""
-        setupTrialFormatting = nil
-        dismissAnyResultCapsule()
-        setupTrialTask = Task { await startDictationSession() }
+        guard !isTerminating else { return }
+        guard readiness == .ready else { return }
+        _ = session.start(dictationSettings(destination: .setupTrial))
     }
 
     func finishSetupTrial() {
-        guard isSetupTrialActive, !isSetupTrialCancelling, !setupTrialFinishRequested,
-              menuBarMode == .recording else { return }
-        setupTrialFinishRequested = true
-        setupTrialTask = Task { await finishDictationSession() }
+        guard isSetupTrialActive else { return }
+        session.finish()
     }
 
     func cancelSetupTrial() {
-        guard isSetupTrialActive, !isSetupTrialCancelling else { return }
-        isSetupTrialCancelling = true
-        setupTrialTask?.cancel()
-        // During processing keep the operation reservation until cleanup has completed,
-        // and discard its result. The destination never changes to an external caret.
-        if menuBarMode == .recording {
-            Task { await cancelDictationSession() }
-        }
+        guard isSetupTrialActive else { return }
+        session.cancel()
     }
 
     func refreshPermissions() {
@@ -460,70 +430,42 @@ final class AppState: ObservableObject {
     /// Toggle (default): press starts, press again commits.
     /// Walkie-talkie: hold records, release commits; repeat press while holding is ignored.
     private func handleHotkeyPressed() {
-        if isSetupTrialActive {
-            if menuBarMode == .recording { finishSetupTrial() }
+        guard !isTerminating else { return }
+        if isSetupTrialActive { session.finish(); return }
+        let hold = session.configuration?.holdToTalk ?? pushToTalkEnabled
+        if session.isActive {
+            if !hold { session.finish() }
             return
         }
+        guard !isProcessing else { return }
         dismissAnyResultCapsule()
-
-        if isProcessing || menuBarMode == .processing || menuBarMode == .cleanup {
-            return
-        }
-
-        if pushToTalkEnabled {
-            pttKeyHeld = true
-            if menuBarMode == .recording || pttStartInFlight {
-                return
-            }
-        }
-
-        if menuBarMode == .recording {
-            Task { await finishDictationSession() }
-            return
-        }
-
         guard readiness == .ready else {
             menuBarMode = .needsSetup
             NSApp.activate(ignoringOtherApps: true)
             return
         }
-
-        guard !updates.installationGate.isBusy, dictationUpdateReservation == nil,
-              let reservation = updates.installationGate.beginOperation() else { return }
-        dictationUpdateReservation = reservation
-        if pushToTalkEnabled {
-            pttStartInFlight = true
-            Task {
-                await startDictationSession()
-                pttStartInFlight = false
-            }
-        } else {
-            Task { await startDictationSession() }
-        }
+        pttKeyHeld = hold
+        _ = session.start(dictationSettings(destination: .caret))
     }
 
-    /// Walkie-talkie only: release commits (or cancels if the session never got a hold).
     private func handleHotkeyReleased() {
-        guard pushToTalkEnabled, !isSetupTrialActive else { return }
+        guard session.configuration?.holdToTalk == true else { return }
         pttKeyHeld = false
-
-        if isProcessing || menuBarMode == .processing || menuBarMode == .cleanup {
-            return
-        }
-        guard menuBarMode == .recording else { return }
-        Task { await finishDictationSession() }
+        if session.phase == .starting { session.cancel() }
+        else { session.finish() }
     }
 
     /// Selection transform (ADR-012): read selection → LLM → show result in Capsule.
     private func handleTransformHotkeyPressed(bindingID: UUID) {
+        guard !isTerminating else { return }
         if isProcessing || menuBarMode == .recording || menuBarMode == .processing || menuBarMode == .cleanup {
             return
         }
         guard let binding = hotkey.binding(id: bindingID) else { return }
         dismissAnyResultCapsule()
-        guard !updates.installationGate.isBusy, dictationUpdateReservation == nil,
+        guard !updates.installationGate.isBusy, !session.isActive,
               let reservation = updates.installationGate.beginOperation() else { return }
-        Task { await runSelectionTransform(binding: binding, updateReservation: reservation) }
+        transformTask = Task { await runSelectionTransform(binding: binding, updateReservation: reservation) }
     }
 
     /// Ready MLX modes for the transform model picker.
@@ -675,7 +617,10 @@ final class AppState: ObservableObject {
     }
 
     private func runSelectionTransform(binding: TransformBinding, updateReservation: UUID) async {
-        defer { updates.installationGate.endOperation(updateReservation) }
+        defer {
+            transformTask = nil
+            updates.installationGate.endOperation(updateReservation)
+        }
         let locale = effectiveLocale
 
         guard permissions.accessibilityGranted else {
@@ -707,7 +652,6 @@ final class AppState: ObservableObject {
         }
 
         isProcessing = true
-        cancelScheduledModelUnload()
         invalidateCapsuleSequence()
         transformResultText = nil
         transformResultDirection = nil
@@ -718,7 +662,8 @@ final class AppState: ObservableObject {
             isProcessing = false
             if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
             refreshMenuBarMode()
-            Task { await pipeline.unloadAll() }
+            // The transform owns the gate until its awaited unload below.
+
         }
 
         do {
@@ -773,309 +718,203 @@ final class AppState: ObservableObject {
             clearCapsulePhase()
             menuBarMode = .error
         }
+        await pipeline.unloadAll()
     }
 
-    /// Bumps the live-draft generation and cancels the in-flight load task.
-    /// The cancelled task may still finish model load. A generation mismatch must not
-    /// call `cancelLiveDraft` (that would tear down a newer session). The streaming
-    /// engine drops a superseded `start` before publish, so this task only skips attach.
-    @discardableResult
-    private func invalidateLiveDraftStart() -> UInt64 {
-        liveDraftStartGeneration &+= 1
-        liveDraftStartTask?.cancel()
-        liveDraftStartTask = nil
-        return liveDraftStartGeneration
+    private struct SessionSettings {
+        let pipeline: DictationPipelineConfiguration
+        let destination: DictationDelivery
+        let deviceUID: String
+        let deviceName: String
+        let unmute: Bool
+        let liveDraft: Bool
+        let holdToTalk: Bool
     }
 
-    private func endDictationUpdateReservation() {
-        guard let token = dictationUpdateReservation else { return }
-        dictationUpdateReservation = nil
-        isSetupTrialActive = false
-        isSetupTrialCancelling = false
-        setupTrialTask = nil
-        setupTrialFinishRequested = false
-        updates.installationGate.endOperation(token)
+    private func dictationSettings(destination: DictationDelivery) -> SessionSettings {
+        SessionSettings(pipeline: pipeline.snapshotConfiguration(), destination: destination,
+            deviceUID: audioInput.selectedDeviceID, deviceName: audioInput.selectedDevice?.name ?? "",
+            unmute: unmuteMicDuringDictation, liveDraft: liveDraftEnabled && activeSTTSupportsStreaming,
+            holdToTalk: destination == .caret && pushToTalkEnabled)
     }
 
-    private func startDictationSession() async {
-        // Retain the reservation for the entire capture; release on every failed start.
-        defer {
-            if menuBarMode != .recording { endDictationUpdateReservation() }
+    private func makeSessionCoordinator() -> DictationSessionCoordinator<SessionSettings, FormattedDictation> {
+        let recorder = AudioRecorder()
+        let mute = MicMuteController()
+        let pipeline = pipeline
+        let meter = audioLevel
+        restoreMuteOnQuit = { mute.restoreSynchronouslyOnQuit() }
+        let coordinator = DictationSessionCoordinator<SessionSettings, FormattedDictation>(
+            gate: updates.installationGate,
+            dependencies: .init(
+                startCapture: { configuration, peak in
+                    meter.stop()
+                    recorder.onLivePeak = peak
+                    recorder.onConvertedBuffer = nil
+                    _ = try recorder.start(deviceUID: configuration.deviceUID)
+                },
+                stopCapture: {
+                    let stopped = try recorder.stop()
+                    return DictationCapture(url: stopped.url, duration: stopped.duration)
+                },
+                cancelCapture: { recorder.cancel() },
+                unmute: { configuration in
+                    if configuration.unmute {
+                        await mute.beginDictationUnmute(deviceUID: configuration.deviceUID, deviceName: configuration.deviceName)
+                    }
+                },
+                restoreMute: { await mute.endDictationRestore() },
+                wantsPreview: { $0.liveDraft },
+                startPreview: { configuration, update in
+                    await pipeline.startLiveDraftIfPossible(languageCode: nil, configuration: configuration.pipeline) { value in
+                        Task { @MainActor in update(value.confirmed, value.volatile) }
+                    }
+                },
+                attachPreview: { attach in
+                    recorder.onConvertedBuffer = attach ? pipeline.liveDraftAudioHandler() : nil
+                },
+                stopPreview: { await pipeline.cancelLiveDraft() },
+                process: { capture, configuration, phase in
+                    try await pipeline.run(audioURL: capture.url, useLiveDraftResult: false,
+                        offlineSecondPass: false, configuration: configuration.pipeline) { value in
+                            phase(value == .transcribing ? .transcribing : .cleaning)
+                        }
+                },
+                unload: { await pipeline.unloadAll() }
+            ))
+        coordinator.onPeak = { [weak self] peak in
+            guard let self else { return }
+            self.recorderLiveLevel = max(peak, self.recorderLiveLevel * 0.55)
         }
-        guard !isSetupTrialCancelling else { return }
-        guard readiness == .ready else {
-            menuBarMode = .needsSetup
-            NSApp.activate(ignoringOtherApps: true)
-            return
+        coordinator.onPreview = { [weak self] confirmed, volatile in
+            self?.liveDraftConfirmed = confirmed
+            self?.liveDraftVolatile = volatile
         }
-        guard menuBarMode != .recording, !isProcessing else { return }
-
-        if pushToTalkEnabled, !isSetupTrialActive, !pttKeyHeld {
-            return
+        coordinator.onPhase = { [weak self] phase in self?.sessionPhaseChanged(phase) }
+        coordinator.onResult = { [weak self] result, duration, configuration in
+            await self?.deliverDictation(result, duration: duration, configuration: configuration)
         }
-
-        cancelScheduledModelUnload()
-        audioLevel.stop()
-        recorderLiveLevel = 0
-
-        // Unmute in parallel with mic open (ADR-007). Do not await before listening —
-        // Wave Link RPC used to block start. Live-draft feed waits for unmute below so
-        // muted prefix does not poison full-buffer Parakeet preview.
-        let unmuteTask: Task<Void, Never>?
-        if unmuteMicDuringDictation {
-            let name = audioInput.selectedDevice?.name ?? ""
-            let deviceUID = audioInput.selectedDeviceID
-            unmuteTask = Task {
-                await micMute.beginDictationUnmute(deviceUID: deviceUID, deviceName: name)
+        coordinator.onFailure = { [weak self] error in
+            guard let self else { return }
+            self.clearLiveDraftText()
+            self.clearCapsulePhase()
+            if case AudioRecorderError.silentOrTooShort = error {
+                self.menuBarMode = .idle
+            } else {
+                self.lastSessionError = error.localizedDescription
+                self.menuBarMode = .error
             }
-        } else {
-            unmuteTask = nil
         }
-
-        if pushToTalkEnabled, !isSetupTrialActive, !pttKeyHeld {
-            await micMute.endDictationRestore()
-            return
+        coordinator.onCancelled = { [weak self] in
+            guard let self else { return }
+            self.clearLiveDraftText()
+            self.menuBarMode = .idle
+            if let draft = self.cancelledDraftToPresent { self.presentLiveDraftResult(draft) }
+            else { self.clearCapsulePhase() }
+            self.cancelledDraftToPresent = nil
         }
+        return coordinator
+    }
 
-        do {
+    private func sessionPhaseChanged(_ phase: DictationSessionPhase) {
+        switch phase {
+        case .starting:
+            isSetupTrialActive = session.configuration?.destination == .setupTrial
+            isSetupTrialCancelling = false
+            if isSetupTrialActive { setupTrialText = ""; setupTrialFormatting = nil }
+            cancelledDraftToPresent = nil
+            dismissAnyResultCapsule()
             clearLiveDraftText()
-            let generation = invalidateLiveDraftStart()
-            recorder.onConvertedBuffer = nil
-
-            _ = try recorder.start(deviceUID: audioInput.selectedDeviceID)
+            recorderLiveLevel = 0
+        case .recording:
             invalidateCapsuleSequence()
             menuBarMode = .recording
             capsulePhase = .listening
             hotkey.setEscapeCancelRegistered(true)
-
-            if liveDraftEnabled, activeSTTSupportsStreaming {
-                liveDraftStartTask = Task { @MainActor [weak self] in
-                    guard let self else { return }
-                    guard !Task.isCancelled, self.liveDraftStartGeneration == generation else {
-                        return
-                    }
-                    // nil language = same as file STT: multilingual Parakeet auto-detect.
-                    // UI appLanguage must not force Latin/Cyrillic script filter on live draft
-                    // (that produced translit / comma spam when speaking the other language).
-                    let started = await self.pipeline.startLiveDraftIfPossible(
-                        languageCode: nil
-                    ) { [weak self] update in
-                        Task { @MainActor in
-                            self?.liveDraftConfirmed = update.confirmed
-                            self?.liveDraftVolatile = update.volatile
-                        }
-                    }
-                    guard self.liveDraftStartGeneration == generation, !Task.isCancelled else { return }
-                    // Wait for hardware unmute before feeding preview (WAV already capturing).
-                    if let unmuteTask {
-                        await unmuteTask.value
-                    }
-                    guard self.liveDraftStartGeneration == generation, !Task.isCancelled else { return }
-                    if started, self.menuBarMode == .recording {
-                        self.recorder.onConvertedBuffer = { [weak self] buffer in
-                            self?.pipeline.feedLiveDraft(buffer)
-                        }
-                    } else if !started {
-                        NSLog("CarrotType: live draft requested but streaming did not start; using file STT path")
-                    }
-                }
-            }
-
-            if pushToTalkEnabled, !isSetupTrialActive {
+            if session.configuration?.holdToTalk == true {
                 hotkey.startPushToTalkReleaseMonitor()
-                if !pttKeyHeld {
-                    await cancelDictationSession()
-                    return
-                }
+                if !pttKeyHeld { session.cancel() }
             }
-        } catch {
-            invalidateLiveDraftStart()
-            recorder.onConvertedBuffer = nil
-            await pipeline.cancelLiveDraft()
-            clearLiveDraftText()
-            await micMute.endDictationRestore()
-            if isSetupTrialActive, isSetupTrialCancelling {
-                clearCapsulePhase()
-                menuBarMode = .idle
-                return
-            }
-            lastSessionError = error.localizedDescription
-            clearCapsulePhase()
-            menuBarMode = .error
-            if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
-            refreshMenuBarMode()
-        }
-    }
-
-    /// Escape (or soft silent stop): discard capture, no STT/paste.
-    /// A non-empty live draft is kept as a Copy capsule instead of being dropped.
-    private func cancelDictationSession() async {
-        if isCancellingDictation { return }
-        guard menuBarMode == .recording, !isProcessing else { return }
-        isCancellingDictation = true
-        defer {
-            isCancellingDictation = false
-            endDictationUpdateReservation()
-        }
-
-        let draft = liveDraftSnapshotText()
-        let showDraftResult = !isSetupTrialActive && liveDraftEnabled && activeSTTSupportsStreaming && !draft.isEmpty
-
-        hotkey.stopPushToTalkReleaseMonitor()
-        // Keep Escape registered if we will show liveDraftResult.
-        if !showDraftResult {
+        case .transcribing, .cleaning:
+            hotkey.stopPushToTalkReleaseMonitor()
             hotkey.setEscapeCancelRegistered(false)
-        }
-        pttKeyHeld = false
-        pttStartInFlight = false
-        recorder.cancel()
-        invalidateLiveDraftStart()
-        recorder.onConvertedBuffer = nil
-        recorderLiveLevel = 0
-        await pipeline.cancelLiveDraft()
-        clearLiveDraftText()
-        await micMute.endDictationRestore()
-        menuBarMode = .idle
-        if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
-        refreshMenuBarMode()
-
-        if showDraftResult {
-            presentLiveDraftResult(draft)
-        } else {
-            clearCapsulePhase()
+            recorderLiveLevel = 0
+            clearLiveDraftText()
+            menuBarMode = phase == .cleaning ? .cleanup : .processing
+            capsulePhase = .understanding
+        case .cancelling:
+            isSetupTrialCancelling = isSetupTrialActive
+            hotkey.stopPushToTalkReleaseMonitor()
+            hotkey.setEscapeCancelRegistered(false)
+            recorderLiveLevel = 0
+        case .finishing: break
+        case .idle:
+            isSetupTrialActive = false
+            isSetupTrialCancelling = false
+            pttKeyHeld = false
+            recorderLiveLevel = 0
+            hotkey.stopPushToTalkReleaseMonitor()
+            if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
+            refreshMenuBarMode()
         }
     }
 
-    private func finishDictationSession() async {
-        guard menuBarMode == .recording, !isProcessing, !isCancellingDictation else { return }
-        defer { endDictationUpdateReservation() }
-        let destination: DictationDelivery = isSetupTrialActive ? .setupTrial : .caret
-        let phaseReservation = dictationUpdateReservation
+    private func cancelDictationSession() async {
+        guard session.phase == .recording || session.phase == .starting else { return }
+        let draft = liveDraftSnapshotText()
+        cancelledDraftToPresent = !isSetupTrialActive && liveDraftEnabled && session.configuration?.liveDraft == true && !draft.isEmpty ? draft : nil
+        session.cancel()
+    }
 
-        invalidateLiveDraftStart()
-
-        isProcessing = true
-        recorderLiveLevel = 0
-        hotkey.stopPushToTalkReleaseMonitor()
-        hotkey.setEscapeCancelRegistered(false)
-        pttKeyHeld = false
-        menuBarMode = .processing
-        capsulePhase = .understanding
-        defer {
-            isProcessing = false
-            recorderLiveLevel = 0
-            if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
-            refreshMenuBarMode()
-            // Unload immediately: Parakeet/Qwen keep GB of RAM and FluidAudio worker state.
-            Task { await pipeline.unloadAll() }
-        }
-
-        let audioURL: URL
-        let recordingDuration: TimeInterval
+    private func deliverDictation(_ result: FormattedDictation, duration: TimeInterval, configuration: SessionSettings) async {
+        clearLiveDraftText()
+        let text = result.text.trimmingCharacters(in: .whitespacesAndNewlines)
         do {
-            let stopped = try recorder.stop()
-            recorder.onConvertedBuffer = nil
-            audioURL = stopped.url
-            recordingDuration = stopped.duration
+            try configuration.destination.deliver(result, atCaret: { completed in
+                if !text.isEmpty { lastDictationText = text }
+                lastFormattingOutcome = completed.formatting
+                try TextInsertionService.insertAtCaret(completed.text, retainInClipboard: retainDictationInClipboard)
+                recordUsageIfEnabled(text: completed.text, recordingDuration: duration)
+            }, inTrial: { completed in
+                setupTrialText = completed.text
+                setupTrialFormatting = completed.formatting
+                if !text.isEmpty {
+                    hasCompletedSetupTrial = true
+                    setupDefaults.set(true, forKey: "carrottype.didCompleteSetupTrial")
+                }
+            })
         } catch {
-            recorder.onConvertedBuffer = nil
-            await pipeline.cancelLiveDraft()
-            clearLiveDraftText()
-            await micMute.endDictationRestore()
-            if case AudioRecorderError.silentOrTooShort = error {
-                // Soft cancel: nothing useful was said — no red error, no paste.
-                clearCapsulePhase()
-                menuBarMode = .idle
-                return
-            }
             lastSessionError = error.localizedDescription
             clearCapsulePhase()
             menuBarMode = .error
+            if !text.isEmpty {
+                presentTransformResult(text, direction: L10n.t("recovery.paste_failed", locale: effectiveLocale))
+                capsulePhase = .dictationRecovery
+            }
             return
         }
+        lastSessionError = nil
+        menuBarMode = .idle
+        if configuration.destination == .setupTrial { clearCapsulePhase() }
+        else { await presentSuccessCapsuleSequence(usedFormattingFallback: result.formatting.usedFallback) }
+    }
 
-        // Remute as soon as capture ends — do not wait for STT/cleanup.
-        await micMute.endDictationRestore()
-
-        // Live draft is Capsule-only (periodic offline preview). Final paste always uses WAV STT.
-        await pipeline.cancelLiveDraft()
-        clearLiveDraftText()
-
-        defer { try? FileManager.default.removeItem(at: audioURL) }
-
-        do {
-            let result = try await pipeline.run(
-                audioURL: audioURL,
-                useLiveDraftResult: false,
-                offlineSecondPass: false,
-                onPhase: { [weak self] phase in
-                    Task { @MainActor in
-                        guard let self, let phaseReservation,
-                              self.dictationUpdateReservation == phaseReservation,
-                              self.isProcessing else { return }
-                        switch phase {
-                        case .transcribing:
-                            self.clearLiveDraftText()
-                            self.menuBarMode = .processing
-                            self.capsulePhase = .understanding
-                        case .cleaning:
-                            self.menuBarMode = .cleanup
-                            self.capsulePhase = .understanding
-                        }
-                    }
-                }
-            )
-            clearLiveDraftText()
-            if isSetupTrialActive, isSetupTrialCancelling {
-                clearCapsulePhase()
-                menuBarMode = .idle
-                return
-            }
-            let text = result.text.trimmingCharacters(in: .whitespacesAndNewlines)
-            do {
-                try destination.deliver(result, atCaret: { completed in
-                    if !text.isEmpty { lastDictationText = text }
-                    lastFormattingOutcome = completed.formatting
-                    try TextInsertionService.insertAtCaret(
-                        completed.text, retainInClipboard: retainDictationInClipboard
-                    )
-                    recordUsageIfEnabled(text: completed.text, recordingDuration: recordingDuration)
-                }, inTrial: { completed in
-                    setupTrialText = completed.text
-                    setupTrialFormatting = completed.formatting
-                    if !text.isEmpty {
-                        hasCompletedSetupTrial = true
-                        setupDefaults.set(true, forKey: "carrottype.didCompleteSetupTrial")
-                    }
-                })
-            } catch {
-                lastSessionError = error.localizedDescription
-                clearCapsulePhase()
-                menuBarMode = .error
-                if !text.isEmpty {
-                    presentTransformResult(text, direction: L10n.t("recovery.paste_failed", locale: effectiveLocale))
-                    capsulePhase = .dictationRecovery
-                }
-                return
-            }
-            lastSessionError = nil
-            menuBarMode = .idle
-            if isSetupTrialActive {
-                clearCapsulePhase()
-            } else {
-                await presentSuccessCapsuleSequence(usedFormattingFallback: result.formatting.usedFallback)
-            }
-        } catch {
-            clearLiveDraftText()
-            if isSetupTrialActive, isSetupTrialCancelling {
-                clearCapsulePhase()
-                menuBarMode = .idle
-                return
-            }
-            lastSessionError = error.localizedDescription
-            clearCapsulePhase()
-            menuBarMode = .error
+    /// Ordinary Quit drains capture/helper/maintenance before replying to AppKit.
+    /// Sparkle's existing termination guard runs first and keeps its install policy.
+    func prepareForQuit() -> NSApplication.TerminateReply {
+        if terminationTask != nil { return .terminateLater }
+        guard updates.installationGate.isBusy else { return .terminateNow }
+        isTerminating = true
+        session.stopAcceptingOperations()
+        session.cancel()
+        transformTask?.cancel()
+        let transform = transformTask
+        terminationTask = Task {
+            await session.waitUntilIdle()
+            await transform?.value
+            NSApp.reply(toApplicationShouldTerminate: updates.installationGate.prepareForTermination())
         }
+        return .terminateLater
     }
 
     func copyLastDictation() {
@@ -1159,40 +998,25 @@ final class AppState: ObservableObject {
         }
     }
 
-    private func scheduleModelUnload() {
-        cancelScheduledModelUnload()
-        modelUnloadTask = Task { [weak self] in
-            await self?.pipeline.unloadAll()
-        }
-    }
-
-    private func cancelScheduledModelUnload() {
-        modelUnloadTask?.cancel()
-        modelUnloadTask = nil
-    }
-
-    /// Unload engines first so ggml / CoreML files are not locked on disk.
+    /// Deletion and unload share the same synchronous reservation as session starts.
     func deleteModelPackage(_ packageID: String) {
-        Task { @MainActor in
-            await pipeline.unloadAll()
-            modelManager.deletePackage(packageID)
-            reloadTransformBindingsFromStore()
-            if let message = modelManager.lastError {
-                lastSessionError = message
-            }
-            refreshMenuBarMode()
-        }
+        performModelMaintenance { self.modelManager.deletePackage(packageID) }
     }
 
     func deleteUnusedModelPackages() {
-        Task { @MainActor in
-            await pipeline.unloadAll()
-            modelManager.deleteUnusedPackages()
-            reloadTransformBindingsFromStore()
-            if let message = modelManager.lastError {
-                lastSessionError = message
-            }
-            refreshMenuBarMode()
+        performModelMaintenance { self.modelManager.deleteUnusedPackages() }
+    }
+
+    private func performModelMaintenance(_ body: @escaping () -> Void) {
+        guard session.maintain({
+            await self.pipeline.unloadAll()
+            body()
+            self.reloadTransformBindingsFromStore()
+            if let message = self.modelManager.lastError { self.lastSessionError = message }
+            self.refreshMenuBarMode()
+        }) else {
+            lastSessionError = L10n.t("error.models_in_use", locale: effectiveLocale)
+            return
         }
     }
 

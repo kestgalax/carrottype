@@ -30,6 +30,7 @@ struct CarrotTypeApp: App {
         #endif
         _appState = StateObject(wrappedValue: state)
         applicationDelegate.updates = state.updates
+        applicationDelegate.prepareForQuit = { [weak state] in state?.prepareForQuit() ?? .terminateNow }
     }
 
     var body: some Scene {

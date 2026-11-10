@@ -13,7 +13,7 @@ This project uses AIDOS governance checks through the cloned AIDOS tooling repos
 2. `npm run aidos:trace`
 3. `npm run aidos:review`
 
-## macOS build (optional / later)
+## macOS build
 
 When a CI macOS runner with full Xcode is available:
 
@@ -23,7 +23,7 @@ xcodegen generate
 xcodebuild -project CarrotType.xcodeproj -scheme CarrotType -configuration Debug build
 ```
 
-Until then, governance markdown checks are the required gate; native build is verified locally by developers with Xcode.
+Native builds are now verified locally and by the workflow below. Governance markdown checks remain required locally; hosted private-tooling availability is described below.
 
 ## Local Pre-Commit Option
 
@@ -51,3 +51,23 @@ python3 scripts/verify-model-catalog-streaming.py
 ```
 
 Compiles production catalog/default-selection/legacy-storage code with temporary UserDefaults suites and model directory fixtures. Covers catalog/fallback consistency, retired/default/unknown preference migration, preserved cleanup choices, legacy inventory, grouped optional deletion and path/symlink safety. Never deletes installed user models.
+
+## 0.6.2 production lifecycle checks and Actions
+
+`.github/workflows/macos.yml` now runs governance, actual production lifecycle/preview/port-order and existing reliability/setup/Ultra/update/notes/catalog regressions, followed by unsigned arm64 Debug compilation. No microphone permission, models, distribution identity, Keychain export or publication is used. `actions/checkout` and AIDOS are pinned to commits; permissions are contents-read and credentials are not persisted. GitHub's [official runner matrix](https://github.com/actions/runner-images#available-images), checked 2026-11-10, lists `xcode-27`; this is selected because the resolved MLX manifest requires Swift 6.3 with experimentalCGen. Runner-selected `DEVELOPER_DIR` is passed to scripts. The Metal component is downloaded only on the disposable CI runner if absent. Local Debug still requires full Xcode/Metal.
+
+```bash
+bash scripts/verify-session-lifecycle.sh
+```
+
+Compiles the actual coordinator and installation gate with controlled delayed adapters (no real audio/models). Covers queued PTT cancel, unmute/preview ordering, snapshot, duplicate stop/cancel, cancelled successful results, start/stop/process errors, stale callbacks, temp WAV deletion, maintenance/deletion/install/quit barriers and awaited final unload. It also compiles the existing sanitation/port-order checks against `LiveDraftText.swift`/`WaveLinkPortOrder.swift`; the `.swift` test files are no longer standalone mirrored implementations. Run through the shell harness above.
+
+Full real-device capture/permission continuity, model inference and Wave Link mute/quit smoke remain manual Debug acceptance. Hosted CI success does not authorize release; local signed Debug delivery/manual approval remains mandatory for each version.
+
+The same lifecycle harness additionally compiles **the actual** `ParakeetStreamingEngine` and recorder fanout against a disposable test-only FluidAudio module. It pauses a real actor preview pass at the SDK boundary, observes its cancellation, verifies join-before-cleanup/no late result and checks that a retained old audio handler cannot feed a new epoch. No model files or microphone are used; real CoreML performance and hardware behavior remain manual checks.
+
+### Private AIDOS access
+
+AIDOS is private (verified 2026-11-10); the first hosted run failed at its checkout before tests. The app regression/build steps now run independently. Hosted governance runs only when the maintainer provisions a narrowly scoped `AIDOS_READ_TOKEN` Actions secret with read access to that repository; credentials are not persisted. Without it the workflow emits an explicit warning and skips only AIDOS checkout/governance, so a green app build does not imply hosted governance passed. Local validate/trace/review evidence remains required. Never put a personal broad-scope token in workflow code or publish/copy private tooling to make CI pass. The first 0.6.2 tag preserves the original workflow; the PR contains this CI-only correction without changing the accepted/built app source.
+
+Hosted app verification passed on commit `0e69d52`: [run 42815581126](https://github.com/kestgalax/carrottype/actions/runs/42815581126), production regression suite and unsigned Debug arm64 build. AIDOS checkout/governance were explicitly skipped because no private-tooling secret was configured; local validate/trace/review passed. Release closeout edits after that run change documentation only and do not change the tested app or workflow.

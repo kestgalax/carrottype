@@ -37,6 +37,7 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         onUpdate: @escaping @Sendable (LiveTranscript) -> Void
     ) async throws {
         let myToken = await cancelInternal(clearModels: true)
+        try Task.checkCancellation()
         guard startToken == myToken else { throw CancellationError() }
 
         guard packageID == BundledModelCatalog.parakeetUltraSTTID else { throw STTEngineError.modelMissing }
@@ -53,6 +54,7 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         }
         guard startToken == myToken else { throw CancellationError() }
 
+        try Task.checkCancellation()
         let manager = AsrManager(config: .default)
         do {
             try await manager.loadModels(models)
@@ -61,7 +63,7 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
             if startToken != myToken { throw CancellationError() }
             throw error
         }
-        guard startToken == myToken else {
+        guard startToken == myToken, !Task.isCancelled else {
             await manager.cleanup()
             throw CancellationError()
         }
@@ -82,9 +84,21 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         }
     }
 
+    /// Compatibility feed targets the current stream. The recorder uses the generation-bound handler below.
     nonisolated func feed(_ buffer: AVAudioPCMBuffer) {
         guard let floats = Self.monoFloats(from: buffer), !floats.isEmpty else { return }
-        Task { await self.appendSamples(floats) }
+        Task { await self.appendCurrentSamples(floats) }
+    }
+
+    private func appendCurrentSamples(_ samples: [Float]) { appendSamples(samples, token: startToken) }
+
+    /// Capture the preview generation at attachment; an old tap must never feed a newer session.
+    func makeFeedHandler() -> @Sendable (AVAudioPCMBuffer) -> Void {
+        let token = startToken
+        return { [weak self] buffer in
+            guard let floats = Self.monoFloats(from: buffer), !floats.isEmpty else { return }
+            Task { await self?.appendSamples(floats, token: token) }
+        }
     }
 
     func finish() async throws -> String {
@@ -125,7 +139,8 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
 
     // MARK: - Private
 
-    private func appendSamples(_ chunk: [Float]) {
+    private func appendSamples(_ chunk: [Float], token: UInt64) {
+        guard startToken == token, asr != nil else { return }
         samples.append(contentsOf: chunk)
         compactLeadingSilenceIfNeeded()
     }
@@ -158,8 +173,10 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         let snapshot = samples
         guard force || snapshot.count >= Self.minPreviewSamples else { return }
 
+        let token = startToken
+        let update = onUpdate
         passInFlight = true
-        defer { passInFlight = false }
+        defer { if startToken == token { passInFlight = false } }
 
         do {
             var decoderState = TdtDecoderState.make()
@@ -168,10 +185,11 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
                 decoderState: &decoderState,
                 language: language
             )
+            guard startToken == token, !Task.isCancelled else { return }
             let trimmed = Self.sanitizePreviewText(result.text)
             guard !trimmed.isEmpty else { return }
             let split = Self.splitInterimTail(trimmed, interimWords: Self.interimWordCount)
-            onUpdate?(LiveTranscript(confirmed: split.body, volatile: split.tail))
+            update?(LiveTranscript(confirmed: split.body, volatile: split.tail))
         } catch {
             if error is CancellationError || Task.isCancelled { return }
             NSLog("CarrotType: live draft preview pass failed: %@", error.localizedDescription)
@@ -184,13 +202,16 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
     private func cancelInternal(clearModels: Bool) async -> UInt64 {
         startToken &+= 1
         let token = startToken
-        previewLoop?.cancel()
+        let loop = previewLoop
+        loop?.cancel()
         previewLoop = nil
         passInFlight = false
         samples = []
         leadingSilenceCompacted = false
         onUpdate = nil
         let published = asr
+        // Joining the actual preview pass prevents its old manager cleanup from racing a new one.
+        await loop?.value
         if let published {
             await published.cleanup()
         }
@@ -218,29 +239,9 @@ actor ParakeetStreamingEngine: StreamingSTTEngine {
         return (body, tail)
     }
 
-    /// Strip decoder junk tokens that sometimes leak into Capsule draft.
-    static func sanitizePreviewText(_ text: String) -> String {
-        var out = text
-        for token in ["<unk>", "<UNK>", "<pad>", "<PAD>", "<s>", "</s>"] {
-            out = out.replacingOccurrences(of: token, with: " ")
-        }
-        let words = out.split { $0.isWhitespace || $0.isNewline }.map(String.init)
-        // Drop punctuation-only spam tokens (",", "--", "...") from hallucinated passes.
-        let cleaned = words.filter { word in
-            !word.allSatisfy { $0.isPunctuation || $0.isMathSymbol }
-        }
-        return cleaned.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
-    /// Keep samples from the first frame above `peakThreshold` (with a tiny pad).
+    static func sanitizePreviewText(_ text: String) -> String { LiveDraftText.sanitizePreviewText(text) }
     static func trimLeadingSilence(_ samples: [Float], peakThreshold: Float) -> [Float] {
-        guard !samples.isEmpty else { return samples }
-        let pad = 1_600 // 100 ms @ 16 kHz
-        guard let firstVoice = samples.firstIndex(where: { abs($0) >= peakThreshold }) else {
-            return []
-        }
-        let start = max(0, firstVoice - pad)
-        return Array(samples[start...])
+        LiveDraftText.trimLeadingSilence(samples, peakThreshold: peakThreshold)
     }
 
     private static func fluidLanguage(from code: String?) -> Language? {
