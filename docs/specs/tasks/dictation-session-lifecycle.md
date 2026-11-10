@@ -5,7 +5,7 @@
 - Task ID: dictation-session-lifecycle
 - Title: Extract recording ownership, pin engine settings and serialize teardown
 - Target: 0.6.2 (28), branch `refactor/dictation-session-lifecycle` from main after 0.6.1
-- Status: implementation and verification in progress; not published
+- Status: implemented; signed Debug and local verification complete; manual acceptance and remote CI pending; not published
 
 ## Traceability
 
@@ -34,7 +34,7 @@ C2: extract existing preview sanitation/silence trimming and Wave Link port orde
 ## Verification
 
 - Check: `bash scripts/verify-session-lifecycle.sh`, plus existing reliability/setup/Ultra/update/release-notes/catalog checks.
-- Check: temporary-copy mutation tests for coordinator cleanup, preview sanitation and cached-port priority; restore no broken code because tracked files are never mutated.
+- Check: temporary-copy mutation tests for coordinator cleanup, preview sanitation, cached-port priority and actual streaming PCM epoch guard; restore no broken code because tracked files are never mutated.
 - Check: local Debug arm64 and GitHub workflow validation/run when available. Native microphone/TCC/hotkeys/quit/mute and real model cold starts remain explicit manual checks.
 - Check: governance validate/trace/review, documentation links and diff checks.
 
@@ -49,3 +49,7 @@ No ADR impact. Follows accepted ADR-007/009/014/017 and the approved C1–C2 pla
 ## Streaming boundary finding
 
 Review found that the streaming actor read its mutable `onUpdate` after an awaited transcription and AudioRecorder reused a mutable fanout/peak callback. A late old pass/tap could therefore invoke the next epoch's callback even with UI token checks. The implementation captures callback/epoch, joins the preview loop, uses epoch-bound PCM attachment and per-capture fanout/peak routing. `StreamingEpochChecks.swift` compiles the actual actor/fanout with a separate test-only FluidAudio module to control inference/cancellation; no production conditional SDK stub or mirrored algorithm is added. This does not claim real CoreML/microphone coverage.
+
+## Delivery and remote CI limit
+
+Signed Debug 0.6.2 (28) is at `dist/CarrotType-0.6.2-Debug/CarrotType.app`; local full regression suite, production mutation checks and arm64 Debug compilation passed. Checklist: `docs/debug-review-v0.6.2.md`. GitHub rejected workflow push because the OAuth token lacks `workflow` scope; connected integration writes also returned 403. Commits remain local, no remote branch/PR/run was created. Remote CI and this version’s manual acceptance/publication remain pending.

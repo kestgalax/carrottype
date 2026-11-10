@@ -117,14 +117,14 @@ Preserve existing useful features throughout these stages. Removing, hiding or r
 3. [x] **0.5.0 — GitHub app updates:** Sparkle ADR + explicit network sinks, signed update archives, appcast, update UI and staging upgrade verification (U1–U3). Published after Debug delivery, explicit publication authorization, clean Release and remote artifact/signature checks; independent manual TCC continuity remains unverified. First updater-enabled installation is manual; publishing is a separate instruction.
 4. [x] **0.6.0 — Setup/settings:** X1–X3 published (26) after user Debug acceptance, clean Release and signed local/draft/public asset verification. Guided readiness/local trial, compact bindings, visible formatting fallback; all existing functions retained.
 5. [x] **0.6.1 — Update presentation:** structured CarrotType release notes, styled signed inline Sparkle notes and offline installed-version What’s New with a persistent button/unread badge (N1–N3). [Task](specs/tasks/update-release-notes-ux.md). Published (27) after its own user Debug acceptance and clean Release/local/draft/public signature/digest verification. Independent interactive/TCC limits remain recorded.
-6. [ ] **0.6.2 — Maintainability:** C1–C2 implemented as Debug (28), local checks/build passed; manual acceptance/publication pending. [Task](specs/tasks/dictation-session-lifecycle.md), [checklist/evidence](debug-review-v0.6.2.md).
+6. [ ] **0.6.2 — Maintainability:** C1–C2 implemented as Debug (28), local checks/build passed; remote CI blocked by workflow permissions, manual acceptance/publication pending. [Task](specs/tasks/dictation-session-lifecycle.md), [checklist/evidence](debug-review-v0.6.2.md).
 7. [ ] **0.7.0 — UI/UX and brand:** evidence-based audit, comparison/discussion of visual directions and modern minimal CarrotType logo concepts, then selected improvements (D1–D3). [Task](specs/tasks/uiux-and-brand-refresh.md). Preserve useful functions; no blanket redesign or asset replacement before discussion.
 8. **Optional trust:** when Developer ID exists — sign + `notarytool` + staple (`ops/deploy.md` / `notarize-dmg.sh`); sign both host and helper. Not a prerequisite to begin updater integration; unsigned upgrade/TCC behavior must be tested.
 9. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 
 ## In progress / on branch
 
-- `refactor/dictation-session-lifecycle` from main after PR #23: C1–C2 Debug candidate, production tests/mutation checks and CI workflow; user manual gate pending.
+- `refactor/dictation-session-lifecycle` from main after PR #23: C1–C2 Debug candidate, production tests/mutation checks passed and CI workflow ready locally; push/remote CI blocked by workflow permissions, user manual gate pending.
 
 - `feat/update-release-notes-ux`, PR #23: 0.6.1 (27) published after accepted Debug and verified Release/assets (`docs/debug-review-v0.6.1.md`). Planning commits retained. Next: 0.6.2 lifecycle, then 0.7.0 UI/UX/logo.
 - Previous `feat/setup-and-settings-polish`, PR #22 merged: X1–X3 released as v0.6.0; acceptance/release evidence in `docs/debug-review-v0.6.0.md`. Unrelated local research/cache files remain untouched.
