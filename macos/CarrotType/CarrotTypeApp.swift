@@ -13,10 +13,10 @@ struct CarrotTypeApp: App {
         let state: AppState
         #if DEBUG
         if let bundleID = Bundle.main.bundleIdentifier,
-           ["app.carrottype.macos.update-test", "app.carrottype.macos.setup-test"].contains(bundleID) {
+           (["app.carrottype.macos.update-test", "app.carrottype.macos.setup-test"].contains(bundleID) || bundleID.hasPrefix("app.carrottype.macos.update-test.")) {
             // Staging bundles never read/write the real installed-model/statistics directory.
             let root = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-                .appendingPathComponent(bundleID.hasSuffix("setup-test") ? "carrottype-setup-test" : "carrottype-update-test", isDirectory: true)
+                .appendingPathComponent(bundleID.replacingOccurrences(of: "app.carrottype.macos.", with: "carrottype-"), isDirectory: true)
             state = AppState(
                 modelManager: ModelManager(modelsRoot: root.appendingPathComponent("models")),
                 hotkey: HotkeyService(registersGlobalHotkeys: !bundleID.hasSuffix("setup-test")),

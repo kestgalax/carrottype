@@ -2,13 +2,13 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.6.0`**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
+Milestone 0–2 vertical slice shipped; **GitHub Release `v0.6.1`**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
-Latest published artifact: `CarrotType-0.6.0.dmg` (SHA-256 `93d2b6e543099910d56e5aa0716531cc23b7e7162210b79e13bccd6edccf690a`); signed ZIP/appcast hashes in `docs/github-release-notes-v0.6.0.md`.
+Latest published artifact: `CarrotType-0.6.1.dmg` (SHA-256 `868f6c83fca6bdc3c5efda2b7489f8c97f1811d633fb25cc85c06a3080ae2f63`); signed ZIP/appcast hashes in `docs/github-release-notes-v0.6.1.md`.
 
-**Release acceptance:** the user accepted Debug 0.6.0 (26) and explicitly authorized publication on 2026-11-10. Clean Release/DMG, local and downloaded draft/public asset signatures/digests passed. Anonymous stable feed/archive matched; native Sparkle probe from isolated build 25 found the update. [Evidence and limits](debug-review-v0.6.0.md).
+**Release acceptance:** the user accepted Debug 0.6.1 (27): «все ок, публикуем» on 2026-11-10. Clean Release/DMG and local/downloaded draft/public signatures/digests passed. Anonymous stable feed/archive matched; native Sparkle probe using an isolated build-26 host found the update. [Acceptance/evidence/limits](debug-review-v0.6.1.md).
 
-**Current focus:** [0.6.0 published](https://github.com/kestgalax/carrottype/releases/tag/v0.6.0): ordered setup, explicit in-app trial, compact transform bindings, truthful model selection/formatting outcome and capture-conflict handling. Existing functions retained. Next planned stage is lifecycle/tests (`0.6.1`), with a new branch and its own Debug acceptance before publication. [Execution plan](superpowers/plans/2026-11-09-product-improvements.md).
+**Current focus:** [0.6.1 published](https://github.com/kestgalax/carrottype/releases/tag/v0.6.1): offline native What’s New in General/Details, structured RU/EN inline HTML notes, observed/read version badge and isolated staging profiles. Existing functions and standard updater trust/gates retained. Next planned stage is **0.6.2 lifecycle/tests**, on a new main-based branch with its own Debug acceptance before publication. The separate **0.7.0 UI/UX audit and logo exploration** follows, with options discussed before implementation. [Execution plan](superpowers/plans/2026-11-09-product-improvements.md).
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -116,13 +116,16 @@ Preserve existing useful features throughout these stages. Removing, hiding or r
 2. [x] **0.4.0 — Ultra-only dictation:** quality-note Result + catalog ADR, simplified model UI/runtime, explicit migration and optional legacy-weight removal (M1–M3). Qwen/Gemma remain for formatting/transform.
 3. [x] **0.5.0 — GitHub app updates:** Sparkle ADR + explicit network sinks, signed update archives, appcast, update UI and staging upgrade verification (U1–U3). Published after Debug delivery, explicit publication authorization, clean Release and remote artifact/signature checks; independent manual TCC continuity remains unverified. First updater-enabled installation is manual; publishing is a separate instruction.
 4. [x] **0.6.0 — Setup/settings:** X1–X3 published (26) after user Debug acceptance, clean Release and signed local/draft/public asset verification. Guided readiness/local trial, compact bindings, visible formatting fallback; all existing functions retained.
-5. [ ] **0.6.1 — Maintainability:** session lifecycle coordinator and production-code regression tests/CI (C1–C2).
-6. **Optional trust:** when Developer ID exists — sign + `notarytool` + staple (`ops/deploy.md` / `notarize-dmg.sh`); sign both host and helper. Not a prerequisite to begin updater integration; unsigned upgrade/TCC behavior must be tested.
-7. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
+5. [x] **0.6.1 — Update presentation:** structured CarrotType release notes, styled signed inline Sparkle notes and offline installed-version What’s New with a persistent button/unread badge (N1–N3). [Task](specs/tasks/update-release-notes-ux.md). Published (27) after its own user Debug acceptance and clean Release/local/draft/public signature/digest verification. Independent interactive/TCC limits remain recorded.
+6. [ ] **0.6.2 — Maintainability:** retained session lifecycle coordinator and production-code regression tests/CI (C1–C2), moved after update UX at the maintainer’s request.
+7. [ ] **0.7.0 — UI/UX and brand:** evidence-based audit, comparison/discussion of visual directions and modern minimal CarrotType logo concepts, then selected improvements (D1–D3). [Task](specs/tasks/uiux-and-brand-refresh.md). Preserve useful functions; no blanket redesign or asset replacement before discussion.
+8. **Optional trust:** when Developer ID exists — sign + `notarytool` + staple (`ops/deploy.md` / `notarize-dmg.sh`); sign both host and helper. Not a prerequisite to begin updater integration; unsigned upgrade/TCC behavior must be tested.
+9. Post-v1 spikes when useful (`docs/research-post-v1-spikes.md`): Sotto cleanup, Qwen3-ASR, etc.
 
 ## In progress / on branch
 
-- `feat/setup-and-settings-polish`, PR #22 from main after merged PR #21. X1–X3 released as v0.6.0; tests, acceptance and release evidence in `docs/debug-review-v0.6.0.md`. Unrelated local research/cache files remain untouched.
+- `feat/update-release-notes-ux`, PR #23: 0.6.1 (27) published after accepted Debug and verified Release/assets (`docs/debug-review-v0.6.1.md`). Planning commits retained. Next: 0.6.2 lifecycle, then 0.7.0 UI/UX/logo.
+- Previous `feat/setup-and-settings-polish`, PR #22 merged: X1–X3 released as v0.6.0; acceptance/release evidence in `docs/debug-review-v0.6.0.md`. Unrelated local research/cache files remain untouched.
 
 ## Near-term polish candidates (if release is blocked)
 

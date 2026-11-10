@@ -23,6 +23,7 @@ struct StatusDetailsPane: View {
                         Text(appVersionLabel)
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                        WhatsNewButton(notes: appState.updates.releaseNotes, locale: locale)
                     }
                 }
 

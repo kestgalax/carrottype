@@ -5,6 +5,7 @@ import Sparkle
 @MainActor
 final class AppUpdateService: NSObject, ObservableObject, SPUUpdaterDelegate {
     let installationGate = UpdateInstallationGate()
+    let releaseNotes = ReleaseNotesStore()
     @Published private(set) var canCheckForUpdates = false
     @Published private(set) var automaticallyChecks = false
     @Published private(set) var automaticallyDownloads = false

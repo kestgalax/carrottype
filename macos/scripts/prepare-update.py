@@ -6,9 +6,12 @@ import email.utils
 import pathlib
 import plistlib
 import re
+import sys
+sys.dont_write_bytecode = True
 import subprocess
 import xml.etree.ElementTree as ET
 from urllib.parse import urlsplit
+import release_notes
 
 ACCOUNT = 'app.carrottype.macos.updates'
 RELEASES = 'https://github.com/kestgalax/carrottype/releases'
@@ -23,8 +26,9 @@ def validate_metadata(info, previous_build, staging=False):
         raise ValueError('Stable version must be MAJOR.MINOR.PATCH, no prerelease')
     if not re.fullmatch(r'[1-9]\d*', build) or int(build) <= previous_build:
         raise ValueError('CFBundleVersion must increase beyond the last stable release')
-    expected_id = 'app.carrottype.macos.update-test' if staging else 'app.carrottype.macos'
-    if info.get('CFBundleIdentifier') != expected_id:
+    bundle_id = info.get('CFBundleIdentifier', '')
+    valid_id = bool(re.fullmatch(r'app\.carrottype\.macos\.update-test(?:\.[a-z0-9-]+)?', bundle_id)) if staging else bundle_id == 'app.carrottype.macos'
+    if not valid_id:
         raise ValueError('Unexpected bundle identity (production and staging must be isolated)')
     if not staging and info.get('SUFeedURL') != FEED:
         raise ValueError('Production feed must use the stable GitHub release endpoint')
@@ -33,14 +37,15 @@ def validate_metadata(info, previous_build, staging=False):
             raise ValueError('Required signature verification is disabled: ' + key)
     if info.get('SUSignedFeedFailureExpirationInterval') != 0:
         raise ValueError('Signed feed verification must not expire')
-    if info.get('SUEnableSystemProfiling') is not False:
-        raise ValueError('System profiling must be disabled')
+    for key in ['SUEnableSystemProfiling', 'SUEnableJavaScript']:
+        if info.get(key) is not False:
+            raise ValueError('Update profiling and release-note JavaScript must be disabled: ' + key)
     if not info.get('SUPublicEDKey'):
         raise ValueError('Missing embedded public key')
     return version, build
 
 
-def make_feed(version, build, archive_url, signature, length, notes, feed_url):
+def make_feed(version, build, archive_url, signature, length, notes, feed_url, structured_notes=None):
     root = ET.Element('rss', {'version': '2.0'})
     channel = ET.SubElement(root, 'channel')
     ET.SubElement(channel, 'title').text = 'CarrotType Updates'
@@ -53,7 +58,14 @@ def make_feed(version, build, archive_url, signature, length, notes, feed_url):
     for key, value in [('version', build), ('shortVersionString', version),
                        ('minimumSystemVersion', '14.0.0'), ('hardwareRequirements', 'arm64')]:
         ET.SubElement(item, '{' + SPARKLE + '}' + key).text = value
-    ET.SubElement(item, 'description', {'{' + SPARKLE + '}format': 'plain-text'}).text = notes
+    if structured_notes is None:
+        ET.SubElement(item, 'description', {'{' + SPARKLE + '}format': 'plain-text'}).text = notes
+    else:
+        for language in structured_notes['localizations']:
+            ET.SubElement(item, 'description', {
+                '{' + SPARKLE + '}format': 'html',
+                '{http://www.w3.org/XML/1998/namespace}lang': language,
+            }).text = release_notes.render_html(structured_notes, language)
     ET.SubElement(item, 'enclosure', {
         'url': archive_url, '{' + SPARKLE + '}edSignature': signature,
         'length': str(length), 'type': 'application/octet-stream',
@@ -68,13 +80,18 @@ def main():
     parser.add_argument('--output-dir', required=True, type=pathlib.Path)
     parser.add_argument('--sparkle-bin', required=True, type=pathlib.Path)
     parser.add_argument('--previous-build', required=True, type=int)
-    parser.add_argument('--notes', required=True, type=pathlib.Path, help='Short plain text, embedded in signed feed')
+    parser.add_argument('--notes', type=pathlib.Path, help='Legacy plain text (isolated staging only); otherwise use bundled ReleaseNotes.json')
     parser.add_argument('--staging-base-url', help='Only isolated test identity; loopback HTTP allowed')
     args = parser.parse_args()
     app = args.app.resolve()
     staging = args.staging_base_url is not None
     info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
     version, build = validate_metadata(info, args.previous_build, staging)
+    if args.notes is not None and not staging:
+        raise ValueError('Production notes must use the app’s bundled ReleaseNotes.json')
+    structured_notes = None if args.notes is not None else release_notes.load(
+        app / 'Contents/Resources/ReleaseNotes.json', version=version, build=build
+    )
     if staging:
         url = urlsplit(args.staging_base_url)
         if url.scheme != 'http' or url.hostname != '127.0.0.1' or url.query or url.fragment:
@@ -99,7 +116,7 @@ def main():
     base = args.staging_base_url.rstrip('/') if staging else RELEASES + '/download/v' + version
     feed_url = base + '/appcast.xml' if staging else FEED
     feed.write_bytes(make_feed(version, build, base + '/' + name, signature, archive.stat().st_size,
-                               args.notes.read_text(), feed_url))
+                               args.notes.read_text() if args.notes else "", feed_url, structured_notes))
     subprocess.run(sign + [str(feed)], check=True)
     subprocess.run(sign + ['--verify', str(feed)], check=True)
     print(f'Prepared and verified: {archive}\nSigned feed: {feed}\nNo release was published.')

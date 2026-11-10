@@ -5,6 +5,8 @@ import pathlib
 import unittest
 import xml.etree.ElementTree as ET
 
+sys.path.insert(0, str(pathlib.Path(__file__).parents[2] / 'macos/scripts'))
+
 spec = importlib.util.spec_from_file_location('update', pathlib.Path(__file__).parents[2] / 'macos/scripts/prepare-update.py')
 update = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(update)
@@ -15,7 +17,7 @@ class UpdateAssetChecks(unittest.TestCase):
         self.info = dict(CFBundleShortVersionString='0.5.0', CFBundleVersion='25',
                          CFBundleIdentifier='app.carrottype.macos', SUFeedURL=update.FEED,
                          SURequireSignedFeed=True, SUVerifyUpdateBeforeExtraction=True,
-                         SUSignedFeedFailureExpirationInterval=0, SUEnableSystemProfiling=False,
+                         SUSignedFeedFailureExpirationInterval=0, SUEnableSystemProfiling=False, SUEnableJavaScript=False,
                          SUPublicEDKey='public-key')
 
     def test_monotonic_build_and_stable_only(self):
@@ -26,7 +28,7 @@ class UpdateAssetChecks(unittest.TestCase):
 
     def test_trust_and_staging_isolation(self):
         for key, value in [('SURequireSignedFeed', False), ('SUVerifyUpdateBeforeExtraction', False),
-                           ('SUEnableSystemProfiling', True), ('SUSignedFeedFailureExpirationInterval', 1),
+                           ('SUEnableSystemProfiling', True), ('SUEnableJavaScript', True), ('SUSignedFeedFailureExpirationInterval', 1),
                            ('SUFeedURL', 'http://example.com/feed.xml'), ('SUPublicEDKey', ''),
                            ('CFBundleIdentifier', 'app.carrottype.macos.update-test')]:
             with self.subTest(key=key), self.assertRaises(ValueError):
@@ -34,6 +36,9 @@ class UpdateAssetChecks(unittest.TestCase):
         with self.assertRaises(ValueError):
             update.validate_metadata(self.info, 24, staging=True)
         update.validate_metadata(dict(self.info, CFBundleIdentifier='app.carrottype.macos.update-test'), 24, staging=True)
+        update.validate_metadata(dict(self.info, CFBundleIdentifier='app.carrottype.macos.update-test.run-123'), 24, staging=True)
+        with self.assertRaises(ValueError):
+            update.validate_metadata(dict(self.info, CFBundleIdentifier='app.carrottype.macos.update-test../invalid'), 24, staging=True)
 
     def test_feed_escapes_notes_and_keeps_signature_metadata(self):
         root = ET.fromstring(update.make_feed('0.5.0', '25', 'https://example.com/archive.zip', 'signature', 123,
