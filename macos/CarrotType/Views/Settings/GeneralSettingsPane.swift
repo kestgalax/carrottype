@@ -25,33 +25,27 @@ struct GeneralSettingsPane: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Toggle(
-                    L10n.t("hotkey.push_to_talk", locale: locale),
+                SettingsToggleRow(
+                    title: L10n.t("hotkey.push_to_talk", locale: locale),
+                    hint: L10n.t("hotkey.push_to_talk_footer", locale: locale),
                     isOn: $appState.pushToTalkEnabled
                 )
-                Text(L10n.t("hotkey.push_to_talk_footer", locale: locale))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Toggle(
-                    L10n.t("hotkey.retain_clipboard", locale: locale),
+                SettingsToggleRow(
+                    title: L10n.t("hotkey.retain_clipboard", locale: locale),
+                    hint: L10n.t("hotkey.retain_clipboard_footer", locale: locale),
                     isOn: $appState.retainDictationInClipboard
                 )
-                Text(L10n.t("hotkey.retain_clipboard_footer", locale: locale))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Toggle(
-                    L10n.t("hotkey.live_draft", locale: locale),
-                    isOn: $appState.liveDraftEnabled
+                SettingsToggleRow(
+                    title: L10n.t("hotkey.live_draft", locale: locale),
+                    hint: liveDraftFooter,
+                    isOn: $appState.liveDraftEnabled,
+                    isEnabled: appState.activeSTTSupportsStreaming
                 )
-                .disabled(!appState.activeSTTSupportsStreaming)
-                Text(liveDraftFooter)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             } header: {
                 Text(L10n.t("hotkey.section", locale: locale))
             }
+
+            GeneralFormattingSection(models: appState.modelManager, locale: locale, onOpenModels: onOpenModels)
 
             Section {
                 if appState.transformBindings.isEmpty {
@@ -194,7 +188,7 @@ private struct TransformBindingEditor: View {
 
             if current.kind == .translate {
                 HStack(spacing: 8) {
-                    Picker("", selection: languageABinding) {
+                    Picker(L10n.t("transform.language_a", locale: locale), selection: languageABinding) {
                         ForEach(TransformLanguageCatalog.codes, id: \.self) { code in
                             Text(TransformLanguageCatalog.displayName(code: code, locale: locale)).tag(code)
                         }
@@ -204,7 +198,7 @@ private struct TransformBindingEditor: View {
                     Text("↔")
                         .foregroundStyle(.secondary)
 
-                    Picker("", selection: languageBBinding) {
+                    Picker(L10n.t("transform.language_b", locale: locale), selection: languageBBinding) {
                         ForEach(TransformLanguageCatalog.codes, id: \.self) { code in
                             Text(TransformLanguageCatalog.displayName(code: code, locale: locale)).tag(code)
                         }
@@ -291,5 +285,32 @@ private struct TransformBindingEditor: View {
 
     private var current: TransformBinding {
         appState.transformBindings.first(where: { $0.id == binding.id }) ?? binding
+    }
+}
+
+/// Shares the exact selection/status source with Models, including Ready-only choices.
+private struct GeneralFormattingSection: View {
+    @ObservedObject var models: ModelManager
+    let locale: Locale
+    let onOpenModels: () -> Void
+
+    var body: some View {
+        Section {
+            Picker(L10n.t("format.mode", locale: locale), selection: Binding(
+                get: { models.cleanupMode }, set: { models.selectCleanup($0) }
+            )) {
+                ForEach(models.selectableCleanupModes) { mode in
+                    Text(mode.title(locale: locale)).tag(mode)
+                }
+            }
+            Button(L10n.t("status.open_models", locale: locale), action: onOpenModels)
+        } header: {
+            Text(L10n.t("format.section", locale: locale))
+        } footer: {
+            Text(L10n.t("format.general_footer", locale: locale))
+                .font(.caption).foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }

@@ -1,6 +1,6 @@
 # CarrotType 0.7.0 design exploration
 
-D1/D2 review materials, not shipping UI. Open `directions.html` locally: three directions applied to the same Settings/Capsule/What's New examples, light/dark toggle, a minimum-window approximation and three logo concepts at app/wordmark/16/18/32 px sizes. All values/state/text are illustrative. Only the design selectors, preview theme/width and example checkboxes work; app-like buttons are illustrations, not links to real preferences or updates.
+Historical D1/D2 review materials. Maintainer selected interface A + logo A; [decision](decision.md). D3 is implemented on `feat/native-ui-brand-0.7`; [Debug checklist](../../debug-review-v0.7.0.md). Open `directions.html` locally: three directions applied to the same Settings/Capsule/What's New examples, light/dark toggle, a minimum-window approximation and three logo concepts at app/wordmark/16/18/32 px sizes. All values/state/text are illustrative. Only the design selectors, preview theme/width and example checkboxes work; app-like buttons are illustrations, not links to real preferences or updates.
 
 ## Sources and provenance
 
@@ -16,9 +16,9 @@ The maintainer confirmed [OpenBot](https://openbot.run/) and [Grok Bot](https://
 
 Apple references: [Settings](https://developer.apple.com/design/human-interface-guidelines/settings), [App icons](https://developer.apple.com/design/human-interface-guidelines/app-icons), [Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility), read on 2026-11-10 (official Markdown endpoints for full content). They inform native controls, simple recognizable marks, labels/contrast and system preference support. Web mockups are layout hypotheses, not native SwiftUI or official Apple materials.
 
-## Selection required for D3
+## Selection record
 
-Choose interface A/B/C, logo A/B/C (independently) and the actual changes to implement. Recommended starting point: interface A; test logo A against B in native small-icon rendering. Keep familiar five-pane navigation; bring a formatting-mode shortcut near dictation settings; retain full model controls in Models; improve accessibility and destructive-action clarity. No feature removals. A selected scope will be recorded before runtime/assets change. Debug and publication acceptance remain separate.
+The initial comparison offered independent A/B/C interface and logo choices. The maintainer subsequently selected A for both. Recommended starting point: interface A; test logo A against B in native small-icon rendering. Keep familiar five-pane navigation; bring a formatting-mode shortcut near dictation settings; retain full model controls in Models; improve accessibility and destructive-action clarity. No feature removals. A selected scope will be recorded before runtime/assets change. Debug and publication acceptance remain separate.
 
 ## Preview verification
 

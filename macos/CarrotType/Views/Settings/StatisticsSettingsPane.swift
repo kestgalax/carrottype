@@ -3,6 +3,7 @@ import SwiftUI
 struct StatisticsSettingsPane: View {
     @ObservedObject var appState: AppState
     @ObservedObject var usageStats: UsageStatsStore
+    @State private var confirmClear = false
     @State private var selectedMonth: Date = Calendar.current.date(
         from: Calendar.current.dateComponents([.year, .month], from: Date())
     ) ?? Date()
@@ -115,8 +116,7 @@ struct StatisticsSettingsPane: View {
 
             Section {
                 Button(L10n.t("stats.clear", locale: locale), role: .destructive) {
-                    appState.clearUsageStatistics()
-                    selectedMonth = UsageStatsStore.startOfMonth(for: Date(), calendar: calendar) ?? Date()
+                    confirmClear = true
                 }
                 .disabled(!usageStats.hasAnyData)
             } footer: {
@@ -126,6 +126,18 @@ struct StatisticsSettingsPane: View {
         .formStyle(.grouped)
         .onAppear {
             selectedMonth = UsageStatsStore.startOfMonth(for: Date(), calendar: calendar) ?? Date()
+        }
+        .confirmationDialog(
+            L10n.t("stats.clear_confirm_title", locale: locale), isPresented: $confirmClear,
+            titleVisibility: .visible
+        ) {
+            Button(L10n.t("stats.clear", locale: locale), role: .destructive) {
+                appState.clearUsageStatistics()
+                selectedMonth = UsageStatsStore.startOfMonth(for: Date(), calendar: calendar) ?? Date()
+            }
+            Button(L10n.t("package.cancel", locale: locale), role: .cancel) {}
+        } message: {
+            Text(L10n.t("stats.clear_confirm_body", locale: locale))
         }
         .onChange(of: usageStats.days) { _, _ in
             clampSelectedMonth()

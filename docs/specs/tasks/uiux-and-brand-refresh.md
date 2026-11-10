@@ -4,7 +4,7 @@
 
 - Task ID: uiux-and-brand-refresh
 - Title: Audit the product experience, discuss directions and implement the selected interface/logo
-- Status: D1 code/resource audit and D2 concepts prepared on `design/uiux-and-brand-0.7` from main after PR #24; native walkthrough and direction selection pending, D3 not started
+- Status: interface A + logo A explicitly selected; D3 implemented on `feat/native-ui-brand-0.7` from main after PR #24; Debug 0.7.0 (29) local verification/delivery, manual acceptance pending
 
 ## Traceability
 
@@ -58,3 +58,7 @@ No ADR impact. Follows accepted ADR-002 and ADR-011; existing product/runtime/up
 - `docs/design/0.7.0/directions.html`: same Settings/Capsule/What’s New content in three directions, light/dark and minimum-size approximation; three editable logo concepts with 16/18/32 px monochrome previews.
 - `docs/design/0.7.0/README.md` and `decision.md`: provenance, confirmed OpenBot/Grok Bot links, recommendation and unresolved selection.
 - Current native GUI acquisition timed out; no complete native/VoiceOver/scenario QA claim. Runtime, installed app, icons and version metadata remain unchanged; no new Debug/release at this design-review point. D3 waits for the requested design discussion/selection.
+
+## D3 selected implementation — 2026-11-10
+
+Maintainer chose A for both interface and logo. Decision: `docs/design/0.7.0/decision.md`. Implemented limited native shell/style, same five destinations, shared General/Models formatting selector, A1–A5 accessibility/confirmation improvements, concise localized hints and original vector/native icon exports. All useful functions and runtime/trust policy retained. Sources: `macos/Brand/`, `AppStyle.swift`, affected Views/localizations; existing icon preserved in archive/history. Actual production SwiftUI rendered offscreen in isolated fixture profile, not a full native walkthrough. Debug/evidence/limits: `docs/debug-review-v0.7.0.md`. Separate manual/publication gate remains.

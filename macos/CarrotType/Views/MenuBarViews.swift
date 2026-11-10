@@ -8,7 +8,7 @@ struct MenuBarLabelView: View {
     private var locale: Locale { appState.effectiveLocale }
 
     var body: some View {
-        Image(systemName: symbolName)
+        menuImage
             .symbolRenderingMode(.hierarchical)
             .foregroundStyle(iconColor)
             .accessibilityLabel(Text(accessibilityLabel))
@@ -19,6 +19,12 @@ struct MenuBarLabelView: View {
                     NSApp.activate(ignoringOtherApps: true)
                 }
             }
+    }
+
+    private var menuImage: Image {
+        appState.menuBarMode == .idle
+            ? Image("CarrotMark").renderingMode(.template)
+            : Image(systemName: symbolName)
     }
 
     private var iconColor: Color {

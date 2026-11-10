@@ -26,8 +26,12 @@ class ReleaseNotesChecks(unittest.TestCase):
     def test_safe_localized_feed_and_output(self):
         for lang in ('en', 'ru'):
             notes = copy.deepcopy(self.notes)
-            notes['localizations'][lang]['sections'][0]['items'][0]['title'] = '<script src="https://evil"> & [link](url)'
-            notes['localizations'][lang]['sections'] = [s for s in notes['localizations'][lang]['sections'] if s['kind'] != 'new'] + [{'kind': 'new', 'items': []}]
+            # Explicit render fixture: do not depend on the shipping release's kinds/counts.
+            notes['localizations'][lang]['sections'] = [
+                {'kind': 'fixed', 'items': [
+                    {'title': '<script src="https://evil"> & [link](url)'},
+                    {'title': 'Second item'}]},
+                {'kind': 'new', 'items': []}]
             rendered = release_notes.render_html(notes, lang)
             self.assertNotIn('<script', rendered)
             class ResourceCheck(HTMLParser):

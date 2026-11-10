@@ -6,6 +6,8 @@ struct SettingsStatusHeader: View {
     let showDetailsLink: Bool
     let onDetails: () -> Void
 
+    @Environment(\.colorScheme) private var colorScheme
+
     private var locale: Locale { appState.effectiveLocale }
 
     var body: some View {
@@ -38,14 +40,14 @@ struct SettingsStatusHeader: View {
             if showDetailsLink {
                 Button(L10n.t("status.details", locale: locale), action: onDetails)
                     .buttonStyle(.plain)
-                    .foregroundStyle(.tint)
+                    .foregroundStyle(AppStyle.accent(colorScheme))
                     .font(.caption)
             }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 8))
+
     }
 
     private var appVersionLabel: String {

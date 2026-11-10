@@ -1,12 +1,9 @@
-# 0.7.0 design decision: awaiting discussion
+# 0.7.0 design decision: Native A + Carrot A
 
-No direction selected yet. This records a reviewable proposal, not an implementation approval or ADR.
+Maintainer selected both A concepts on 2026-11-10: «согласен, мне нравится A как для интерфейса так и для логотипа». Implementation branch `feat/native-ui-brand-0.7` starts from main after PR #24, with the exploration preserved.
 
-- Interface options: A Native / B Warm / C Graphic, same representative screens and content.
-- Logo options: A Carrot / B Carrot + caret / C C + sprout; independent from interface selection.
-- Recommendation: interface A; compare signs A/B at native sizes before choosing the final one.
-- Proposed first slice: audit A1–A5 (accessibility/destructive clarity), U1/U2 (dictation grouping and formatting access), limited shared tokens; selected sign only after discussion.
-- Deferred: new sidebar destinations/dashboard, removing/collapsing useful settings, app window geometry changes without native evidence, engine/runtime/trust changes, automatic asset replacement.
-- Still required: finish native D1 observations; record maintainer's UI/logo/scope choice; final vector/optical/template exports; native before/after and relevant regression checks; signed Debug 0.7.0 manual gate; separate publication authorization.
+Scope: familiar native grouped settings and five-pane navigation; brand/title/spacing hierarchy and compact status at the bottom of the sidebar; formatting-mode access in General using the same Ready-only ModelManager binding; accessibility A1–A5, dictation grouping U1/U2 and deletion confirmations; original geometric Carrot A icon and idle menu template. Keep active recording/processing/error state symbols and semantics.
 
-Decision fields to fill after discussion: selected UI, selected mark, agreed changes/backlog, observations requiring follow-up, acceptance examples and affected files. Do not infer a selection from “next stage” or from the recommendation.
+Preserve all controls and functions, RU/EN and settings/data, native light/dark, window sizes, local/trust/runtime policy and no-remount language behavior. Deferred: extra sidebar destinations/dashboard, U3 readiness restructuring, geometry changes without native evidence, UI variants B/C. Existing models/formatting engines stay.
+
+Verification: vector/PNG provenance and 16/18/32 px checks, native offscreen rendering where available (not interactive QA), Debug arm64 and relevant production regressions, concise manual checklist. Debug 0.7.0 must be accepted separately before publishing. No new ADR impact.

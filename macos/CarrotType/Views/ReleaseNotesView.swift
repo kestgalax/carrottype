@@ -1,13 +1,5 @@
 import SwiftUI
 
-private enum ReleaseNotesStyle {
-    static func accent(_ scheme: ColorScheme) -> Color {
-        scheme == .dark
-            ? Color(red: 1, green: 0.68, blue: 0.45)
-            : Color(red: 0.64, green: 0.26, blue: 0.04)
-    }
-}
-
 struct WhatsNewButton: View {
     @ObservedObject var notes: ReleaseNotesStore
     let locale: Locale
@@ -19,7 +11,7 @@ struct WhatsNewButton: View {
             Button(L10n.t("release_notes.title", locale: locale)) { isPresented = true }
             if notes.hasUnreadChanges {
                 Text(L10n.t("release_notes.updated", locale: locale))
-                    .font(.caption).fontWeight(.medium).foregroundStyle(ReleaseNotesStyle.accent(colorScheme))
+                    .font(.caption).fontWeight(.medium).foregroundStyle(AppStyle.accent(colorScheme))
                     .accessibilityLabel(L10n.t("release_notes.updated", locale: locale))
             }
         }
@@ -131,7 +123,7 @@ struct ReleaseNotesView: View {
 
     private func sectionColor(_ kind: ReleaseNotes.Section.Kind) -> Color {
         switch kind {
-        case .new: return ReleaseNotesStyle.accent(colorScheme)
+        case .new: return AppStyle.accent(colorScheme)
         case .improved: return .primary
         case .fixed: return .primary
         }

@@ -1548,13 +1548,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hold the shortcut to record. Release to transcribe and paste. Without holding, a tap does not keep recording. Escape cancels without pasting; if live draft was showing, the status pill keeps it briefly so you can Copy."
+            "value": "Recording lasts only while held. Release to transcribe and paste. Escape cancels without pasting; a nonempty live draft can still be copied."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Удерживайте сочетание, чтобы писать. Отпустите — распознать и вставить. Без удержания короткое нажатие не оставляет запись. Escape отменяет без вставки; если был черновик, плашка ненадолго остаётся — можно Скопировать."
+            "value": "Запись идёт только при удержании. Отпустите — распознать и вставить. Escape отменяет без вставки; непустой черновик можно скопировать."
           }
         }
       }
@@ -1599,13 +1599,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Text still pastes at the caret. If focus moves, the result stays on the system pasteboard so you can ⌘V — other apps and clipboard tools can read it while it remains there. While recording, Escape cancels without pasting. If live draft showed text, the status pill keeps it briefly so you can Copy."
+            "value": "Text still pastes at the caret, and remains on the clipboard for ⌘V even if focus moves. Other apps and clipboard tools can read it."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Текст вставляется у курсора как обычно. Если фокус уйдёт, результат останется в системном буфере для ⌘V — другие приложения и утилиты буфера могут его прочитать, пока он там. Во время записи Escape отменяет диктовку без вставки. Если в плашке уже был черновик, она ненадолго останется — можно Скопировать."
+            "value": "Вставка у курсора сохраняется, а результат остаётся в буфере для ⌘V, даже если фокус изменится. Другие приложения и утилиты буфера могут его прочитать."
           }
         }
       }
@@ -1613,16 +1613,16 @@
     "hotkey.section": {
       "extractionState": "stale",
       "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hotkey"
-          }
-        },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Горячая клавиша"
+            "value": "Диктовка"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictation"
           }
         }
       }
@@ -2098,7 +2098,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ready"
+            "value": "Готово"
           }
         }
       }
@@ -2438,7 +2438,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Almost"
+            "value": "Нужна настройка"
           }
         }
       }
@@ -2455,7 +2455,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Blocked"
+            "value": "Недоступно"
           }
         }
       }
@@ -2472,7 +2472,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ready"
+            "value": "Готово"
           }
         }
       }
@@ -4116,13 +4116,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "While you speak, a preview appears in the status pill and can rephrase earlier words as context grows. Nothing is inserted until you stop. Escape keeps a Copy-able snapshot in the pill for a few seconds. Needs Parakeet. Off by default."
+            "value": "The draft updates as you speak; text is pasted only after stopping. Escape briefly keeps a nonempty draft for copying. Requires Ultra; off by default."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Пока вы говорите, в плашке статуса виден черновик: по мере речи он может уточнять уже сказанное. В документ ничего не попадёт, пока не остановите запись. Escape на несколько секунд оставляет в плашке снимок, который можно Скопировать. Нужен Parakeet. По умолчанию выключено."
+            "value": "Черновик уточняется по мере речи; вставка — только после остановки. Escape на несколько секунд оставляет непустой черновик для копирования. Нужен Ultra; по умолчанию выключено."
           }
         }
       }
@@ -4861,6 +4861,312 @@
           "stringUnit": {
             "state": "translated",
             "value": "Модели используются. Повторите удаление после завершения текущей операции."
+          }
+        }
+      }
+    },
+    "transform.language_a": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Первый язык"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First language"
+          }
+        }
+      }
+    },
+    "transform.language_b": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Второй язык"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Second language"
+          }
+        }
+      }
+    },
+    "settings.description.general": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Диктовка и работа с текстом"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictation and text actions"
+          }
+        }
+      }
+    },
+    "settings.description.setup": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Микрофон, разрешения и пробная диктовка"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone, permissions and a local trial"
+          }
+        }
+      }
+    },
+    "settings.description.models": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Распознавание речи и оформление текста"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech recognition and text formatting"
+          }
+        }
+      }
+    },
+    "settings.description.storage": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Установленные пакеты и кэш скачивания"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed packages and download cache"
+          }
+        }
+      }
+    },
+    "settings.description.statistics": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Локальная статистика по твоему выбору"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local statistics, by your choice"
+          }
+        }
+      }
+    },
+    "settings.details_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Состояние приложения"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Application status"
+          }
+        }
+      }
+    },
+    "settings.description.details": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Готовность, последние ошибки и результат оформления"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Readiness, recent errors and formatting feedback"
+          }
+        }
+      }
+    },
+    "format.general_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Изменение режима применяется к следующей диктовке. Загрузить и выбрать модели можно в разделе Модели."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changes apply to the next dictation. Download and manage packages in Models."
+          }
+        }
+      }
+    },
+    "package.delete_confirm_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удалить «%@»?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete “%@”?"
+          }
+        }
+      }
+    },
+    "package.delete_confirm_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Для повторного использования потребуется скачать пакет заново (%@)."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To use it again, download the package again (%@)."
+          }
+        }
+      }
+    },
+    "storage.delete_unused_confirm_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удалить неиспользуемые пакеты?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete unused packages?"
+          }
+        }
+      }
+    },
+    "storage.delete_unused_confirm_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Будут удалены установленные пакеты, которые сейчас не используются для диктовки, оформления и действий с выделением. Для повторного использования потребуется скачать их заново."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed packages not currently used for dictation, formatting or selection actions will be deleted. To use them again, download them again."
+          }
+        }
+      }
+    },
+    "stats.clear_confirm_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Очистить статистику?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear statistics?"
+          }
+        }
+      }
+    },
+    "stats.clear_confirm_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Все локальные счётчики за все месяцы будут удалены. Это действие нельзя отменить. Модели, настройки и переключатель сбора статистики сохранятся."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All local counts for every month will be deleted. This cannot be undone. Models, settings and the statistics collection preference are retained."
+          }
+        }
+      }
+    },
+    "package.delete_stt_effect": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Диктовка будет недоступна, пока Ultra не установлен снова."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictation will be unavailable until Ultra is installed again."
+          }
+        }
+      }
+    },
+    "package.delete_cleanup_effect": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Если этот пакет выбран для оформления, режим переключится на Light. Действия с этой моделью перейдут на другую доступную или потребуют загрузки модели."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If this package is selected for formatting, the mode will switch to Light. Actions using it will use another available model or require a model download."
           }
         }
       }
