@@ -14,7 +14,7 @@
 - Версия и обновления — рядом\. Настройки автоматической проверки и скачивания сохранены на прежнем месте\.
 
 
-Version **0.6.1 (27)**, macOS 14+, Apple Silicon. Maintainer accepted Debug and explicitly authorized publication on 2026-11-10. Self-signed; not Developer ID signed or notarized.
+[Published release](https://github.com/kestgalax/carrottype/releases/tag/v0.6.1). Version **0.6.1 (27)**, macOS 14+, Apple Silicon. Maintainer accepted Debug and explicitly authorized publication on 2026-11-10. Self-signed; not Developer ID signed or notarized.
 
 ## Install / update
 
@@ -37,7 +37,7 @@ What’s New works offline for the installed version and follows the in-app lang
 - Debug arm64 delivered and accepted by the user before publication; individual manual checklist results were not enumerated. Native SwiftUI view rendered for RU/EN/light/dark; independent interactive GUI/TCC/VoiceOver continuity is not claimed.
 - Fresh clean Release arm64 build, DMG integrity/layout preservation from checksum-verified 0.6.0 template, deep app/component signatures, bundled notes/locale identity, helper path jail, MLX shaders, Ultra-only catalog and no bundled weights verified.
 - Production notes/schema/escaping/tracking and updater gate tests, setup/formatting/bindings/hotkeys and clipboard/selection/helper/protocol regressions passed. Governance validate/trace/review passed. Exact pinned Sparkle native isolated A → B and unavailable/tampered feed/corrupt archive/no-update checks passed with retained external fixtures; staging A/B share candidate code.
-- Archive/feed signatures verified locally; RU/EN HTML descriptions and ZIP resource match the bundled source. Remote draft/public verification is recorded in the release evidence before closeout. No new engines, dependencies or network sink; standard Sparkle trust/install gates and all existing features preserved.
+- Archive/feed signatures verified locally; RU/EN HTML descriptions and ZIP resource match the bundled source. Downloaded draft/public signatures/identity/length checks passed and all draft digests matched local files. Anonymous stable feed/archive matched verified bytes; native Sparkle using an isolated build-26 host found the published update (discovery only, not a post-release installation/TCC claim). No new engines, dependencies or network sink; standard Sparkle trust/install gates and all existing features preserved.
 - Ed25519 does not replace Gatekeeper/notarization. Full network audit and independent permission continuity remain unverified; existing FluidAudio downloader and paste acknowledgement residuals remain documented. Private signing key stays in Keychain; no export.
 
 [Debug acceptance and release evidence](debug-review-v0.6.1.md) · [Update trust](decisions/ADR-017-github-app-updates.md)

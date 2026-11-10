@@ -90,7 +90,7 @@ Trial entry reserves the existing `UpdateInstallationGate` before scheduling cap
 
 Transform disclosure rows retain saved mode selection, explain the same `TransformModelSelection` resolution used at runtime and navigate to Models without downloading. A saved empty array is distinct from absent/invalid preferences. Hotkey capture temporarily unregisters app chords and always restores registration on apply/conflict/cancel; editing callbacks cannot start dictation. Registration can be disabled by dependency injection for tests. The Debug-only `setup-test` identity uses isolated preferences/model/stat roots and disables global registration; it is never a shipping identity.
 
-## Update presentation — 0.6.1 Debug candidate
+## Update presentation — 0.6.1
 
 `ReleaseNotes.json` is bundled version/build/date plus localized summary/sections/items. `ReleaseNotes.decode` validates identity/schema/date/content and supplies English fallback; `ReleaseNotesStore` reads it locally and persists only observed/read version+build identifiers. The first tracked launch establishes a quiet baseline; subsequent observed changes remain unread across relaunch until the sheet opens. There is no automatic popup or HTTP read. Invalid/missing/mismatched data leaves the app usable with a notes-unavailable message and explicit GitHub releases link.
 

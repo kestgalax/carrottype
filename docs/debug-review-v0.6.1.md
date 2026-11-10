@@ -1,6 +1,6 @@
 # Debug 0.6.1 (27): обновления и «Что нового»
 
-Статус 2026-11-10: N1–N3 реализованы в `feat/update-release-notes-ux` от main с сохранёнными планами 0.6.1/0.6.2/0.7.0. Debug собран и подписан локально. **Пользователь принял Debug 0.6.1 и явно разрешил публикацию: «все ок, публикуем» (2026-11-10)**. Результаты отдельных ручных пунктов не перечислялись; ниже сохранены ограничения автоматической проверки. Готовится чистый Release с проверкой production assets.
+Статус 2026-11-10: N1–N3 реализованы в `feat/update-release-notes-ux` от main с сохранёнными планами 0.6.1/0.6.2/0.7.0. Debug собран и подписан локально. **Пользователь принял Debug 0.6.1 и явно разрешил публикацию: «все ок, публикуем» (2026-11-10)**. Результаты отдельных ручных пунктов не перечислялись; ниже сохранены ограничения автоматической проверки. Чистый Release/DMG и подписанные production assets проверены; [0.6.1 опубликована](https://github.com/kestgalax/carrottype/releases/tag/v0.6.1).
 
 ## Основная сборка
 
@@ -42,3 +42,7 @@
 ## Release preparation — 2026-11-10
 
 After explicit user Debug acceptance, clean Release arm64 built in fresh temporary DerivedData. Deep/strict component signatures, production identity/notes/build/RU+EN resources, helper path jail, MLX shaders, Ultra catalog/no bundled weights and DMG integrity passed. Installer filesystem/layout/background retained from SHA-verified 0.6.0. Production ZIP/appcast signed and verified; both localized HTML descriptions and archived JSON matched the signed Release bundle. Hashes recorded in `github-release-notes-v0.6.1.md`. Remote draft/public gates follow before release closeout; private key not exported.
+
+## Publication verification — 2026-11-10
+
+Stable/latest v0.6.1 (27), release ID 440170995; source/tag `7207548`, PR #23. All three local hashes/lengths matched GitHub draft assets. Downloaded feed/archive signatures, identity, monotonic build and versioned URLs passed. After publication, anonymous HTTPS stable feed/archive matched the verified assets and GitHub latest points to 0.6.1. Native Sparkle CLI with isolated build-26 host metadata/key reported “Update available!” (exit 0), without launching/replacing the user's installation. Both signed HTML descriptions match the bundled RU/EN source; ZIP carries identical JSON. This is discovery evidence, not independent post-release TCC/interactive installation verification. Private key remained in Keychain, no export; published assets immutable. Next stage remains 0.6.2; 0.7.0 design discussion is separate.
