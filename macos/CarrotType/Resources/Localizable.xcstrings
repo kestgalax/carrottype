@@ -4848,6 +4848,22 @@
           }
         }
       }
+    },
+    "error.models_in_use": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Models are in use. Try removing them after the current operation finishes."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Модели используются. Повторите удаление после завершения текущей операции."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -88,8 +88,11 @@ final class AppUpdateService: NSObject, ObservableObject, SPUUpdaterDelegate {
 @MainActor
 final class CarrotTypeApplicationDelegate: NSObject, NSApplicationDelegate {
     weak var updates: AppUpdateService?
+    var prepareForQuit: (() -> NSApplication.TerminateReply)?
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        updates?.shouldTerminate() ?? .terminateNow
+        let reply = updates?.shouldTerminate() ?? .terminateNow
+        guard reply == .terminateNow else { return reply }
+        return prepareForQuit?() ?? .terminateNow
     }
 }

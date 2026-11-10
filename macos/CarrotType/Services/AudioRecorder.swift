@@ -135,32 +135,7 @@ private final class RecordingBuffers: @unchecked Sendable {
     }
 }
 
-/// Main-actor assignment of `AudioRecorder.onConvertedBuffer`; the tap calls `emit`.
-private final class ConvertedBufferFanout: @unchecked Sendable {
-    private let lock = NSLock()
-    private var handler: ((AVAudioPCMBuffer) -> Void)?
-
-    func setHandler(_ handler: ((AVAudioPCMBuffer) -> Void)?) {
-        lock.lock()
-        self.handler = handler
-        lock.unlock()
-    }
-
-    func currentHandler() -> ((AVAudioPCMBuffer) -> Void)? {
-        lock.lock()
-        defer { lock.unlock() }
-        return handler
-    }
-
-    func emit(_ buffer: AVAudioPCMBuffer) {
-        lock.lock()
-        let handler = self.handler
-        lock.unlock()
-        handler?(buffer)
-    }
-}
-
-/// Captures microphone audio as 16 kHz mono Float32 WAV for whisper.cpp.
+/// Captures microphone audio as 16 kHz mono Float32 WAV for file STT.
 @MainActor
 final class AudioRecorder {
     private var engine: AVAudioEngine?
@@ -179,7 +154,7 @@ final class AudioRecorder {
         set { convertedBufferFanout.setHandler(newValue) }
     }
 
-    private let convertedBufferFanout = ConvertedBufferFanout()
+    private var convertedBufferFanout = ConvertedBufferFanout()
 
     init() {
         guard let format = AVAudioFormat(
@@ -195,6 +170,8 @@ final class AudioRecorder {
 
     func start(deviceUID: String?) throws -> URL {
         guard !isRecording else { throw AudioRecorderError.alreadyRecording }
+        convertedBufferFanout.setHandler(nil)
+        convertedBufferFanout = ConvertedBufferFanout()
 
         if let deviceUID, !deviceUID.isEmpty {
             try AudioInputService.selectSystemInputDevice(uid: deviceUID)
@@ -230,10 +207,11 @@ final class AudioRecorder {
         }
 
         let session = RecordingBuffers(file: file, converter: converter, targetFormat: targetFormat)
-        session.onInstantPeak = { [weak self] peak in
+        let onPeak = onLivePeak
+        session.onInstantPeak = { peak in
             let display = min(1, pow(peak, 0.55) * 1.35)
             Task { @MainActor in
-                self?.onLivePeak?(display)
+                onPeak?(display)
             }
         }
         let fanout = convertedBufferFanout
@@ -280,6 +258,7 @@ final class AudioRecorder {
         lastPeakLevel = snapshot.peak
         let duration = Double(snapshot.frames) / targetFormat.sampleRate
 
+        convertedBufferFanout.setHandler(nil)
         engine.inputNode.removeTap(onBus: 0)
         engine.stop()
         buffers = nil
@@ -298,6 +277,7 @@ final class AudioRecorder {
     }
 
     func cancel() {
+        convertedBufferFanout.setHandler(nil)
         guard isRecording else { return }
         if let engine {
             engine.inputNode.removeTap(onBus: 0)

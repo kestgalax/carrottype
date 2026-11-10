@@ -60,3 +60,7 @@ Maintainer accepted the delivered Debug: «все ок, публикуем». Th
 ## 0.6.1 published — 2026-11-10
 
 User accepted Debug: «все ок, публикуем». Stable/latest 0.6.1 (27) published; clean Release/DMG, signed bundled/local/draft/public assets and anonymous feed/archive digests passed. Native Sparkle probe with isolated build-26 host found the update. Tag/source 7207548; PR #23; release notes/checksums and evidence in `docs/github-release-notes-v0.6.1.md`, `docs/debug-review-v0.6.1.md`. No independent post-release TCC/GUI/network audit claim; no key export. Next: 0.6.2 lifecycle, then separate 0.7.0 UI/UX/logo discussion; new branches and per-version Debug acceptance remain required.
+
+## 0.6.2 implementation — 2026-11-10
+
+C1–C2 on `refactor/dictation-session-lifecycle` from main after PR #23. Debug 0.6.2 (28): single session owner, snapshotted model/formatting/device/mode, joined preview/unmute/teardown and awaited model unload; model maintenance shares the install gate. Streaming pass/feed/recorder peak/fanout are epoch-bound; actual actor tested with test-only SDK. Normal Quit drains cleanup; Sparkle trust/gates preserved. Production helpers replace mirrors; local checks/mutations and Debug pass, Actions workflow added with pinned tooling and no distribution keys. Manual acceptance and publication pending; details: `docs/debug-review-v0.6.2.md`, `docs/specs/tasks/dictation-session-lifecycle.md`. No user models or data removed. Next after this version’s approval/release: separate 0.7.0 UI/UX/logo exploration, options discussed before replacement.

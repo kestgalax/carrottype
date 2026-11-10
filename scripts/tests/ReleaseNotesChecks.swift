@@ -7,17 +7,20 @@ struct Checks {
         let root = URL(fileURLWithPath: CommandLine.arguments[1])
         let temp = URL(fileURLWithPath: CommandLine.arguments[2])
         let source = try Data(contentsOf: root.appendingPathComponent("macos/CarrotType/Resources/ReleaseNotes.json"))
-        let notes = try ReleaseNotes.decode(source, version: "0.6.1", build: "27")
+        let info = try PropertyListSerialization.propertyList(from: Data(contentsOf: root.appendingPathComponent("macos/CarrotType/Info.plist")), format: nil) as! [String: Any]
+        let version = info["CFBundleShortVersionString"] as! String
+        let build = info["CFBundleVersion"] as! String
+        let notes = try ReleaseNotes.decode(source, version: version, build: build)
         precondition(notes.content(locale: Locale(identifier: "de"))?.summary == notes.localizations["en"]?.summary)
         precondition(notes.content(locale: Locale(identifier: "ru"))?.visibleSections.count == 2)
         do {
-            _ = try ReleaseNotes.decode(source, version: "0.6.1", build: "28")
+            _ = try ReleaseNotes.decode(source, version: version, build: "999999999")
             fatalError("Mismatched build accepted")
         } catch {}
         var json = try JSONSerialization.jsonObject(with: source) as! [String: Any]
         json["date"] = "2026-02-31"
         do {
-            _ = try ReleaseNotes.decode(JSONSerialization.data(withJSONObject: json), version: "0.6.1", build: "27")
+            _ = try ReleaseNotes.decode(JSONSerialization.data(withJSONObject: json), version: version, build: build)
             fatalError("Invalid date accepted")
         } catch {}
         let suite = "carrottype-release-checks-" + UUID().uuidString
@@ -31,6 +34,7 @@ struct Checks {
             try PropertyListSerialization.data(fromPropertyList: info, format: .xml, options: 0).write(to: url.appendingPathComponent("Info.plist"))
             var data = try JSONSerialization.jsonObject(with: source) as! [String: Any]
             data["build"] = build
+            data["version"] = "0.6.1"
             try (corrupt ? Data("broken".utf8) : JSONSerialization.data(withJSONObject: data))
                 .write(to: url.appendingPathComponent("ReleaseNotes.json"))
             return Bundle(url: url)!

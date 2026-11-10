@@ -1,13 +1,5 @@
-#!/usr/bin/env swift
+// Compiled with production WaveLinkPortOrder by verify-session-lifecycle.sh
 import Foundation
-
-/// Mirrors `WaveLinkPortOrder.prioritized` in MicMuteController.swift — keep in sync.
-enum WaveLinkPortOrder {
-    static func prioritized(cached: UInt16?, candidates: [UInt16]) -> [UInt16] {
-        guard let cached, candidates.contains(cached) else { return candidates }
-        return [cached] + candidates.filter { $0 != cached }
-    }
-}
 
 let candidates: [UInt16] = Array(1884...1893) + [1824]
 

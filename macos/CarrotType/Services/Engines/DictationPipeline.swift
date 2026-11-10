@@ -11,6 +11,14 @@ protocol STTEngine: Sendable {
     func unload() async
 }
 
+struct DictationPipelineConfiguration {
+    let packageID: String
+    let modelPath: String?
+    let supportsStreaming: Bool
+    let cleanupMode: CleanupMode
+    let cleanupDirectory: URL?
+}
+
 /// Holds the streaming actor so the audio tap can call `feed` without hopping to the main actor.
 private final class ParakeetStreamingBox: @unchecked Sendable {
     let engine = ParakeetStreamingEngine()
@@ -29,23 +37,31 @@ final class DictationPipeline {
     /// True while a live-draft streaming session is accepting audio.
     private(set) var isLiveDraftActive = false
 
+    private var previewFeed: (@Sendable (AVAudioPCMBuffer) -> Void)?
+
     private var parakeetStreaming: ParakeetStreamingEngine { streamingBox.engine }
 
     init(modelManager: ModelManager) {
         self.modelManager = modelManager
     }
 
-    /// Start SlidingWindow streaming for the active Parakeet package when possible.
+    func snapshotConfiguration() -> DictationPipelineConfiguration {
+        DictationPipelineConfiguration(packageID: modelManager.activeSTTID,
+            modelPath: modelManager.selectedSTTModelPath(), supportsStreaming: modelManager.selectedSTTSupportsStreaming,
+            cleanupMode: modelManager.cleanupMode, cleanupDirectory: modelManager.cleanupModelDirectory())
+    }
+
+    /// Start full-buffer preview for the active Parakeet package when possible.
     /// On failure, logs and returns false so the caller keeps the file-only path.
     func startLiveDraftIfPossible(
         languageCode: String?,
+        configuration: DictationPipelineConfiguration? = nil,
         onUpdate: @escaping @Sendable (LiveTranscript) -> Void
     ) async -> Bool {
         await cancelLiveDraft()
-        guard modelManager.selectedSTTSupportsStreaming else { return false }
-        guard let modelPath = modelManager.selectedSTTModelPath() else { return false }
-
-        let packageID = modelManager.activeSTTID
+        let configuration = configuration ?? snapshotConfiguration()
+        guard configuration.supportsStreaming, let modelPath = configuration.modelPath else { return false }
+        let packageID = configuration.packageID
         do {
             try await parakeetStreaming.start(
                 modelDirectory: URL(fileURLWithPath: modelPath, isDirectory: true),
@@ -53,6 +69,7 @@ final class DictationPipeline {
                 languageCode: languageCode,
                 onUpdate: onUpdate
             )
+            previewFeed = await parakeetStreaming.makeFeedHandler()
             isLiveDraftActive = true
             return true
         } catch is CancellationError {
@@ -67,12 +84,11 @@ final class DictationPipeline {
         }
     }
 
-    /// Safe from the audio tap: ordered sync yield into the streaming feed bridge.
-    nonisolated func feedLiveDraft(_ buffer: AVAudioPCMBuffer) {
-        streamingBox.engine.feed(buffer)
-    }
+    /// The recorder holds this generation-bound handler, never a mutable current-session lookup.
+    func liveDraftAudioHandler() -> ((AVAudioPCMBuffer) -> Void)? { previewFeed }
 
     func cancelLiveDraft() async {
+        previewFeed = nil
         isLiveDraftActive = false
         await parakeetStreaming.cancel()
     }
@@ -95,10 +111,12 @@ final class DictationPipeline {
         audioURL: URL,
         useLiveDraftResult: Bool,
         offlineSecondPass: Bool,
+        configuration: DictationPipelineConfiguration? = nil,
         onPhase: @escaping @Sendable (DictationPhase) -> Void
     ) async throws -> FormattedDictation {
-        let mode = modelManager.cleanupMode
-        let directory = modelManager.cleanupModelDirectory(for: mode)
+        let configuration = configuration ?? snapshotConfiguration()
+        let mode = configuration.cleanupMode
+        let directory = configuration.cleanupDirectory
         onPhase(.transcribing)
 
         var raw: String?
@@ -135,7 +153,7 @@ final class DictationPipeline {
 
         if raw == nil {
             let stt = parakeet
-            let modelPath = modelManager.selectedSTTModelPath()
+            let modelPath = configuration.modelPath
             raw = try await stt.transcribe(audioURL: audioURL, modelPath: modelPath)
         }
 
@@ -169,6 +187,7 @@ final class DictationPipeline {
     }
 
     func unloadAll() async {
+        previewFeed = nil
         isLiveDraftActive = false
         await parakeet.unload()
         await parakeetStreaming.unload()
