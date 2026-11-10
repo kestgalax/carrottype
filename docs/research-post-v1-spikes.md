@@ -1,5 +1,7 @@
 # Research spikes (post-v1 DMG)
 
+**Current update 2026-11-10:** the historical gate/offerings below describe the v0.1.0 era. Public MIT distribution and optional notarization are governed by ADR-011; current shipped Ultra-only STT is ADR-016. The maintainer now explicitly requested a separate alternative-STT research/version stage after 0.8.0: [0.9.0 research/plan](2026-11-10-dictation-alternatives.md). Research does not authorize selecting a new runtime/default without ADR/evidence. Keep this history, but do not treat obsolete private/notarization gating or the retired Whisper listing below as current policy.
+
 Not scheduled for implementation in the unsigned `v0.1.0` release. Tracked from the Turbo/DMG plan recommendations.
 
 ## Cleanup
