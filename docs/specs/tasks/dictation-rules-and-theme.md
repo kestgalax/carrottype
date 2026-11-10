@@ -5,7 +5,7 @@ Trace: maintainer request and implementation authorization (2026-11-10), [audit/
 ## Metadata
 
 - Task ID: dictation-rules-and-theme
-- Status: implemented, signed Debug review pending; no publication authorization
+- Status: quality rework required; current signed Debug is diagnostic, no publication authorization
 
 ## Traceability
 
@@ -51,5 +51,7 @@ Qwen weights are absent: no Qwen comparative quality/latency/RAM claim. Syntheti
 New ADR required: ADR-018 accepted for narrowed cleanup offerings/compatibility and bounded dictation rules/v3 helper purpose. No new engine/runtime/network/trust; existing ADR-009/012/015/016/017 boundaries retained.
 
 ## Custom-rule Debug diagnostic
+
+Next: [R1–R4 rework proposal](../../superpowers/plans/2026-11-10-formatting-rework.md), requested by the maintainer after failed combined-rule acceptance. Explicit deterministic controls, separately assessed business style, stage-specific fallback reporting, then signed Debug/manual acceptance. Proposal only; revised ADR and implementation pending.
 
 Maintainer asked to recheck actual Gemma trial against four formatting/tone rules and supplied text. Actual AppState path confirms rules arrive, but combined/style compliance remains unreliable. Prompt priority/content-intent boundaries clarified, question-mark-loss rejection tested, actual-mode/fallback UI made explicit; no generic few-shot contamination retained. [Detailed evidence and unresolved quality](../../2026-11-10-formatting-quality-0.8.0.md). No complete four-rule/business-tone acceptance is claimed, no user message committed, no new engine or implicit download. Signed Debug feedback still precedes any publication.
