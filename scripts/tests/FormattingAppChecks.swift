@@ -2,6 +2,23 @@ import AppKit
 import SwiftUI
 @testable import CarrotType
 
+@MainActor private final class ThemeReading {
+    var scheme: ColorScheme?
+    var mounts = 0
+    var unmounts = 0
+}
+
+private struct ThemeReadingView: View {
+    @Environment(\.colorScheme) private var scheme
+    let reading: ThemeReading
+    var body: some View {
+        Color.clear.frame(height: 1)
+            .onAppear { reading.scheme = scheme; reading.mounts += 1 }
+            .onDisappear { reading.unmounts += 1 }
+            .onChange(of: scheme) { _, value in reading.scheme = value }
+    }
+}
+
 @main struct FormattingAppChecks {
     @MainActor static func main() throws {
         let nsApp = NSApplication.shared
@@ -43,12 +60,35 @@ import SwiftUI
         precondition(state.modelManager.cleanupMode == .light && !state.modelManager.selectableCleanupModes.contains(.smartPlus))
         precondition(state.modelManager.installedPackageFootprints.contains { $0.id == BundledModelCatalog.smartPlusCleanupID })
         print("PASS actual ModelManager/AppState: ready legacy survives restore, binding-specific availability, no new/fallback recommendation, retained Storage")
-        state.appTheme = .dark
-        precondition(NSApp.appearance?.name == .darkAqua && defaults.string(forKey: AppTheme.defaultsKey) == "dark")
-        state.appTheme = .light
-        precondition(NSApp.appearance?.name == .aqua)
+        // Exercise SwiftUI's *observed* scheme in an existing native Settings host,
+        // not just the AppKit preference. A nil preference alone missed the reported bug.
         state.appTheme = .system
+        let systemScheme: ColorScheme = NSApp.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua ? .dark : .light
+        let reading = ThemeReading()
+        let host = NSHostingView(rootView: VStack {
+            CarrotTypeSettingsView().environmentObject(state).environment(\.locale, state.effectiveLocale)
+            ThemeReadingView(reading: reading)
+        })
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 720, height: 520),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.contentView = host
+        func settleTheme() {
+            host.layoutSubtreeIfNeeded()
+            RunLoop.main.run(until: Date().addingTimeInterval(0.25))
+        }
+        settleTheme()
+        for theme in [AppTheme.light, .system, .dark, .system, .light, .dark, .system] {
+            state.appTheme = theme
+            settleTheme()
+            let expected: ColorScheme = theme == .system ? systemScheme : (theme == .light ? .light : .dark)
+            precondition(reading.scheme == expected, "SwiftUI did not follow \(theme)")
+            precondition(window.appearance == nil, "Window must inherit the application's appearance")
+            precondition(defaults.string(forKey: AppTheme.defaultsKey) == theme.rawValue)
+            precondition(reading.mounts == 1 && reading.unmounts == 0, "Theme changes must not remount Settings")
+        }
         precondition(NSApp.appearance == nil)
+        window.contentView = nil
+        print("PASS native Settings host: repeated Light/Dark → System reaches inherited SwiftUI scheme without remount")
         var rules = state.dictationRules; rules.customRules = "Keep CarrotType"; state.dictationRules = rules
         precondition(DictationRules.load(defaults: defaults).customRules == "Keep CarrotType")
         let beforeClipboard = NSPasteboard.general.changeCount
