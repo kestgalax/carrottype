@@ -4,7 +4,7 @@
 
 - Task ID: uiux-and-brand-refresh
 - Title: Audit the product experience, discuss directions and implement the selected interface/logo
-- Status: Planned, 2026-11-10; target 0.7.0 after 0.6.1/0.6.2
+- Status: D1 code/resource audit and D2 concepts prepared on `design/uiux-and-brand-0.7` from main after PR #24; native walkthrough and direction selection pending, D3 not started
 
 ## Traceability
 
@@ -17,7 +17,7 @@
 
 ## Scope
 
-D1: audit actual screens and complete journeys, preserve strengths/features, prioritize findings by user effect and cost. D2: present 2–3 visual directions on comparable screens and 3 distinct logo concepts; discuss the preferred direction with the maintainer before replacement. D3: implement only the selected scope in small changes on a new main-based branch, with a Debug review before release. This planning task does not perform the audit, design the logo or change runtime/UI assets.
+D1: audit actual screens and complete journeys, preserve strengths/features, prioritize findings by user effect and cost. D2: present 2–3 visual directions on comparable screens and 3 distinct logo concepts; discuss the preferred direction with the maintainer before replacement. D3: implement only the selected scope in small changes on a new main-based branch, with a Debug review before release. Current progress: preliminary code/resource audit and comparable HTML/SVG concepts are available; native walkthrough is incomplete and no shipping UI/assets were changed.
 
 Audit first-run/permissions/model download, everyday dictation/Capsule/cancel/recovery, trial, settings/navigation/formatting/bindings, Storage, stats and updates. Check terminology, density, hierarchy, feedback, keyboard/VoiceOver, RU/EN, light/dark and minimum window. Record evidence and distinguish hypotheses from observed failures.
 
@@ -51,3 +51,10 @@ Likely files: dated audit/design brief and decision in docs, selected SwiftUI Vi
 ## ADR Impact
 
 No ADR impact. Follows accepted ADR-002 and ADR-011; existing product/runtime/update decisions remain. A later proposal changing runtime, architecture, network or update trust requires its own ADR before implementation.
+
+## D1/D2 deliverables — 2026-11-10
+
+- `docs/2026-11-10-uiux-audit.md`: evidence-labelled strengths/findings, preservation matrix, priorities/cost and native observation limits.
+- `docs/design/0.7.0/directions.html`: same Settings/Capsule/What’s New content in three directions, light/dark and minimum-size approximation; three editable logo concepts with 16/18/32 px monochrome previews.
+- `docs/design/0.7.0/README.md` and `decision.md`: provenance, confirmed OpenBot/Grok Bot links, recommendation and unresolved selection.
+- Current native GUI acquisition timed out; no complete native/VoiceOver/scenario QA claim. Runtime, installed app, icons and version metadata remain unchanged; no new Debug/release at this design-review point. D3 waits for the requested design discussion/selection.
