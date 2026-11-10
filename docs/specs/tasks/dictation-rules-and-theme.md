@@ -65,3 +65,6 @@ R3 limited two-candidate Gemma evaluation completed, **quality acceptance failed
 
 
 First-letter maintainer addition: independent persisted `lowercaseFirstLetter`, absent → false; only the first letter changes in the final shared exact stage, with full-lowercase precedence and protected starts retained. New RU/EN examples, legacy defaults/persistence, combinations and real AppState trial check; new signed Debug app recorded in the review document. Tone/publishing status unchanged.
+
+
+Release scope accepted: maintainer explicitly accepted current Debug and authorized publication after the first-letter addition. Business-tone quality remains a disclosed limitation accepted for this release (experimental/off by default), not a semantic pass. Earlier pending-acceptance/release-block statements are historical. Application source frozen at 0edde77; clean Release, remote asset/CI verification and publication evidence pending.

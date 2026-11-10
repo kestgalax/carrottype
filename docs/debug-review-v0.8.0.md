@@ -1,6 +1,10 @@
 # Debug review — CarrotType 0.8.0 (30)
 
 
+## Maintainer acceptance / release gate
+
+Maintainer explicitly accepted the delivered first-sentence Debug and instructed «ок, пока остановимся, хорошо получилось, давай релизить». Manual/publication gate satisfied for current 0.8.0 (30), application source 0edde77. Individual full device/TCC/VoiceOver checks were not enumerated. Retain disclosed experimental business tone, off by default; acceptance is a product decision to ship the present scope, not proof of four-rule/model semantic reliability. Earlier “not release-ready/no authorization” entries are historical. Clean Release/signature/remote-asset/CI gates still apply.
+
 ## Current: first-sentence lowercase Debug
 
 App: `dist/.builds.noindex/CarrotType-0.8.0-First-Lowercase/CarrotType.app`. Quit the previous instance before opening this one. Version/build 0.8.0/30 unchanged; existing development signature deep/strict checked. No new ZIP: earlier archives predate this control. Installed app and potentially running earlier review bundles remain untouched.
