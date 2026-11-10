@@ -34,3 +34,7 @@
 ## ADR Impact
 
 Follows accepted ADR-012 and existing ADR-005/009/010/014/016/017. No new runtime, model policy, dependency, network sink or distribution trust decision. Full lifecycle coordinator remains 0.6.1.
+
+## Completion
+
+Shipped as v0.6.0 (26) after user Debug acceptance on 2026-11-10. Clean Release, DMG, signed local/draft/public assets and native update-discovery checks passed; evidence/remaining limits are in `docs/debug-review-v0.6.0.md`. Next stage: 0.6.1 lifecycle/tests.

@@ -1,6 +1,6 @@
 # Debug 0.6.0 (26): проверка перед публикацией
 
-Статус 2026-11-10: пользователь принял Debug 0.6.0 (26): «Все отлично, можно публиковать». Собственное подтверждение этой версии получено; готовится Release. Ветка `feat/setup-and-settings-polish` от main после v0.5.0. Отдельные результаты ручного чеклиста пользователь не перечислял; ограничения автоматической проверки ниже сохранены.
+Статус 2026-11-10: пользователь принял Debug 0.6.0 (26): «Все отлично, можно публиковать». Собственное подтверждение этой версии получено; [Release опубликован](https://github.com/kestgalax/carrottype/releases/tag/v0.6.0). Ветка `feat/setup-and-settings-polish` от main после v0.5.0. Отдельные результаты ручного чеклиста пользователь не перечислял; ограничения автоматической проверки ниже сохранены.
 
 ## Что изменилось
 
@@ -36,8 +36,12 @@
 - `verify-dictation-reliability.sh`, `verify-ultra-models.sh`, `verify-app-updates.sh`, streaming catalog flags — passed. Governance validate/trace/review и diff/new-file checks — passed.
 - Изолированная UI-копия запущена; native window list подтвердил Settings 880×680. Чтение accessibility tree/screenshots через Orca вернуло `permission_denied`, хотя inventory дважды сообщает `granted`. Полная визуальная проверка не выполнена; обход разрешений не применялся. Тестовая копия закрыта, установленная продолжила работать. Автоматическое подтверждение Microphone/Accessibility не выполнялось, микрофон не включался.
 - До пользовательского подтверждения оставались ручные проверки реального microphone → STT → trial/normal paste, meter/RU/EN/minimum window и teardown. Ошибки helper в новых тестах управляются fake engine, старый transport/protocol harness проверяет настоящие subprocess failures; это не полный запуск MLX на всех моделях.
-- Пользовательское подтверждение Debug и разрешение публикации получены 2026-11-10. Release packaging и проверка подписанных production assets выполняются отдельно. Полный lifecycle refactor и расширенный network audit остаются отдельно.
+- Пользовательское подтверждение Debug и разрешение публикации получены 2026-11-10. Release packaging и проверка подписанных production assets выполнены (см. ниже). Полный lifecycle refactor и расширенный network audit остаются отдельно.
 
 ## Release preparation — 2026-11-10
 
 User accepted Debug and authorized publication. Clean Release arm64 build succeeded in fresh temporary DerivedData. DMG integrity, preserved layout/background, deep/strict app/component signatures, helper path jail, MLX shaders, Ultra catalog and RU/EN microphone-purpose resources passed. Production ZIP and appcast were signed/verified with the existing Keychain key, without export. Artifact hashes are in `github-release-notes-v0.6.0.md`; remote draft/public checks follow before release closeout.
+
+## Publication verification — 2026-11-10
+
+v0.6.0, build 26, source/tag `6e7358c`, PR #22. All three GitHub draft asset digests/lengths matched local files; downloaded feed/archive signatures, identities, monotonic build and URLs passed. Published stable/latest release ID 440086166. Repeated public verification passed: anonymous HTTPS feed/archive matched the verified assets and GitHub latest points to this release. Exact resolved native Sparkle CLI probed the stable feed using isolated build 25 (`update-test`) and returned “Update available!” (exit 0); no user installation was launched/replaced. This is a discovery check, not an independent native 0.5.0 → 0.6.0 installation/TCC test. Private key stayed in Keychain. Release assets remain immutable.

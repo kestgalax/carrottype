@@ -1,6 +1,6 @@
 # CarrotType v0.6.0 — setup and settings
 
-Version **0.6.0 (26)**, macOS 14+, Apple Silicon. The maintainer accepted Debug and explicitly authorized publication on 2026-11-10. Self-signed; not Developer ID signed or notarized.
+[Published release](https://github.com/kestgalax/carrottype/releases/tag/v0.6.0). Version **0.6.0 (26)**, macOS 14+, Apple Silicon. The maintainer accepted Debug and explicitly authorized publication on 2026-11-10. Self-signed; not Developer ID signed or notarized.
 
 - Four-step setup guidance and an explicit local dictation trial. The result stays in Settings; no automatic external paste, clipboard change or usage count. Only the trial-completion Boolean persists.
 - Compact expandable transform bindings with all existing editors, honest unavailable-model/fallback labels and a working Models link. A saved empty list stays empty after relaunch.
@@ -29,7 +29,7 @@ If Gatekeeper blocks the manually downloaded app, attempt to open it in Finder, 
 
 - Debug arm64 was delivered first and accepted by the user; individual manual checklist results were not enumerated. Automated native UI observation was permission-blocked; no independent claim of TCC continuity.
 - Fresh clean Release arm64 build; deep/strict component signatures; DMG integrity; preserved installer layout/background from checksum-verified 0.5.0; helper path jail, localized microphone descriptions, Ultra-only catalog, MLX shaders and no bundled weights verified.
-- Production setup/formatting/delivery/binding/hotkey checks and existing clipboard/selection/helper/protocol, Ultra migration/storage and updater gate regressions passed. Governance validate/trace/review passed. Signed archive/feed verified locally; draft/public remote verification is recorded in the Debug review after publication.
+- Production setup/formatting/delivery/binding/hotkey checks and existing clipboard/selection/helper/protocol, Ultra migration/storage and updater gate regressions passed. Governance validate/trace/review passed. Signed archive/feed verified locally and after download from the draft/public release; all asset digests matched local files. Anonymous stable feed/archive matched; native Sparkle probe from isolated build 25 found the update (discovery only, no installation/TCC claim).
 - Existing isolated Sparkle native A → B/signature-negative evidence is from 0.5.0; this release does not change update code. Ed25519 signatures do not replace Gatekeeper/notarization. Full network audit and independent TCC continuity remain deferred; existing FluidAudio downloader and paste acknowledgement residuals remain documented. No private key export.
 
 [Update trust decision](decisions/ADR-017-github-app-updates.md) · [Debug verification record](debug-review-v0.6.0.md)
