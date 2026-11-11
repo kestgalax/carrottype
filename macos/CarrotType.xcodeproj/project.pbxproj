@@ -14,6 +14,7 @@
 		1290041827D9F55DD5A90732 /* UsageStatsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58FE054A522F437944498CC /* UsageStatsStore.swift */; };
 		1424691E8C5507CB87824295 /* AudioInputService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C308C7819FB980179CA944D /* AudioInputService.swift */; };
 		1B59537CCF6939AA81AE6426 /* STTEngineError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4BBEDAE20F785C0137C887 /* STTEngineError.swift */; };
+		1C73B6203206E943F99AC5F9 /* DynamicIslandMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE1070A606D99FBB1076A30 /* DynamicIslandMode.swift */; };
 		1F1E9D5F8E55971C3A39B461 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A26C73B9E41B226D9DC2062 /* ServiceManagement.framework */; };
 		2267ECB139580B1231C3D98E /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = C96851DE3927A9D883868D3E /* MLXLMCommon */; };
 		232FBC6B127516DFCDA2BF9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDFA98C4C936AA6524585F75 /* Assets.xcassets */; };
@@ -30,6 +31,7 @@
 		40793D8C8B303AE52135AD97 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2F124EFF6A1ED662214AA79 /* Carbon.framework */; };
 		408E99C45638965D101D2C73 /* LiveDraftText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C77D3DC93FB5A210B9B035 /* LiveDraftText.swift */; };
 		44CDE8B0154ED975ECD8BD42 /* MicMuteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A3B11B85E9BEB710CA6CB4 /* MicMuteController.swift */; };
+		4C159DD2BA0E6085710CBD2D /* DynamicIslandIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB424BA73140FD09F7B4C67F /* DynamicIslandIndicators.swift */; };
 		4CD5D01CA1E2291B4136CDD6 /* ModelCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 483744F178A17C48BF392DE8 /* ModelCatalog.json */; };
 		4F23139483EA3C30C4F53B76 /* DictationRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59F17E9DF9ACC0B04D93189 /* DictationRules.swift */; };
 		54D6AE6E6EBE7236D03B0218 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1100C490D0C239D082EF6C60 /* InfoPlist.strings */; };
@@ -37,6 +39,7 @@
 		55E68B4BCBFEC16567620F70 /* DictationRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59F17E9DF9ACC0B04D93189 /* DictationRules.swift */; };
 		560E47E8BF8423CB014C16A6 /* LaunchAtLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C277E7479373B3E2DA6C7F /* LaunchAtLoginService.swift */; };
 		5A35E7F40EC6280BAD745434 /* WaveLinkPortOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428EF9BD7420AF390B390559 /* WaveLinkPortOrder.swift */; };
+		5BC592856B864E8B4DEE81B3 /* DynamicIslandSettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F01DC4CE06A8279E4FFD849 /* DynamicIslandSettingsPane.swift */; };
 		5F3589564E9DA267FEFC7FF2 /* SetupProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E21A6CA18C7371EEF14B46F /* SetupProgress.swift */; };
 		5F988470236EE3D4A4179BAA /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE375B29BA9AD7B167B76BE /* ModelManager.swift */; };
 		5FDC9ED5E9C465087BF5E8D5 /* ReleaseNotesHistory.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D92ED99098D9030390EDEFE /* ReleaseNotesHistory.json */; };
@@ -179,6 +182,7 @@
 		7E12BFD1DB1A536385EE5619 /* LightCleanupEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightCleanupEngine.swift; sourceTree = "<group>"; };
 		7E321ED881327A9305318B57 /* CarrotType.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarrotType.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EBB6DC297BE778E340C7DEE /* TextCleanup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCleanup.swift; sourceTree = "<group>"; };
+		7F01DC4CE06A8279E4FFD849 /* DynamicIslandSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicIslandSettingsPane.swift; sourceTree = "<group>"; };
 		8235284359B7C3A7A66533D8 /* ReleaseNotes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ReleaseNotes.json; sourceTree = "<group>"; };
 		89ED5A599D2EE48261B14B7A /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		8A26C73B9E41B226D9DC2062 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
@@ -210,7 +214,9 @@
 		F030E16C4E6640B30B01CCAF /* PermissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionService.swift; sourceTree = "<group>"; };
 		F11ED546758ABC44F1858768 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		F729C29AD2C7164B457EDC2B /* SettingsStatusHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStatusHeader.swift; sourceTree = "<group>"; };
+		FB424BA73140FD09F7B4C67F /* DynamicIslandIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicIslandIndicators.swift; sourceTree = "<group>"; };
 		FBC3A4D6B88AFA5F20C69B01 /* LanguagePairDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguagePairDetector.swift; sourceTree = "<group>"; };
+		FBE1070A606D99FBB1076A30 /* DynamicIslandMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicIslandMode.swift; sourceTree = "<group>"; };
 		FC8AF679C38E4E258DA8FEFB /* StatusDetailsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusDetailsPane.swift; sourceTree = "<group>"; };
 		FD109D911C2BE1F4C00F3038 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		FF630F116A29B033D376FDC6 /* ModelsSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsSettingsPane.swift; sourceTree = "<group>"; };
@@ -352,6 +358,7 @@
 		C859322C266348CF5A31A25A /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				7F01DC4CE06A8279E4FFD849 /* DynamicIslandSettingsPane.swift */,
 				6B00175B5CD179162D130703 /* FirstRunWelcomePane.swift */,
 				6231A700974FA82A8E4BAFC1 /* FormattingRulesSection.swift */,
 				E01F0C09CF14B2C2102D5E1E /* GeneralSettingsPane.swift */,
@@ -400,6 +407,7 @@
 				392FD990A790CF739FA334CE /* AppStyle.swift */,
 				31145C9C348D545D5A70A84E /* AppUpdateViews.swift */,
 				ABEAA3680522EFDCA855E969 /* CarrotTypeSettingsView.swift */,
+				FB424BA73140FD09F7B4C67F /* DynamicIslandIndicators.swift */,
 				21049F0E68A2ADE0DA4314A4 /* HotkeySettingsRow.swift */,
 				5D51F39387D51B7D74F72297 /* MenuBarViews.swift */,
 				BC24539957AB2B6B9B8DAE91 /* MicrophoneLevelMeter.swift */,
@@ -418,6 +426,7 @@
 				956F2B01DE0B361D286C434D /* BundledModelCatalog.swift */,
 				5FFCE12C41D4E5485499DEBA /* DictationDelivery.swift */,
 				6BD4AE9D5EDFDBBF23D3E982 /* DictationModelPolicy.swift */,
+				FBE1070A606D99FBB1076A30 /* DynamicIslandMode.swift */,
 				20B2484C6CDB9EA89F7724FB /* ModelTypes.swift */,
 				8B4ED8B40E69BEEEBD41FEC2 /* ReleaseNotes.swift */,
 				2E21A6CA18C7371EEF14B46F /* SetupProgress.swift */,
@@ -584,6 +593,9 @@
 				BC099652A4FFE95AEB6168BF /* DictationPipeline.swift in Sources */,
 				4F23139483EA3C30C4F53B76 /* DictationRules.swift in Sources */,
 				8CE8FD75D71828FB967FDDCE /* DictationSessionCoordinator.swift in Sources */,
+				4C159DD2BA0E6085710CBD2D /* DynamicIslandIndicators.swift in Sources */,
+				1C73B6203206E943F99AC5F9 /* DynamicIslandMode.swift in Sources */,
+				5BC592856B864E8B4DEE81B3 /* DynamicIslandSettingsPane.swift in Sources */,
 				CD6BF2145BDF3A01437CE70B /* FirstRunWelcomePane.swift in Sources */,
 				8A3B2DD1F95F4A3276076426 /* FormattingRulesSection.swift in Sources */,
 				AC59FC1DDE6059740FBEB131 /* GeneralSettingsPane.swift in Sources */,

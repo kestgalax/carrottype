@@ -6273,6 +6273,329 @@
           }
         }
       }
+    },
+    "settings.pane.dynamicIsland": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dynamic Island"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dynamic Island"
+          }
+        }
+      }
+    },
+    "settings.description.dynamicIsland": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вид статуса во время диктовки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictation status appearance"
+          }
+        }
+      }
+    },
+    "island.mode.section": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Во время диктовки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "During dictation"
+          }
+        }
+      }
+    },
+    "island.mode.full": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полная капсула"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full capsule"
+          }
+        }
+      }
+    },
+    "island.mode.minimal": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Минимальная индикация"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minimal indicator"
+          }
+        }
+      }
+    },
+    "island.mode.menuOnly": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Только строка меню"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menu bar only"
+          }
+        }
+      }
+    },
+    "island.mode.full_detail": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Текущая капсула: статус и живой текст. Перекрывает больше экрана."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The current capsule with status and live text. Covers more of the screen."
+          }
+        }
+      }
+    },
+    "island.mode.minimal_detail": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тонкая подсветка записи и точки обработки. Без текста и без живого черновика; при отмене черновик не показывается."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A thin recording glow and processing dots. No text and no live draft; cancelling does not produce a draft."
+          }
+        }
+      }
+    },
+    "island.mode.menuOnly_detail": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Статус показывает только иконка в строке меню. Живой черновик не вычисляется; при отмене Copy не появляется. Результаты перевода и восстановление текста по-прежнему доступны."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the menu bar icon shows status. No live draft is computed, and cancelling does not offer Copy. Transform results and text recovery still appear."
+          }
+        }
+      }
+    },
+    "island.menu_only_note": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Если строка меню скрывается автоматически, заметность статуса ограничена."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If the menu bar hides automatically, status visibility is limited."
+          }
+        }
+      }
+    },
+    "island.preview.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Предпросмотр"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preview"
+          }
+        }
+      }
+    },
+    "island.preview.recording": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запись"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording"
+          }
+        }
+      }
+    },
+    "island.preview.processing": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обработка"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Processing"
+          }
+        }
+      }
+    },
+    "island.live_draft_disabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Доступно только в полной капсуле. Сохранённый выбор не сбрасывается."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Available only in the full capsule. Your saved choice is kept."
+          }
+        }
+      }
+    },
+    "island.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройки применяются со следующей диктовки. Результаты перевода и восстановление текста показываются отдельно."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings apply from the next dictation. Transform results and text recovery are shown separately."
+          }
+        }
+      }
+    },
+    "island.fallback_warning": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Последняя диктовка: применена базовая обработка — модель оформления недоступна."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last dictation: basic formatting was applied because the formatting model was unavailable."
+          }
+        }
+      }
+    },
+    "island.mode.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Режим"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mode"
+          }
+        }
+      }
+    },
+    "island.preview.live_text": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Живой текст обновляется во время речи"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live text updates while you speak"
+          }
+        }
+      }
+    },
+    "island.preview.synthetic": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Синтетический предпросмотр — запись не начинается."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synthetic preview — recording does not start."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

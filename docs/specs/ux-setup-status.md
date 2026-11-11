@@ -56,10 +56,11 @@ Window title: **carrottype**. Default size ~880×680 (min 720×520); window is r
 - **Status header** (not a pane): Ready / Almost / Blocked + version (`vX.Y.Z`). When Almost/Blocked, **Details…** opens the Status checklist in the detail column (deep-links to Setup / Models). Details remains accessible when Ready (0.3.10); readiness and the last operation error are displayed separately.
 - **Panes** (SF Symbols):
   1. **General** (`info.square`) — dictation hotkey, optional Walkie-talkie (hold to talk), retain clipboard, transform selected text **bindings** (hotkey + Translate/Custom + model + language pair), language
-  2. **Setup** (`gear`) — Microphone, input device, optional mic meter, optional unmute during dictation (ADR-007), Accessibility
-  3. **Models** (`cpu`) — Parakeet Ultra + post-dictation formatting
-  4. **Storage** (`internaldrive`) — installed packages (sizes, Active/Unused, delete unused) + catalog-scoped Hugging Face download cache size/clear
-  5. **Statistics** (`chart.bar`) — opt-in local time-saved estimates for a selected month (ADR-013); off by default
+  2. **Dynamic Island** (`capsule`) — dictation status presentation: Full capsule (default) / Minimal indicator / Menu bar only; moved **Show text while you speak** switch (same saved preference; visible but disabled outside Full); synthetic recording/processing preview
+  3. **Setup** (`gear`) — Microphone, input device, optional mic meter, optional unmute during dictation (ADR-007), Accessibility
+  4. **Models** (`cpu`) — Parakeet Ultra + post-dictation formatting
+  5. **Storage** (`internaldrive`) — installed packages (sizes, Active/Unused, delete unused) + catalog-scoped Hugging Face download cache size/clear
+  6. **Statistics** (`chart.bar`) — opt-in local time-saved estimates for a selected month (ADR-013); off by default
 
 Default pane after open (post first-run): **General** if Ready, else **Setup**.
 
@@ -67,11 +68,12 @@ Default pane after open (post first-run): **General** if Ready, else **Setup**.
 
 1. **Welcome** (only while `showFirstRun`) — privacy sentence, live four-step progress + **Continue**; always navigate to Setup, including the local trial when already Ready (0.6.0)
 2. **Status Details** (via Details… at every readiness state) — readiness, remaining hint buttons, last session / model error, **Check for updates…** (native Sparkle in 0.5.0; available regardless of readiness)
-3. **General** — dictation hotkey capture + optional **Walkie-talkie (hold to talk)** (off by default: press starts, press again commits; on: **hold** records, **release** commits — repeat press does not commit) + optional **Also keep the result on the clipboard** + optional **Show text while you speak** (ADR-014, off by default; disabled when active STT `supportsStreaming` is false; Capsule grows with adapting preview text); while recording, **Escape** cancels (no STT/paste); silent/too-short finish is a soft cancel; **Transform selected text** bindings list (max 5): each row has hotkey (default first binding **⌥'**), kind Translate/Custom, Ready Smart/Smart+/Gemma model, language pair for Translate or instruction editor for Custom (ADR-012); Language System / Russian / English (must not remount Settings or stop the optional mic meter)
-4. **Setup** — Microphone, input device picker, Accessibility; optional **Show microphone meter** (off by default); optional **Unmute mic during dictation (experimental)** (off by default — ADR-007); tip to remove/re-add the app if Accessibility status is stuck
-5. **Models** — one Parakeet Ultra row with state, size/license, download/cancel/retry/delete; no STT picker or alternative STT offerings (0.4.0, ADR-016). Already-installed Ultra is reused without download. Without Ultra, explain the explicit download requirement and optional legacy cleanup in Storage. Formatting Off / Light / Qwen3 0.6B / Gemma retains Ready-only selection and Make active / Delete controls. From 0.8.0 Smart+ is legacy-only: keep an existing active ready selection/binding and Storage, no new download/Make active.
-6. **Storage** — Installed packages (current Ultra/cleanup sizes, Active/Unused, delete unused), optional Retired Dictation Models (known former catalog directories, per-group removal with confirmation) and Download cache (current Hub repos plus the allowlisted retired Parakeet v3 repo). Nothing is removed automatically. Legacy Apple cleanup removes only the app preparation marker; shared system assets and unknown experimental packages remain untouched. Package Delete does not clear Hub cache; cache clear does not uninstall Ready packages.
-7. **Statistics** — toggle to collect local counts (off by default); month stepper (current month default); two estimates (**Would have typed** / **Time saved**) plus **characters** and **completed dictation** counts side by side; **typing speed** (WPM default 50, 1 word = 5 characters, recomputes dictation times only); then **Bindings** rows with per-hotkey successful transform counts (live labels; deleted bindings remain as an orphan row). **Clear statistics** wipes the local JSON. No charts or transcripts. Copy from Capsule is not counted.
+3. **General** — dictation hotkey capture + optional **Walkie-talkie (hold to talk)** (off by default: press starts, press again commits; on: **hold** records, **release** commits — repeat press does not commit) + optional **Also keep the result on the clipboard**; while recording, **Escape** cancels (no STT/paste); silent/too-short finish is a soft cancel; **Transform selected text** bindings list (max 5): each row has hotkey (default first binding **⌥'**), kind Translate/Custom, Ready Smart/Smart+/Gemma model, language pair for Translate or instruction editor for Custom (ADR-012); Language System / Russian / English (must not remount Settings or stop the optional mic meter)
+4. **Dynamic Island** — one presentation choice: **Full capsule** (default; current status and live text), **Minimal indicator** (thin recording glow / processing dots, no text or growth), **Menu bar only** (no dictation status panel; existing menu icon). Absent/invalid saved values mean Full. The **Show text while you speak** switch moved here with its exact saved value; it is visible but disabled outside Full, and returning to Full restores the previous choice. A synthetic preview follows the selected mode and uses the shared production visuals (full capsule, minimal indicator, or menu-bar status glyphs); it never captures audio, touches models/WAV/clipboard/statistics or opens the real overlay. The mode selector is a vertical list so long RU/EN labels fit the real detail column at the 720×520 minimum window. Settings apply from the next dictation; transform results and paste-failure recovery remain visible in every mode.
+5. **Setup** — Microphone, input device picker, Accessibility; optional **Show microphone meter** (off by default); optional **Unmute mic during dictation (experimental)** (off by default — ADR-007); tip to remove/re-add the app if Accessibility status is stuck
+6. **Models** — one Parakeet Ultra row with state, size/license, download/cancel/retry/delete; no STT picker or alternative STT offerings (0.4.0, ADR-016). Already-installed Ultra is reused without download. Without Ultra, explain the explicit download requirement and optional legacy cleanup in Storage. Formatting Off / Light / Qwen3 0.6B / Gemma retains Ready-only selection and Make active / Delete controls. From 0.8.0 Smart+ is legacy-only: keep an existing active ready selection/binding and Storage, no new download/Make active.
+7. **Storage** — Installed packages (current Ultra/cleanup sizes, Active/Unused, delete unused), optional Retired Dictation Models (known former catalog directories, per-group removal with confirmation) and Download cache (current Hub repos plus the allowlisted retired Parakeet v3 repo). Nothing is removed automatically. Legacy Apple cleanup removes only the app preparation marker; shared system assets and unknown experimental packages remain untouched. Package Delete does not clear Hub cache; cache clear does not uninstall Ready packages.
+8. **Statistics** — toggle to collect local counts (off by default); month stepper (current month default); two estimates (**Would have typed** / **Time saved**) plus **characters** and **completed dictation** counts side by side; **typing speed** (WPM default 50, 1 word = 5 characters, recomputes dictation times only); then **Bindings** rows with per-hotkey successful transform counts (live labels; deleted bindings remain as an orphan row). **Clear statistics** wipes the local JSON. No charts or transcripts. Copy from Capsule is not counted.
 
 No marketing cards, no stat strips. Progress belongs on the model row being downloaded.
 
@@ -101,6 +103,20 @@ During an active dictation session a compact floating **Status Capsule** appears
 **Live-draft cancel Copy** (ADR-014, v0.3.5): Escape during recording with live draft on and non-empty preview cancels without paste but keeps a **Copy / Close** snapshot in the Capsule (transform-style chrome); auto-dismiss ~5 s; new dictation clears it.
 
 Escape cancel with empty preview, soft silent cancel, and pipeline errors hide the capsule immediately (no Writing/Inserted). Design: `docs/superpowers/specs/2026-07-24-status-capsule-design.md`.
+
+### Dynamic Island modes (pre-release prototype)
+
+The dictation status surface is chosen in **Settings → Dynamic Island** and applies from the next
+dictation. **Full capsule** is the existing behavior and default. **Minimal indicator** draws only
+a thin recording glow below the notch (compact top-center indicator without a notch) or three
+processing dots; it has no text body, no live draft and no Escape draft Copy. **Menu bar only**
+draws no dictation status panel, leaving the existing menu-bar icon. Mode changes during a session
+do not alter that session.
+
+Transform processing/results and paste-failure recovery keep their full Copy/Close chrome in every
+mode. Light fallback remains visible in the menu (from the existing RAM last-result outcome) when
+the status panel is suppressed; Details keeps the detailed outcome. A normal stop always uses the
+session WAV → STT → formatting → caret paste path regardless of mode.
 
 ## First-run behavior
 

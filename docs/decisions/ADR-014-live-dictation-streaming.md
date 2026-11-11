@@ -32,6 +32,40 @@ OpenBot (local Parakeet TDT v3 via sherpa-onnx) re-transcribes the **entire** ac
 - Capsule draft quality tracks full-utterance context; final paste quality matches the existing file path.
 - “Offline second pass” Settings control removed from General (final path is always WAV STT).
 
+## Amendment — Dynamic Island presentation modes (prototype, 2026-11-11)
+
+Maintainer approved a pre-release Dynamic Island settings prototype (D1–D3 in
+`docs/specs/tasks/dynamic-island-settings.md`). This amendment narrows when the existing
+preview/cancel behavior above is active; it does not change the WAV-final pipeline.
+
+1. **Preference:** `carrottype.dynamicIslandMode` is `full` (default, also for absent/invalid
+   values), `minimal`, or `menuOnly`. The existing `carrottype.liveDraftEnabled` key/value
+   moves with its switch to Settings → Dynamic Island and is preserved.
+2. **Effective preview:** live draft runs only when the captured session mode is **full**,
+   the saved live-draft switch is on, and the captured STT package supports streaming.
+   Minimal and menu-bar-only sessions never start preview passes, including hidden ones.
+3. **Capture:** mode and effective preview are pinned into the session configuration at
+   dictation start. Changing Settings during recording/processing affects only the next
+   session and does not interrupt capture, teardown, or start a second preview.
+4. **Minimal indicator:** a thin recording glow below the notch (or a compact top-center
+   indicator without a notch) and three processing dots; no text body or growth. Shapes and
+   color distinguish states. Reduce Motion disables pulsing, Increase Contrast keeps borders.
+   The panel remains nonactivating and click-through, and the existing display-selection
+   policy is unchanged.
+5. **Menu bar only:** no dictation status panel; the existing menu-bar icon continues to
+   show recording/processing/cleanup. Runtime errors remain in the menu/Details.
+6. **Escape without draft:** because no draft is computed in minimal/menu-only, Escape
+   cancels capture without a Copy/Close snapshot. A normal stop still transcribes the
+   session WAV, runs formatting, and pastes exactly as before.
+7. **Result exceptions:** transform processing/results and dictation paste-failure recovery
+   keep their full Copy/Close result chrome in every mode. `.understanding` is shared, so its
+   presentation owner (dictation vs transform) is tracked explicitly.
+8. **Fallback visibility:** Light fallback still appears briefly in the full capsule. When the
+   status panel is suppressed, the menu shows a short warning based on the existing RAM
+   `lastFormattingOutcome`, and Details retains the detailed last-result outcome.
+9. **Rejected alternative:** suppressing all panels, including transform/recovery results,
+   would require changing ADR-012 result delivery and was not approved.
+
 ## Alternatives considered
 
 - **SlidingWindow short windows:** fast first token, weak whole-utterance coherence — rejected for Capsule after owner comparison with OpenBot.

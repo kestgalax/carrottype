@@ -1,6 +1,42 @@
 [
   {
     "schemaVersion": 1,
+    "version": "0.8.2",
+    "build": "32",
+    "date": "2026-11-11",
+    "localizations": {
+      "en": {
+        "summary": "Catch up on the releases you skipped.",
+        "sections": [
+          {
+            "kind": "improved",
+            "items": [
+              {
+                "title": "All skipped changes.",
+                "detail": "The update window and What’s New show changes between your previous and new version, grouped by release. After installation the history is available offline."
+              }
+            ]
+          }
+        ]
+      },
+      "ru": {
+        "summary": "Что нового за все пропущенные версии.",
+        "sections": [
+          {
+            "kind": "improved",
+            "items": [
+              {
+                "title": "Все пропущенные изменения.",
+                "detail": "Окно обновления и «Что нового» показывают изменения между прежней и новой версией, сгруппированные по релизам. История после установки доступна без интернета."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
     "version": "0.8.1",
     "build": "31",
     "date": "2026-11-11",

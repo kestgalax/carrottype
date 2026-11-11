@@ -26,7 +26,7 @@ Transform hotkey (default ⌥')
 
 | Component | Responsibility |
 |-----------|----------------|
-| App shell (Swift / SwiftUI) | Lifecycle, menu bar status, Status Capsule (session chrome near notch), Setup/Status UI, permission prompts, RU/EN locale |
+| App shell (Swift / SwiftUI) | Lifecycle, menu bar status, Dynamic Island status capsule/minimal indicator (session chrome near notch), Setup/Status UI, permission prompts, RU/EN locale |
 | Hotkey service | Register and handle global dictation + N transform binding hotkeys; dictation is toggle (default) or hold-to-talk only (Settings Walkie-talkie) |
 | Audio capture | Record microphone audio for the active session; optional experimental temporary unmute via Wave Link (ADR-007) |
 | Model Manager | Catalog, download, verify, activate STT/cleanup packages (ADR-003) |
@@ -40,7 +40,7 @@ Transform hotkey (default ⌥')
 
 - Default path is fully local: audio is not uploaded.
 - Model weights download anonymously; no login required (ADR-003).
-- Settings/Setup UI is secondary to the hotkey loop but required for readiness transparency; shell is a locked sidebar (General / Setup / Models / Storage / Statistics) with Status as a compact header (`docs/specs/ux-setup-status.md`).
+- Settings/Setup UI is secondary to the hotkey loop but required for readiness transparency; shell is a locked sidebar (General / Dynamic Island / Setup / Models / Storage / Statistics) with Status as a compact header (`docs/specs/ux-setup-status.md`).
 - Optional usage statistics (ADR-013) are local JSON under Application Support; off by default; never transcripts or network.
 - Cloud STT/cleanup is out of MVP scope.
 - Non-macOS platforms are out of MVP scope.
@@ -147,3 +147,34 @@ The optional `lowercaseFirstLetter` control is another final exact operation: on
 ### Cumulative release notes (0.8.2)
 
 Immutable `ReleaseNotesHistory.json` bundles published structured records from 0.6.1 (build 27); `ReleaseNotes.json` remains current and the authoring source for the next archived record. History is contiguous/descending and excludes current/future/duplicate builds. `ReleaseNotesStore` preserves the previous observed identity as an upgrade baseline across relaunch/read, filters the offline interval, and falls back to current notes on unknown/downgrade/malformed history. Incomplete coverage is explicit. Signed inline HTML uses the stock Sparkle installed-build marker and CSS sibling filtering; no authored JavaScript, remote resources or custom updater/network/trust changes (ADR-017). Unknown markers show available history with a start-version label. GitHub Markdown remains current-only.
+
+## Dynamic Island modes — pre-release prototype (ADR-014 amendment)
+
+Settings → Dynamic Island (immediately after General) owns `carrottype.dynamicIslandMode`: `full`
+(default; absent/invalid values resolve to full), `minimal`, or `menuOnly`. The existing
+`carrottype.liveDraftEnabled` switch moved here with the same defaults key and saved value; it
+stays visible but disabled outside full and is restored when returning to full.
+
+`DynamicIslandPolicy` is the single presentation authority. It combines the logical
+`StatusCapsulePhase`, the owning operation (`.dictation` or `.transform`), and the mode captured
+at dictation start. `StatusCapsuleController` runs attach/sync/show/position/screen-change/theme/
+locale through it, and the same captured mode drives the finishing sequence. Mode changes only
+affect the next session. Logical phases are not erased to hide a panel.
+
+- Full: the existing capsule chrome and live-draft behavior; effective preview is
+  `full && savedLiveDraft && captured supportsStreaming`.
+- Minimal: recording glow or processing dots only, no text/live draft and no Escape draft
+  Copy; the panel stays nonactivating and click-through.
+- Menu bar only: no dictation status panel; the existing menu-bar state icon remains.
+- Result exception: transform status/results and paste-failure recovery keep full Copy/Close
+  chrome in every mode. `.understanding` therefore carries its owning operation. Light fallback
+  is reported in the menu (from RAM `lastFormattingOutcome`) when the capsule is suppressed, and
+  Details keeps the detailed last result.
+
+The Settings preview is synthetic SwiftUI that follows the selected mode and uses the same
+production visual components: the full `StatusCapsuleView` (synthetic live-draft text only when
+the saved switch/support allow it), the shared minimal indicator, or shared menu-bar status
+glyphs. It never captures audio, starts models, writes WAVs, accesses the clipboard/statistics,
+or opens the real overlay.
+The final WAV STT path, session coordinator, install gate, cancellation teardown, PTT, mute
+restoration, caret/trial destinations, statistics and model policy are unchanged.

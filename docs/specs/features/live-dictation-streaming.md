@@ -20,20 +20,21 @@ Users only see progress after stop. Interim text while speaking (without pasting
 
 ## Proposed Behavior
 
-1. Settings → General → **Show text while you speak** (default **off**). Disabled when active STT `supportsStreaming` is false.
-2. When on + Parakeet: **start mic and session WAV before** Parakeet model load; load preview engine concurrently and attach 16 kHz fan-out when ready. ~1 s single-flight **offline** re-transcribe of **all** samples so far (post-attach buffers feed preview; WAV holds full utterance for paste); Capsule shows body + muted last 2 words; Capsule height grows with text (scroll after max).
-3. On stop: cancel preview → session WAV file STT → cleanup → caret paste.
-4. On Escape while recording: cancel preview and capture; **no paste**. If live draft was on and the preview was non-empty, show the snapshot in Copy / Close Capsule chrome (~5 s auto-dismiss; new dictation clears it).
+1. Settings → Dynamic Island → **Show text while you speak** (default **off**). The switch is visible but disabled outside the **Full capsule** mode; a missing/invalid island mode means Full. The effective preview is `full && saved switch && supportsStreaming`, captured at session start. Disabled when active STT `supportsStreaming` is false.
+2. When on + Parakeet + Full: **start mic and session WAV before** Parakeet model load; load preview engine concurrently and attach 16 kHz fan-out when ready. ~1 s single-flight **offline** re-transcribe of **all** samples so far (post-attach buffers feed preview; WAV holds full utterance for paste); Capsule shows body + muted last 2 words; Capsule height grows with text (scroll after max).
+3. On stop: cancel preview → session WAV file STT → cleanup → caret paste. This final path is unchanged in Minimal/Menu-only, which simply never start the preview.
+4. On Escape while recording: cancel preview and capture; **no paste**. If live draft was on, Full mode, and the preview was non-empty, show the snapshot in Copy / Close Capsule chrome (~5 s auto-dismiss; new dictation clears it). Minimal/Menu-only compute no draft and show no Copy result.
 5. Preview start/pass failures: log; recording and WAV paste path unchanged.
 6. Cold load: words spoken before preview attach remain on the session WAV; Capsule preview may appear after load completes.
 
 ## Acceptance Criteria
 
 - Live draft off: behaviour matches pre-feature file path.
-- Live draft on + Parakeet: Capsule text appears while speaking and can rewrite earlier words as speech continues; no paste until stop.
+- Live draft on + Parakeet + Full capsule: Capsule text appears while speaking and can rewrite earlier words as speech continues; no paste until stop.
+- Minimal/Menu-bar-only: no preview pass is invoked at all; Escape has no draft Copy, while stop still transcribes the WAV and pastes.
 - Long drafts: Capsule expands; content beyond max height scrolls.
 - Live draft on + Whisper/Apple: toggle unavailable; file path used.
-- Escape / silent cancel: no paste; preview cancelled. Escape with non-empty live draft: Copy capsule (no paste); soft empty cancel unchanged.
+- Escape / silent cancel: no paste; preview cancelled. Escape with non-empty live draft in Full: Copy capsule (no paste); soft empty cancel unchanged.
 - Escape Copy capsule: 5 s auto-dismiss; Close / second Escape dismiss; starting dictation clears.
 - Catalog: Parakeet v3/Ultra `supportsStreaming: true`, others false.
 
