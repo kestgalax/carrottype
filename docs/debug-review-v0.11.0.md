@@ -98,5 +98,19 @@ claim that those checks passed.
 
 ## Draft, PR and CI
 
-- PR targeting `main` from `kestgalax/settings-organization` and the draft release details are
-  recorded in the closeout section added after those objects were created.
+- PR [#32](https://github.com/kestgalax/carrottype/pull/32) targets `main` from
+  `kestgalax/settings-organization`; checked head `3b561d9`.
+- Tag `v0.11.0` is created on publication; application behavior remains `6cb6212` with metadata
+  `a78d549`.
+- Draft release ID `442261291` (`https://github.com/kestgalax/carrottype/releases/tag/v0.11.0`,
+  drafts render as an untagged placeholder) contains `CarrotType-0.11.0.dmg`
+  (asset `RA_kwDOThgsOs4r7-V1`), `CarrotType-0.11.0-35.zip`
+  (asset `RA_kwDOThgsOs4r7-V2`) and `appcast.xml` (asset `RA_kwDOThgsOs4r7-V3`).
+- `python3 macos/scripts/verify-update-release.py --tag v0.11.0 --previous-build 34
+  --sparkle-bin macos/.derivedData/SourcePackages/artifacts/sparkle/Sparkle/bin` passed
+  authenticated draft signatures, identity, version, lengths, URLs and GitHub asset digests.
+- Downloaded draft assets are byte-equal to the local files above (DMG 23,830,560;
+  ZIP 23,890,373; appcast 36,309 bytes) with identical SHA-256 values.
+- Hosted `macOS checks` run [43112615078](https://github.com/kestgalax/carrottype/actions/runs/43112615078)
+  passed for PR head `3b561d9` (7m49s); private hosted AIDOS was explicitly skipped because the
+  read token is unavailable, while local validate/trace/review passed.
