@@ -206,3 +206,29 @@ Maintainer accepted signed Debug and instructed «можно публикова�
 ## Typing-test levels and variation — 2026-11-11
 
 Maintainer asked for Easy/Medium/Advanced and new text per attempt; clarified this is a playful optional test, not authoritative speed certification (WPM stays manually editable). Codex revised `docs/specs/tasks/typing-speed-test.md`: Medium default, easy frequent words, medium everyday sentences, advanced longer vocabulary/punctuation/moderate numbers; original small RU/EN corpora with local PRNG sentence/word assembly, fresh attempt seed, no LLM/network, no immediate whole-prompt repeat within sheet, corpus budget ~100KB. Results include level; baseline remains one explicit Use. Remove proposed 95% hard acceptance gate, accuracy informational. Entire implementation remains pending agreement. Planning branch rebased onto published0.9.0 main58bdca2 with both memory histories preserved.
+
+## Typing-speed calibration implementation — 2026-11-11
+
+Maintainer approved the revised three-level/local-prompt design
+(«отлично, мне нравится, давай реализовывать»); T1–T4 implemented on a fresh main-based Orca
+worktree `kestgalax/typing-speed-test` from 58bdca2 after cherry-picking planning commits
+129ae80, 8b35759, 53e7890. ADR-013 amended for RAM-only attempts and explicit Apply; Dynamic
+Island 0.9.0 behavior is preserved. New production `TypingTestCorpus`/`TypingSpeedTest` model,
+`TypingSpeedTestCoordinator`, native `NSTextView` input adapter/TextKit prompt display and
+Statistics sheet. 30 s starts on the first committed printable grapheme; fixed deadline; exact
+credited-character formula; Accuracy is informational; only Use writes the existing global WPM.
+Gate is held only while Running; only app hotkeys are token-suspended while input owns focus;
+deactivation/sleep/Settings close/quit/install release both exactly once. No stats/model/mic/
+clipboard/network writes or persisted attempt data.
+
+Evidence: `bash scripts/verify-typing-speed-test.sh` PASS (3×2 prompts, metric/deadline/NFC/IME
+fixtures, refill, range, 20 builds); `python3 scripts/verify-typing-speed-app.py` PASS (actual
+AppState/gate/hotkey/fakes, native text input, IME marked-only-on-commit, 20-cycle cleanup);
+existing setup/dynamic-island/formatting-rules/launch/session/reliability/Ultra/updates/notes/
+catalog/brand suites PASS; local AIDOS validate/trace/review PASS. Corpus measured 15,359 UTF-8
+bytes; model event processing 13.88 ms per 650 committed graphemes (0.021 ms/event), 20 prompt
+builds 3.89 ms. Native whole-Settings+sheet snapshots under
+`dist/.builds.noindex/Typing-Speed-Native-Review/native` (36 states plus out-of-range/low
+accuracy); signed arm64 Debug under `dist/.builds.noindex/Typing-Speed-Debug-2026-11-11`.
+Manual real typing/focus/IME/VoiceOver/device/performance acceptance remains for Codex/maintainer;
+no merge/push/version/publication authorization.

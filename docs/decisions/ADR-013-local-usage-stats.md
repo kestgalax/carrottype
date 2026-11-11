@@ -2,7 +2,51 @@
 
 ## Status
 
-Accepted
+Accepted; amended 2026-11-11 for the native typing-speed calibration prototype.
+
+## 2026-11-11 amendment — native typing-speed calibration
+
+The maintainer approved a small native calibration sheet from Settings → Statistics
+(«отлично, мне нравится, давай реализовывать»). It is an assistant for choosing the
+existing estimate, not a new statistic or a replacement for manual input.
+
+1. **Existing global baseline.** `carrottype.typingSpeedWPM`, the Stepper range
+   (10–200, default 50) and manual editing stay unchanged. One global value is used
+   for every month and both dictation languages; a test result never introduces a
+   per-language or per-level baseline.
+2. **Explicit Apply only.** A measured result writes the existing WPM setting only
+   after the user presses «Использовать N WPM». Cancel, Close, Escape, Repeat,
+   deactivation, sleep, Settings close, quit or install never write it. The
+   collection toggle is not enabled or changed. The sheet explains that all period
+   estimates are recalculated from stored aggregates while dictation counts do not
+   change.
+3. **No accuracy acceptance gate.** Accuracy is informational. A low-accuracy result
+   inside 10–200 WPM can still be applied; an out-of-range result is shown honestly
+   with an explanation and no silent clamp, and Apply is unavailable.
+4. **RAM-only attempts.** The test text, keys, accuracy, language, level, date and
+   result exist only for the open sheet/attempt. No seed, attempt or result is
+   persisted, and the statistics store/API is not involved.
+5. **Local-only scope.** Text comes from small original bundled RU/EN corpora with a
+   seeded injectable PRNG; no WebView, network, model, microphone, Accessibility,
+   clipboard, LLM, account, ranking or anti-bot system is added. The test does not
+   require app Readiness or enabled collection.
+6. **Operation boundary.** The test holds the existing `UpdateInstallationGate` only
+   while it is actually running (not while Ready or showing a result), pauses only
+   CarrotType global hotkeys by token while its input owns focus, and restores both
+   idempotently on every exit. A real dictation/transform/maintenance/install
+   operation wins; the test is dismissed without applying.
+7. **Metric contract.** The first committed printable grapheme starts a fixed
+   30-second monotonic deadline. Credited characters are fully correct words plus
+   their typed separators plus the correct prefix of the current unfinished word;
+   corrections never double count. `CPM = credited × 60 / 30`, `WPM = credited / 5 ×
+   60 / 30`. Accuracy is correct committed-grapheme attempts divided by all
+   committed-grapheme attempts, including corrected mistakes; Backspace, modifiers,
+   navigation and marked IME text are not attempts. NFC extended graphemes preserve
+   case and ё.
+
+The native stack (ADR-002), opt-in aggregate storage, privacy/network boundary and
+install gate (ADR-017) are unchanged. This amendment does not authorize a new
+runtime, dependency, trust model, version or publication.
 
 ## Context
 

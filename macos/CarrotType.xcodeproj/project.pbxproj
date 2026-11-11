@@ -16,12 +16,14 @@
 		1B59537CCF6939AA81AE6426 /* STTEngineError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4BBEDAE20F785C0137C887 /* STTEngineError.swift */; };
 		1C73B6203206E943F99AC5F9 /* DynamicIslandMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE1070A606D99FBB1076A30 /* DynamicIslandMode.swift */; };
 		1F1E9D5F8E55971C3A39B461 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A26C73B9E41B226D9DC2062 /* ServiceManagement.framework */; };
+		20FCEB97142F73E8063720D3 /* TypingSpeedTestCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0A761468F99C6F1AE0BEF5 /* TypingSpeedTestCoordinator.swift */; };
 		2267ECB139580B1231C3D98E /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = C96851DE3927A9D883868D3E /* MLXLMCommon */; };
 		232FBC6B127516DFCDA2BF9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDFA98C4C936AA6524585F75 /* Assets.xcassets */; };
 		2AAE34ED21402F9B558E2DDD /* SetupProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DD18484F202210846BA918 /* SetupProgressView.swift */; };
 		2BD621CE7CA97256A7C4829F /* TransformBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5867765885D6B28BCCEBBE63 /* TransformBinding.swift */; };
 		2E15B15907D6FB83AF3C5FF1 /* AudioLevelMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B50E12D241D4FD62DF4339 /* AudioLevelMonitor.swift */; };
 		30466AFF7B885C06A347E2A5 /* ReleaseNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4ED8B40E69BEEEBD41FEC2 /* ReleaseNotes.swift */; };
+		3159752656DDD6D9C464757C /* TypingTestInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1D5D6624DC8D64D6F6956E /* TypingTestInputView.swift */; };
 		348605D908FF4DB02EFE78C8 /* StatusDetailsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC8AF679C38E4E258DA8FEFB /* StatusDetailsPane.swift */; };
 		375E2CA32F9FCC0CD105C073 /* UsageStatsEstimate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305588113649BE00DF4D0A19 /* UsageStatsEstimate.swift */; };
 		38B5F304A2002F19F94DE7DD /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89ED5A599D2EE48261B14B7A /* AppState.swift */; };
@@ -49,6 +51,7 @@
 		6B8FF1F93F87CF1802ACBDB4 /* ClipboardSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B396B01E431F6442D30B243E /* ClipboardSnapshot.swift */; };
 		6D7821FEFA32798EAC2B35F2 /* SettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = D769905C5F256B10EFB2C0FC /* SettingsPane.swift */; };
 		6E76DB8D54356C0C0EA15F2F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04ACFB5863E0E05AB1CB0B9D /* AVFoundation.framework */; };
+		6E7AB809A7E17D6E483A51AE /* TypingTestCorpus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7124A870F127A56637CBA931 /* TypingTestCorpus.swift */; };
 		6F476E571A06131EDA8BCE2F /* AppUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943EB9B0D4CC5DA19517B9A /* AppUpdateService.swift */; };
 		746A656143C087189B33B987 /* HuggingFace in Frameworks */ = {isa = PBXBuildFile; productRef = C3A13A3946B1DA246EEB8C55 /* HuggingFace */; };
 		750021AC0024C9A389B610AA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3E8E2BEBD0ADFF9762189AF3 /* Localizable.xcstrings */; };
@@ -61,8 +64,10 @@
 		851708932F5826834776BD5B /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFF4FFAEC733525AE390701F /* CoreAudio.framework */; };
 		8520736B38B948EC591EAD67 /* CleanupHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E32E8498292740FB1B758A /* CleanupHelperProtocol.swift */; };
 		8A3B2DD1F95F4A3276076426 /* FormattingRulesSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6231A700974FA82A8E4BAFC1 /* FormattingRulesSection.swift */; };
+		8BE0492AEDCAE211F8E03519 /* TypingSpeedTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E98CE01339E20A4ECF6372 /* TypingSpeedTest.swift */; };
 		8CE8FD75D71828FB967FDDCE /* DictationSessionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6F983DE2841C50A5073190 /* DictationSessionCoordinator.swift */; };
 		8E8FF3437CC7B24CE31A9CD1 /* CleanupHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E32E8498292740FB1B758A /* CleanupHelperProtocol.swift */; };
+		90E11B6BFEBA99F89E9721FC /* TypingSpeedTestSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF03276D9B859FA0001D625 /* TypingSpeedTestSheet.swift */; };
 		92B387822AA0FEA69CA38335 /* BundledModelCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F2B01DE0B361D286C434D /* BundledModelCatalog.swift */; };
 		96A6C38E4ACA5A358B86F03D /* LanguagePairDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC3A4D6B88AFA5F20C69B01 /* LanguagePairDetector.swift */; };
 		9860C21774B4315986E7A353 /* CarrotTypeCleanupHelper in Embed Dependencies */ = {isa = PBXBuildFile; fileRef = 21F45A6C3B678F2FE61C979E /* CarrotTypeCleanupHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -132,6 +137,7 @@
 /* Begin PBXFileReference section */
 		04ACFB5863E0E05AB1CB0B9D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0980441C3D0FA7826C576597 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		09E98CE01339E20A4ECF6372 /* TypingSpeedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingSpeedTest.swift; sourceTree = "<group>"; };
 		0A8A229A676ECD2FA3F5A5BC /* DictationPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationPipeline.swift; sourceTree = "<group>"; };
 		0C03ED580868653554F85816 /* SetupSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupSettingsPane.swift; sourceTree = "<group>"; };
 		0F09559BA130283076BCE198 /* HotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyService.swift; sourceTree = "<group>"; };
@@ -161,8 +167,10 @@
 		428EF9BD7420AF390B390559 /* WaveLinkPortOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveLinkPortOrder.swift; sourceTree = "<group>"; };
 		46B50E12D241D4FD62DF4339 /* AudioLevelMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioLevelMonitor.swift; sourceTree = "<group>"; };
 		483744F178A17C48BF392DE8 /* ModelCatalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ModelCatalog.json; sourceTree = "<group>"; };
+		4F1D5D6624DC8D64D6F6956E /* TypingTestInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingTestInputView.swift; sourceTree = "<group>"; };
 		5867765885D6B28BCCEBBE63 /* TransformBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformBinding.swift; sourceTree = "<group>"; };
 		5AAF8B54F64449B53985B446 /* ParakeetStreamingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParakeetStreamingEngine.swift; sourceTree = "<group>"; };
+		5BF03276D9B859FA0001D625 /* TypingSpeedTestSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingSpeedTestSheet.swift; sourceTree = "<group>"; };
 		5D51F39387D51B7D74F72297 /* MenuBarViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarViews.swift; sourceTree = "<group>"; };
 		5E6F983DE2841C50A5073190 /* DictationSessionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationSessionCoordinator.swift; sourceTree = "<group>"; };
 		5F4BBEDAE20F785C0137C887 /* STTEngineError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STTEngineError.swift; sourceTree = "<group>"; };
@@ -175,6 +183,7 @@
 		6D5E9702CDF812A27F79C481 /* StreamingSTTEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingSTTEngine.swift; sourceTree = "<group>"; };
 		6E5336DFE61B515F41AB2DCF /* StorageSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageSettingsPane.swift; sourceTree = "<group>"; };
 		6FE375B29BA9AD7B167B76BE /* ModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelManager.swift; sourceTree = "<group>"; };
+		7124A870F127A56637CBA931 /* TypingTestCorpus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingTestCorpus.swift; sourceTree = "<group>"; };
 		71D2AE30056A532BB32F5CEB /* StatisticsSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsSettingsPane.swift; sourceTree = "<group>"; };
 		75C77D3DC93FB5A210B9B035 /* LiveDraftText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDraftText.swift; sourceTree = "<group>"; };
 		797712955E7ADE3ABBD30757 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
@@ -200,6 +209,7 @@
 		B0D40E1D3CA1524781D9C600 /* QwenCleanupPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QwenCleanupPackage.swift; sourceTree = "<group>"; };
 		B396B01E431F6442D30B243E /* ClipboardSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardSnapshot.swift; sourceTree = "<group>"; };
 		B7AB7C3BBBAC0A34FBB80EB5 /* SelectionTextService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionTextService.swift; sourceTree = "<group>"; };
+		BC0A761468F99C6F1AE0BEF5 /* TypingSpeedTestCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingSpeedTestCoordinator.swift; sourceTree = "<group>"; };
 		BC24539957AB2B6B9B8DAE91 /* MicrophoneLevelMeter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneLevelMeter.swift; sourceTree = "<group>"; };
 		CDFA98C4C936AA6524585F75 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D2A3B11B85E9BEB710CA6CB4 /* MicMuteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicMuteController.swift; sourceTree = "<group>"; };
@@ -305,6 +315,7 @@
 				B7AB7C3BBBAC0A34FBB80EB5 /* SelectionTextService.swift */,
 				7EBB6DC297BE778E340C7DEE /* TextCleanup.swift */,
 				AD23B7D3784693FB5A2848F2 /* TextInsertionService.swift */,
+				BC0A761468F99C6F1AE0BEF5 /* TypingSpeedTestCoordinator.swift */,
 				2B7E607FB06F724E52DF2061 /* UpdateInstallationGate.swift */,
 				A58FE054A522F437944498CC /* UsageStatsStore.swift */,
 				428EF9BD7420AF390B390559 /* WaveLinkPortOrder.swift */,
@@ -371,6 +382,8 @@
 				71D2AE30056A532BB32F5CEB /* StatisticsSettingsPane.swift */,
 				FC8AF679C38E4E258DA8FEFB /* StatusDetailsPane.swift */,
 				6E5336DFE61B515F41AB2DCF /* StorageSettingsPane.swift */,
+				5BF03276D9B859FA0001D625 /* TypingSpeedTestSheet.swift */,
+				4F1D5D6624DC8D64D6F6956E /* TypingTestInputView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -432,6 +445,8 @@
 				2E21A6CA18C7371EEF14B46F /* SetupProgress.swift */,
 				5867765885D6B28BCCEBBE63 /* TransformBinding.swift */,
 				242030E55FC47146761A1EA5 /* TransformModelSelection.swift */,
+				09E98CE01339E20A4ECF6372 /* TypingSpeedTest.swift */,
+				7124A870F127A56637CBA931 /* TypingTestCorpus.swift */,
 				305588113649BE00DF4D0A19 /* UsageStatsEstimate.swift */,
 			);
 			path = Models;
@@ -637,6 +652,11 @@
 				787E4A9AEEB1E5ED06517F99 /* TextInsertionService.swift in Sources */,
 				2BD621CE7CA97256A7C4829F /* TransformBinding.swift in Sources */,
 				E6694569520C80ACDD7102CD /* TransformModelSelection.swift in Sources */,
+				8BE0492AEDCAE211F8E03519 /* TypingSpeedTest.swift in Sources */,
+				20FCEB97142F73E8063720D3 /* TypingSpeedTestCoordinator.swift in Sources */,
+				90E11B6BFEBA99F89E9721FC /* TypingSpeedTestSheet.swift in Sources */,
+				6E7AB809A7E17D6E483A51AE /* TypingTestCorpus.swift in Sources */,
+				3159752656DDD6D9C464757C /* TypingTestInputView.swift in Sources */,
 				EDCD96A4C48BEEBEAB8F2DCC /* UpdateInstallationGate.swift in Sources */,
 				375E2CA32F9FCC0CD105C073 /* UsageStatsEstimate.swift in Sources */,
 				1290041827D9F55DD5A90732 /* UsageStatsStore.swift in Sources */,

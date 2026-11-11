@@ -181,6 +181,10 @@ final class HotkeyService: ObservableObject {
     private var localMonitor: Any?
     private var pttGlobalReleaseMonitor: Any?
     private var pttLocalReleaseMonitor: Any?
+    /// Token-owned temporary suspension (typing-test input focus). Nested tokens are
+    /// allowed; only the final release re-registers app hotkeys.
+    private var hotkeySuspensions = Set<UUID>()
+    private var escapeRegistrationRequested = false
     private var onHotkey: (() -> Void)?
     private var onHotkeyReleased: (() -> Void)?
     private var onTransformHotkey: ((UUID) -> Void)?
@@ -208,6 +212,30 @@ final class HotkeyService: ObservableObject {
     }
 
     var displayString: String { chord.displayString }
+
+    var isGlobalHotkeySuspended: Bool { !hotkeySuspensions.isEmpty }
+
+    /// Temporarily stop only CarrotType's registered global hotkeys, without entering
+    /// hotkey-capture mode and without touching saved chords. Nested tokens are safe.
+    func suspendGlobalHotkeys() -> UUID {
+        let token = UUID()
+        hotkeySuspensions.insert(token)
+        if hotkeySuspensions.count == 1 {
+            unregisterEscapeCancelHotkey()
+            unregisterGlobalHotkey()
+        }
+        return token
+    }
+
+    /// Idempotent: an unknown or already-released token never restores anything twice.
+    func resumeGlobalHotkeys(_ token: UUID) {
+        guard hotkeySuspensions.remove(token) != nil else { return }
+        guard hotkeySuspensions.isEmpty else { return }
+        registerGlobalHotkey()
+        if escapeRegistrationRequested {
+            registerEscapeCancelHotkey()
+        }
+    }
 
     func setOnHotkey(_ handler: @escaping () -> Void) {
         onHotkey = handler
@@ -278,6 +306,8 @@ final class HotkeyService: ObservableObject {
     }
 
     func setEscapeCancelRegistered(_ enabled: Bool) {
+        escapeRegistrationRequested = enabled
+        guard !isGlobalHotkeySuspended else { return }
         if enabled {
             registerEscapeCancelHotkey()
         } else {
@@ -369,7 +399,7 @@ final class HotkeyService: ObservableObject {
 
     func registerGlobalHotkey() {
         unregisterGlobalHotkey()
-        guard registersGlobalHotkeys else { return }
+        guard registersGlobalHotkeys, !isGlobalHotkeySuspended else { return }
         installHandlerIfNeeded()
 
         var dictationRef: EventHotKeyRef?

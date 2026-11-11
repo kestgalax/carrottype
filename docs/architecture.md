@@ -149,7 +149,6 @@ The optional `lowercaseFirstLetter` control is another final exact operation: on
 Immutable `ReleaseNotesHistory.json` bundles published structured records from 0.6.1 (build 27); `ReleaseNotes.json` remains current and the authoring source for the next archived record. History is contiguous/descending and excludes current/future/duplicate builds. `ReleaseNotesStore` preserves the previous observed identity as an upgrade baseline across relaunch/read, filters the offline interval, and falls back to current notes on unknown/downgrade/malformed history. Incomplete coverage is explicit. Signed inline HTML uses the stock Sparkle installed-build marker and CSS sibling filtering; no authored JavaScript, remote resources or custom updater/network/trust changes (ADR-017). Unknown markers show available history with a start-version label. GitHub Markdown remains current-only.
 
 ## Dynamic Island modes — pre-release prototype (ADR-014 amendment)
-
 Settings → Dynamic Island (immediately after General) owns `carrottype.dynamicIslandMode`: `full`
 (default; absent/invalid values resolve to full), `minimal`, or `menuOnly`. The existing
 `carrottype.liveDraftEnabled` switch moved here with the same defaults key and saved value; it
@@ -178,3 +177,36 @@ glyphs. It never captures audio, starts models, writes WAVs, accesses the clipbo
 or opens the real overlay.
 The final WAV STT path, session coordinator, install gate, cancellation teardown, PTT, mute
 restoration, caret/trial destinations, statistics and model policy are unchanged.
+
+## Typing-speed calibration — pre-release prototype (ADR-013 amendment)
+
+Settings → Statistics keeps the existing WPM Stepper and adds a compact **Measure…** action.
+It presents a native 600×390 sheet inside the real Settings window; it does not add a sidebar
+pane, menu item, global hotkey or WebView.
+
+- `TypingTestCorpus` is a small original bundled RU/EN corpus (easy word stream, authored
+  medium/advanced sentences). `TypingTestPromptBuilder` uses an injectable `SplitMix64` seed,
+  shuffles fragments locally, avoids an immediate whole-prompt repeat, prevents adjacent
+  duplicate fragments at refill boundaries and prepares at least 650 NFC graphemes.
+- `TypingSpeedTestEngine` is pure Swift. The first committed printable grapheme fixes a
+  monotonic 30-second deadline; late events are discarded. Credited characters are fully
+  correct words plus their typed separators plus the correct prefix of the current unfinished
+  word. `CPM = credited × 60 / 30`, `WPM = credited / 5 × 60 / 30`. Accuracy counts committed
+  grapheme insertions, including corrected mistakes; Backspace/navigation/marked IME text are
+  not attempts. Prompts are extended in RAM if typing exceeds the prepared text without moving
+  the deadline.
+- `TypingSpeedTestSheetModel` owns one ≤10 Hz timer only while Running, a fresh seed for each
+  attempt and the RAM-only result. The transparent native `NSTextView` adapter accepts
+  committed edits with Backspace and IME/dead keys; the TextKit display renders per-character
+  state, underlines wrong characters and scrolls by line. Paste/drop/autocorrect/substitutions/
+  spellcheck/undo are disabled.
+- `TypingSpeedTestCoordinator` owns the small cross-cutting boundary. Input focus temporarily
+  suspends only CarrotType global hotkeys by token. The existing `UpdateInstallationGate` is
+  reserved only while the attempt is actually running, and released exactly once on completion,
+  cancel, close, deactivation, sleep, quit or install. Ready and Result hold neither the gate nor
+  hotkeys. A real dictation/transform/maintenance/install request dismisses the test without
+  applying a result.
+- Only the explicit **Use N WPM** action writes `carrottype.typingSpeedWPM`; it never enables
+  collection, writes daily statistics, or stores attempt text/keys/accuracy/language/level/date.
+  Out-of-range results stay visible with an explanation and no silent clamp. Accuracy is
+  informational and never blocks Apply.

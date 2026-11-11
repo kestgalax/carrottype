@@ -139,3 +139,13 @@ Existing ADR must be superseded or amended: ADR-013 расширяется ло�
 ## Решение для согласования
 
 Согласовано: небольшой нативный sheet, 30 s, RU/EN, Лёгкий/Средний(default)/Продвинутый, новая локальная комбинация из встроенных авторских корпусов, сохранение любого результата в пределах существующего WPM-диапазона только по Use, без истории и accuracy gate. Уровни/вариативность добавлены после уточнения maintainer; игровая цель не требует антибот-системы или научной сертификации. T0 завершён; T1–T4 выполняет OpenCode в отдельном worktree от актуального main, результат проверяет Codex. Согласие на реализацию не является согласием на будущую публикацию.
+
+## Implementation status — 2026-11-11
+
+T1–T4 implemented on `kestgalax/typing-speed-test` (fresh main-based Orca worktree from
+`58bdca2`; planning commits `129ae80`, `8b35759`, `53e7890` cherry-picked in order). ADR-013
+amended. Production model/corpus, native sheet/input adapter, AppState ownership and docs are
+in the branch. Verification evidence and the signed Debug path are recorded in
+[debug-review-typing-speed-test.md](../../debug-review-typing-speed-test.md). Codex review and
+maintainer Debug/manual acceptance remain; no version bump, merge, push or publication is
+authorized by this implementation.

@@ -87,3 +87,15 @@ The maintainer accepted the signed Debug and authorized publication («можн�
 ## Dynamic Island modes — pre-release prototype (2026-11-11)
 
 The maintainer approved a focused presentation choice for the next Debug prototype: Full capsule (default), Minimal indicator, or Menu bar only, configured in a dedicated Settings pane. This changes only the visibility/shape of dictation status, not local dictation, result delivery, RAM recovery or trust boundaries. Transform results and paste-failure recovery remain visible in every mode; when the status capsule is suppressed, a Light fallback warning stays available in the menu and Details. No version or publication is assigned by this prototype.
+
+## Typing-speed calibration — pre-release prototype (2026-11-11)
+
+Statistics gains an optional local **Measure…** sheet for choosing the existing estimate more
+accurately. It is a small native 30-second typing calibration, not a game, account or ranking:
+RU/EN text with Easy/Medium/Advanced difficulty is composed from original bundled corpora, and
+the result stays in RAM. Only an explicit **Use N WPM** writes the existing global setting;
+cancelling, closing, repeating or an out-of-range/unsupported result never changes it, and
+collection stays exactly as the user left it. The feature needs no model, microphone,
+Accessibility, network or Ready state and stores no attempt text, keys or history. This
+prototype has no version or publication authorization; the maintainer reviews the signed Debug
+separately.

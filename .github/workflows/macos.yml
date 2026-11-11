@@ -52,6 +52,7 @@ jobs:
           bash scripts/verify-session-lifecycle.sh
           bash scripts/verify-dictation-reliability.sh
           bash scripts/verify-setup-formatting.sh
+          bash scripts/verify-typing-speed-test.sh
           bash scripts/verify-formatting-rules.sh
           bash scripts/verify-launch-at-login.sh
           bash scripts/verify-ultra-models.sh

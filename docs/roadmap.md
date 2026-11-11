@@ -10,7 +10,7 @@ Published 0.9.0 (33) after approved Debug and verified draft. Evidence: [0.9.0 r
 
 **Release acceptance:** maintainer accepted the signed Dynamic Island Debug and authorized publication («можно публиковать»). Stable 0.9.0 (33) published 2026-11-11; individual manual device/TCC/VoiceOver outcomes not enumerated. [Evidence/limits](debug-review-v0.9.0.md).
 
-**Current focus:** maintainer approved the [typing-speed test](specs/tasks/typing-speed-test.md): native 30 s RU/EN sheet, three levels and locally varied prompts, explicit Apply without accuracy gate. T0 complete; T1–T4 assigned to OpenCode in a separate main-based worktree, followed by Codex review and signed Debug delivery. Future version/manual acceptance/publication remain separate. Collect Dynamic Island 0.9.0 feedback; GigaAM deferred.
+**Current focus:** the [typing-speed test](specs/tasks/typing-speed-test.md) is implemented: native 30 s RU/EN sheet, three levels and locally varied prompts, explicit Apply without accuracy gate. T1–T4 are on `kestgalax/typing-speed-test` for Codex review and signed Debug delivery; future version/manual acceptance/publication remain separate. Collect Dynamic Island 0.9.0 feedback; GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -250,3 +250,29 @@ Maintainer accepted the delivered signed Debug and authorized publication: «м�
 ## 0.9.0 publication closeout — 2026-11-11
 
 Maintainer accepted signed Debug and instructed «можно публиковать». Stable/latest **0.9.0 (33)** published after Codex final gate. Tag `v0.9.0` / `d97f6c2`, accepted app behavior `0908750`, version/notes metadata `c6f801e`; PR #30 merged as `8dccb00`, final-source CI `43052628002` passed (`4f37b5e`). Clean arm64 Release, checksum-verified 0.8.2 installer-template fallback (Finder -1743), mounted DMG/helper/MLX/no weights, signed ZIP/feed, immutable notes archive, isolated A32→B33 plus negatives, downloaded draft and anonymous public byte/signature/length/identity/URL checks passed. Native isolated build32 Sparkle found the live update without installation. Python public verification used the system CA bundle after its default environment lacked a chain; no TLS bypass. GitHub connector merge403 was handled through authorized gh CLI. No user app/profile/model/login-item replacement or key export. Real-device/TCC/VoiceOver/fullscreen/network limits remain; individual manual results not enumerated. Notes/hashes: `docs/github-release-notes-v0.9.0.md`, evidence `docs/debug-review-v0.9.0.md`. Collect feedback; GigaAM deferred. Separate typing-speed calibration is a Codex proposal pending agreement, not included or implementation-authorized.
+
+
+## Typing-speed calibration — implementation for review (no version assigned)
+
+Maintainer approved the revised design with three levels and local prompt variation
+(«отлично, мне нравится, давай реализовывать»). T1–T4 are implemented on a fresh main-based
+`kestgalax/typing-speed-test` Orca worktree, preserving 0.9.0 behavior and the published
+Dynamic Island release. The authoritative spec is
+[docs/specs/tasks/typing-speed-test.md](specs/tasks/typing-speed-test.md); ADR-013 is amended for
+the RAM-only, explicit-Apply calibration.
+
+Delivered: compact **Measure…** beside the existing Statistics WPM Stepper; native 600×390 sheet
+in the real 720×520 Settings shell; RU/EN independent text; Easy/Medium(default)/Advanced
+original local corpora with a seeded injectable PRNG; one 30 s attempt from the first committed
+grapheme; per-character feedback and timed result; explicit **Use N WPM** only; no accuracy
+threshold and no silent clamp; no stats/model/mic/Accessibility/network dependency. The test
+reserves the install gate only while running, suspends only CarrotType hotkeys by token while
+its input owns focus, and releases both exactly once on completion/cancel/close/deactivation/
+sleep/quit/install. No attempt text/keys/result/seed is persisted.
+
+Verification: production model fixtures for all 3×2 modes, metric/deadline/correction/NFC/IME/
+refill/range fixtures, actual AppState/hotkey/gate/native-input fakes, 20-cycle cleanup,
+existing setup/lifecycle/reliability/usage/Dynamic Island regressions, native whole-Settings+
+sheet snapshots, local governance and a signed arm64 Debug app. Measured corpus 15,359 UTF-8
+bytes; model event processing 13.88 ms per 650 committed graphemes (0.021 ms/event). Codex review and maintainer
+manual acceptance remain; no merge, push, version bump or publication is authorized.
