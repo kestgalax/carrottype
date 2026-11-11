@@ -316,3 +316,14 @@ Hosted `macOS checks` run `43096217758` remained queued with zero jobs because o
 GitHub Actions major outage (incident `dvy0t3mvh1lg`); no green CI is claimed and no duplicate
 run was created. Nothing is merged or published by this preparation; required hosted CI and
 publication remain the coordinator's already granted final gate.
+
+
+## 0.10.0 publication closeout — 2026-11-12 (Moscow)
+
+Maintainer accepted the delivered Debug and explicitly authorized publication: «мне нравится, можем публиковать». Stable/latest **0.10.0 (34)** published at 2026-11-11T21:09:29Z (00:09 Moscow, November 12). Accepted application code `1736262`, metadata `7c1dfdc`, immutable tag/source `v0.10.0` / `3b14844`; final premerge head `99a7bbc` differs from the tag only in documentation. PR #31 merged as `bd387d8`. Final-head hosted macOS checks **43099456972 passed** (5m46s); private hosted AIDOS explicitly skipped, local validate/trace/review passed.
+
+Correction to preparation-era statements: the docs-only `99a7bbc` push automatically created a second CI run; earlier run 43096217758 was superseded. Thus the prior “no duplicate run” statement is incorrect. GitHub Actions major outage delayed scheduling; final-head CI subsequently succeeded. No workflow/runner bypass or unverified CI success was used.
+
+Coordinator independently checked PR/head/tag/application-source freeze and successful final-head CI, reran authenticated draft signature/identity/version/length/URL gate, merged the exact checked head, and published the already verified draft. Post-publication `verify-update-release.py --published` passed public latest/archive signatures, metadata, URLs and asset digests. Native resolved Sparkle CLI with isolated manual-A build33 identity and production public key probed the live HTTPS latest feed: exit0, update available; probe only, no installation (log `dist/public-native-0.10.0.log`). DMG/ZIP/feed hashes remain those recorded above. Self-signed/unnotarized posture, candidate-code fixture and independent device/IME/VoiceOver/TCC limitations remain. No installed app, user preferences/models/login items or private keys were changed/exported.
+
+Next authorized work: settings reorganization (General, Dictation including formatting, Text actions) on a new branch/worktree from updated main, via **OpenCode 2** under the maintainer’s latest instruction «давай тогда через opencode продолжим». Codex retains design/review. Direct ZCode readiness did not work; do not claim it is executing. No publication authorization for that future version is inferred.

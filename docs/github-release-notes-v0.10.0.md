@@ -31,7 +31,7 @@ Maintainer принял доставленный Debug и разрешил пу�
 
 Локальные проверки: `verify-release-notes.sh`, `verify-typing-speed-test.sh`, `verify-typing-speed-app.py` (включая реальный mounted-sheet Start/focus regression) и релевантные Dynamic Island/session/setup/update/formatting/reliability регрессии прошли; локальный AIDOS validate/trace/review — Approve. Чистая arm64 Release-сборка; Finder layout вернул `-1743`, поэтому использован checksum-verified DMG-шаблон 0.9.0 с сохранёнными `.DS_Store`, background, layout и Applications-ссылкой. Финальный DMG прошёл `hdiutil verify`, mounted app/helper/MLX/identity проверены, весов моделей нет. ZIP/appcast подписаны и проверены; RU/EN описания содержат текущий релиз и семь исторических записей.
 
-Изолированная нативная установка A33→B34 и негативные сценарии (offline/tampered feed/corrupt archive/no-new-version) прошли на свежей staging identity; это candidate-code fixture, не исторический бинарник и не TCC. Draft release ID `442184838` создан с DMG/ZIP/appcast и прошёл `verify-update-release.py --tag v0.10.0 --previous-build 33`; скачанные из черновика файлы побайтно совпали с локальными. PR [#31](https://github.com/kestgalax/carrottype/pull/31), тег `v0.10.0` на `3b14844`. Hosted `macOS checks` [43096217758](https://github.com/kestgalax/carrottype/actions/runs/43096217758) остался в очереди без запущенных jobs из-за внешней аварии GitHub Actions (incident `dvy0t3mvh1lg`); зелёный CI не заявляется, обязательная hosted-проверка остаётся финальным гейтом. Стабильный выпуск не публикуется этим этапом.
+Изолированная нативная установка A33→B34 и негативные сценарии (offline/tampered feed/corrupt archive/no-new-version) прошли на свежей staging identity; это candidate-code fixture, не исторический бинарник и не TCC. Draft release ID `442184838` создан с DMG/ZIP/appcast и прошёл `verify-update-release.py --tag v0.10.0 --previous-build 33`; скачанные из черновика файлы побайтно совпали с локальными. PR [#31](https://github.com/kestgalax/carrottype/pull/31), тег `v0.10.0` на `3b14844`. Hosted `macOS checks` [43099456972](https://github.com/kestgalax/carrottype/actions/runs/43099456972) прошёл для финальной версии ветки `99a7bbc`; локальные governance-проверки прошли, приватный AIDOS на GitHub явно пропущен. PR #31 слит в main (`bd387d8`). Задержка CI была связана с внешним сбоем GitHub Actions.
 
 ## SHA-256
 
@@ -44,3 +44,6 @@ Maintainer принял доставленный Debug и разрешил пу�
 SHA-256 исполняемого файла `CarrotType.app/Contents/MacOS/CarrotType`: `9ad1f609dee2327c340a99c36a84718f892bfd7dc0e835266e75e992eb295beb`.
 
 SHA-256 helper `CarrotType.app/Contents/MacOS/CarrotTypeCleanupHelper`: `0021f77aa5046236afdb06b7fbc306b5be3fb54b7288a3eeb8625f7a94223574`.
+
+
+Опубликовано stable/latest; публичная проверка подписей и файлов обновления прошла. Нативный Sparkle probe из изолированной сборки 33 обнаружил обновление без установки.
