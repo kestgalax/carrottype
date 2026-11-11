@@ -5,7 +5,7 @@ Trace: maintainer request and implementation authorization (2026-11-10), [audit/
 ## Metadata
 
 - Task ID: dictation-rules-and-theme
-- Status: R1/R2 exact rework implemented for signed Debug review; R3 tone quality failed/open, not release-ready, no publication authorization
+- Status: released 0.8.0 (30), maintainer-accepted scope; business-tone quality remains a disclosed experimental limitation
 
 ## Traceability
 
@@ -68,3 +68,8 @@ First-letter maintainer addition: independent persisted `lowercaseFirstLetter`, 
 
 
 Release scope accepted: maintainer explicitly accepted current Debug and authorized publication after the first-letter addition. Business-tone quality remains a disclosed limitation accepted for this release (experimental/off by default), not a semantic pass. Earlier pending-acceptance/release-block statements are historical. Application source frozen at 0edde77; clean Release, remote asset/CI verification and publication evidence pending.
+
+
+## Release closeout — 2026-11-11
+
+Maintainer accepted the signed first-sentence Debug and authorized release: «ок, пока остановимся, хорошо получилось, давай релизить». Stable/latest **0.8.0 (30)** published on 2026-11-11 from tag/source `v0.8.0` / `819286a` (application code `0edde77`), PR #27. Known business-tone failures remain disclosed/experimental/off by default; release acceptance is not a semantic quality pass. Fresh clean Release arm64, signed host/helper/Sparkle, mounted DMG/layout/background, no bundled weights and real installed-Gemma Release helper smoke passed. Local governance passed; hosted regressions/Debug/actual native checks passed ([42891053801](https://github.com/kestgalax/carrottype/actions/runs/42891053801), [42891040649](https://github.com/kestgalax/carrottype/actions/runs/42891040649)); private hosted AIDOS explicitly skipped. Signed ZIP/feed and downloaded draft/public artifacts passed digests, signatures, lengths, identity/URLs; anonymous latest feed/archive match. Isolated A29→B30 install and negative cases passed; public native Sparkle probe found 0.8.0 from isolated build-29 metadata without installation. No user app/profile/model replacement or private-key export. Full independent device/TCC/VoiceOver/network and Qwen comparison remain unverified. Hashes: `docs/github-release-notes-v0.8.0.md`. Stop feature iteration per maintainer; collect feedback, no next stage selected; GigaAM stays deferred.
