@@ -62,20 +62,26 @@ struct CarrotTypeSettingsView: View {
             }
             .padding(.horizontal, 18).padding(.top, 22).padding(.bottom, 16)
 
-            VStack(alignment: .leading, spacing: 2) {
-                ForEach(SettingsPane.allCases) { pane in
-                    sidebarRow(pane)
+            // Only the destination list scrolls; Details, version and footer stay pinned.
+            ScrollView(.vertical) {
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(SettingsPane.allCases) { pane in
+                        sidebarRow(pane)
+                    }
                 }
+                .padding(.horizontal, 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.horizontal, 8)
-
-            Spacer(minLength: 12)
+            .scrollIndicators(.automatic)
+            .frame(maxHeight: .infinity, alignment: .top)
+            .accessibilityIdentifier("settings.navScroll")
 
             SettingsStatusHeader(appState: appState, showDetailsLink: true) {
                 showStatusDetails = true
             }
             .padding(.horizontal, 10)
             WhatsNewButton(notes: appState.updates.releaseNotes, locale: locale)
+                .accessibilityIdentifier("settings.footer.whatsNew")
                 .controlSize(.small)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 18)
@@ -102,6 +108,7 @@ struct CarrotTypeSettingsView: View {
         )
         .foregroundStyle(isSelected ? Color.primary : Color.primary.opacity(0.85))
         .focused($focusedPane, equals: pane)
+        .accessibilityIdentifier("settings.nav.\(pane.rawValue)")
         .overlay {
             RoundedRectangle(cornerRadius: 6)
                 .strokeBorder(focusedPane == pane ? AppStyle.accent(colorScheme) : .clear, lineWidth: 2)
@@ -132,7 +139,14 @@ struct CarrotTypeSettingsView: View {
         } else {
             switch selection {
             case .general:
-                GeneralSettingsPane(appState: appState, hotkey: appState.hotkey, onOpenModels: {
+                GeneralSettingsPane(appState: appState)
+            case .dictation:
+                DictationSettingsPane(appState: appState, hotkey: appState.hotkey, onOpenModels: {
+                    selection = .models
+                    showStatusDetails = false
+                })
+            case .textActions:
+                TextActionsSettingsPane(appState: appState, hotkey: appState.hotkey, onOpenModels: {
                     selection = .models
                     showStatusDetails = false
                 })

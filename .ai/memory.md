@@ -299,3 +299,56 @@ Correction to preparation-era statements: the docs-only `99a7bbc` push automatic
 Coordinator independently checked PR/head/tag/application-source freeze and successful final-head CI, reran authenticated draft signature/identity/version/length/URL gate, merged the exact checked head, and published the already verified draft. Post-publication `verify-update-release.py --published` passed public latest/archive signatures, metadata, URLs and asset digests. Native resolved Sparkle CLI with isolated manual-A build33 identity and production public key probed the live HTTPS latest feed: exit0, update available; probe only, no installation (log `dist/public-native-0.10.0.log`). DMG/ZIP/feed hashes remain those recorded above. Self-signed/unnotarized posture, candidate-code fixture and independent device/IME/VoiceOver/TCC limitations remain. No installed app, user preferences/models/login items or private keys were changed/exported.
 
 Next authorized work: settings reorganization (General, Dictation including formatting, Text actions) on a new branch/worktree from updated main, via **OpenCode 2** under the maintainer’s latest instruction «давай тогда через opencode продолжим». Codex retains design/review. Direct ZCode readiness did not work; do not claim it is executing. No publication authorization for that future version is inferred.
+
+## Settings organization implementation — 2026-11-12
+
+Maintainer approval «ок, мне нравится, тогда после интеграции теста печати, переходим к этому
+изменению» is no longer blocked: typing-speed is integrated and 0.10.0 (34) is published from
+main `22536e7` (PR #31 merge `bd387d8`). Implemented the approved S1–S4 extraction on a fresh
+main-based Orca worktree/branch `kestgalax/settings-organization`, copying the authoritative
+`design/settings-organization` spec commits (`5443d07`, `93b76cd`, `d4583d4`) without applying the
+old roadmap/memory over published release docs. Latest agent choice «давай тогда через opencode
+продолжим» means OpenCode 2; direct ZCode readiness failed and is not claimed.
+
+Sidebar: General / Dictation / Text actions / Dynamic Island / Setup / Models / Storage /
+Statistics. General is app-only (language, theme, updates, launch-at-login last); Dictation owns
+the existing shortcut/PTT/clipboard plus the existing shared Ready-only formatting selector,
+exact rules, model preferences/My Rules and text trial; Text actions owns the unchanged
+Translate/Custom binding editor. No ninth pane, no second preference/model source, no automatic
+download, no engine/prompt/helper/trust/network/default/history change. Sidebar 200 pt, 720×520
+minimum, General-if-ready/Setup-if-not-ready and first-run-to-Setup preserved; only the nav list
+scrolls while Details/version/What's New are pinned. Pane departure cancels chord capture and
+restores registration; leaving Dictation cancels a running trial and waits for the existing
+gate/teardown; theme/language changes do not cancel/remount it.
+
+Verification: before/after control inventory, new actual AppState/pane unmount/hotkey/trial checks,
+native whole-Settings 8 panes × RU/EN × light/dark at 720×520 with Dictation bottom scroll,
+existing setup/formatting/lifecycle/Dynamic Island/typing-speed/launch/catalog regressions, and a
+signed arm64 Debug under `dist/.builds.noindex/Settings-Organization-Debug-2026-11-12`. Evidence:
+`docs/debug-review-settings-organization.md`. Version remains 0.10.0 (34); no merge/push/DMG/
+release/publication or user preferences/models/installed app/login-item changes. Codex review is
+the next gate.
+
+## Settings organization release — 0.11.0 (2026-11-12)
+
+Maintainer accepted the Settings organization Debug and authorized publication («все ок, можно
+публиковать»), correcting the version to 0.11.0 (35): stable/latest was already 0.10.0 (34).
+Application behavior is frozen at `6cb6212`; release work is version/build, RU/EN
+`ReleaseNotes.json`, the published 0.10.0 notes archived unchanged at the top of
+`ReleaseNotesHistory.json` (34→27), project metadata and documentation.
+
+Sidebar: General (language, theme, updates, launch-at-login last) / Dictation (existing shortcut,
+PTT, clipboard plus the existing Ready-only formatting selector, exact rules, My Rules and trial)
+/ Text actions (unchanged Translate/Custom bindings) / Dynamic Island / Setup / Models / Storage /
+Statistics. Window size, 720×520 minimum, saved values/defaults, Ready-based starting pane and
+pinned footer are preserved; only the navigation list scrolls. No runtime/model/prompt/helper/
+dictation/transform/statistics/updater/trust/network/dependency/history change; GigaAM excluded.
+
+Clean arm64 Release; Finder `-1743`, checksum-verified published 0.10.0 DMG template
+(`0313202e…`, 23,834,939 bytes) preserved `.DS_Store`, background, layout and Applications link.
+Final DMG `dist/CarrotType-0.11.0.dmg` (23,830,560 bytes, `f231d29d…`), signed ZIP
+`CarrotType-0.11.0-35.zip` (23,890,373, `4b9d8a1d…`) and appcast (36,309, `93ae4893…`). Isolated
+candidate-code staging A34→B35 and negative cases passed; not historical/TCC proof. Notes,
+settings-organization/typing-speed/formatting/Dynamic Island actual checks, production regressions
+and local AIDOS validate/trace/review passed. Draft/PR/CI and publication follow. No installed app,
+user preferences/models/login items or private keys were changed.

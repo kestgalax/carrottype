@@ -36,7 +36,7 @@ Users need **multiple** shortcuts (e.g. translate on one chord, summarize on ano
 ## Consequences
 
 - Product intent / architecture document a secondary loop; Ready state still does **not** require a transform model.
-- `HotkeyService` registers N transform chords; Settings → General shows a bindings list.
+- `HotkeyService` registers N transform chords; Settings → Text actions shows a bindings list (moved from General by the approved settings-organization extraction; behavior unchanged).
 - Transform fails clearly when Custom instruction empty, no selection, Accessibility denied, or no Ready MLX package for the binding.
 - Dictation path passes `instructions: nil` so literal cleanup behavior is unchanged.
 
