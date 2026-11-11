@@ -8,7 +8,7 @@ assignment, publication, tag, feed, DMG or installed-app replacement.
 - Orca worktree: `/Users/kestgalax/orca/workspaces/carrottype/dynamic-island-implementation`
 - Branch: `kestgalax/dynamic-island-implementation`, created from main `d0a4058`
 - Authoritative spec: cherry-picked `0b3e27c` (`docs/specs/tasks/dynamic-island-settings.md`)
-- Implementation commit: `8134189` (code, tests, docs)
+- Implementation commit: `8134189` (code, tests, docs); review-evidence follow-ups `7d369fd`, `cef8469` (docs/test only). Application code is unchanged since `8134189`.
 - The prior OpenCode planning branch and competing proposal were not used.
 
 ## Implemented behavior
