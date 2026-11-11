@@ -261,3 +261,26 @@ no merge/push/release or user installation change. After typing-test integration
 the already approved settings reorganization through direct Orca ZCode with configured
 GLM-5.3 (not OpenCode); Codex retains planning/review. Close the completed worker session
 while preserving worktree, commits, evidence and both Debug copies.
+
+## 0.10.0 typing-speed release prep — 2026-11-11
+
+Maintainer accepted the delivered signed Debug and authorized publication:
+«мне нравится, можем публиковать»; individual device/IME/VoiceOver/TCC outcomes were not
+enumerated. Application behavior is frozen at `1736262` (accepted R1/R2), based on fetched main
+`58bdca2`; latest stable is 0.9.0 (33). Metadata commit `7c1dfdc` sets 0.10.0 (34), archives the
+published 0.9.0 `ReleaseNotes.json` unchanged into immutable history (33→27), and authors RU/EN
+notes for the Statistics Measure sheet: 30 seconds, RU/EN, three levels, varied original local
+prompts, explicit Use only, manual WPM preserved, RAM-only attempts, no network/model/
+microphone. Dynamic Island stays untranslated; GigaAM and settings reorganization are excluded.
+
+Clean arm64 Release/`dist/CarrotType-0.10.0.dmg` (SHA-256
+`0313202e7a523095ced62143698e776c1c297f341e6a78967874221aae3d0313`, 23,834,939 bytes), signed
+`dist/updates-0.10.0/CarrotType-0.10.0-34.zip`
+(`70191cdc5370d0bcecae188026bd044571a9a9a5bc11c41e2bcf45082d323e7`, 23,879,143 bytes) and
+signed appcast (`d295a82beb2cc971c1dbe2c87c2bfe9a97e4eb176155344017907905ae4bfd63`, 30,611
+bytes) prepared. Finder automation hit documented `-1743`; checksum-verified published 0.9.0
+DMG template preserved layout/background/.DS_Store/Applications link. Mounted app/helper/MLX/
+identity/no-weights checks passed. Isolated candidate-code staging A33→B34 plus offline/
+tampered-feed/corrupt-archive/no-new-version passed on fresh identity; not historical/TCC proof.
+Typing-speed/notes/regressions and local AIDOS validate/trace/review passed. Draft/PR pending
+Codex gate; stable remains 0.9.0. No installed app/profile/model/login-item change or key export.

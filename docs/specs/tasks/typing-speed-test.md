@@ -158,3 +158,14 @@ text on the custom prompt renderer. Both are implemented and validated in
 [review findings](../reviews/typing-speed-test.md); signed Debug R1R2 is in
 `dist/.builds.noindex/Typing-Speed-Debug-R1R2-2026-11-11/CarrotType.app` with the prior app
 preserved. Codex re-review and maintainer manual acceptance remain; no version/publication.
+
+### Release 0.10.0 (34) — 2026-11-11
+
+After Codex re-review approved R1/R2 and the maintainer accepted the delivered signed Debug,
+publication was authorized: «мне нравится, можем публиковать». Application behavior is frozen
+at `1736262`; only version/build 0.10.0 (34), notes/history and documentation change. The
+published 0.9.0 notes are archived unchanged and RU/EN notes cover the Statistics Measure
+sheet. Dynamic Island remains untranslated; GigaAM and the settings reorganization are not
+included. Clean Release/DMG, signed ZIP/appcast, isolated A33→B34 staging and the draft/PR are
+recorded in [release review](../../debug-review-v0.10.0.md); stable/latest remains 0.9.0 (33)
+pending the Codex final gate. Individual device/IME/VoiceOver/TCC results were not enumerated.

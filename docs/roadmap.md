@@ -2,7 +2,7 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.9.0`**: Dynamic Island Full/default, Minimal and Menu-bar-only modes. **v0.8.2**: cumulative release notes across skipped versions. **v0.8.1**: opt-in launch at macOS sign-in. **v0.8.0**: exact dictation rules including first-sentence lowercase, text trial, two offered cleanup models and System/Light/Dark. **v0.7.0**: native settings, accessibility/confirmation polish and selected carrot-microphone A brand. **v0.6.2**: coordinated dictation lifecycle, awaited teardown and generation-safe live draft; production regressions. **v0.6.1**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
+Milestone 0–2 vertical slice shipped; **release 0.10.0 (34)** with the local typing-speed calibration is prepared as a verified draft/PR for the Codex final gate. **GitHub Release `v0.9.0`**: Dynamic Island Full/default, Minimal and Menu-bar-only modes. **v0.8.2**: cumulative release notes across skipped versions. **v0.8.1**: opt-in launch at macOS sign-in. **v0.8.0**: exact dictation rules including first-sentence lowercase, text trial, two offered cleanup models and System/Light/Dark. **v0.7.0**: native settings, accessibility/confirmation polish and selected carrot-microphone A brand. **v0.6.2**: coordinated dictation lifecycle, awaited teardown and generation-safe live draft; production regressions. **v0.6.1**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
 Latest published artifact: `CarrotType-0.9.0.dmg` — SHA-256 `2c51717d4294f41671a554f5e754f2bf76e0ec07166aac2b5671fe5882e2a595`; signed ZIP/feed hashes in [release notes](github-release-notes-v0.9.0.md).
 
@@ -10,7 +10,7 @@ Published 0.9.0 (33) after approved Debug and verified draft. Evidence: [0.9.0 r
 
 **Release acceptance:** maintainer accepted the signed Dynamic Island Debug and authorized publication («можно публиковать»). Stable 0.9.0 (33) published 2026-11-11; individual manual device/TCC/VoiceOver outcomes not enumerated. [Evidence/limits](debug-review-v0.9.0.md).
 
-**Current focus:** the [typing-speed test](specs/tasks/typing-speed-test.md) is implemented: native 30 s RU/EN sheet, three levels and locally varied prompts, explicit Apply without accuracy gate. T1–T4 are on `kestgalax/typing-speed-test` for Codex review and signed Debug delivery; future version/manual acceptance/publication remain separate. Collect Dynamic Island 0.9.0 feedback; GigaAM deferred.
+**Current focus:** the [typing-speed test](specs/tasks/typing-speed-test.md) is implemented and the maintainer authorized publication of 0.10.0 (34): «мне нравится, можем публиковать». Application behavior is frozen at `1736262` (accepted R1/R2). Release metadata/notes, clean Release/DMG, signed ZIP/appcast, isolated A33→B34 staging and a draft/PR are prepared for the Codex final gate; stable/latest remains 0.9.0 (33). Individual device/IME/VoiceOver/TCC results were not enumerated. Collect Dynamic Island 0.9.0 feedback; GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -294,3 +294,21 @@ independent diff/signature checks passed. Next: maintainer live typing/IME/Voice
 of the delivered Debug, then integration and the already approved settings reorganization
 (direct Orca ZCode/GLM-5.3 implementation, Codex design/review). No merge, push, version bump
 or publication has occurred.
+
+## 0.10.0 — typing-speed release (draft prepared)
+
+Maintainer accepted the delivered Debug and explicitly authorized publication:
+«мне нравится, можем публиковать». Individual device/IME/VoiceOver/TCC results were not
+enumerated; those limits remain. Application behavior/source is frozen at `1736262` (accepted
+R1/R2); only version metadata 0.10.0 (34), notes/history and documentation change. The
+published 0.9.0 `ReleaseNotes.json` was archived unchanged into immutable history (33→27) and
+RU/EN notes were authored from the bundled single source. Dynamic Island remains untranslated;
+GigaAM and the settings reorganization are not part of this release.
+
+Release base is fetched main `58bdca2`; latest stable remains 0.9.0 (33). Clean arm64 Release,
+checksum-verified 0.9.0 installer-template fallback (Finder `-1743`), mounted app/helper/MLX/
+identity/no-weights, signed ZIP/appcast and isolated A33→B34 plus offline/tampered-feed/
+corrupt-archive/no-new-version staging passed. `docs/debug-review-v0.10.0.md` records exact
+hashes and the candidate-code fixture limits; `docs/github-release-notes-v0.10.0.md` is the
+release body. PR/CI/draft ID/head evidence is added by the closeout commit. Nothing is merged
+or published by this preparation; the coordinator holds the already granted final gate.
