@@ -328,3 +328,27 @@ signed arm64 Debug under `dist/.builds.noindex/Settings-Organization-Debug-2026-
 `docs/debug-review-settings-organization.md`. Version remains 0.10.0 (34); no merge/push/DMG/
 release/publication or user preferences/models/installed app/login-item changes. Codex review is
 the next gate.
+
+## Settings organization release — 0.11.0 (2026-11-12)
+
+Maintainer accepted the Settings organization Debug and authorized publication («все ок, можно
+публиковать»), correcting the version to 0.11.0 (35): stable/latest was already 0.10.0 (34).
+Application behavior is frozen at `6cb6212`; release work is version/build, RU/EN
+`ReleaseNotes.json`, the published 0.10.0 notes archived unchanged at the top of
+`ReleaseNotesHistory.json` (34→27), project metadata and documentation.
+
+Sidebar: General (language, theme, updates, launch-at-login last) / Dictation (existing shortcut,
+PTT, clipboard plus the existing Ready-only formatting selector, exact rules, My Rules and trial)
+/ Text actions (unchanged Translate/Custom bindings) / Dynamic Island / Setup / Models / Storage /
+Statistics. Window size, 720×520 minimum, saved values/defaults, Ready-based starting pane and
+pinned footer are preserved; only the navigation list scrolls. No runtime/model/prompt/helper/
+dictation/transform/statistics/updater/trust/network/dependency/history change; GigaAM excluded.
+
+Clean arm64 Release; Finder `-1743`, checksum-verified published 0.10.0 DMG template
+(`0313202e…`, 23,834,939 bytes) preserved `.DS_Store`, background, layout and Applications link.
+Final DMG `dist/CarrotType-0.11.0.dmg` (23,830,560 bytes, `f231d29d…`), signed ZIP
+`CarrotType-0.11.0-35.zip` (23,890,373, `4b9d8a1d…`) and appcast (36,309, `93ae4893…`). Isolated
+candidate-code staging A34→B35 and negative cases passed; not historical/TCC proof. Notes,
+settings-organization/typing-speed/formatting/Dynamic Island actual checks, production regressions
+and local AIDOS validate/trace/review passed. Draft/PR/CI and publication follow. No installed app,
+user preferences/models/login items or private keys were changed.

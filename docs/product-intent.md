@@ -115,3 +115,20 @@ Correction to preparation-era statements: the docs-only `99a7bbc` push automatic
 Coordinator independently checked PR/head/tag/application-source freeze and successful final-head CI, reran authenticated draft signature/identity/version/length/URL gate, merged the exact checked head, and published the already verified draft. Post-publication `verify-update-release.py --published` passed public latest/archive signatures, metadata, URLs and asset digests. Native resolved Sparkle CLI with isolated manual-A build33 identity and production public key probed the live HTTPS latest feed: exit0, update available; probe only, no installation (log `dist/public-native-0.10.0.log`). DMG/ZIP/feed hashes remain those recorded above. Self-signed/unnotarized posture, candidate-code fixture and independent device/IME/VoiceOver/TCC limitations remain. No installed app, user preferences/models/login items or private keys were changed/exported.
 
 Next authorized work: settings reorganization (General, Dictation including formatting, Text actions) on a new branch/worktree from updated main, via **OpenCode 2** under the maintainer’s latest instruction «давай тогда через opencode продолжим». Codex retains design/review. Direct ZCode readiness did not work; do not claim it is executing. No publication authorization for that future version is inferred.
+
+## Settings organization — 0.11.0 (authorized, draft prepared)
+
+The maintainer accepted the delivered Settings organization Debug and authorized publication:
+«все ок, можно публиковать», correcting the version because stable is already 0.10.0 (34). Release
+**0.11.0 (35)** freezes application behavior at `6cb6212`, so only version metadata, RU/EN notes,
+immutable history and documentation change. The sidebar is ordered **General / Dictation / Text
+actions / Dynamic Island / Setup / Models / Storage / Statistics**: General owns language, theme,
+updates and launch-at-login; Dictation owns the existing shortcut/PTT/clipboard controls plus the
+existing Ready-only formatting selector, exact rules, model preferences/My Rules and text trial;
+Text actions owns the unchanged Translate/Custom bindings.
+
+Window size, the 720×520 minimum, saved values and defaults are unchanged; only the navigation
+list scrolls while Details, version and What’s New stay pinned. No runtime, engine, model, prompt,
+helper, dictation/transform, statistics, updater, trust, network, dependency or history change.
+GigaAM is excluded. Individual device/IME/VoiceOver/TCC outcomes were not enumerated. The verified
+draft/PR awaits publication; stable/latest remains 0.10.0 (34) until then.
