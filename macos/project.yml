@@ -82,6 +82,7 @@ targets:
       - sdk: CoreAudio.framework
       - sdk: AVFoundation.framework
       - sdk: Network.framework
+      - sdk: ServiceManagement.framework
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.carrottype.macos
@@ -121,8 +122,8 @@ targets:
         CFBundleName: CarrotType
         CFBundleDisplayName: CarrotType
         CFBundleIconName: AppIcon
-        CFBundleShortVersionString: "0.8.0"
-        CFBundleVersion: "30"
+        CFBundleShortVersionString: "0.8.1"
+        CFBundleVersion: "31"
         SUFeedURL: https://github.com/kestgalax/carrottype/releases/latest/download/appcast.xml
         SUPublicEDKey: kyWmWPcxx2NbRMhm2mAHgI58bk92VuFyPLd9wG/kaLc=
         SUEnableAutomaticChecks: false

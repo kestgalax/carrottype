@@ -205,3 +205,8 @@ General distinguishes exact controls (always-remove word list, lowercase prose, 
 
 
 First-letter opt-in: “Первое предложение со строчной буквы” sits beside full-prose lowercase. It lowercases only the first letter, preserving all remaining case; full lowercase takes precedence and disables the redundant toggle without clearing it. Caption explains protected starts and precedence. Missing old preferences default false; this runs after model/Light/Off through the common exact stage.
+
+
+### Launch at login — 0.8.1
+
+General begins with an opt-in “Запускать при входе в macOS” switch and explains sign-in after restart/power-on, with recording still explicit. Current OS status determines the switch; pending approval carries an orange explanation and button opening native Login Items settings. Errors remain visible without pretending the switch changed successfully. Returning from System Settings refreshes status. A non-installed review/DMG copy explains “move to Applications and open there”; it cannot register a temporary path, but an existing requested item can be explicitly removed. No automatic startup enrollment, view remount or hidden preference mirror.

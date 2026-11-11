@@ -17,6 +17,7 @@ struct GeneralSettingsPane: View {
 
     var body: some View {
         Form {
+            LaunchAtLoginSection(service: appState.launchAtLogin, locale: locale)
             Section {
                 HotkeySettingsRow(hotkey: hotkey, target: .dictation)
                 if hotkey.isRecording, hotkey.captureTarget == .dictation {

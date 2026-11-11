@@ -6105,6 +6105,142 @@
           }
         }
       }
+    },
+    "login.section": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Startup"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запуск приложения"
+          }
+        }
+      }
+    },
+    "login.toggle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Launch at login"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запускать при входе в macOS"
+          }
+        }
+      }
+    },
+    "login.hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType opens in the menu bar after you sign in, including after restarting or powering on your Mac. Recording starts only when you ask."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarrotType появится в строке меню после входа в систему, в том числе после перезагрузки или включения Mac. Запись начинается только по вашему действию."
+          }
+        }
+      }
+    },
+    "login.install": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To enable startup, move CarrotType to Applications and open it from there. This avoids launching a temporary test copy."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Для включения автозапуска перенесите CarrotType в «Программы» и откройте оттуда, чтобы не запускалась временная тестовая копия."
+          }
+        }
+      }
+    },
+    "login.pending": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Startup is requested, but macOS approval is still required."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Автозапуск запрошен, но требуется разрешение в настройках macOS."
+          }
+        }
+      }
+    },
+    "login.unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS could not find or identify this login item. Try opening the installed application again."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS не смогла найти или определить элемент автозапуска. Попробуйте заново открыть установленное приложение."
+          }
+        }
+      }
+    },
+    "login.error": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not change startup. Try again or check macOS Login Items."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось изменить автозапуск. Повторите попытку или проверьте объекты входа в настройках macOS."
+          }
+        }
+      }
+    },
+    "login.settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open macOS Login Items"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть настройки автозапуска macOS"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

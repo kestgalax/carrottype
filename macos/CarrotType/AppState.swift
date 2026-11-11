@@ -5,6 +5,7 @@ import Foundation
 
 @MainActor
 final class AppState: ObservableObject {
+    let launchAtLogin = LaunchAtLoginService()
     @Published var menuBarMode: MenuBarMode = .needsSetup {
         didSet {
             updateLevelDecayTimer()

@@ -137,3 +137,8 @@ Business tone has a separate prompt but the same helper/purpose and content guar
 
 
 The optional `lowercaseFirstLetter` control is another final exact operation: only the first prose letter changes; the rest retains case. Protected starts stay unchanged, full-prose lowercase takes precedence, old saved settings default this new key false. No helper prompt or transform change.
+
+
+## Launch at login — 0.8.1 (ADR-019)
+
+`LaunchAtLoginService` wraps native `SMAppService.mainApp` through an injected adapter. Only explicit General toggle calls register/unregister; init, launch, refresh and updates never mutate startup state. macOS status owns the source of truth, refreshed on view appearance/app activation; no UserDefaults desired-state mirror. Pending approval is displayed distinctly with native System Settings navigation; failures retain real OS state. Registration requires resolved installed Applications location, while an existing requested item remains explicitly removable from a moved copy. No helper, LaunchAgent/plist, daemon, extra recording or third-party package. Tests use fakes; actual self-signed installation/relogin behavior is a manual Debug gate.
