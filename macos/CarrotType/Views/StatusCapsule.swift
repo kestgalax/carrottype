@@ -3,66 +3,41 @@ import Combine
 import SwiftUI
 
 /// Compact dictation process indicator near the camera notch (or under the menu bar).
-/// `transformResult` and `liveDraftResult` show Copy / Close result chrome (ADR-012).
-enum StatusCapsulePhase: Equatable {
-    case listening
-    case understanding
-    case writing
-    case inserted
-    case formattingFallback
-    case transformResult
-    case liveDraftResult
-    case dictationRecovery
-
-    var isResult: Bool {
-        self == .transformResult || self == .liveDraftResult || self == .dictationRecovery
-    }
-}
-
+/// `transformResult`, `liveDraftResult` and `dictationRecovery` show Copy / Close result chrome (ADR-012).
+///
+/// Presenting is centralized through `DynamicIslandPolicy`: a logical phase can be hidden or
+/// rendered as the minimal indicator without clearing domain state.
 @MainActor
 final class StatusCapsuleController {
     private var panel: NSPanel?
-    private var hosting: NSHostingView<StatusCapsuleView>?
+    private var hosting: NSHostingView<DynamicIslandRootView>?
     private weak var appState: AppState?
     private var cancellables = Set<AnyCancellable>()
     private var screenObserver: NSObjectProtocol?
+
+    /// Native fixtures use this to assert that a suppressed mode never resurrects the panel.
+    var isVisibleForTesting: Bool { panel != nil }
 
     func attach(appState: AppState) {
         self.appState = appState
         cancellables.removeAll()
 
-        Publishers.CombineLatest4(
-            appState.$capsulePhase,
-            appState.$transformResultText,
-            appState.$transformResultDirection,
-            appState.$appLanguage
-        )
-        .combineLatest(
-            Publishers.CombineLatest3(
-                appState.$transformResultCopiedFeedback,
-                appState.$liveDraftConfirmed,
-                appState.$liveDraftVolatile
-            )
-        )
-        .receive(on: RunLoop.main)
-        .sink { [weak self] phaseLang, draftTuple in
-            guard let self else { return }
-            let (phase, resultText, direction, _) = phaseLang
-            let (copied, liveConfirmed, liveVolatile) = draftTuple
-            if let phase {
-                self.show(
-                    phase: phase,
-                    resultText: resultText,
-                    direction: direction,
-                    copiedFeedback: copied,
-                    liveConfirmed: liveConfirmed,
-                    liveVolatile: liveVolatile
-                )
-            } else {
-                self.hide()
-            }
-        }
-        .store(in: &cancellables)
+        let refreshTriggers: [AnyPublisher<Void, Never>] = [
+            appState.$capsulePhase.map { _ in () }.eraseToAnyPublisher(),
+            appState.$transformResultText.map { _ in () }.eraseToAnyPublisher(),
+            appState.$transformResultDirection.map { _ in () }.eraseToAnyPublisher(),
+            appState.$transformResultCopiedFeedback.map { _ in () }.eraseToAnyPublisher(),
+            appState.$liveDraftConfirmed.map { _ in () }.eraseToAnyPublisher(),
+            appState.$liveDraftVolatile.map { _ in () }.eraseToAnyPublisher(),
+            appState.$appLanguage.map { _ in () }.eraseToAnyPublisher(),
+            appState.$appTheme.map { _ in () }.eraseToAnyPublisher(),
+            appState.$capsuleOperation.map { _ in () }.eraseToAnyPublisher(),
+            appState.$activeDictationMode.map { _ in () }.eraseToAnyPublisher()
+        ]
+        Publishers.MergeMany(refreshTriggers)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] in self?.refresh() }
+            .store(in: &cancellables)
 
         if screenObserver == nil {
             screenObserver = NotificationCenter.default.addObserver(
@@ -70,57 +45,51 @@ final class StatusCapsuleController {
                 object: nil,
                 queue: .main
             ) { [weak self] _ in
-                Task { @MainActor in self?.positionPanel() }
+                Task { @MainActor in self?.refresh() }
             }
         }
     }
 
-    func sync(phase: StatusCapsulePhase?) {
-        if let phase {
-            show(
-                phase: phase,
-                resultText: appState?.transformResultText,
-                direction: appState?.transformResultDirection,
-                copiedFeedback: appState?.transformResultCopiedFeedback ?? false,
-                liveConfirmed: appState?.liveDraftConfirmed ?? "",
-                liveVolatile: appState?.liveDraftVolatile ?? ""
-            )
-        } else {
+    func sync() {
+        refresh()
+    }
+
+    /// Single presentation path shared by pub/sub, explicit sync and screen changes.
+    private func refresh() {
+        guard let appState, let phase = appState.capsulePhase else {
             hide()
+            return
         }
+        show(phase: phase, presentation: appState.islandPresentation, appState: appState)
     }
 
     private func show(
         phase: StatusCapsulePhase,
-        resultText: String?,
-        direction: String?,
-        copiedFeedback: Bool,
-        liveConfirmed: String,
-        liveVolatile: String
+        presentation: DynamicIslandPresentation,
+        appState: AppState
     ) {
+        guard presentation != .hidden else {
+            hide()
+            return
+        }
         let geometry = StatusCapsuleGeometry.preferred()
-        let locale = appState?.effectiveLocale ?? Locale.current
-        let draftText = [liveConfirmed, liveVolatile].filter { !$0.isEmpty }.joined(separator: " ")
-        let hasLiveDraft = phase == .listening && !draftText.isEmpty
-        let size = geometry.panelSize(for: phase, hasLiveDraft: hasLiveDraft, liveDraftText: draftText)
-        let root = StatusCapsuleView(
+        let size = geometry.panelSize(
+            for: phase,
+            presentation: presentation,
+            hasLiveDraft: hasLiveDraft(phase: phase, appState: appState),
+            liveDraftText: liveDraftText(appState: appState)
+        )
+        let root = makeRoot(
             phase: phase,
-            resultText: resultText ?? "",
-            direction: direction,
-            copiedFeedback: copiedFeedback,
-            liveConfirmed: liveConfirmed,
-            liveVolatile: liveVolatile,
-            topInset: geometry.contentTopInset,
-            maxLiveDraftBodyHeight: StatusCapsuleGeometry.maxLiveDraftBodyHeight,
-            locale: locale,
-            onCopy: { [weak self] in self?.appState?.copyTransformResult() },
-            onClose: { [weak self] in self?.appState?.dismissAnyResultCapsule() }
+            presentation: presentation,
+            geometry: geometry,
+            appState: appState
         )
 
         if let hosting {
             hosting.rootView = root
             hosting.frame = NSRect(origin: .zero, size: size)
-            applyPanelInteraction(for: phase)
+            applyPanelInteraction(for: phase, presentation: presentation)
             positionPanel()
             panel?.orderFrontRegardless()
             return
@@ -146,14 +115,40 @@ final class StatusCapsuleController {
 
         self.panel = panel
         self.hosting = hostingView
-        applyPanelInteraction(for: phase)
+        applyPanelInteraction(for: phase, presentation: presentation)
         positionPanel()
         panel.orderFrontRegardless()
     }
 
-    private func applyPanelInteraction(for phase: StatusCapsulePhase) {
-        // Status phases stay click-through; result must accept Copy / Close clicks.
-        panel?.ignoresMouseEvents = !(phase.isResult)
+    private func makeRoot(
+        phase: StatusCapsulePhase,
+        presentation: DynamicIslandPresentation,
+        geometry: StatusCapsuleGeometry,
+        appState: AppState
+    ) -> DynamicIslandRootView {
+        DynamicIslandRootView(
+            presentation: presentation,
+            phase: phase,
+            resultText: appState.transformResultText ?? "",
+            direction: appState.transformResultDirection,
+            copiedFeedback: appState.transformResultCopiedFeedback,
+            liveConfirmed: appState.liveDraftConfirmed,
+            liveVolatile: appState.liveDraftVolatile,
+            topInset: geometry.contentTopInset,
+            maxLiveDraftBodyHeight: StatusCapsuleGeometry.maxLiveDraftBodyHeight,
+            minimalBarWidth: geometry.minimalBarWidth,
+            locale: appState.effectiveLocale,
+            onCopy: { [weak self] in self?.appState?.copyTransformResult() },
+            onClose: { [weak self] in self?.appState?.dismissAnyResultCapsule() }
+        )
+    }
+
+    private func applyPanelInteraction(
+        for phase: StatusCapsulePhase,
+        presentation: DynamicIslandPresentation
+    ) {
+        // Status/minimal phases stay click-through; full result chrome accepts Copy / Close.
+        panel?.ignoresMouseEvents = !(presentation == .full && phase.isResult)
     }
 
     private func hide() {
@@ -167,36 +162,39 @@ final class StatusCapsuleController {
 
     private func positionPanel() {
         guard let panel, let appState, let phase = appState.capsulePhase else { return }
+        let presentation = appState.islandPresentation
+        guard presentation != .hidden else { return }
         let geometry = StatusCapsuleGeometry.preferred()
-        let liveConfirmed = appState.liveDraftConfirmed
-        let liveVolatile = appState.liveDraftVolatile
-        let draftText = [liveConfirmed, liveVolatile].filter { !$0.isEmpty }.joined(separator: " ")
-        let hasLiveDraft = phase == .listening && !draftText.isEmpty
-        let size = geometry.panelSize(for: phase, hasLiveDraft: hasLiveDraft, liveDraftText: draftText)
+        let size = geometry.panelSize(
+            for: phase,
+            presentation: presentation,
+            hasLiveDraft: hasLiveDraft(phase: phase, appState: appState),
+            liveDraftText: liveDraftText(appState: appState)
+        )
         panel.setContentSize(size)
         hosting?.frame = NSRect(origin: .zero, size: size)
         panel.setFrame(
             NSRect(
-                origin: geometry.origin(for: phase, hasLiveDraft: hasLiveDraft, liveDraftText: draftText),
+                origin: geometry.origin(
+                    for: phase,
+                    presentation: presentation,
+                    hasLiveDraft: hasLiveDraft(phase: phase, appState: appState),
+                    liveDraftText: liveDraftText(appState: appState)
+                ),
                 size: size
             ),
             display: true
         )
-        if let hosting {
-            hosting.rootView = StatusCapsuleView(
-                phase: phase,
-                resultText: appState.transformResultText ?? "",
-                direction: appState.transformResultDirection,
-                copiedFeedback: appState.transformResultCopiedFeedback,
-                liveConfirmed: liveConfirmed,
-                liveVolatile: liveVolatile,
-                topInset: geometry.contentTopInset,
-                maxLiveDraftBodyHeight: StatusCapsuleGeometry.maxLiveDraftBodyHeight,
-                locale: appState.effectiveLocale,
-                onCopy: { [weak self] in self?.appState?.copyTransformResult() },
-                onClose: { [weak self] in self?.appState?.dismissAnyResultCapsule() }
-            )
-        }
+    }
+
+    private func liveDraftText(appState: AppState) -> String {
+        [appState.liveDraftConfirmed, appState.liveDraftVolatile]
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+    }
+
+    private func hasLiveDraft(phase: StatusCapsulePhase, appState: AppState) -> Bool {
+        phase == .listening && !liveDraftText(appState: appState).isEmpty
     }
 }
 
@@ -221,6 +219,11 @@ struct StatusCapsuleGeometry {
         hasNotch ? notchHeight : 0
     }
 
+    /// Minimal indicator bar width; prototype judgment within the approved spec.
+    var minimalBarWidth: CGFloat {
+        hasNotch ? max(48, min(notchWidth * 0.55, 140)) : MinimalIslandMetrics.nonNotchBarWidth
+    }
+
     /// Max height of the live-draft body (below the camera inset), before scrolling.
     static let maxLiveDraftBodyHeight: CGFloat = 280
     private static let liveDraftMinBodyHeight: CGFloat = 72
@@ -229,9 +232,19 @@ struct StatusCapsuleGeometry {
 
     func panelSize(
         for phase: StatusCapsulePhase,
+        presentation: DynamicIslandPresentation = .full,
         hasLiveDraft: Bool = false,
         liveDraftText: String = ""
     ) -> NSSize {
+        if presentation == .minimal {
+            if hasNotch {
+                return NSSize(
+                    width: max(notchWidth, 48),
+                    height: notchHeight + MinimalIslandMetrics.notchProtrusion
+                )
+            }
+            return MinimalIslandMetrics.nonNotchPanelSize
+        }
         if phase == .formattingFallback {
             return NSSize(width: max(notchWidth + 24, 320), height: contentTopInset + visibleDrop)
         }
@@ -258,10 +271,16 @@ struct StatusCapsuleGeometry {
     /// Top-left of the panel in Cocoa screen coords (origin bottom-left).
     func origin(
         for phase: StatusCapsulePhase,
+        presentation: DynamicIslandPresentation = .full,
         hasLiveDraft: Bool = false,
         liveDraftText: String = ""
     ) -> NSPoint {
-        let size = panelSize(for: phase, hasLiveDraft: hasLiveDraft, liveDraftText: liveDraftText)
+        let size = panelSize(
+            for: phase,
+            presentation: presentation,
+            hasLiveDraft: hasLiveDraft,
+            liveDraftText: liveDraftText
+        )
         let x = centerX - size.width / 2
         if hasNotch {
             return NSPoint(x: x, y: screenTopY - size.height)
@@ -313,6 +332,52 @@ struct StatusCapsuleGeometry {
             notchHeight = 0
             visibleDrop = 36
             centerX = screen.frame.midX
+        }
+    }
+}
+
+/// Hosts either the existing full capsule or the compact minimal indicator.
+struct DynamicIslandRootView: View {
+    let presentation: DynamicIslandPresentation
+    let phase: StatusCapsulePhase
+    var resultText: String
+    var direction: String?
+    var copiedFeedback: Bool
+    var liveConfirmed: String = ""
+    var liveVolatile: String = ""
+    var topInset: CGFloat
+    var maxLiveDraftBodyHeight: CGFloat = StatusCapsuleGeometry.maxLiveDraftBodyHeight
+    var minimalBarWidth: CGFloat = MinimalIslandMetrics.nonNotchBarWidth
+    var locale: Locale
+    var onCopy: () -> Void
+    var onClose: () -> Void
+
+    @ViewBuilder
+    var body: some View {
+        switch presentation {
+        case .full:
+            StatusCapsuleView(
+                phase: phase,
+                resultText: resultText,
+                direction: direction,
+                copiedFeedback: copiedFeedback,
+                liveConfirmed: liveConfirmed,
+                liveVolatile: liveVolatile,
+                topInset: topInset,
+                maxLiveDraftBodyHeight: maxLiveDraftBodyHeight,
+                locale: locale,
+                onCopy: onCopy,
+                onClose: onClose
+            )
+        case .minimal:
+            MinimalStatusIndicatorView(
+                phase: phase,
+                topInset: topInset,
+                barWidth: minimalBarWidth,
+                locale: locale
+            )
+        case .hidden:
+            EmptyView()
         }
     }
 }
@@ -496,17 +561,12 @@ struct StatusCapsuleView: View {
                     .scaleEffect(pulse ? 1.12 : 0.96)
                 label(L10n.t("capsule.listening", locale: locale))
             case .understanding:
-                TimelineView(.animation(minimumInterval: 0.4, paused: false)) { context in
-                    let tick = Int(context.date.timeIntervalSinceReferenceDate / 0.4) % 3
-                    HStack(spacing: 3) {
-                        ForEach(0..<3, id: \.self) { index in
-                            Circle()
-                                .fill(ink.opacity(index == tick ? 1.0 : 0.28))
-                                .frame(width: 4, height: 4)
-                        }
-                    }
-                    .frame(width: 18)
-                }
+                ProcessingDots(
+                    diameter: 4,
+                    spacing: 3,
+                    ink: ink
+                )
+                .frame(width: 18)
                 label(L10n.t("capsule.understanding", locale: locale))
             case .writing:
                 Text("✍")

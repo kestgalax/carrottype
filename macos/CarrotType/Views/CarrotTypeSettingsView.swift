@@ -129,6 +129,8 @@ struct CarrotTypeSettingsView: View {
                     selection = .models
                     showStatusDetails = false
                 })
+            case .dynamicIsland:
+                DynamicIslandSettingsPane(appState: appState)
             case .setup:
                 SetupSettingsPane(appState: appState, permissions: appState.permissions)
             case .models:

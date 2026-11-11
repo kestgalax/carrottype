@@ -147,3 +147,9 @@ Sidebar: **Dynamic Island**. Группа «Во время диктовки» /
 ## ADR Impact
 
 Existing ADR must be superseded or amended: после согласования дополнить ADR-014 условиями effective preview/отмены в режимах без текста. ADR-012 сохраняется при существующей доставке transform results. Нового runtime/engine/network/trust решения нет; глобальное отключение result-панелей потребует отдельного пересмотра ADR-012 до реализации.
+
+## Реализация — 2026-11-11 (OpenCode, на review)
+
+D1–D3 реализованы в отдельном Orca worktree на новой ветке от main `d0a4058`; авторитетный spec-коммит `0b3e27c` перенесён cherry-pick, прежняя planning-ветка не использована. Добавлены `DynamicIslandMode`/`DynamicIslandPolicy`, pane после General, перенос live-draft переключателя с тем же ключом, synthetic preview на общих компонентах, minimal indicator и menu-only suppression. Режим и effective preview захватываются в `DictationSessionSettings`; minimal/menu не вызывают preview и не дают Escape Copy. Result/recovery/transform остаются full; fallback виден в меню/Details. Coordinator/install gate/WAV/paste/PTT/mute/stats/model policy не менялись.
+
+Проверки: `bash scripts/verify-dynamic-island.sh`; `python3 scripts/verify-dynamic-island-app.py` (actual AppState/coordinator с fake adapters); существующие lifecycle/setup/reliability/catalog scripts; AIDOS validate/trace/review; arm64 Debug build. Offscreen native RU/EN light/dark/minimum snapshots и подписанный Debug приложены в отчёте. Реальные notch/external/fullscreen, VoiceOver, auto-hidden menu bar и интерактивное принятие остаются ручными; публикация не разрешена. Код review выполняет Codex.

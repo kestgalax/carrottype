@@ -76,6 +76,11 @@ struct MenuBarContentView: View {
             }
         }
 
+        if appState.showsSuppressedFallbackWarning {
+            Text(L10n.t("island.fallback_warning", locale: locale))
+                .foregroundStyle(.secondary)
+        }
+
         if appState.lastDictationText != nil {
             Button(L10n.t("recovery.copy_last", locale: locale)) {
                 appState.copyLastDictation()

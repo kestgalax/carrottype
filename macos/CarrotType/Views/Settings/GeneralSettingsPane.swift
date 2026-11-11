@@ -8,13 +8,6 @@ struct GeneralSettingsPane: View {
 
     private var locale: Locale { appState.effectiveLocale }
 
-    private var liveDraftFooter: String {
-        if appState.activeSTTSupportsStreaming {
-            return L10n.t("hotkey.live_draft_footer", locale: locale)
-        }
-        return L10n.t("hotkey.live_draft_unavailable", locale: locale)
-    }
-
     var body: some View {
         Form {
             Section {
@@ -34,12 +27,6 @@ struct GeneralSettingsPane: View {
                     title: L10n.t("hotkey.retain_clipboard", locale: locale),
                     hint: L10n.t("hotkey.retain_clipboard_footer", locale: locale),
                     isOn: $appState.retainDictationInClipboard
-                )
-                SettingsToggleRow(
-                    title: L10n.t("hotkey.live_draft", locale: locale),
-                    hint: liveDraftFooter,
-                    isOn: $appState.liveDraftEnabled,
-                    isEnabled: appState.activeSTTSupportsStreaming
                 )
             } header: {
                 Text(L10n.t("hotkey.section", locale: locale))

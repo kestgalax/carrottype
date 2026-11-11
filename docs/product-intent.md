@@ -18,7 +18,7 @@ Build a macOS background / menu-bar app whose primary loop is:
 
 1. Global hotkey starts recording.
 2. Same hotkey stops recording: **press again** in toggle mode (default), or **release** when Walkie-talkie is on in Settings (hold-to-talk only). The modes are mutually exclusive; same dictation shortcut either way.
-3. On-device STT (Parakeet Ultra only from 0.4.0; explicit download, existing installed Ultra reused) produces text. Optional live draft (ADR-014) may show adapting interim text in the Status Capsule while speaking (periodic full-buffer Parakeet preview); mic and session WAV start immediately even while Parakeet loads (v0.3.6); paste still happens only after stop via the WAV. Escape cancel with non-empty preview can offer Copy from the Capsule without pasting (v0.3.5).
+3. On-device STT (Parakeet Ultra only from 0.4.0; explicit download, existing installed Ultra reused) produces text. Optional live draft (ADR-014) may show adapting interim text in the Status Capsule while speaking (periodic full-buffer Parakeet preview); mic and session WAV start immediately even while Parakeet loads (v0.3.6); paste still happens only after stop via the WAV. Escape cancel with non-empty preview can offer Copy from the Capsule without pasting (v0.3.5). Dynamic Island settings may replace that status capsule with a minimal indicator or leave status to the menu bar; live draft is available only in the full capsule.
 4. Optional cleanup / post-dictation formatting (Light heuristics, Qwen3 0.6B or Gemma) formats text without rewriting meaning.
 5. Text is inserted at the current caret in the frontmost app.
 6. Optional: keep the result on the clipboard after paste so ⌘V still works if focus moved. Starting with 0.3.10, the last completed non-empty dictation is also available to Copy from RAM until replaced, explicitly cleared, or app exit; no transcript history is written to disk. A dispatched paste is not a verified insertion in the receiving app.
@@ -79,3 +79,7 @@ Explicit presentation/word/tone preferences override generic cleanup defaults. A
 
 
 0.8 rework: explicit word deletion, prose lowercase and last-sentence full-stop controls are deterministic opt-ins independent of model availability, including when Off is selected. Existing preferences/custom text are preserved. Model-based business tone is separately labelled experimental and must not be presented as reliably completed merely because generation or safe fallback succeeded. Current quality acceptance is open.
+
+## Dynamic Island modes — pre-release prototype (2026-11-11)
+
+The maintainer approved a focused presentation choice for the next Debug prototype: Full capsule (default), Minimal indicator, or Menu bar only, configured in a dedicated Settings pane. This changes only the visibility/shape of dictation status, not local dictation, result delivery, RAM recovery or trust boundaries. Transform results and paste-failure recovery remain visible in every mode; when the status capsule is suppressed, a Light fallback warning stays available in the menu and Details. No version or publication is assigned by this prototype.

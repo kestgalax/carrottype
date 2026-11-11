@@ -3,6 +3,20 @@ import Carbon
 import Combine
 import Foundation
 
+/// Everything pinned at dictation start. Mode and effective preview are captured here.
+struct DictationSessionSettings {
+    let pipeline: DictationPipelineConfiguration
+    let destination: DictationDelivery
+    let deviceUID: String
+    let deviceName: String
+    let unmute: Bool
+    let liveDraft: Bool
+    let holdToTalk: Bool
+    let islandMode: DynamicIslandMode
+}
+
+typealias AppDictationSession = DictationSessionCoordinator<DictationSessionSettings, FormattedDictation>
+
 @MainActor
 final class AppState: ObservableObject {
     let launchAtLogin = LaunchAtLoginService()
@@ -11,8 +25,12 @@ final class AppState: ObservableObject {
             updateLevelDecayTimer()
         }
     }
-    /// Session chrome phase for Status Capsule (nil = hidden).
+    /// Session chrome phase for Status Capsule (nil = hidden). Logical even when a mode suppresses the panel.
     @Published private(set) var capsulePhase: StatusCapsulePhase?
+    /// `.understanding` is shared by dictation and transform; results/presentation need the owner.
+    @Published private(set) var capsuleOperation: DynamicIslandOperation = .dictation
+    /// Mode captured at dictation start; settings changes apply to the next session.
+    @Published private(set) var activeDictationMode: DynamicIslandMode = .full
     /// Text shown while `capsulePhase` is `.transformResult` or `.liveDraftResult`.
     @Published private(set) var transformResultText: String?
     /// Optional direction hint for Translate bindings (e.g. `EN → RU`).
@@ -24,6 +42,8 @@ final class AppState: ObservableObject {
     @Published private(set) var setupTrialFormatting: FormattingOutcome?
     @Published private(set) var hasCompletedSetupTrial: Bool
     @Published private(set) var lastFormattingOutcome: FormattingOutcome?
+    /// Presentation mode captured by the last completed caret dictation.
+    @Published private(set) var lastDictationIslandMode: DynamicIslandMode?
     @Published private(set) var isSetupTrialCancelling = false
     private let setupDefaults: UserDefaults
     private var didPresentFirstRunThisLaunch = false
@@ -43,6 +63,12 @@ final class AppState: ObservableObject {
         didSet {
             setupDefaults.set(appTheme.rawValue, forKey: AppTheme.defaultsKey)
             NSApplication.shared.appearance = appTheme.appearance
+        }
+    }
+    /// Dictation status presentation: full capsule (default), minimal indicator, or menu bar only.
+    @Published var dynamicIslandMode: DynamicIslandMode {
+        didSet {
+            dynamicIslandMode.save(defaults: setupDefaults)
         }
     }
     @Published var dictationRules: DictationRules {
@@ -123,6 +149,7 @@ final class AppState: ObservableObject {
     var transformBindings: [TransformBinding] { hotkey.transformBindings }
 
     let updates = AppUpdateService()
+    private let sessionDependenciesFactory: (@MainActor () -> AppDictationSession.Dependencies)?
     private lazy var session = makeSessionCoordinator()
     private var restoreMuteOnQuit: (() -> Void)?
     private var cancelledDraftToPresent: String?
@@ -160,7 +187,8 @@ final class AppState: ObservableObject {
         audioInput: AudioInputService? = nil,
         audioLevel: AudioLevelMonitor? = nil,
         usageStats: UsageStatsStore? = nil,
-        defaults: UserDefaults = .standard
+        defaults: UserDefaults = .standard,
+        sessionDependenciesFactory: (@MainActor () -> AppDictationSession.Dependencies)? = nil
     ) {
         let modelManager = modelManager ?? ModelManager()
         let permissions = permissions ?? PermissionService()
@@ -175,7 +203,9 @@ final class AppState: ObservableObject {
         self.pipeline = DictationPipeline(modelManager: modelManager)
         self.usageStats = usageStats ?? UsageStatsStore()
         self.setupDefaults = defaults
+        self.sessionDependenciesFactory = sessionDependenciesFactory
         self.appTheme = AppTheme.load(defaults: defaults)
+        self.dynamicIslandMode = DynamicIslandMode.load(defaults: defaults)
         self.dictationRules = DictationRules.load(defaults: defaults)
         self.hasCompletedSetupTrial = defaults.bool(forKey: "carrottype.didCompleteSetupTrial")
         self.showFirstRun = !defaults.bool(forKey: "carrottype.didCompleteFirstRun")
@@ -332,6 +362,23 @@ final class AppState: ObservableObject {
         modelManager.selectedSTTSupportsStreaming
     }
 
+    /// Single presentation decision used by the capsule controller and native fixtures.
+    var islandPresentation: DynamicIslandPresentation {
+        DynamicIslandPolicy.presentation(
+            phase: capsulePhase,
+            operation: capsuleOperation,
+            mode: activeDictationMode
+        )
+    }
+
+    /// Light fallback must remain discoverable when the status panel is suppressed.
+    var showsSuppressedFallbackWarning: Bool {
+        DynamicIslandPolicy.showsFallbackWarning(
+            mode: lastDictationIslandMode ?? dynamicIslandMode,
+            usedFallback: lastFormattingOutcome?.usedFallback == true
+        )
+    }
+
     func refreshMenuBarMode() {
         if menuBarMode == .recording || menuBarMode == .processing || menuBarMode == .cleanup {
             return
@@ -467,14 +514,28 @@ final class AppState: ObservableObject {
             return
         }
         pttKeyHeld = hold
-        _ = session.start(dictationSettings(destination: .caret))
+        _ = startDictationSession(destination: .caret)
+    }
+
+    /// Shared start path; tests bypass readiness with the same captured settings/coordinator.
+    @discardableResult
+    func startDictationSession(destination: DictationDelivery) -> Bool {
+        let settings = dictationSettings(destination: destination)
+        dismissAnyResultCapsule()
+        pttKeyHeld = settings.holdToTalk
+        return session.start(settings)
     }
 
     private func handleHotkeyReleased() {
         guard session.configuration?.holdToTalk == true else { return }
         pttKeyHeld = false
         if session.phase == .starting { session.cancel() }
-        else { session.finish() }
+        else { finishDictationSession() }
+    }
+
+    /// Shared finish path; tests use the real coordinator teardown with fake adapters.
+    func finishDictationSession() {
+        session.finish()
     }
 
     /// Selection transform (ADR-012): read selection → LLM → show result in Capsule.
@@ -571,6 +632,7 @@ final class AppState: ObservableObject {
         transformResultCopiedFeedback = false
         transformResultText = text
         transformResultDirection = nil
+        capsuleOperation = .dictation
         capsulePhase = .liveDraftResult
         hotkey.setEscapeCancelRegistered(true)
         liveDraftResultDismissTask = Task { @MainActor [weak self] in
@@ -596,7 +658,7 @@ final class AppState: ObservableObject {
         if menuBarMode != .recording {
             hotkey.setEscapeCancelRegistered(false)
         }
-        statusCapsule.sync(phase: capsulePhase)
+        statusCapsule.sync()
     }
 
     func dismissAnyResultCapsule() {
@@ -610,8 +672,16 @@ final class AppState: ObservableObject {
         transformCopiedFeedbackTask?.cancel()
         transformResultText = text
         transformResultDirection = direction
+        capsuleOperation = .transform
         capsulePhase = .transformResult
         hotkey.setEscapeCancelRegistered(true)
+    }
+
+    /// Production paste-failure recovery; result chrome stays available in every island mode.
+    func presentDictationRecovery(_ text: String) {
+        presentTransformResult(text, direction: L10n.t("recovery.paste_failed", locale: effectiveLocale))
+        capsuleOperation = .dictation
+        capsulePhase = .dictationRecovery
     }
 
     func dismissTransformResult() {
@@ -627,7 +697,7 @@ final class AppState: ObservableObject {
         if menuBarMode != .recording {
             hotkey.setEscapeCancelRegistered(false)
         }
-        statusCapsule.sync(phase: capsulePhase)
+        statusCapsule.sync()
     }
 
     func copyTransformResult() {
@@ -642,6 +712,24 @@ final class AppState: ObservableObject {
             guard let self, !Task.isCancelled else { return }
             self.transformResultCopiedFeedback = false
         }
+    }
+
+    /// Transform owns `.understanding`; its status must stay visible even in minimal/menu-only modes.
+    func beginTransformPresentation() {
+        isProcessing = true
+        invalidateCapsuleSequence()
+        transformResultText = nil
+        transformResultDirection = nil
+        transformResultCopiedFeedback = false
+        menuBarMode = .cleanup
+        capsuleOperation = .transform
+        capsulePhase = .understanding
+    }
+
+    func endTransformPresentation() {
+        isProcessing = false
+        if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
+        refreshMenuBarMode()
     }
 
     private func runSelectionTransform(binding: TransformBinding, updateReservation: UUID) async {
@@ -679,19 +767,10 @@ final class AppState: ObservableObject {
             return
         }
 
-        isProcessing = true
-        invalidateCapsuleSequence()
-        transformResultText = nil
-        transformResultDirection = nil
-        transformResultCopiedFeedback = false
-        menuBarMode = .cleanup
-        capsulePhase = .understanding
+        beginTransformPresentation()
         defer {
-            isProcessing = false
-            if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
-            refreshMenuBarMode()
+            endTransformPresentation()
             // The transform owns the gate until its awaited unload below.
-
         }
 
         do {
@@ -749,23 +828,24 @@ final class AppState: ObservableObject {
         await pipeline.unloadAll()
     }
 
-    private struct SessionSettings {
-        let pipeline: DictationPipelineConfiguration
-        let destination: DictationDelivery
-        let deviceUID: String
-        let deviceName: String
-        let unmute: Bool
-        let liveDraft: Bool
-        let holdToTalk: Bool
-    }
-
-    private func dictationSettings(destination: DictationDelivery) -> SessionSettings {
+    private func dictationSettings(destination: DictationDelivery) -> DictationSessionSettings {
         var configuration = pipeline.snapshotConfiguration()
         configuration.rules = dictationRules.normalized
-        return SessionSettings(pipeline: configuration, destination: destination,
-            deviceUID: audioInput.selectedDeviceID, deviceName: audioInput.selectedDevice?.name ?? "",
-            unmute: unmuteMicDuringDictation, liveDraft: liveDraftEnabled && activeSTTSupportsStreaming,
-            holdToTalk: destination == .caret && pushToTalkEnabled)
+        let mode = dynamicIslandMode
+        return DictationSessionSettings(
+            pipeline: configuration,
+            destination: destination,
+            deviceUID: audioInput.selectedDeviceID,
+            deviceName: audioInput.selectedDevice?.name ?? "",
+            unmute: unmuteMicDuringDictation,
+            liveDraft: DynamicIslandPolicy.effectivePreview(
+                mode: mode,
+                savedLiveDraft: liveDraftEnabled,
+                supportsStreaming: configuration.supportsStreaming
+            ),
+            holdToTalk: destination == .caret && pushToTalkEnabled,
+            islandMode: mode
+        )
     }
 
     var canRunFormattingTrial: Bool {
@@ -805,15 +885,17 @@ final class AppState: ObservableObject {
         formattingTrialResult = nil; formattingTrialOutcome = nil; formattingTrialError = nil
     }
 
-    private func makeSessionCoordinator() -> DictationSessionCoordinator<SessionSettings, FormattedDictation> {
-        let recorder = AudioRecorder()
-        let mute = MicMuteController()
-        let pipeline = pipeline
-        let meter = audioLevel
-        restoreMuteOnQuit = { mute.restoreSynchronouslyOnQuit() }
-        let coordinator = DictationSessionCoordinator<SessionSettings, FormattedDictation>(
-            gate: updates.installationGate,
-            dependencies: .init(
+    private func makeSessionCoordinator() -> AppDictationSession {
+        let dependencies: AppDictationSession.Dependencies
+        if let sessionDependenciesFactory {
+            dependencies = sessionDependenciesFactory()
+        } else {
+            let recorder = AudioRecorder()
+            let mute = MicMuteController()
+            let pipeline = pipeline
+            let meter = audioLevel
+            restoreMuteOnQuit = { mute.restoreSynchronouslyOnQuit() }
+            dependencies = .init(
                 startCapture: { configuration, peak in
                     meter.stop()
                     recorder.onLivePeak = peak
@@ -848,7 +930,9 @@ final class AppState: ObservableObject {
                         }
                 },
                 unload: { await pipeline.unloadAll() }
-            ))
+            )
+        }
+        let coordinator = AppDictationSession(gate: updates.installationGate, dependencies: dependencies)
         coordinator.onPeak = { [weak self] peak in
             guard let self else { return }
             self.recorderLiveLevel = max(peak, self.recorderLiveLevel * 0.55)
@@ -886,12 +970,17 @@ final class AppState: ObservableObject {
     private func sessionPhaseChanged(_ phase: DictationSessionPhase) {
         switch phase {
         case .starting:
+            if let configuration = session.configuration {
+                activeDictationMode = configuration.islandMode
+                capsuleOperation = .dictation
+            }
             isSetupTrialActive = session.configuration?.destination == .setupTrial
             isSetupTrialCancelling = false
             if isSetupTrialActive { setupTrialText = ""; setupTrialFormatting = nil }
             cancelledDraftToPresent = nil
             dismissAnyResultCapsule()
             clearLiveDraftText()
+            invalidateCapsuleSequence()
             recorderLiveLevel = 0
         case .recording:
             invalidateCapsuleSequence()
@@ -926,19 +1015,27 @@ final class AppState: ObservableObject {
         }
     }
 
-    private func cancelDictationSession() async {
+    func cancelDictationSession() async {
         guard session.phase == .recording || session.phase == .starting else { return }
         let draft = liveDraftSnapshotText()
-        cancelledDraftToPresent = !isSetupTrialActive && liveDraftEnabled && session.configuration?.liveDraft == true && !draft.isEmpty ? draft : nil
+        let capturedPreview = session.configuration?.liveDraft == true
+        cancelledDraftToPresent = !isSetupTrialActive && capturedPreview && !draft.isEmpty ? draft : nil
         session.cancel()
     }
 
-    private func deliverDictation(_ result: FormattedDictation, duration: TimeInterval, configuration: SessionSettings) async {
+    var isStatusPanelVisible: Bool { statusCapsule.isVisibleForTesting }
+
+    var dictationSessionPhase: DictationSessionPhase { session.phase }
+
+    private func deliverDictation(_ result: FormattedDictation, duration: TimeInterval, configuration: DictationSessionSettings) async {
         clearLiveDraftText()
         let text = result.text.trimmingCharacters(in: .whitespacesAndNewlines)
         if text.isEmpty {
             if configuration.destination == .setupTrial { setupTrialText = ""; setupTrialFormatting = result.formatting }
-            else { lastFormattingOutcome = result.formatting }
+            else {
+                lastFormattingOutcome = result.formatting
+                lastDictationIslandMode = configuration.islandMode
+            }
             menuBarMode = .idle
             clearCapsulePhase()
             return
@@ -947,6 +1044,7 @@ final class AppState: ObservableObject {
             try configuration.destination.deliver(result, atCaret: { completed in
                 if !text.isEmpty { lastDictationText = text }
                 lastFormattingOutcome = completed.formatting
+                lastDictationIslandMode = configuration.islandMode
                 try TextInsertionService.insertAtCaret(completed.text, retainInClipboard: retainDictationInClipboard)
                 recordUsageIfEnabled(text: completed.text, recordingDuration: duration)
             }, inTrial: { completed in
@@ -962,8 +1060,7 @@ final class AppState: ObservableObject {
             clearCapsulePhase()
             menuBarMode = .error
             if !text.isEmpty {
-                presentTransformResult(text, direction: L10n.t("recovery.paste_failed", locale: effectiveLocale))
-                capsulePhase = .dictationRecovery
+                presentDictationRecovery(text)
             }
             return
         }
@@ -1036,7 +1133,7 @@ final class AppState: ObservableObject {
         if menuBarMode != .recording {
             hotkey.setEscapeCancelRegistered(false)
         }
-        statusCapsule.sync(phase: nil)
+        statusCapsule.sync()
     }
 
     private func invalidateCapsuleSequence() {
@@ -1044,7 +1141,7 @@ final class AppState: ObservableObject {
     }
 
     /// Command dispatched, then Done. CGEvent cannot acknowledge insertion in another app.
-    private func presentSuccessCapsuleSequence(usedFormattingFallback: Bool) async {
+    func presentSuccessCapsuleSequence(usedFormattingFallback: Bool) async {
         let token = UUID()
         capsuleSequenceToken = token
         capsulePhase = .writing
