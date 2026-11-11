@@ -230,7 +230,7 @@ bytes; model event processing 13.88–19.22 ms per 650 committed graphemes (0.02
 builds 3.89–4.61 ms. Native whole-Settings+sheet snapshots under
 `dist/.builds.noindex/Typing-Speed-Native-Review/native` (36 states plus out-of-range/low
 accuracy); signed arm64 Debug under `dist/.builds.noindex/Typing-Speed-Debug-2026-11-11`
-(executable SHA-256 `8cd1b431c79368f6cbb6a04744fa5141e6c52be71f2e7f305b79f8a5cf6c34bd`).
+(executable SHA-256 `e328029d84f7cf2685a7f93b00e9e6e4cb74f57d61b12e01432610d24da95747`).
 Implementation commit `af39ec2`; full evidence/limits in `docs/debug-review-typing-speed-test.md`.
 Manual real typing/focus/IME/VoiceOver/device/performance acceptance remains for Codex/maintainer;
 no merge/push/version/publication authorization.

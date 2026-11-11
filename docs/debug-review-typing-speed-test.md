@@ -116,7 +116,7 @@ The sheet itself stays within 600×390.
 - `codesign --verify --deep --strict`: valid on disk, satisfies its Designated Requirement.
 - CDHash: `98897b2d46729d96012b71c4ad236febe0d587ce5af47a60961e5b8c4cab0c0c`
 - Executable SHA-256:
-  `8cd1b431c79368f6cbb6a04744fa5141e6c52be71f2e7f305b79f8a5cf6c34bd`
+  `e328029d84f7cf2685a7f93b00e9e6e4cb74f57d61b12e01432610d24da95747`
 - `CarrotType.debug.dylib` SHA-256:
   `926f002e67734602b1b1c483c2f3d0b88e93375fa8e0e404118880a62d83758a`
 - Previous potentially running Debug copies and the installed/user app, preferences, models and
