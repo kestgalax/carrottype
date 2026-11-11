@@ -53,6 +53,13 @@ record does not claim that every device/TCC/VoiceOver/fullscreen check passed.
   manual/unverified unless separately performed.
 - Offscreen/native fixture evidence and candidate-code staging are not interactive
   acceptance.
-- The draft release, PR/CI links and hosted verification are recorded in the coordinator
-  report when available; no public latest/live release was mutated by this preparation.
+- Draft release v0.9.0 ID `441884470` (tag `v0.9.0`) was uploaded with DMG, signed ZIP and
+  signed feed. `macos/scripts/verify-update-release.py --tag v0.9.0 --previous-build 32`
+  passed; downloaded draft bytes match the local hashes above. The GitHub draft URL currently
+  renders as an untagged placeholder until publication; the canonical release path is
+  `https://github.com/kestgalax/carrottype/releases/tag/v0.9.0`.
+- PR [#30](https://github.com/kestgalax/carrottype/pull/30) targets `main`; hosted macOS checks
+  [run 43048767504](https://github.com/kestgalax/carrottype/actions/runs/43048767504) passed
+  (head `458d9aa`, 9m24s). Tag `v0.9.0` points at `458d9aa`. No public latest/live release was
+  mutated by this preparation; stable/latest remains 0.8.2 (32).
 - No private updater key was exported; no published artifact/release history was rewritten.
