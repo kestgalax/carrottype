@@ -54,6 +54,36 @@ class ReleaseNotesChecks(unittest.TestCase):
         self.assertIn(self.notes['localizations']['ru']['summary'], descriptions[1].text)
         self.assertEqual(release_notes.content_for(self.notes, 'de')[0], 'en')
 
+    def test_cumulative_history(self):
+        root = Path(__file__).parents[2]
+        history = release_notes.load_history(root / 'macos/CarrotType/Resources/ReleaseNotesHistory.json', self.notes)
+        builds = [str(b) for b in range(int(self.build), 26, -1)]
+        self.assertEqual([n['build'] for n in history], builds[1:])
+        for language in ('en', 'ru'):
+            rendered = release_notes.render_html(self.notes, language, history)
+            self.assertEqual(rendered.count('class="release"'), len(builds))
+            offsets = [rendered.index('data-sparkle-version="' + b + '"') for b in builds]
+            self.assertEqual(offsets, sorted(offsets))
+            self.assertIn('.release.sparkle-installed-version ~ .release', rendered)
+            self.assertNotIn('<script', rendered)
+            self.assertIn('history-scope', rendered)
+            poisoned = copy.deepcopy(history)
+            poisoned[0]['localizations'][language]['summary'] = '<script>bad()</script>'
+            self.assertNotIn('<script', release_notes.render_html(self.notes, language, poisoned))
+            self.assertIn('&lt;script&gt;', release_notes.render_html(self.notes, language, poisoned))
+        feed = ET.fromstring(update.make_feed(self.version, self.build, 'https://example.com/app.zip', 'sig', 42,
+                                             '', update.FEED, self.notes, history))
+        self.assertTrue(all(d.text.count('class="release"') == len(builds)
+                            for d in feed.findall('channel/item/description')))
+        for entries in [history + [history[-1]], history[1:], list(reversed(history)), [self.notes] + history]:
+            with tempfile.TemporaryDirectory() as tmp:
+                p = Path(tmp) / 'history.json'
+                p.write_text(json.dumps(entries))
+                with self.assertRaises(ValueError):
+                    release_notes.load_history(p, self.notes)
+        # Only the current release is included in GitHub Markdown.
+        self.assertNotIn('CarrotType 0.8.1', release_notes.render_markdown(self.notes, 'en'))
+
     def test_invalid_or_mismatched_sources_fail(self):
         candidates = []
         for key, value in [('version', 'invalid'), ('build', 'invalid'), ('date', '2026-02-31'), ('schemaVersion', 2)]:

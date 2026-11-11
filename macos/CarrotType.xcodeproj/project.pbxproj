@@ -39,6 +39,7 @@
 		5A35E7F40EC6280BAD745434 /* WaveLinkPortOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428EF9BD7420AF390B390559 /* WaveLinkPortOrder.swift */; };
 		5F3589564E9DA267FEFC7FF2 /* SetupProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E21A6CA18C7371EEF14B46F /* SetupProgress.swift */; };
 		5F988470236EE3D4A4179BAA /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE375B29BA9AD7B167B76BE /* ModelManager.swift */; };
+		5FDC9ED5E9C465087BF5E8D5 /* ReleaseNotesHistory.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D92ED99098D9030390EDEFE /* ReleaseNotesHistory.json */; };
 		6824CE78650D3313752EDB7D /* ParakeetStreamingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AAF8B54F64449B53985B446 /* ParakeetStreamingEngine.swift */; };
 		6907436AC4B5CEB0186D6370 /* PermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F030E16C4E6640B30B01CCAF /* PermissionService.swift */; };
 		6B8A6A54ACE564ACBFE92820 /* TextCleanup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB6DC297BE778E340C7DEE /* TextCleanup.swift */; };
@@ -182,6 +183,7 @@
 		89ED5A599D2EE48261B14B7A /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		8A26C73B9E41B226D9DC2062 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		8B4ED8B40E69BEEEBD41FEC2 /* ReleaseNotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReleaseNotes.swift; sourceTree = "<group>"; };
+		8D92ED99098D9030390EDEFE /* ReleaseNotesHistory.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ReleaseNotesHistory.json; sourceTree = "<group>"; };
 		8DBB7C260BE9EE22B7B2B51A /* DictationFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationFormatting.swift; sourceTree = "<group>"; };
 		8FC142B441FCA12DB36C0774 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		90DD18484F202210846BA918 /* SetupProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupProgressView.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 				3E8E2BEBD0ADFF9762189AF3 /* Localizable.xcstrings */,
 				483744F178A17C48BF392DE8 /* ModelCatalog.json */,
 				8235284359B7C3A7A66533D8 /* ReleaseNotes.json */,
+				8D92ED99098D9030390EDEFE /* ReleaseNotesHistory.json */,
 				30519F8A8B45D0B51A85ACD3 /* Sparkle-LICENSE.txt */,
 				1100C490D0C239D082EF6C60 /* InfoPlist.strings */,
 			);
@@ -525,6 +528,7 @@
 				750021AC0024C9A389B610AA /* Localizable.xcstrings in Resources */,
 				4CD5D01CA1E2291B4136CDD6 /* ModelCatalog.json in Resources */,
 				A83022796F4C8399E5258DD4 /* ReleaseNotes.json in Resources */,
+				5FDC9ED5E9C465087BF5E8D5 /* ReleaseNotesHistory.json in Resources */,
 				BC2226002626170C3F7F1952 /* Sparkle-LICENSE.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -45,7 +45,7 @@ def validate_metadata(info, previous_build, staging=False):
     return version, build
 
 
-def make_feed(version, build, archive_url, signature, length, notes, feed_url, structured_notes=None):
+def make_feed(version, build, archive_url, signature, length, notes, feed_url, structured_notes=None, history=None):
     root = ET.Element('rss', {'version': '2.0'})
     channel = ET.SubElement(root, 'channel')
     ET.SubElement(channel, 'title').text = 'CarrotType Updates'
@@ -65,7 +65,7 @@ def make_feed(version, build, archive_url, signature, length, notes, feed_url, s
             ET.SubElement(item, 'description', {
                 '{' + SPARKLE + '}format': 'html',
                 '{http://www.w3.org/XML/1998/namespace}lang': language,
-            }).text = release_notes.render_html(structured_notes, language)
+            }).text = release_notes.render_html(structured_notes, language, history)
     ET.SubElement(item, 'enclosure', {
         'url': archive_url, '{' + SPARKLE + '}edSignature': signature,
         'length': str(length), 'type': 'application/octet-stream',
@@ -92,6 +92,12 @@ def main():
     structured_notes = None if args.notes is not None else release_notes.load(
         app / 'Contents/Resources/ReleaseNotes.json', version=version, build=build
     )
+    history_path = app / 'Contents/Resources/ReleaseNotesHistory.json'
+    if not staging and int(build) >= 32 and not history_path.is_file():
+        raise ValueError('Cumulative release history is required')
+    history = release_notes.load_history(history_path, structured_notes) if history_path.is_file() and structured_notes else []
+    if not staging and int(build) >= 32 and (not history or history[-1]['build'] != '27'):
+        raise ValueError('Preserve complete structured history from build 27')
     if staging:
         url = urlsplit(args.staging_base_url)
         if url.scheme != 'http' or url.hostname != '127.0.0.1' or url.query or url.fragment:
@@ -116,7 +122,7 @@ def main():
     base = args.staging_base_url.rstrip('/') if staging else RELEASES + '/download/v' + version
     feed_url = base + '/appcast.xml' if staging else FEED
     feed.write_bytes(make_feed(version, build, base + '/' + name, signature, archive.stat().st_size,
-                               args.notes.read_text() if args.notes else "", feed_url, structured_notes))
+                               args.notes.read_text() if args.notes else "", feed_url, structured_notes, history))
     subprocess.run(sign + [str(feed)], check=True)
     subprocess.run(sign + ['--verify', str(feed)], check=True)
     print(f'Prepared and verified: {archive}\nSigned feed: {feed}\nNo release was published.')
