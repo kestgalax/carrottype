@@ -108,6 +108,8 @@ struct GeneralSettingsPane: View {
             } footer: {
                 Text(L10n.t("language.footer", locale: locale))
             }
+
+            LaunchAtLoginSection(service: appState.launchAtLogin, locale: locale)
         }
         .formStyle(.grouped)
         .scrollIndicators(.never)

@@ -1,84 +1,32 @@
 {
   "schemaVersion": 1,
-  "version": "0.8.0",
-  "build": "30",
-  "date": "2026-11-10",
+  "version": "0.8.1",
+  "build": "31",
+  "date": "2026-11-11",
   "localizations": {
     "en": {
-      "summary": "Formatting your way, with a choice of theme.",
+      "summary": "CarrotType ready when you sign in.",
       "sections": [
         {
           "kind": "new",
           "items": [
             {
-              "title": "Formatting rules.",
-              "detail": "Exact word removal, lowercase and final-period controls work without a model and survive fallback. Separate model preferences and experimental business tone can be tried on sample text."
-            },
-            {
-              "title": "System, Light or Dark.",
-              "detail": "Theme is independent of language, applies immediately and persists across launches."
-            }
-          ]
-        },
-        {
-          "kind": "improved",
-          "items": [
-            {
-              "title": "Two offered models.",
-              "detail": "Qwen3 0.6B and Gemma; installed Smart+ remains compatible with existing settings and actions."
-            }
-          ]
-        },
-        {
-          "kind": "fixed",
-          "items": [
-            {
-              "title": "Gentler basic formatting.",
-              "detail": "Preserves meaningful words and line breaks."
-            },
-            {
-              "title": "Reject incomplete model results.",
-              "detail": "Token-aware budgeting rejects incomplete output; detected loss of protected values also uses visible basic-formatting fallback."
+              "title": "Launch at login.",
+              "detail": "Enable startup in General. After restarting or powering on your Mac, CarrotType opens in the menu bar when you sign in. macOS approval and errors are shown explicitly."
             }
           ]
         }
       ]
     },
     "ru": {
-      "summary": "Постобработка по вашим правилам и выбор темы.",
+      "summary": "CarrotType под рукой после включения Mac.",
       "sections": [
         {
           "kind": "new",
           "items": [
             {
-              "title": "Правила постобработки.",
-              "detail": "Удаление слов, строчные буквы и последняя точка настраиваются без модели и работают при её отказе. Пожелания модели и экспериментальный деловой стиль можно проверить на тексте."
-            },
-            {
-              "title": "Системная, светлая или тёмная тема.",
-              "detail": "Выбор независим от языка, применяется сразу и сохраняется после перезапуска."
-            }
-          ]
-        },
-        {
-          "kind": "improved",
-          "items": [
-            {
-              "title": "Две предлагаемые модели.",
-              "detail": "Qwen3 0.6B и Gemma; установленный Smart+ сохраняется для совместимости с существующими настройками и действиями."
-            }
-          ]
-        },
-        {
-          "kind": "fixed",
-          "items": [
-            {
-              "title": "Бережная базовая обработка.",
-              "detail": "Сохраняет смысловые слова и переносы строк."
-            },
-            {
-              "title": "Защита от обрезанного результата модели.",
-              "detail": "Учёт токенов защищает от обрезанного ответа; обнаруженная потеря защищённых значений тоже вызывает видимый переход на базовую обработку."
+              "title": "Запуск при входе в macOS.",
+              "detail": "Включите автозапуск в Основных. После перезагрузки или включения Mac приложение появится в строке меню при входе в систему. Необходимость разрешения macOS и ошибки показываются явно."
             }
           ]
         }
