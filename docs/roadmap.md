@@ -8,7 +8,7 @@ Latest published artifact: `CarrotType-0.8.2.dmg` — SHA-256 `0d6bb879f769e94e7
 
 **Release acceptance:** 0.8.2 (32) signed Debug accepted for publication («можно опубликовать»); stable published 2026-11-11 after clean Release and local/draft/public signature/digest/native-update verification. Individual manual results not enumerated. [Evidence/limits](debug-review-v0.8.2.md).
 
-**Current focus:** collect feedback on cumulative notes in 0.8.2. No next implementation stage selected; GigaAM deferred.
+**Current focus:** maintainer approved the [Codex Dynamic Island design/tasks](specs/tasks/dynamic-island-settings.md): dedicated pane, Full/default + minimal + menu-bar-only dictation modes, preserved preferences and transform/recovery results. D0 complete; D1–D3 assigned to OpenCode in a separate worktree, followed by Codex review and signed Debug delivery. Implementation authorized 2026-11-11 («согласовываю, давай делать мне нравится»); Debug acceptance/publication and version selection remain separate. GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 

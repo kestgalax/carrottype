@@ -2,6 +2,14 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## Dynamic Island planning — 2026-11-11
+
+Maintainer approved the Codex proposal: «согласовываю, давай делать мне нравится». Full remains default; minimal recording/processing indicator and menu-bar-only status, no hidden preview in either; preserved saved live-draft choice, transform/recovery Copy/Close exceptions. Authorize OpenCode D1–D3 implementation in a new main-based Orca child worktree, then Codex review and signed Debug delivery. Do not treat this as Debug acceptance or publication authorization. This supersedes the pending-decision status below; old worker draft remains independent history.
+
+Maintainer clarified roles: Codex researches/designs the solution and agrees it with them; OpenCode implements only afterward in a separate Orca worktree. Earlier research dispatch `ctx_423a01c1cb56` was explicitly stopped (closed agent terminal/ptyKilled confirmed). App tracked files were unchanged in that worktree; an untracked package-lock.json was observed and left untouched. Codex plan on fresh main-based `design/dynamic-island-settings`: `docs/specs/tasks/dynamic-island-settings.md`. Proposed dedicated pane plus full/minimal/menu-bar-only dictation modes, preserved live-draft preference and explicit result/recovery exceptions. Proposal pending user agreement, no implementation/version/release selected. GigaAM remains deferred; prior history below is retained.
+
+Late OpenCode report arrived after stop: documentation commit `17cf2a3` exists on its separate branch; inspected stat confirms four documentation files only. Preserve it as an independent draft, do not merge it over the Codex proposal. Codex planning branch local AIDOS validate/trace/review and diff whitespace checks pass; local spec links resolve. Native indicator geometry remains unverified until an approved implementation prototype.
+
 ## Canonical sources
 
 - Product: `docs/product-intent.md`
