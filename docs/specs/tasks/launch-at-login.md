@@ -3,7 +3,7 @@
 ## Metadata
 
 - Task ID: launch-at-login
-- Status: signed Debug accepted for publication; release verification in progress
+- Status: completed / 0.8.1 published after revised Debug acceptance and explicit publication instruction
 
 ## Traceability
 

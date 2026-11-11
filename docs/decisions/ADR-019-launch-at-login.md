@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for 0.8.1 implementation: maintainer requested a small patch with startup after restart/power-on. Debug/manual acceptance and separate publication instruction remain required.
+Accepted; shipped in 0.8.1 after revised signed Debug delivery and explicit maintainer publication instruction. Individual actual reboot/approval results were not enumerated; subsequent releases retain separate acceptance.
 
 ## Context
 
