@@ -8,7 +8,7 @@ Latest published artifact: `CarrotType-0.8.0.dmg` — SHA-256 `12f023406085eb60d
 
 **Release acceptance:** 0.8.0 (30) signed Debug accepted and publication explicitly authorized; stable published 2026-11-11 after clean Release and local/draft/public signature/digest/native-update checks. Experimental business tone remains an accepted disclosed limitation. [Evidence/limits](debug-review-v0.8.0.md).
 
-**Current focus:** 0.8.1 (31) opt-in launch-at-login patch on `feat/launch-at-login-0.8.1`, fresh from main `d05027a`. Native system state/approval/error feedback and installed-app guard implemented; local fake-policy checks and Debug build passed. Signed Debug/manual login/reboot verification and source CI follow. Stable remains 0.8.0; no 0.8.1 publication authorization. GigaAM deferred.
+**Current focus:** 0.8.1 (31) opt-in launch-at-login patch on `feat/launch-at-login-0.8.1`, fresh from main `d05027a`. Native system state/approval/error feedback and installed-app guard implemented; local fake-policy checks and Debug build passed. Signed Debug delivered; maintainer requested moving startup to the bottom of General and removing persistent hints. UI revision implemented: startup is the last General section, routine explanatory text is removed and the non-installed restriction uses contextual help. Refreshed signed Debug is available for review; local build/signature/governance checks passed. Manual login/reboot verification remains pending. Stable remains 0.8.0; no 0.8.1 publication authorization. GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 

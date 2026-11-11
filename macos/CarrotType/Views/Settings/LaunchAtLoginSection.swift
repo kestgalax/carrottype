@@ -10,10 +10,7 @@ struct LaunchAtLoginSection: View {
         Section {
             Toggle(t("login.toggle"), isOn: Binding(get: { service.isRequested }, set: { service.setEnabled($0) }))
                 .disabled(!service.canChange)
-            Text(t("login.hint")).font(.caption).foregroundStyle(.secondary)
-            if !service.isInstalled {
-                Text(t("login.install")).font(.caption).foregroundStyle(.secondary)
-            }
+                .help(service.isInstalled ? "" : t("login.install"))
             if service.status == .requiresApproval {
                 Label(t("login.pending"), systemImage: "exclamationmark.triangle")
                     .font(.caption).foregroundStyle(.orange)

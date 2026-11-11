@@ -14,14 +14,14 @@
 
 ## Scope
 
-Native `SMAppService.mainApp` toggle in General, explicit opt-in with authoritative OS state, pending approval/settings action, failure feedback and refresh on appearance/activation. No launch-before-login, separate helper/plist, automatic registration/recording, installation, model/settings reset or other login-item mutation. Register only an installed Applications copy; explicit removal remains possible after moving a registered app. Shared ServiceManagement adapter is injected for pure tests. Version 0.8.1 (31); existing functionality retained.
+Native `SMAppService.mainApp` toggle at the bottom of General, without persistent descriptive hints, explicit opt-in with authoritative OS state, pending approval/settings action, failure feedback and refresh on appearance/activation. No launch-before-login, separate helper/plist, automatic registration/recording, installation, model/settings reset or other login-item mutation. Register only an installed Applications copy; explicit removal remains possible after moving a registered app. Shared ServiceManagement adapter is injected for pure tests. Version 0.8.1 (31); existing functionality retained.
 
 ## Acceptance Criteria
 
 - Init/launch/refresh never register/unregister; saved OS-enabled state is not reset and no shadow Boolean is persisted.
 - Explicit toggle registers/unregisters, reflects true status after success/failure, and reports pending approval without implying startup is already approved.
 - General refreshes external settings changes on reactivation; native settings action appears for approval/errors.
-- Temporary/DMG/review copies explain installation requirement and cannot register themselves. Explicit removal of an already registered item remains possible.
+- Temporary/DMG/review copies explain installation requirement in contextual help and cannot register themselves. Explicit removal of an already registered item remains possible.
 - Signed Debug before manual installed-app/login/reboot verification; publication only after separate maintainer instruction.
 
 ## Verification

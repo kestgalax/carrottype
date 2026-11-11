@@ -17,7 +17,6 @@ struct GeneralSettingsPane: View {
 
     var body: some View {
         Form {
-            LaunchAtLoginSection(service: appState.launchAtLogin, locale: locale)
             Section {
                 HotkeySettingsRow(hotkey: hotkey, target: .dictation)
                 if hotkey.isRecording, hotkey.captureTarget == .dictation {
@@ -109,6 +108,8 @@ struct GeneralSettingsPane: View {
             } footer: {
                 Text(L10n.t("language.footer", locale: locale))
             }
+
+            LaunchAtLoginSection(service: appState.launchAtLogin, locale: locale)
         }
         .formStyle(.grouped)
         .scrollIndicators(.never)
