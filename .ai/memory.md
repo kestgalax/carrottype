@@ -234,3 +234,20 @@ accuracy); signed arm64 Debug under `dist/.builds.noindex/Typing-Speed-Debug-202
 Implementation commit `af39ec2`; full evidence/limits in `docs/debug-review-typing-speed-test.md`.
 Manual real typing/focus/IME/VoiceOver/device/performance acceptance remains for Codex/maintainer;
 no merge/push/version/publication authorization.
+
+## Typing-speed R1/R2 review fixes — 2026-11-11
+
+Codex requested changes on the typing-speed Debug. R1: `start()` no longer synchronously calls
+focus before `TypingTestInputView` mounts; a published focus token plus `viewDidMoveToWindow`
+and one deterministic main-loop hop focus the real field after attachment, with stale-token
+cancellation. Focus failure returns to Ready with gate/hotkey release; failed `beginRun` now
+rebuilds a fresh engine/prompt so retry works. R2: `TypingPromptDisplayView` exposes the full
+reference prompt as accessible value and keeps typed/prompt progress in accessibility help.
+New actual `NSHostingView`/`NSWindow` regression hosts the real sheet in Ready, invokes
+production Start without injected focus, asserts native first responder, commits a grapheme,
+verifies Running/gate/timer, and checks Repeat/Cancel restoration. Targeted typing-speed model/app
+checks pass; signed Debug at `dist/.builds.noindex/Typing-Speed-Debug-R1R2-2026-11-11/CarrotType.app`
+(CDHash `911541c5…`, executable SHA-256 `83760a13…`), prior app preserved. Findings/validation:
+`docs/specs/reviews/typing-speed-test.md`, `docs/debug-review-typing-speed-test.md`. Codex
+re-review and manual live typing/IME/VoiceOver/device checks remain; no merge/push/version/
+publication or user installation/preferences/models changes.

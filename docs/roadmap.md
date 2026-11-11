@@ -276,3 +276,18 @@ existing setup/lifecycle/reliability/usage/Dynamic Island regressions, native wh
 sheet snapshots, local governance and a signed arm64 Debug app (`af39ec2`). Measured corpus 15,359 UTF-8
 bytes; model event processing 13.88–19.22 ms per 650 committed graphemes (0.021–0.030 ms/event).
 Codex review and maintainer manual acceptance remain; no merge, push, version bump or publication is authorized. Evidence/limits: [debug review](debug-review-typing-speed-test.md).
+
+### Typing-speed R1/R2 review fixes — 2026-11-11
+
+Codex changes requested resolved without redesign. R1: Start no longer calls focus before the
+armed/running branch has mounted `TypingTestInputView`; the model publishes a token, the field
+focuses once after real window attachment (one deterministic main-loop hop, stale-token safe),
+and a failed `beginRun` rebuilds a fresh engine/prompt so Start is retryable. R2: the custom
+prompt view exposes the full reference text as accessible value with separate typed/prompt
+progress. A new actual `NSHostingView`/`NSWindow` regression mounts the real sheet in Ready,
+invokes production Start, asserts native first responder, commits a grapheme and verifies
+Running/gate/timer/hotkey restoration through Repeat/Cancel. Evidence:
+[review findings](specs/reviews/typing-speed-test.md), [Debug review](debug-review-typing-speed-test.md).
+New signed Debug: `dist/.builds.noindex/Typing-Speed-Debug-R1R2-2026-11-11/CarrotType.app`
+(prior app preserved). Codex re-review and maintainer manual acceptance remain; no merge, push,
+version bump or publication.

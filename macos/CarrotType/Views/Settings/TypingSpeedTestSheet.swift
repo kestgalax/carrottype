@@ -19,6 +19,7 @@ final class TypingSpeedTestSheetModel: ObservableObject {
     @Published private(set) var notice: String?
     @Published private(set) var documentToken = UUID()
     @Published private(set) var inputEnabled = false
+    @Published private(set) var focusRequest: UUID?
     @Published private(set) var isTimerRunning = false
     @Published private(set) var language: TypingTestLanguage
     @Published private(set) var level: TypingTestLevel
@@ -31,7 +32,6 @@ final class TypingSpeedTestSheetModel: ObservableObject {
     private let clock: () -> TimeInterval
     private let makeSeed: () -> UInt64
     private let tickInterval: TimeInterval
-    private let focusInput: () -> Bool
     private var engine: TypingSpeedTestEngine?
     private var timer: Timer?
     private var lastPromptText: String?
@@ -48,12 +48,10 @@ final class TypingSpeedTestSheetModel: ObservableObject {
         builder: TypingTestPromptBuilder = TypingTestPromptBuilder(),
         clock: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime },
         makeSeed: @escaping () -> UInt64 = { UInt64.random(in: .min ... .max) },
-        tickInterval: TimeInterval = 0.1,
-        focusInput: (() -> Bool)? = nil
+        tickInterval: TimeInterval = 0.1
     ) {
         let controller = TypingTestInputController()
         self.inputController = controller
-        self.focusInput = focusInput ?? { controller.focus() }
         self.appState = appState
         self.locale = locale
         self.language = initialLanguage
@@ -90,7 +88,9 @@ final class TypingSpeedTestSheetModel: ObservableObject {
         restartForConfigurationChange()
     }
 
-    /// Ready → armed/focused. No gate lease or countdown yet.
+    /// Ready → armed/focused. No gate lease or countdown yet. The native field is
+    /// mounted by the armed/running view and requests focus only after its window
+    /// attachment is real; the async one-shot result carries this token.
     func start() {
         guard screen == .ready, engine != nil, !promptText.isEmpty else { return }
         guard appState.typingSpeedTest.acquireInputFocus() else {
@@ -101,13 +101,22 @@ final class TypingSpeedTestSheetModel: ObservableObject {
         screen = .armed
         inputEnabled = true
         remainingSeconds = Int(engine?.duration ?? 30)
-        guard focusInput() else {
-            inputEnabled = false
-            screen = .ready
-            appState.typingSpeedTest.releaseFocus()
-            notice = L10n.t("typingtest.focus_failed", locale: locale)
+        focusRequest = UUID()
+    }
+
+    /// Token-safe focus completion from the actual native field. A stale or failed
+    /// request returns to Ready without leaving the gate/hotkey ownership behind.
+    func handleInputFocusResult(_ focused: Bool, token: UUID) {
+        guard screen == .armed, focusRequest == token else { return }
+        if focused {
+            notice = nil
             return
         }
+        focusRequest = nil
+        inputEnabled = false
+        screen = .ready
+        appState.typingSpeedTest.releaseFocus()
+        notice = L10n.t("typingtest.focus_failed", locale: locale)
     }
 
     func handleEdit(_ edit: TypingTestEdit) {
@@ -162,6 +171,7 @@ final class TypingSpeedTestSheetModel: ObservableObject {
         stopTimer()
         engine?.cancel()
         inputEnabled = false
+        focusRequest = nil
         resignInput()
         appState.typingSpeedTest.releaseFocus()
         onRequestClose?()
@@ -176,6 +186,7 @@ final class TypingSpeedTestSheetModel: ObservableObject {
         stopTimer()
         engine?.cancel()
         inputEnabled = false
+        focusRequest = nil
         resignInput()
         appState.typingSpeedTest.releaseFocus()
         result = nil
@@ -201,6 +212,7 @@ final class TypingSpeedTestSheetModel: ObservableObject {
         stopTimer()
         engine?.cancel()
         inputEnabled = false
+        focusRequest = nil
         resignInput()
         appState.typingSpeedTest.releaseFocus()
         appState.typingSpeedTest.onInvalidated = nil
@@ -228,6 +240,7 @@ final class TypingSpeedTestSheetModel: ObservableObject {
         stopTimer()
         engine?.cancel()
         inputEnabled = false
+        focusRequest = nil
         resignInput()
         appState.typingSpeedTest.releaseFocus()
         result = nil
@@ -241,6 +254,7 @@ final class TypingSpeedTestSheetModel: ObservableObject {
         stopTimer()
         engine?.cancel()
         inputEnabled = false
+        focusRequest = nil
         resignInput()
         appState.typingSpeedTest.releaseFocus()
         screen = .ready
@@ -260,15 +274,21 @@ final class TypingSpeedTestSheetModel: ObservableObject {
         suppressFocusLoss = false
     }
 
+    /// A real operation may win between armed and the first grapheme. Build a
+    /// fresh engine/prompt so Start can be retried; a cancelled engine must not be
+    /// reused by the next attempt.
     private func resetInputAfterFailedStart() {
         stopTimer()
         engine?.cancel()
         inputEnabled = false
-        screen = .ready
-        typedText = ""
-        compositionText = ""
-        documentToken = UUID()
+        focusRequest = nil
+        resignInput()
         appState.typingSpeedTest.releaseFocus()
+        screen = .ready
+        result = nil
+        compositionText = ""
+        buildPrompt()
+        notice = L10n.t("typingtest.busy", locale: locale)
     }
 
     private func finish() {
@@ -283,6 +303,7 @@ final class TypingSpeedTestSheetModel: ObservableObject {
         compositionText = ""
         screen = .result
         inputEnabled = false
+        focusRequest = nil
         appState.typingSpeedTest.releaseFocus()
         resignInput()
     }
@@ -497,11 +518,15 @@ struct TypingSpeedTestSheet: View {
                     documentToken: model.documentToken,
                     isEnabled: model.inputEnabled,
                     locale: locale,
+                    focusRequest: model.focusRequest,
                     controller: model.inputController,
                     onEdit: { model.handleEdit($0) },
                     onCompositionChange: { model.handleCompositionChange($0) },
                     onEscape: { model.requestClose() },
-                    onFocusLost: { model.handleFocusLost() }
+                    onFocusLost: { model.handleFocusLost() },
+                    onFocusResult: { focused, token in
+                        model.handleInputFocusResult(focused, token: token)
+                    }
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .opacity(0.01)

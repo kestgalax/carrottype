@@ -149,3 +149,12 @@ in the branch. Verification evidence and the signed Debug path are recorded in
 [debug-review-typing-speed-test.md](../../debug-review-typing-speed-test.md). Codex review and
 maintainer Debug/manual acceptance remain; no version bump, merge, push or publication is
 authorized by this implementation.
+
+### Review R1/R2 — 2026-11-11
+
+Codex requested two focused changes: real mounted-field focus lifecycle for Start (with
+token-safe deferred focus and retryable failed `beginRun`), and readable accessible reference
+text on the custom prompt renderer. Both are implemented and validated in
+[review findings](../reviews/typing-speed-test.md); signed Debug R1R2 is in
+`dist/.builds.noindex/Typing-Speed-Debug-R1R2-2026-11-11/CarrotType.app` with the prior app
+preserved. Codex re-review and maintainer manual acceptance remain; no version/publication.

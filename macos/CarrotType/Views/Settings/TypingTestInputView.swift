@@ -25,6 +25,12 @@ final class TypingTestField: NSTextView {
     var onEscape: (() -> Void)?
     var onFocusLost: (() -> Void)?
     var onMarkedTextChange: (() -> Void)?
+    var onWindowAttachment: (() -> Void)?
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        onWindowAttachment?()
+    }
 
     override func setMarkedText(_ string: Any, selectedRange: NSRange, replacementRange: NSRange) {
         super.setMarkedText(string, selectedRange: selectedRange, replacementRange: replacementRange)
@@ -68,11 +74,13 @@ struct TypingTestInputView: NSViewRepresentable {
     let documentToken: UUID
     let isEnabled: Bool
     let locale: Locale
+    let focusRequest: UUID?
     let controller: TypingTestInputController
     let onEdit: (TypingTestEdit) -> Void
     let onCompositionChange: (String) -> Void
     let onEscape: () -> Void
     let onFocusLost: () -> Void
+    let onFocusResult: (Bool, UUID) -> Void
 
     func makeNSView(context: Context) -> TypingTestField {
         let view = TypingTestField(frame: .zero)
@@ -116,6 +124,10 @@ struct TypingTestInputView: NSViewRepresentable {
             guard let view else { return }
             coordinator?.publishComposition(from: view)
         }
+        view.onWindowAttachment = { [weak view, weak coordinator = context.coordinator] in
+            guard let view else { return }
+            coordinator?.handleWindowAttachment(view)
+        }
         view.string = text
         view.setAccessibilityElement(true)
         view.setAccessibilityRole(.textArea)
@@ -138,6 +150,7 @@ struct TypingTestInputView: NSViewRepresentable {
             view.string = text
             view.setSelectedRange(NSRange(location: (text as NSString).length, length: 0))
         }
+        context.coordinator.syncFocus(view)
     }
 
     func makeCoordinator() -> Coordinator {
@@ -148,9 +161,49 @@ struct TypingTestInputView: NSViewRepresentable {
         var parent: TypingTestInputView
         var lastText = ""
         var documentToken: UUID?
+        private var observedFocusRequest: UUID?
+        private var pendingFocusToken: UUID?
 
         init(parent: TypingTestInputView) {
             self.parent = parent
+        }
+
+        func syncFocus(_ view: TypingTestField) {
+            if parent.focusRequest != observedFocusRequest {
+                observedFocusRequest = parent.focusRequest
+                pendingFocusToken = parent.focusRequest
+                requestDeferredFocus(view)
+            }
+            if !parent.isEnabled {
+                pendingFocusToken = nil
+            }
+        }
+
+        func handleWindowAttachment(_ view: TypingTestField) {
+            guard parent.isEnabled,
+                  let token = parent.focusRequest,
+                  pendingFocusToken == token,
+                  view.window != nil else { return }
+            requestDeferredFocus(view)
+        }
+
+        /// One deterministic main-loop hop after AppKit has attached the mounted
+        /// field to its window. No polling or retry loop; the token cancels stale work.
+        private func requestDeferredFocus(_ view: TypingTestField) {
+            guard parent.isEnabled,
+                  let token = parent.focusRequest,
+                  pendingFocusToken == token,
+                  view.window != nil else { return }
+            DispatchQueue.main.async { [weak self, weak view] in
+                guard let self, let view,
+                      self.pendingFocusToken == token,
+                      self.parent.focusRequest == token,
+                      self.parent.isEnabled,
+                      view.window != nil else { return }
+                self.pendingFocusToken = nil
+                let focused = view.window?.makeFirstResponder(view) ?? false
+                self.parent.onFocusResult(focused, token)
+            }
         }
 
         func textDidChange(_ notification: Notification) {
@@ -204,10 +257,18 @@ final class TypingPromptDisplayView: NSView {
 
     required init?(coder: NSCoder) { nil }
 
-    func update(attributed: NSAttributedString, caretUTF16: Int, accessibilityValue: String) {
+    func update(
+        attributed: NSAttributedString,
+        caretUTF16: Int,
+        accessibilityText: String,
+        accessibilityProgress: String
+    ) {
         textStorage.setAttributedString(attributed)
         self.caretUTF16 = caretUTF16
-        setAccessibilityValue(accessibilityValue)
+        // The custom-drawn glyphs have no accessibility children; expose the full
+        // reference prompt as readable static text, with progress separately.
+        setAccessibilityValue(accessibilityText)
+        setAccessibilityHelp(accessibilityProgress)
         textContainer.size = NSSize(
             width: max(0, bounds.width - inset.width * 2),
             height: .greatestFiniteMagnitude
@@ -297,7 +358,8 @@ struct TypingPromptView: NSViewRepresentable {
                 typed: typed,
                 composition: composition
             ),
-            accessibilityValue: String(
+            accessibilityText: prompt,
+            accessibilityProgress: String(
                 format: L10n.t("typingtest.prompt.value", locale: locale),
                 typed.count,
                 prompt.count

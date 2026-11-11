@@ -84,6 +84,7 @@ struct TypingSpeedTestAppChecks {
         lifecycleChecks(state: state)
         inputAdapterChecks()
         await viewModelChecks(state: state, fixture: fixture)
+        realSheetFocusLifecycle(state: state)
         try await snapshotEvidence(state: state, output: snapshots)
         precondition(fake.startCalls == 0 && fake.processCalls == 0)
         precondition(!state.statsCollectionEnabled)
@@ -243,11 +244,13 @@ struct TypingSpeedTestAppChecks {
             documentToken: token,
             isEnabled: true,
             locale: Locale(identifier: "ru"),
+            focusRequest: nil,
             controller: controller,
             onEdit: { edits.append($0) },
             onCompositionChange: { composition = $0 },
             onEscape: { escapes += 1 },
-            onFocusLost: { focusLosses += 1 }
+            onFocusLost: { focusLosses += 1 },
+            onFocusResult: { _, _ in }
         )
         let host = NSHostingView(rootView: representable.frame(width: 520, height: 88))
         host.frame = NSRect(x: 0, y: 0, width: 520, height: 88)
@@ -328,8 +331,7 @@ struct TypingSpeedTestAppChecks {
             initialLevel: .medium,
             clock: clock.read,
             makeSeed: { 1234 },
-            tickInterval: 10,
-            focusInput: { true }
+            tickInterval: 10
         )
         precondition(model.screen == .ready)
         precondition(model.promptText.count >= 650)
@@ -340,6 +342,16 @@ struct TypingSpeedTestAppChecks {
         precondition(model.screen == .armed)
         precondition(state.typingSpeedTest.interaction == .focused)
         precondition(!model.isTimerRunning, "No countdown in armed")
+        let failedToken = model.focusRequest!
+        model.handleInputFocusResult(false, token: failedToken)
+        precondition(model.screen == .ready, "A failed real focus returns to Ready")
+        precondition(!state.updates.installationGate.isBusy)
+        precondition(!state.hotkey.isGlobalHotkeySuspended)
+        precondition(model.notice != nil)
+
+        model.start()
+        precondition(model.screen == .armed)
+        model.handleInputFocusResult(true, token: model.focusRequest!)
         let firstCharacter = String(model.promptText.prefix(1))
         model.handleEdit(TypingTestEdit.between("", firstCharacter)!)
         precondition(model.screen == .running)
@@ -358,6 +370,23 @@ struct TypingSpeedTestAppChecks {
         precondition(model.screen == .ready)
         precondition(model.promptText != firstPrompt, "Repeat uses a new prompt")
         precondition(!model.isTimerRunning)
+
+        // A real operation may win between armed and the first grapheme. The
+        // cancelled engine must be replaced so Start can be retried.
+        model.start()
+        model.handleInputFocusResult(true, token: model.focusRequest!)
+        let externalLease = state.updates.installationGate.beginOperation()!
+        model.handleEdit(TypingTestEdit.between("", String(model.promptText.prefix(1)))!)
+        precondition(model.screen == .ready, "Failed beginRun returns to Ready")
+        precondition(model.notice != nil)
+        precondition(!state.hotkey.isGlobalHotkeySuspended)
+        state.updates.installationGate.endOperation(externalLease)
+        model.start()
+        model.handleInputFocusResult(true, token: model.focusRequest!)
+        model.handleEdit(TypingTestEdit.between("", String(model.promptText.prefix(1)))!)
+        precondition(model.screen == .running, "Start must retry with a fresh engine")
+        model.handleLifecycleInvalidation()
+        precondition(model.screen == .ready)
 
         // 20 attempt cycles must leave no timer/gate/hotkey ownership behind.
         for cycle in 0..<20 {
@@ -400,6 +429,106 @@ struct TypingSpeedTestAppChecks {
         print("PASS sheet model: armed vs running timer, fixed deadline, repeat variation, 20-cycle cleanup")
     }
 
+
+    @MainActor private static func waitUntil(
+        _ label: String,
+        timeout: TimeInterval = 2,
+        _ condition: () -> Bool
+    ) {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !condition() {
+            precondition(Date() < deadline, "Timed out: \(label)")
+            RunLoop.main.run(until: Date().addingTimeInterval(0.02))
+        }
+    }
+
+    @MainActor private static func findSubview<T: NSView>(_ type: T.Type, in view: NSView) -> T? {
+        if let match = view as? T { return match }
+        for subview in view.subviews {
+            if let match = findSubview(type, in: subview) { return match }
+        }
+        return nil
+    }
+
+    /// Drives the real SwiftUI sheet from Ready through the production Start action.
+    /// No injected focus success: the native field must mount, attach, and become the
+    /// window first responder before a committed grapheme can start the run.
+    @MainActor private static func realSheetFocusLifecycle(state: AppState) {
+        let clock = FakeClock()
+        let model = TypingSpeedTestSheetModel(
+            appState: state,
+            locale: Locale(identifier: "ru"),
+            initialLanguage: .russian,
+            initialLevel: .medium,
+            clock: clock.read,
+            makeSeed: { 4242 },
+            tickInterval: 10
+        )
+        let host = NSHostingView(rootView: TypingSpeedTestSheet(appState: state, fixtureModel: model))
+        host.frame = NSRect(x: 0, y: 0, width: 600, height: 390)
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 600, height: 390),
+            styleMask: [.titled],
+            backing: .buffered,
+            defer: false
+        )
+        window.contentView = host
+        host.layoutSubtreeIfNeeded()
+        pump(0.1)
+        precondition(model.screen == .ready)
+        precondition(model.inputController.textView == nil, "Ready must not mount the typing field")
+
+        model.start()
+        waitUntil("real sheet Start focus") {
+            window.firstResponder === model.inputController.textView && model.screen == .armed
+        }
+        guard let field = model.inputController.textView else {
+            preconditionFailure("Native field did not mount for armed state")
+        }
+        precondition(window.firstResponder === field)
+        precondition(state.typingSpeedTest.interaction == .focused)
+        precondition(!state.updates.installationGate.isBusy, "Armed still holds no gate lease")
+
+        guard let promptView = findSubview(TypingPromptDisplayView.self, in: host) else {
+            preconditionFailure("Prompt display view missing")
+        }
+        precondition(promptView.accessibilityValue() as? String == model.promptText,
+                     "Accessibility must expose the full reference prompt, not only counts")
+        precondition((promptView.accessibilityHelp() ?? "").contains("0"))
+
+        field.insertText("a", replacementRange: field.selectedRange())
+        pump(0.1)
+        precondition(model.screen == .running)
+        precondition(state.updates.installationGate.isBusy)
+        precondition(model.isTimerRunning)
+        precondition(state.hotkey.isGlobalHotkeySuspended)
+        let runningPrompt = findSubview(TypingPromptDisplayView.self, in: host)
+        precondition(runningPrompt?.accessibilityValue() as? String == model.promptText)
+        precondition((runningPrompt?.accessibilityHelp() ?? "").contains("1"))
+
+        let firstPrompt = model.promptText
+        model.repeatAttempt()
+        pump(0.1)
+        precondition(model.screen == .ready)
+        precondition(model.promptText != firstPrompt)
+        precondition(!state.updates.installationGate.isBusy)
+        precondition(!state.hotkey.isGlobalHotkeySuspended)
+        precondition(!model.isTimerRunning)
+
+        model.start()
+        waitUntil("real sheet repeat focus") {
+            window.firstResponder === model.inputController.textView && model.screen == .armed
+        }
+        model.requestClose()
+        pump(0.05)
+        precondition(!state.updates.installationGate.isBusy)
+        precondition(!state.hotkey.isGlobalHotkeySuspended)
+        precondition(!model.isTimerRunning)
+        model.sheetDidDisappear()
+        window.contentView = nil
+        print("PASS real sheet Start: mounted field becomes first responder, commit starts running/gate/timer, repeat/cancel restore")
+    }
+
     @MainActor private static func snapshotEvidence(state: AppState, output: URL) async throws {
         let directory = output.appendingPathComponent("native")
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -421,8 +550,7 @@ struct TypingSpeedTestAppChecks {
                             initialLevel: level,
                             clock: clock.read,
                             makeSeed: { 9000 + UInt64(level.rawValue.count) },
-                            tickInterval: 10,
-                            focusInput: { true }
+                            tickInterval: 10
                         )
                         if kind != "ready" {
                             model.start()
@@ -459,7 +587,7 @@ struct TypingSpeedTestAppChecks {
         let fastClock = FakeClock()
         let fast = TypingSpeedTestSheetModel(
             appState: state, locale: locale, initialLanguage: .russian, initialLevel: .advanced,
-            clock: fastClock.read, makeSeed: { 77 }, tickInterval: 10, focusInput: { true }
+            clock: fastClock.read, makeSeed: { 77 }, tickInterval: 10
         )
         fast.start()
         fast.handleEdit(TypingTestEdit.between("", fast.promptText)!)
@@ -477,7 +605,7 @@ struct TypingSpeedTestAppChecks {
         let lowClock = FakeClock()
         let low = TypingSpeedTestSheetModel(
             appState: state, locale: locale, initialLanguage: .english, initialLevel: .medium,
-            clock: lowClock.read, makeSeed: { 88 }, tickInterval: 10, focusInput: { true }
+            clock: lowClock.read, makeSeed: { 88 }, tickInterval: 10
         )
         low.start()
         let good = String(low.promptText.prefix(100))
@@ -501,8 +629,7 @@ struct TypingSpeedTestAppChecks {
                 state: state,
                 model: TypingSpeedTestSheetModel(
                     appState: state, locale: Locale(identifier: "en"), initialLanguage: .english,
-                    initialLevel: .advanced, clock: { 0 }, makeSeed: { 99 }, tickInterval: 10,
-                    focusInput: { true }
+                    initialLevel: .advanced, clock: { 0 }, makeSeed: { 99 }, tickInterval: 10
                 ),
                 locale: Locale(identifier: "en")
             ),
@@ -516,8 +643,7 @@ struct TypingSpeedTestAppChecks {
         state.appTheme = .light
         let bottomModel = TypingSpeedTestSheetModel(
             appState: state, locale: Locale(identifier: "ru"), initialLanguage: .russian,
-            initialLevel: .medium, clock: { 0 }, makeSeed: { 111 }, tickInterval: 10,
-            focusInput: { true }
+            initialLevel: .medium, clock: { 0 }, makeSeed: { 111 }, tickInterval: 10
         )
         let bottomInfo = try render(
             view: wholeShellWithSheet(state: state, model: bottomModel, locale: Locale(identifier: "ru")),

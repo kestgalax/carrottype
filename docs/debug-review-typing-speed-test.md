@@ -68,13 +68,20 @@ Commands and results from this worktree:
   no adjacent duplicate at refill, metric fixtures (words, separators, last partial, wrong
   words, case/ё, NFC), exact deadline/late events, corrections/accuracy denominator, empty/
   out-of-range/low-accuracy policy, refill without shortening 30 s.
-- `python3 scripts/verify-typing-speed-app.py --build-log /tmp/typing-speed-debug.log` — PASS.
+- `python3 scripts/verify-typing-speed-app.py --build-log /tmp/typing-r1r2.log` — PASS.
   Actual AppState/hotkey/gate fakes: focus vs running lease, busy/installing/waiting exclusion,
   idempotent/nested token restore, Apply-only WPM write with stats off, deactivation/sleep/
   Settings close/quit/install cleanup, queued hotkey dismissal without capture, 20-cycle
   timer/gate/hotkey cleanup. Native input harness: committed inserts, Backspace diff, paste
-  blocked, IME marked text only on commit, Escape/focus. No microphone/model/clipboard/stats
+  blocked, IME marked text only on commit, Escape/focus. **R1 actual-window regression:** host
+  the real `TypingSpeedTestSheet` in Ready via `NSHostingView`/`NSWindow`, invoke production
+  `model.start()` without injected focus success, wait for real layout, assert the mounted field
+  is the window first responder, commit a printable grapheme, assert Running/gate/timer/hotkey
+  suspension, then Repeat/Cancel and assert restoration. **R2:** assert the prompt accessibility
+  value is the full reference text and progress is separate. No microphone/model/clipboard/stats
   writes.
+- R1 failure/retry coverage: a failed focus returns to Ready with ownership released, and a
+  failed `beginRun` is followed by a successful retry using a fresh engine/prompt.
 - Existing regressions: `verify-setup-formatting.sh`, `verify-dynamic-island.sh`,
   `verify-formatting-rules.sh`, `verify-launch-at-login.sh`, `verify-session-lifecycle.sh`,
   `verify-dictation-reliability.sh`, `verify-ultra-models.sh`, `verify-app-updates.sh`,
@@ -107,30 +114,32 @@ out-of-range, low-accuracy, long English advanced, and minimum-window bottom-scr
 The Statistics form scrolls to the Measure row at the real minimum without enlarging the window.
 The sheet itself stays within 600×390.
 
-## Signed Debug app
+## Signed Debug app — R1/R2
 
-- Path:
-  `/Users/kestgalax/orca/workspaces/carrottype/typing-speed-test/dist/.builds.noindex/Typing-Speed-Debug-2026-11-11/CarrotType.app`
+- Current path:
+  `/Users/kestgalax/orca/workspaces/carrottype/typing-speed-test/dist/.builds.noindex/Typing-Speed-Debug-R1R2-2026-11-11/CarrotType.app`
+- Prior app preserved at
+  `dist/.builds.noindex/Typing-Speed-Debug-2026-11-11/CarrotType.app` (not replaced).
 - Bundle: `app.carrottype.macos`, version **0.9.0 (33)**, arm64 Debug.
 - Identity: `CarrotType Development` (self-signed development identity; not notarized).
 - `codesign --verify --deep --strict`: valid on disk, satisfies its Designated Requirement.
-- CDHash: `98897b2d46729d96012b71c4ad236febe0d587ce5af47a60961e5b8c4cab0c0c`
+- CDHash: `911541c5bd4a2ca6dba57d4cc33a3188d183ed92349c5d5fb9037832542d0082`
 - Executable SHA-256:
-  `e328029d84f7cf2685a7f93b00e9e6e4cb74f57d61b12e01432610d24da95747`
+  `83760a134066c98ae192908caa8059fb1484d7e5bdf063ca683c434fe31134a2`
 - `CarrotType.debug.dylib` SHA-256:
-  `926f002e67734602b1b1c483c2f3d0b88e93375fa8e0e404118880a62d83758a`
+  `109effd2da669ca201764cb6bdd8825558d80deeef70b83d0552cd7dac07731c`
 - Previous potentially running Debug copies and the installed/user app, preferences, models and
   published release assets were not replaced. No DMG/ZIP/release was produced.
 
 ## Honest limitations / manual checks remaining
 
-- The native snapshots are offscreen compositions of real views; they do not prove a live sheet
-  presentation, actual key events on a device, or independent GUI inspection.
-- Real interactive typing/focus across the Start button, a live sheet on a physical keyboard,
-  actual third-party IME/dead-key composition, VoiceOver reading order/announcements, real
-  app deactivation/sleep, and real updater quit/install handoff remain for Codex/maintainer
-  manual review. The native input harness exercises the production adapter but not those OS
-  environments.
+- The native snapshots are offscreen compositions of real views; the R1 test hosts the real
+  sheet in an `NSHostingView`/`NSWindow`, but neither is a live on-screen sheet capture or a
+  physical-keyboard/device acceptance.
+- Physical live-sheet typing, actual third-party IME/dead-key composition, VoiceOver reading
+  order/announcements, real app deactivation/sleep, and real updater quit/install handoff remain
+  for Codex/maintainer manual review. The production adapter and first-responder path are
+  exercised; those OS environments are not.
 - No real model, microphone, Accessibility permission or statistics collection was required or
   touched. No network call was added; the corpus is bundled.
 - The test is a calibration aid, not a scientific/competitive measurement. No comparison or
