@@ -2,6 +2,10 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## Typing-test implementation authorized — 2026-11-11
+
+Maintainer approved the revised Codex design: «отлично, мне нравится, давай реализовывать». Implement native30s RU/EN test from Statistics WPM, Easy/Medium(default)/Advanced, fresh local combinations from small original bundled corpora, explicit Apply, RAM-only attempts and informational accuracy (no95% gate). T0 complete; OpenCode T1–T4 in a fresh main-based Orca child worktree, Codex review before signed Debug delivery. No future release version/publication authorization; 0.9.0 already published and immutable, GigaAM deferred. Authoritative spec `docs/specs/tasks/typing-speed-test.md` on `design/typing-speed-test`; historical pending entries below retained.
+
 ## Dynamic Island Codex review — 2026-11-11
 
 OpenCode application source `0908750`, evidence `d44e65c` reviewed by Codex. R1 selected-mode shared preview, R2 actual minimum whole-shell layout/scroll evidence, R3 untranslated RU/EN Dynamic Island resolved. No blocking code findings for Debug delivery. Final app `dist/.builds.noindex/Dynamic-Island-Debug-R1R3-2026-11-11/CarrotType.app`, independent deep-strict signature/executable hash and native screenshots checked. Formal review: `docs/specs/reviews/dynamic-island-settings.md`. Next maintainer manual recording/notch/fullscreen/results/VoiceOver evaluation; no version bump, merge, publication or installed app replacement authorized by this review.

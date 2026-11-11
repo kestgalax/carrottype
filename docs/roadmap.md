@@ -10,13 +10,13 @@ Published 0.9.0 (33) after approved Debug and verified draft. Evidence: [0.9.0 r
 
 **Release acceptance:** maintainer accepted the signed Dynamic Island Debug and authorized publication («можно публиковать»). Stable 0.9.0 (33) published 2026-11-11; individual manual device/TCC/VoiceOver outcomes not enumerated. [Evidence/limits](debug-review-v0.9.0.md).
 
-**Current focus:** collect feedback on Dynamic Island 0.9.0. Separate typing-speed test research/proposal is in progress on `design/typing-speed-test`, pending maintainer agreement; not included in this release. GigaAM remains deferred.
+**Current focus:** maintainer approved the [typing-speed test](specs/tasks/typing-speed-test.md): native 30 s RU/EN sheet, three levels and locally varied prompts, explicit Apply without accuracy gate. T0 complete; T1–T4 assigned to OpenCode in a separate main-based worktree, followed by Codex review and signed Debug delivery. Future version/manual acceptance/publication remain separate. Collect Dynamic Island 0.9.0 feedback; GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
 ## Parallel planning — typing-speed calibration (2026-11-11)
 
-Maintainer requested a small typing test beside Statistics WPM, inspired by Monkeytype, with native usability and minimal overhead. [Codex proposal/tasks](specs/tasks/typing-speed-test.md): optional local 30 s RU/EN sheet, three difficulty levels and locally randomized prompts from small bundled original corpora, explicit application to existing WPM, RAM-only attempts and no new runtime/network. Accuracy is informational; no hard quality gate. Awaiting agreement before OpenCode implementation. Planning branch rebased onto published 0.9.0 main `58bdca2`; published Dynamic Island remains unchanged. No typing-test implementation/version/publication selected.
+Maintainer requested a small typing test beside Statistics WPM, inspired by Monkeytype, with native usability and minimal overhead. [Codex design/tasks](specs/tasks/typing-speed-test.md): optional local 30 s RU/EN sheet, three difficulty levels and locally randomized prompts from small bundled original corpora, explicit application to existing WPM, RAM-only attempts and no new runtime/network. Accuracy is informational; no hard quality gate. Approved for OpenCode implementation: «отлично, мне нравится, давай реализовывать». Planning branch rebased onto published 0.9.0 main `58bdca2`; published Dynamic Island remains unchanged. Release version and future Debug/manual/publication acceptance are not selected.
 
 ## Milestone 0: Product Intent
 

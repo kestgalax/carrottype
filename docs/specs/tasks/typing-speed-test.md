@@ -1,11 +1,11 @@
 # Измерение скорости печати в Statistics
 
-2026-11-11. **Проект Codex, ожидает согласования. App-код не изменён.**
+2026-11-11. **Решение Codex согласовано; реализация разрешена.** Maintainer: «отлично, мне нравится, давай реализовывать» после добавления трёх уровней и локальной вариативности. OpenCode реализует, Codex проверяет; Debug/manual acceptance и публикация отдельно. App-код на этапе согласования не изменён.
 
 ## Metadata
 
 - Task ID: typing-speed-test
-- Status: proposed; implementation/version/publication not selected
+- Status: approved for implementation; release version, Debug/manual acceptance and publication pending
 - Roles: Codex researches/designs/reviews; OpenCode implements after maintainer agreement in a separate fresh main-based Orca worktree.
 
 ## Traceability
@@ -138,4 +138,4 @@ Existing ADR must be superseded or amended: ADR-013 расширяется ло�
 
 ## Решение для согласования
 
-Рекомендуется: небольшой нативный sheet, 30 s, RU/EN, Лёгкий/Средний(default)/Продвинутый, новая локальная комбинация из встроенных авторских корпусов, сохранение любого результата в пределах существующего WPM-диапазона только по Use, без истории и accuracy gate. Уровни/вариативность добавлены после уточнения maintainer; игровая цель не требует антибот-системы или научной сертификации. До согласования общего решения implementation не запускать.
+Согласовано: небольшой нативный sheet, 30 s, RU/EN, Лёгкий/Средний(default)/Продвинутый, новая локальная комбинация из встроенных авторских корпусов, сохранение любого результата в пределах существующего WPM-диапазона только по Use, без истории и accuracy gate. Уровни/вариативность добавлены после уточнения maintainer; игровая цель не требует антибот-системы или научной сертификации. T0 завершён; T1–T4 выполняет OpenCode в отдельном worktree от актуального main, результат проверяет Codex. Согласие на реализацию не является согласием на будущую публикацию.
