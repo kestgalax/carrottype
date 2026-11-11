@@ -16,7 +16,7 @@ Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full
 
 ## Parallel planning — typing-speed calibration (2026-11-11)
 
-Maintainer requested a small typing test beside Statistics WPM, inspired by Monkeytype, with native usability and minimal overhead. [Codex proposal/tasks](specs/tasks/typing-speed-test.md): optional local 30 s RU/EN sheet, explicit application to existing WPM, RAM-only attempts and no new runtime/network. Awaiting agreement before OpenCode implementation. This independent planning branch is based on main `d0a4058`; Dynamic Island 0.9.0 release preparation continues in its own worktree and is not changed by this proposal. No typing-test implementation/version/publication selected.
+Maintainer requested a small typing test beside Statistics WPM, inspired by Monkeytype, with native usability and minimal overhead. [Codex proposal/tasks](specs/tasks/typing-speed-test.md): optional local 30 s RU/EN sheet, three difficulty levels and locally randomized prompts from small bundled original corpora, explicit application to existing WPM, RAM-only attempts and no new runtime/network. Accuracy is informational; no hard quality gate. Awaiting agreement before OpenCode implementation. Planning branch rebased onto published 0.9.0 main `58bdca2`; published Dynamic Island remains unchanged. No typing-test implementation/version/publication selected.
 
 ## Milestone 0: Product Intent
 
