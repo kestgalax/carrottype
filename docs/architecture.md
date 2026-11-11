@@ -171,7 +171,10 @@ affect the next session. Logical phases are not erased to hide a panel.
   is reported in the menu (from RAM `lastFormattingOutcome`) when the capsule is suppressed, and
   Details keeps the detailed last result.
 
-The Settings preview is synthetic SwiftUI using the same indicator components; it never captures
-audio, starts models, writes WAVs, accesses the clipboard/statistics, or opens the real overlay.
+The Settings preview is synthetic SwiftUI that follows the selected mode and uses the same
+production visual components: the full `StatusCapsuleView` (synthetic live-draft text only when
+the saved switch/support allow it), the shared minimal indicator, or shared menu-bar status
+glyphs. It never captures audio, starts models, writes WAVs, accesses the clipboard/statistics,
+or opens the real overlay.
 The final WAV STT path, session coordinator, install gate, cancellation teardown, PTT, mute
 restoration, caret/trial destinations, statistics and model policy are unchanged.
