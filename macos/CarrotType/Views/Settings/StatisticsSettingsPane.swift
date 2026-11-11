@@ -124,6 +124,7 @@ struct StatisticsSettingsPane: View {
             }
         }
         .formStyle(.grouped)
+        .scrollIndicators(.never)
         .onAppear {
             selectedMonth = UsageStatsStore.startOfMonth(for: Date(), calendar: calendar) ?? Date()
         }

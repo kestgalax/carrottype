@@ -17,6 +17,7 @@ struct DictationPipelineConfiguration {
     let supportsStreaming: Bool
     let cleanupMode: CleanupMode
     let cleanupDirectory: URL?
+    var rules: DictationRules = DictationRules()
 }
 
 /// Holds the streaming actor so the audio tap can call `feed` without hopping to the main actor.
@@ -164,8 +165,13 @@ final class DictationPipeline {
         onPhase(.cleaning)
         return try await DictationFormatting.perform(
             text: raw, mode: mode, directory: directory,
-            engine: selectedCleanupEngine(for: mode), lightEngine: lightCleanup
+            engine: selectedCleanupEngine(for: mode), lightEngine: lightCleanup, rules: configuration.rules
         )
+    }
+
+    func formatText(_ text: String, mode: CleanupMode, directory: URL?, rules: DictationRules) async throws -> FormattedDictation {
+        try await DictationFormatting.perform(text: text, mode: mode, directory: directory,
+            engine: selectedCleanupEngine(for: mode), lightEngine: lightCleanup, rules: rules)
     }
 
     /// Selection transform (ADR-012): custom instructions + explicit MLX mode/package.

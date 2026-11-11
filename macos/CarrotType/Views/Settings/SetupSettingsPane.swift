@@ -139,6 +139,7 @@ struct SetupSettingsPane: View {
             SetupTrialSection(appState: appState)
         }
         .formStyle(.grouped)
+        .scrollIndicators(.never)
         .onDisappear { appState.cancelSetupTrial() }
     }
 

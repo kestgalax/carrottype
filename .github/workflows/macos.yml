@@ -52,6 +52,7 @@ jobs:
           bash scripts/verify-session-lifecycle.sh
           bash scripts/verify-dictation-reliability.sh
           bash scripts/verify-setup-formatting.sh
+          bash scripts/verify-formatting-rules.sh
           bash scripts/verify-ultra-models.sh
           bash scripts/verify-app-updates.sh
           bash scripts/verify-release-notes.sh
@@ -65,10 +66,15 @@ jobs:
             xcodebuild -downloadComponent MetalToolchain
           fi
       - name: Debug arm64 compile (no distribution signing)
+        run: |
+          set -o pipefail
+          xcodebuild -project macos/CarrotType.xcodeproj -scheme CarrotType \
+          -configuration Debug -destination 'platform=macOS,arch=arm64' \
+          -derivedDataPath "$RUNNER_TEMP/carrottype-build" \
+          -onlyUsePackageVersionsFromResolvedFile \
+          -skipPackagePluginValidation -skipMacroValidation \
+          CODE_SIGNING_ALLOWED=NO COMPILER_INDEX_STORE_ENABLE=NO build | tee "$RUNNER_TEMP/carrottype-debug.log"
+      - name: Actual formatting app checks (isolated, no devices or weights)
         run: >-
-          xcodebuild -project macos/CarrotType.xcodeproj -scheme CarrotType
-          -configuration Debug -destination 'platform=macOS,arch=arm64'
-          -derivedDataPath "$RUNNER_TEMP/carrottype-build"
-          -onlyUsePackageVersionsFromResolvedFile
-          -skipPackagePluginValidation -skipMacroValidation
-          CODE_SIGNING_ALLOWED=NO COMPILER_INDEX_STORE_ENABLE=NO build
+          python3 scripts/verify-formatting-app.py --build-log "$RUNNER_TEMP/carrottype-debug.log"
+          --products "$RUNNER_TEMP/carrottype-build/Build/Products/Debug"

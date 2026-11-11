@@ -92,6 +92,7 @@ struct StorageSettingsPane: View {
             }
         }
         .formStyle(.grouped)
+        .scrollIndicators(.never)
         .onAppear {
             models.refreshDownloadCacheBytes()
             models.refreshLegacySTTPackages()

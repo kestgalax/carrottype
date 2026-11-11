@@ -2,8 +2,8 @@ import Foundation
 
 /// Versioned stdin/stdout JSON contract between CarrotType and CarrotTypeCleanupHelper (ADR-009 / ADR-012).
 enum CleanupHelperProtocol {
-    /// v2: optional `instructions` for selection transform (nil = literal dictation cleanup).
-    static let version = 2
+    /// v3: explicit purpose and bounded dictation rules; transform instructions remain independent.
+    static let version = 3
 }
 
 struct CleanupHelperRequest: Codable, Sendable {
@@ -14,19 +14,25 @@ struct CleanupHelperRequest: Codable, Sendable {
     var modelDirectory: String
     /// When non-empty, used as ChatSession instructions instead of the built-in literal cleanup prompt.
     var instructions: String?
+    var purpose: String?
+    var dictationRules: DictationRules?
 
     init(
         text: String,
         mode: String,
         modelDirectory: String,
         instructions: String? = nil,
-        v: Int = CleanupHelperProtocol.version
+        v: Int = CleanupHelperProtocol.version,
+        purpose: String? = nil,
+        dictationRules: DictationRules? = nil
     ) {
         self.v = v
         self.text = text
         self.mode = mode
         self.modelDirectory = modelDirectory
         self.instructions = instructions
+        self.purpose = purpose ?? (instructions?.isEmpty == false ? "transform" : "dictation")
+        self.dictationRules = dictationRules
     }
 }
 

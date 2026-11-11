@@ -30,3 +30,7 @@ ADR-003 defined cleanup modes Off / Light / Smart / Smart+ with Qwen3 as the Sma
 - **Cloud LLM cleanup:** rejected for product privacy intent.
 - **Bundle Qwen weights in the `.app`:** rejected for release size (ADR-003).
 - **llama.cpp instead of MLX:** MLX is the Apple Silicon-native path already used by the mlx-community 4-bit Qwen3 packages.
+
+## 0.8.0 clarification
+
+[ADR-018](ADR-018-dictation-rules-and-cleanup-catalog.md) narrows new cleanup offerings to Qwen3 0.6B/Gemma while retaining installed Smart+ compatibility, and specifies bounded dictation preferences/v3 helper purpose independent of Translate/Custom. Existing engine/runtime/process/trust decisions remain; historical rationale above is retained.

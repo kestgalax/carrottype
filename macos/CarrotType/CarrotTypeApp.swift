@@ -56,6 +56,8 @@ struct CarrotTypeApp: App {
                     minHeight: settingsMinSize.height,
                     maxHeight: .infinity
                 )
+                // NSApplication.appearance is the sole theme authority. Combining it with
+                // preferredColorScheme can leave SwiftUI pinned after returning to System.
                 .background(SettingsWindowChromeFix())
                 // Avoid remounting Settings on language change: that races onDisappear
                 // (clears settingsVisible / mic meter) with onAppear and breaks the meter.

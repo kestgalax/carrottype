@@ -21,11 +21,25 @@ actor QwenCleanupEngine: CleanupEngine {
     /// Wall-clock budget for cold load + generate (helper is killed on timeout).
     private static let timeoutNanoseconds: UInt64 = 120_000_000_000
 
-    func cleanup(
+    func formatDictation(text: String, mode: CleanupMode, modelDirectory: URL?, rules: DictationRules) async throws -> String {
+        try await run(text: text, mode: mode, modelDirectory: modelDirectory, instructions: nil, rules: rules.normalized)
+    }
+
+    func cleanup(text: String, mode: CleanupMode, modelDirectory: URL?, instructions: String?) async throws -> String {
+        do {
+            return try await run(text: text, mode: mode, modelDirectory: modelDirectory, instructions: instructions, rules: nil)
+        } catch let failure as DictationModelFailure {
+            // Selection transforms retain their existing localised error contract (ADR-012).
+            throw failure == .modelUnavailable ? CleanupEngineError.modelMissing : .generationFailed
+        }
+    }
+
+    private func run(
         text: String,
         mode: CleanupMode,
         modelDirectory: URL?,
-        instructions: String?
+        instructions: String?,
+        rules: DictationRules?
     ) async throws -> String {
         switch mode {
         case .off:
@@ -37,9 +51,9 @@ actor QwenCleanupEngine: CleanupEngine {
         }
 
         #if arch(arm64)
-        guard let modelDirectory else { throw CleanupEngineError.modelMissing }
+        guard let modelDirectory else { throw DictationModelFailure.modelUnavailable }
         guard QwenCleanupPackage.isPackageReady(at: modelDirectory) else {
-            throw CleanupEngineError.modelMissing
+            throw DictationModelFailure.modelUnavailable
         }
         guard let helperURL = Self.helperExecutableURL() else {
             throw CleanupEngineError.helperMissing
@@ -49,7 +63,8 @@ actor QwenCleanupEngine: CleanupEngine {
             text: text,
             mode: mode.rawValue,
             modelDirectory: modelDirectory.path,
-            instructions: instructions
+            instructions: instructions,
+            purpose: instructions?.isEmpty == false ? "transform" : "dictation", dictationRules: rules
         )
         let requestData = try JSONEncoder().encode(request)
         let data: Data
@@ -61,6 +76,10 @@ actor QwenCleanupEngine: CleanupEngine {
             )
         } catch is CancellationError {
             throw CancellationError()
+        } catch CleanupHelperTransportError.timedOut {
+            throw DictationModelFailure.timedOut
+        } catch CleanupHelperTransportError.outputLimit {
+            throw DictationModelFailure.contextLimit
         } catch {
             throw CleanupEngineError.generationFailed
         }
@@ -71,9 +90,9 @@ actor QwenCleanupEngine: CleanupEngine {
             return cleaned
         }
         switch response.error {
-        case "modelMissing": throw CleanupEngineError.modelMissing
+        case "modelMissing": throw DictationModelFailure.modelUnavailable
         case "notAppleSilicon": throw CleanupEngineError.notAppleSilicon
-        default: throw CleanupEngineError.generationFailed
+        default: throw DictationModelFailure(rawValue: response.error ?? "") ?? .generationFailed
         }
         #else
         throw CleanupEngineError.notAppleSilicon

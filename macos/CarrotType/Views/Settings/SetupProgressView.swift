@@ -88,10 +88,16 @@ struct FormattingOutcomeView: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(String(format: L10n.t("format.actual", locale: locale), outcome.actualMode.title(locale: locale)))
             if let reason = outcome.fallbackReason {
-                Text(String(format: L10n.t(reason == .modelUnavailable ? "format.fallback_missing" : "format.fallback_failed", locale: locale),
-                            outcome.requestedMode.title(locale: locale)))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Label(L10n.t("rules.failure." + reason.rawValue, locale: locale), systemImage: "exclamationmark.triangle")
+                    .font(.callout).foregroundStyle(.orange)
+            }
+            if outcome.exactRulesApplied {
+                Label(L10n.t("rules.exact_applied", locale: locale), systemImage: "checkmark.circle")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            if outcome.style != .notRequested {
+                Text(L10n.t("rules.style." + outcome.style.rawValue, locale: locale))
+                    .font(.caption).foregroundStyle(outcome.style == .generated ? Color.secondary : Color.orange)
             }
         }
     }

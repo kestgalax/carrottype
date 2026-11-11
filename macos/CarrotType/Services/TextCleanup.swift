@@ -12,21 +12,24 @@ enum TextCleanup {
     }
 
     private static func light(_ text: String) -> String {
+        // Whitespace and words inside fenced code are data. Prefer an unchanged transcript
+        // over applying prose heuristics to it (also used by model failure fallback).
+        if text.contains("`") || text.range(of: #"(?i)https?://|[\w.+-]+@[\w.-]+\.[a-z]{2,}"#, options: .regularExpression) != nil {
+            return text.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
         var result = text
-            .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
+            .replacingOccurrences(of: #"[^\S\r\n]+"#, with: " ", options: .regularExpression)
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        let fillers = [
-            "эм", "ээ", "аа", "ну", "типа", "как бы", "в общем",
-            "um", "uh", "like", "you know",
-        ]
+        // Only unambiguous hesitation sounds. 'like', 'ну', 'типа' can carry meaning.
+        let fillers = ["эм", "ээ", "um", "uh"]
         for filler in fillers {
-            let pattern = "(?i)(^|\\s)" + NSRegularExpression.escapedPattern(for: filler) + "(?=\\s|$|,|\\.)"
+            let pattern = "(?i)(^|\\s)" + NSRegularExpression.escapedPattern(for: filler) + "(?=\\s|$|,|\\.)[,\\.]*[ \t]*"
             result = result.replacingOccurrences(of: pattern, with: "$1", options: .regularExpression)
         }
 
         result = result
-            .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
+            .replacingOccurrences(of: #"[^\S\r\n]+"#, with: " ", options: .regularExpression)
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
         if let first = result.first {

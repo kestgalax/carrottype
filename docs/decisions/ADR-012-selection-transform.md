@@ -48,3 +48,7 @@ Users need **multiple** shortcuts (e.g. translate on one chord, summarize on ano
 - **Reuse dictation cleanup mode for transform:** rejected; Off/Light would block transform.
 - **Default ⌥⌘T:** rejected; conflicts with browser Reopen Closed Tab.
 - **Auto-replace selection:** rejected for v1; breaks translate-while-reading.
+
+## 0.8.0 clarification
+
+[ADR-018](ADR-018-dictation-rules-and-cleanup-catalog.md) narrows new cleanup offerings to Qwen3 0.6B/Gemma while retaining installed Smart+ compatibility, and specifies bounded dictation preferences/v3 helper purpose independent of Translate/Custom. Existing engine/runtime/process/trust decisions remain; historical rationale above is retained.
