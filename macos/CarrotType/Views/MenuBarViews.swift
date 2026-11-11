@@ -1,6 +1,35 @@
 import AppKit
 import SwiftUI
 
+/// Shared menu-bar status glyph used by the real label and the synthetic Settings preview.
+enum MenuBarStatusAppearance {
+    static func image(for mode: MenuBarMode) -> Image {
+        mode == .idle
+            ? Image("CarrotMark").renderingMode(.template)
+            : Image(systemName: symbolName(for: mode))
+    }
+
+    static func color(for mode: MenuBarMode) -> Color {
+        switch mode {
+        case .recording: return .red
+        case .processing, .cleanup: return .orange
+        case .error: return .yellow
+        default: return .primary
+        }
+    }
+
+    static func symbolName(for mode: MenuBarMode) -> String {
+        switch mode {
+        case .idle: return "waveform.badge.microphone"
+        case .needsSetup: return "waveform.badge.exclamationmark"
+        case .recording: return "record.circle.fill"
+        case .processing: return "ellipsis.circle.fill"
+        case .cleanup: return "text.badge.checkmark"
+        case .error: return "exclamationmark.triangle"
+        }
+    }
+}
+
 struct MenuBarLabelView: View {
     @EnvironmentObject private var appState: AppState
     @Environment(\.openSettings) private var openSettings
@@ -8,9 +37,9 @@ struct MenuBarLabelView: View {
     private var locale: Locale { appState.effectiveLocale }
 
     var body: some View {
-        menuImage
+        MenuBarStatusAppearance.image(for: appState.menuBarMode)
             .symbolRenderingMode(.hierarchical)
-            .foregroundStyle(iconColor)
+            .foregroundStyle(MenuBarStatusAppearance.color(for: appState.menuBarMode))
             .accessibilityLabel(Text(accessibilityLabel))
             .onAppear {
                 guard appState.takeFirstRunPresentationRequest() else { return }
@@ -19,32 +48,6 @@ struct MenuBarLabelView: View {
                     NSApp.activate(ignoringOtherApps: true)
                 }
             }
-    }
-
-    private var menuImage: Image {
-        appState.menuBarMode == .idle
-            ? Image("CarrotMark").renderingMode(.template)
-            : Image(systemName: symbolName)
-    }
-
-    private var iconColor: Color {
-        switch appState.menuBarMode {
-        case .recording: return .red
-        case .processing, .cleanup: return .orange
-        case .error: return .yellow
-        default: return .primary
-        }
-    }
-
-    private var symbolName: String {
-        switch appState.menuBarMode {
-        case .idle: return "waveform.badge.microphone"
-        case .needsSetup: return "waveform.badge.exclamationmark"
-        case .recording: return "record.circle.fill"
-        case .processing: return "ellipsis.circle.fill"
-        case .cleanup: return "text.badge.checkmark"
-        case .error: return "exclamationmark.triangle"
-        }
     }
 
     private var accessibilityLabel: String {

@@ -286,49 +286,44 @@ struct DynamicIslandAppChecks {
         // Show the saved switch ON; non-Full renders must show it disabled without resetting it.
         state.liveDraftEnabled = true
 
-        for (index, language) in [AppLanguage.russian, .english].enumerated() {
+        // Actual Settings shell at the documented minimum window size (720×520), with
+        // Dynamic Island selected. The 200 pt sidebar leaves about 519 pt for the real pane.
+        var renderedBottomScroll = false
+        for (language, code) in [(AppLanguage.russian, "ru"), (AppLanguage.english, "en")] {
             for theme in [AppTheme.light, .dark] {
-                state.appLanguage = language
-                state.appTheme = theme
-                let pane = DynamicIslandSettingsPane(appState: state)
-                    .environment(\.locale, language.effectiveLocale)
-                try render(
-                    view: pane,
-                    size: NSSize(width: 720, height: 520),
-                    appearance: theme.appearance,
-                    to: snapshots.appendingPathComponent(
-                        "settings-\(index == 0 ? "ru" : "en")-\(theme.rawValue).png"
+                for mode in DynamicIslandMode.allCases {
+                    state.appLanguage = language
+                    state.appTheme = theme
+                    state.dynamicIslandMode = mode
+                    let view = CarrotTypeSettingsView(initialPane: .dynamicIsland)
+                        .environmentObject(state)
+                        .environment(\.locale, language.effectiveLocale)
+                    let name = "settings-\(code)-\(theme.rawValue)-\(mode.rawValue)"
+                    let info = try render(
+                        view: view,
+                        size: NSSize(width: 720, height: 520),
+                        appearance: theme.appearance,
+                        to: snapshots.appendingPathComponent("\(name).png")
                     )
-                )
+                    precondition(info.found, "Whole Settings shell must expose its Form scroll container at minimum size")
+                    print("LAYOUT \(name) overflow=\(info.overflow)")
+                    if info.overflow > 0, !renderedBottomScroll {
+                        let bottom = try render(
+                            view: CarrotTypeSettingsView(initialPane: .dynamicIsland)
+                                .environmentObject(state)
+                                .environment(\.locale, language.effectiveLocale),
+                            size: NSSize(width: 720, height: 520),
+                            appearance: theme.appearance,
+                            scrollToBottom: true,
+                            to: snapshots.appendingPathComponent("\(name)-bottom.png")
+                        )
+                        precondition(bottom.found)
+                        renderedBottomScroll = true
+                    }
+                }
             }
         }
-
-        // Mode-specific copy/disabled switch evidence at the same minimum size.
-        state.appLanguage = .russian
-        state.appTheme = .light
-        for mode in [DynamicIslandMode.minimal, .menuOnly] {
-            state.dynamicIslandMode = mode
-            try render(
-                view: DynamicIslandSettingsPane(appState: state)
-                    .environment(\.locale, state.effectiveLocale),
-                size: NSSize(width: 720, height: 520),
-                appearance: AppTheme.light.appearance,
-                to: snapshots.appendingPathComponent("settings-ru-light-\(mode.rawValue).png")
-            )
-        }
         state.dynamicIslandMode = .full
-
-        // Whole Settings host shows the six-pane sidebar order at the documented minimum size.
-        state.appLanguage = .russian
-        state.appTheme = .light
-        try render(
-            view: CarrotTypeSettingsView()
-                .environmentObject(state)
-                .environment(\.locale, state.effectiveLocale),
-            size: NSSize(width: 720, height: 520),
-            appearance: AppTheme.light.appearance,
-            to: snapshots.appendingPathComponent("settings-sidebar-ru-light.png")
-        )
 
         // Real minimal-indicator components at native geometry (offscreen, not a device screenshot).
         let geometry = StatusCapsuleGeometry.preferred()
@@ -378,13 +373,20 @@ struct DynamicIslandAppChecks {
         print("GEOMETRY notched=\(geometry.hasNotch) notch=\(geometry.notchWidth)x\(geometry.notchHeight) bar=\(geometry.minimalBarWidth)")
     }
 
+    private struct ScrollInfo {
+        let found: Bool
+        let overflow: CGFloat
+    }
+
     @MainActor
+    @discardableResult
     private static func render(
         view: some View,
         size: NSSize,
         appearance: NSAppearance?,
+        scrollToBottom: Bool = false,
         to url: URL
-    ) throws {
+    ) throws -> ScrollInfo {
         let host = NSHostingView(rootView: view)
         host.frame = NSRect(origin: .zero, size: size)
         let window = NSWindow(
@@ -398,6 +400,12 @@ struct DynamicIslandAppChecks {
         host.layoutSubtreeIfNeeded()
         RunLoop.main.run(until: Date().addingTimeInterval(0.3))
         host.layoutSubtreeIfNeeded()
+        let info = scrollInfo(in: host)
+        if scrollToBottom, info.overflow > 0 {
+            _ = scrollSettingsToBottom(in: host)
+            host.layoutSubtreeIfNeeded()
+            RunLoop.main.run(until: Date().addingTimeInterval(0.15))
+        }
         guard let rep = host.bitmapImageRepForCachingDisplay(in: host.bounds) else {
             preconditionFailure("No bitmap for native snapshot")
         }
@@ -407,5 +415,51 @@ struct DynamicIslandAppChecks {
         }
         try data.write(to: url)
         window.contentView = nil
+        return info
+    }
+
+    @MainActor
+    private static func deepestScroll(in view: NSView) -> NSScrollView? {
+        var first: NSScrollView?
+        var best: NSScrollView?
+        var bestOverflow: CGFloat = 0
+        func visit(_ current: NSView) {
+            if let scroll = current as? NSScrollView, let document = scroll.documentView {
+                if first == nil { first = scroll }
+                let overflow = document.frame.height - scroll.contentView.bounds.height
+                if overflow > bestOverflow {
+                    bestOverflow = overflow
+                    best = scroll
+                }
+            }
+            current.subviews.forEach(visit)
+        }
+        visit(view)
+        return best ?? first
+    }
+
+    @MainActor
+    private static func scrollInfo(in view: NSView) -> ScrollInfo {
+        guard let scroll = deepestScroll(in: view), let document = scroll.documentView else {
+            return ScrollInfo(found: false, overflow: 0)
+        }
+        return ScrollInfo(
+            found: true,
+            overflow: max(0, document.frame.height - scroll.contentView.bounds.height)
+        )
+    }
+
+    @MainActor
+    private static func scrollSettingsToBottom(in view: NSView) -> Bool {
+        guard let scroll = deepestScroll(in: view), let document = scroll.documentView else {
+            return false
+        }
+        let maxY = max(0, document.frame.height - scroll.contentView.bounds.height)
+        scroll.contentView.scroll(to: NSPoint(x: 0, y: maxY))
+        scroll.reflectScrolledClipView(scroll.contentView)
+        if maxY > 0 {
+            precondition(scroll.contentView.bounds.origin.y > 0, "Settings content did not scroll to the bottom")
+        }
+        return true
     }
 }

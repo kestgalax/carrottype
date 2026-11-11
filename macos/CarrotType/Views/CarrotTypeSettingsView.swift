@@ -11,6 +11,13 @@ struct CarrotTypeSettingsView: View {
     @State private var showStatusDetails = false
     @State private var didApplyInitialSelection = false
 
+    /// Fixture-only initial selection; `nil` preserves normal runtime behavior.
+    private let initialPane: SettingsPane?
+
+    init(initialPane: SettingsPane? = nil) {
+        self.initialPane = initialPane
+    }
+
     private var locale: Locale { appState.effectiveLocale }
 
     var body: some View {
@@ -160,6 +167,6 @@ struct CarrotTypeSettingsView: View {
         if appState.showFirstRun {
             return
         }
-        selection = defaultPane
+        selection = initialPane ?? defaultPane
     }
 }

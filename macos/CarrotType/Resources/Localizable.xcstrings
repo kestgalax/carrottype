@@ -6280,7 +6280,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Динамический остров"
+            "value": "Dynamic Island"
           }
         },
         "en": {
@@ -6563,19 +6563,36 @@
         }
       }
     },
-    "island.preview.caption": {
+    "island.preview.live_text": {
       "extractionState": "manual",
       "localizations": {
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Так выглядит минимальная индикация."
+            "value": "Живой текст обновляется во время речи"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This is how the minimal indicator looks."
+            "value": "Live text updates while you speak"
+          }
+        }
+      }
+    },
+    "island.preview.synthetic": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Синтетический предпросмотр — запись не начинается."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synthetic preview — recording does not start."
           }
         }
       }

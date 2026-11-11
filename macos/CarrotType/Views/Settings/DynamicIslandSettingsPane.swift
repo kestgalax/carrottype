@@ -23,12 +23,7 @@ struct DynamicIslandSettingsPane: View {
     var body: some View {
         Form {
             Section {
-                Picker(L10n.t("island.mode.title", locale: locale), selection: $appState.dynamicIslandMode) {
-                    ForEach(DynamicIslandMode.allCases) { mode in
-                        Text(mode.title(locale: locale)).tag(mode)
-                    }
-                }
-                .pickerStyle(.radioGroup)
+                IslandModeSelector(appState: appState, locale: locale)
 
                 Text(appState.dynamicIslandMode.detail(locale: locale))
                     .font(.caption)
@@ -46,7 +41,11 @@ struct DynamicIslandSettingsPane: View {
             }
 
             Section {
-                DynamicIslandSettingsPreview(locale: locale)
+                DynamicIslandSettingsPreview(
+                    mode: appState.dynamicIslandMode,
+                    showLiveDraft: appState.liveDraftEnabled && appState.activeSTTSupportsStreaming,
+                    locale: locale
+                )
             } header: {
                 Text(L10n.t("island.preview.title", locale: locale))
             }
@@ -70,59 +69,146 @@ struct DynamicIslandSettingsPane: View {
     }
 }
 
-/// Synthetic recording/processing chrome from the same views as the real indicator.
-/// It never captures audio, touches models/WAV/clipboard/statistics, or opens a status panel.
-private struct DynamicIslandSettingsPreview: View {
+/// Vertical radio list. A horizontal native radio group truncates long localized labels
+/// in the real 519 pt detail column at the minimum Settings window width.
+private struct IslandModeSelector: View {
+    @ObservedObject var appState: AppState
     let locale: Locale
 
-    var body: some View {
-        HStack(alignment: .top, spacing: 14) {
-            tile(
-                title: L10n.t("island.preview.recording", locale: locale),
-                content: { RecordingGlowBar(width: 44) }
-            )
-            tile(
-                title: L10n.t("island.preview.processing", locale: locale),
-                content: {
-                    ProcessingDots(
-                        diameter: MinimalIslandMetrics.dotDiameter,
-                        spacing: MinimalIslandMetrics.dotSpacing,
-                        ink: .orange
-                    )
-                }
-            )
-            Spacer(minLength: 0)
-        }
-        .padding(.vertical, 2)
+    @Environment(\.colorScheme) private var colorScheme
 
-        Text(L10n.t("island.preview.caption", locale: locale))
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .padding(.top, 2)
+    var body: some View {
+        VStack(alignment: .leading, spacing: 1) {
+            ForEach(DynamicIslandMode.allCases) { mode in
+                let selected = appState.dynamicIslandMode == mode
+                Button {
+                    appState.dynamicIslandMode = mode
+                } label: {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Image(systemName: selected ? "largecircle.fill.circle" : "circle")
+                            .font(.system(size: 13))
+                            .foregroundStyle(selected ? AppStyle.accent(colorScheme) : Color.secondary)
+                        Text(mode.title(locale: locale))
+                            .foregroundStyle(.primary)
+                        Spacer(minLength: 0)
+                    }
+                    .padding(.vertical, 4)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(selected ? .isSelected : [])
+                .accessibilityLabel(mode.title(locale: locale))
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(L10n.t("island.mode.title", locale: locale))
+    }
+}
+
+/// Synthetic recording/processing chrome from the same views as the selected real mode.
+/// It never captures audio, touches models/WAV/clipboard/statistics, or opens a status panel.
+private struct DynamicIslandSettingsPreview: View {
+    let mode: DynamicIslandMode
+    let showLiveDraft: Bool
+    let locale: Locale
+
+    private var canvasHeight: CGFloat {
+        mode == .full && showLiveDraft ? 104 : 44
     }
 
-    private func tile<Content: View>(
-        title: String,
-        @ViewBuilder content: () -> Content
-    ) -> some View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .top, spacing: 14) {
+                tile(title: L10n.t("island.preview.recording", locale: locale), phase: .listening)
+                tile(title: L10n.t("island.preview.processing", locale: locale), phase: .understanding)
+                Spacer(minLength: 0)
+            }
+
+            Text(L10n.t("island.preview.synthetic", locale: locale))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.vertical, 2)
+        .allowsHitTesting(false)
+    }
+
+    private func tile(title: String, phase: StatusCapsulePhase) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             ZStack {
-                RoundedRectangle(cornerRadius: 7, style: .continuous)
-                    .fill(Color.black)
-                content()
-                    .frame(height: 18)
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color.primary.opacity(0.06))
+                previewContent(phase: phase)
             }
-            .frame(width: 116, height: 24)
+            .frame(width: 210, height: canvasHeight)
             .overlay {
-                RoundedRectangle(cornerRadius: 7, style: .continuous)
-                    .strokeBorder(Color.primary.opacity(0.14), lineWidth: 0.5)
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .strokeBorder(Color.primary.opacity(0.12), lineWidth: 0.5)
             }
 
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .frame(width: 150, alignment: .leading)
+        .frame(width: 210, alignment: .leading)
         .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder
+    private func previewContent(phase: StatusCapsulePhase) -> some View {
+        switch mode {
+        case .full:
+            fullCapsule(phase: phase)
+        case .minimal:
+            minimalIndicator(phase: phase)
+        case .menuOnly:
+            menuBarGlyph(phase: phase)
+        }
+    }
+
+    private func fullCapsule(phase: StatusCapsulePhase) -> some View {
+        let hasDraft = phase == .listening && showLiveDraft
+        return StatusCapsuleView(
+            phase: phase,
+            resultText: "",
+            direction: nil,
+            copiedFeedback: false,
+            liveConfirmed: hasDraft ? L10n.t("island.preview.live_text", locale: locale) : "",
+            liveVolatile: "",
+            topInset: 0,
+            locale: locale,
+            onCopy: {},
+            onClose: {}
+        )
+        .frame(width: hasDraft ? 196 : 148, height: hasDraft ? 96 : 36)
+    }
+
+    private func minimalIndicator(phase: StatusCapsulePhase) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 7, style: .continuous)
+                .fill(Color.black)
+            MinimalStatusIndicatorView(
+                phase: phase,
+                topInset: 0,
+                barWidth: 44,
+                locale: locale
+            )
+        }
+        .frame(width: 116, height: 24)
+    }
+
+    private func menuBarGlyph(phase: StatusCapsulePhase) -> some View {
+        let mode: MenuBarMode = phase == .understanding ? .processing : .recording
+        return ZStack {
+            RoundedRectangle(cornerRadius: 7, style: .continuous)
+                .fill(Color.black)
+            MenuBarStatusAppearance.image(for: mode)
+                .renderingMode(.template)
+                .symbolRenderingMode(.hierarchical)
+                .foregroundStyle(MenuBarStatusAppearance.color(for: mode))
+                .font(.system(size: 15, weight: .medium))
+        }
+        .frame(width: 116, height: 24)
     }
 }
