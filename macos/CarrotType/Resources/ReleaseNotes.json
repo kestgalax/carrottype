@@ -1,26 +1,26 @@
 {
   "schemaVersion": 1,
-  "version": "0.10.0",
-  "build": "34",
-  "date": "2026-11-11",
+  "version": "0.11.0",
+  "build": "35",
+  "date": "2026-11-12",
   "localizations": {
     "en": {
-      "summary": "A short local typing test for a more accurate speed estimate.",
+      "summary": "Settings are grouped by what you do: General, Dictation and Text actions.",
       "sections": [
         {
           "kind": "new",
           "items": [
             {
-              "title": "Measure your typing speed.",
-              "detail": "Statistics now offers a Measure… action next to the saved words-per-minute estimate. It opens a native 30-second test in the same window; no new settings pane, menu item or hotkey is added."
+              "title": "General is about the app itself.",
+              "detail": "Updates, version and What's New, theme, interface language and launch at macOS sign-in now live in General. They are no longer mixed with dictation controls."
             },
             {
-              "title": "Russian or English, three levels.",
-              "detail": "Choose the text language independently of the interface and Easy, Medium (the default) or Advanced. Easy uses common short words, Medium everyday sentences, and Advanced longer text with varied punctuation and a few numbers."
+              "title": "Dictation keeps its own settings.",
+              "detail": "The dictation shortcut, Walkie-talkie hold mode, clipboard preference, formatting mode and rules, My Rules and the text trial are together in Dictation. Formatting is only selectable when the app is ready, exactly as before."
             },
             {
-              "title": "A different prompt on every attempt.",
-              "detail": "Prompts are assembled locally from small original bundled corpora in a fresh order. The test needs no model, network, microphone, Accessibility permission or Ready state."
+              "title": "Text actions has the bindings.",
+              "detail": "Translate and Custom transform bindings, including their model, language and instruction editors, moved to Text actions. The existing limits and conflict checks are unchanged."
             }
           ]
         },
@@ -28,34 +28,38 @@
           "kind": "improved",
           "items": [
             {
-              "title": "Only Use changes your speed.",
-              "detail": "WPM, CPM, accuracy, language and level are shown when the 30 seconds end. Only Use N WPM writes the existing estimate; Repeat, Close, Escape, low accuracy or an out-of-range result leave the saved value and manual WPM editing unchanged."
+              "title": "Eight panes in a clearer order.",
+              "detail": "The sidebar now lists General, Dictation, Text actions, Dynamic Island, Setup, Models, Storage and Statistics. The Dynamic Island pane name remains untranslated in both languages."
             },
             {
-              "title": "Attempts stay in memory only.",
-              "detail": "Attempt text, keys, result, accuracy, language, level and date remain in RAM for the open sheet. Statistics collection keeps exactly the state you left it in."
+              "title": "Nothing saved is reset.",
+              "detail": "Window size, the 720×520 minimum, the readiness-based starting pane and every saved preference and binding keep their previous values. Only the navigation list scrolls; Details, version and What's New stay pinned."
+            },
+            {
+              "title": "Leaving a pane stays clean.",
+              "detail": "Leaving Dictation or Text actions cancels shortcut capture and restores the registered hotkey. Leaving Dictation also cancels a running text trial; changing language or theme does not remount Settings or stop a finished trial."
             }
           ]
         }
       ]
     },
     "ru": {
-      "summary": "Короткий локальный тест для более точной оценки скорости печати.",
+      "summary": "Настройки собраны по сценариям: «Основные», «Диктовка» и «Преобразования».",
       "sections": [
         {
           "kind": "new",
           "items": [
             {
-              "title": "Измерение скорости печати.",
-              "detail": "В «Статистике» рядом с сохранённой оценкой слов в минуту появилась кнопка «Измерить…». Она открывает нативный тест на 30 секунд в том же окне: новый раздел настроек, пункт меню или горячая клавиша не добавляются."
+              "title": "«Основные» — только о приложении.",
+              "detail": "Обновления, версия и «Что нового», тема, язык интерфейса и запуск при входе в macOS теперь находятся в «Основных» и больше не смешиваются с настройками диктовки."
             },
             {
-              "title": "Русский или English, три уровня.",
-              "detail": "Язык текста выбирается независимо от языка интерфейса: лёгкий, средний (по умолчанию) или продвинутый. Лёгкий использует частые короткие слова, средний — обычные фразы, продвинутый — более длинный текст с разнообразной пунктуацией и небольшим числом цифр."
+              "title": "У «Диктовки» свои настройки.",
+              "detail": "Сочетание клавиш диктовки, режим рации, сохранение результата в буфере, режим и правила оформления, «Мои правила» и пробный текст собраны в «Диктовке». Оформление по-прежнему доступно только в состоянии Ready."
             },
             {
-              "title": "Новый текст на каждую попытку.",
-              "detail": "Текст собирается локально из небольших собственных встроенных корпусов в новом порядке. Тесту не нужны модель, сеть, микрофон, разрешение Универсального доступа или состояние Ready."
+              "title": "«Преобразования» — для связок.",
+              "detail": "Связки Translate и Custom вместе с выбором модели, языка и инструкции переехали в «Преобразования». Ограничения и проверка конфликтов не изменились."
             }
           ]
         },
@@ -63,12 +67,16 @@
           "kind": "improved",
           "items": [
             {
-              "title": "Скорость меняет только Use.",
-              "detail": "По окончании 30 секунд показываются WPM, знаки в минуту, точность, язык и уровень. Только «Использовать N WPM» записывает существующую оценку; «Повторить», «Закрыть», Escape, низкая точность или результат вне диапазона не меняют сохранённое значение и ручное редактирование WPM."
+              "title": "Восемь разделов в понятном порядке.",
+              "detail": "В боковом списке теперь: «Основные», «Диктовка», «Преобразования», Dynamic Island, «Настройка», «Модели», «Хранилище» и «Статистика». Название раздела Dynamic Island по-прежнему не переводится."
             },
             {
-              "title": "Попытки только в памяти.",
-              "detail": "Текст попытки, нажатия, результат, точность, язык, уровень и дата остаются в RAM, пока открыт лист. Сбор статистики остаётся ровно в том состоянии, в котором вы его оставили."
+              "title": "Сохранённое не сбрасывается.",
+              "detail": "Размер окна, минимум 720×520, стартовый раздел по состоянию Ready, все сохранённые значения и связки остаются прежними. Прокручивается только список разделов; Details, версия и «Что нового» остаются на месте."
+            },
+            {
+              "title": "Уход из раздела ничего не ломает.",
+              "detail": "При уходе из «Диктовки» или «Преобразований» захват сочетания отменяется, а горячая клавиша снова регистрируется. Уход из «Диктовки» также отменяет идущую пробу текста; смена языка или темы не пересоздаёт настройки и не останавливает завершённую пробу."
             }
           ]
         }
