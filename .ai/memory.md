@@ -14,6 +14,10 @@ Maintainer clarified roles: Codex researches/designs the solution and agrees it 
 
 Late OpenCode report arrived after stop: documentation commit `17cf2a3` exists on its separate branch; inspected stat confirms four documentation files only. Preserve it as an independent draft, do not merge it over the Codex proposal. Codex planning branch local AIDOS validate/trace/review and diff whitespace checks pass; local spec links resolve. Native indicator geometry remains unverified until an approved implementation prototype.
 
+## Typing-speed calibration proposal — 2026-11-11
+
+Maintainer asked to research a Monkeytype-inspired test near Statistics WPM while the Dynamic Island release agent continues separately. Codex inspected current global manual WPM/estimate path and proposed an offline native 30 s RU/EN sheet, explicit Use, RAM-only attempts, no WebView/models/network, lifecycle-owned hotkey/gate cleanup. Spec: `docs/specs/tasks/typing-speed-test.md`; fresh main-based branch `design/typing-speed-test`. Proposal only, needs agreement; no OpenCode implementation or future release authorization. Preserve Dynamic Island 0.9.0 preparation in its separate worktree; use updated main for any later typing-test implementation. Existing WPM changes recalculate all displayed periods, not stored counts.
+
 ## Canonical sources
 
 - Product: `docs/product-intent.md`
