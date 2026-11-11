@@ -42,3 +42,7 @@ Follows accepted ADR-014 with the approved presentation/preview amendment; ADR-0
 - Check: actual recording, stop/paste and Escape in all modes on the maintainer Mac; restore Full and its saved live-draft preference; translate/recovery result accessibility.
 - Check: notch glow visibility, external display/fullscreen, auto-hidden menu bar, VoiceOver and keyboard navigation in live Settings.
 - Risk: these manual checks remain unverified. Existing worker evidence does not prove them; Debug/manual acceptance and publication require separate maintainer instruction. No installed app or user profile was replaced.
+
+## Maintainer acceptance and release authorization — 2026-11-11
+
+After the signed Debug delivery, the maintainer explicitly accepted it and authorized publication: «можно публиковать». Individual manual outcomes were not enumerated. Release preparation uses frozen application source `0908750` and metadata 0.9.0 (33); evidence is in `docs/debug-review-v0.9.0.md` and `docs/github-release-notes-v0.9.0.md`. The release remains a draft until the coordinator final gate; this authorization is not a claim that every device/TCC/VoiceOver/fullscreen check was individually repeated.

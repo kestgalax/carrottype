@@ -80,6 +80,10 @@ Explicit presentation/word/tone preferences override generic cleanup defaults. A
 
 0.8 rework: explicit word deletion, prose lowercase and last-sentence full-stop controls are deterministic opt-ins independent of model availability, including when Off is selected. Existing preferences/custom text are preserved. Model-based business tone is separately labelled experimental and must not be presented as reliably completed merely because generation or safe fallback succeeded. Current quality acceptance is open.
 
+## Dynamic Island release candidate — 0.9.0 (prepared, not published)
+
+The maintainer accepted the signed Debug and authorized publication («можно публиковать»). Version 0.9.0 (33) packages the approved Full/Minimal/Menu-bar-only presentation modes and dedicated untranslated Dynamic Island pane, with preserved live-draft preference and transform/recovery exceptions. Application source is frozen at `0908750`; only metadata/notes/history/docs change. A verified draft is prepared; stable 0.8.2 remains live until the coordinator final gate. GigaAM is not part of this release.
+
 ## Dynamic Island modes — pre-release prototype (2026-11-11)
 
 The maintainer approved a focused presentation choice for the next Debug prototype: Full capsule (default), Minimal indicator, or Menu bar only, configured in a dedicated Settings pane. This changes only the visibility/shape of dictation status, not local dictation, result delivery, RAM recovery or trust boundaries. Transform results and paste-failure recovery remain visible in every mode; when the status capsule is suppressed, a Light fallback warning stays available in the menu and Details. No version or publication is assigned by this prototype.

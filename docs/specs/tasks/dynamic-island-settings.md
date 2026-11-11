@@ -155,3 +155,8 @@ D1–D3 реализованы в отдельном Orca worktree на ново
 Проверки: `bash scripts/verify-dynamic-island.sh`; `python3 scripts/verify-dynamic-island-app.py` (actual AppState/coordinator с fake adapters); существующие lifecycle/setup/reliability/catalog scripts; AIDOS validate/trace/review; arm64 Debug build. Offscreen native RU/EN light/dark/minimum snapshots и подписанный Debug приложены в отчёте. Реальные notch/external/fullscreen, VoiceOver, auto-hidden menu bar и интерактивное принятие остаются ручными; публикация не разрешена. Код review выполняет Codex. Отчёт: [debug-review-dynamic-island.md](../../debug-review-dynamic-island.md).
 
 Review R1–R3 (2026-11-11): preview теперь следует выбранному режиму и использует общие production-виды (full capsule / minimal / menu-bar glyphs); настройки проверяются на реальной оболочке 720×520 с выбранным Dynamic Island и прокруткой вниз; sidebar/заголовок называются Dynamic Island в RU и EN; выбор режима — вертикальный список. Исправления в `0908750`, новый подписанный Debug в `Dynamic-Island-Debug-R1R3-2026-11-11`.
+
+
+## Release 0.9.0 (draft prepared) — 2026-11-11
+
+Maintainer accepted the delivered Debug and authorized publication: «можно публиковать»; individual manual outcomes were not enumerated. Application behavior/source remains `0908750`; release metadata is 0.9.0 (33). The 0.8.2 notes were archived unchanged, RU/EN 0.9.0 notes author the three modes, untranslated Dynamic Island pane, preserved live-draft choice and result/recovery exceptions. Clean Release/DMG, signed ZIP/appcast and A32→B33 staging are verified locally; the draft is not published and stable remains 0.8.2. GigaAM is not included.
