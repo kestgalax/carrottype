@@ -283,6 +283,8 @@ struct DynamicIslandAppChecks {
     private static func renderNativeEvidence(state: AppState, output: URL) throws {
         let snapshots = output.appendingPathComponent("native")
         try FileManager.default.createDirectory(at: snapshots, withIntermediateDirectories: true)
+        // Show the saved switch ON; non-Full renders must show it disabled without resetting it.
+        state.liveDraftEnabled = true
 
         for (index, language) in [AppLanguage.russian, .english].enumerated() {
             for theme in [AppTheme.light, .dark] {
