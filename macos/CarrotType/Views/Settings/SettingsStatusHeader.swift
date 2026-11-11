@@ -42,6 +42,7 @@ struct SettingsStatusHeader: View {
                     .buttonStyle(.plain)
                     .foregroundStyle(AppStyle.accent(colorScheme))
                     .font(.caption)
+                    .accessibilityIdentifier("settings.footer.details")
             }
         }
         .padding(.horizontal, 10)

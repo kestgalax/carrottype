@@ -1361,13 +1361,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Post-dictation formatting"
+            "value": "Text formatting"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Оформление после диктовки"
+            "value": "Оформление текста"
           }
         }
       }
@@ -2495,6 +2495,23 @@
         }
       }
     },
+    "settings.pane.dictation": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictation"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Диктовка"
+          }
+        }
+      }
+    },
     "settings.pane.models": {
       "extractionState": "stale",
       "localizations": {
@@ -2559,6 +2576,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Статистика"
+          }
+        }
+      }
+    },
+    "settings.pane.textActions": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text actions"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Преобразования"
           }
         }
       }
@@ -4905,13 +4939,47 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Диктовка и работа с текстом"
+            "value": "Оформление, обновления и запуск при входе"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dictation and text actions"
+            "value": "Appearance, updates and launch at login"
+          }
+        }
+      }
+    },
+    "settings.description.dictation": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сочетание клавиш, оформление и правила"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shortcut, formatting and rules"
+          }
+        }
+      }
+    },
+    "settings.description.textActions": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Действия с выделенным текстом"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions for selected text"
           }
         }
       }
@@ -5211,7 +5279,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Правила постобработки"
+            "value": "Правила оформления текста"
           }
         },
         "en": {

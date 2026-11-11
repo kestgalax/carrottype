@@ -40,7 +40,7 @@ Transform hotkey (default ⌥')
 
 - Default path is fully local: audio is not uploaded.
 - Model weights download anonymously; no login required (ADR-003).
-- Settings/Setup UI is secondary to the hotkey loop but required for readiness transparency; shell is a locked sidebar (General / Dynamic Island / Setup / Models / Storage / Statistics) with Status as a compact header (`docs/specs/ux-setup-status.md`).
+- Settings/Setup UI is secondary to the hotkey loop but required for readiness transparency; shell is a locked sidebar (General / Dictation / Text actions / Dynamic Island / Setup / Models / Storage / Statistics) with Status as a compact header (`docs/specs/ux-setup-status.md`).
 - Optional usage statistics (ADR-013) are local JSON under Application Support; off by default; never transcripts or network.
 - Cloud STT/cleanup is out of MVP scope.
 - Non-macOS platforms are out of MVP scope.
@@ -210,3 +210,25 @@ pane, menu item, global hotkey or WebView.
   collection, writes daily statistics, or stores attempt text/keys/accuracy/language/level/date.
   Out-of-range results stay visible with an explanation and no silent clamp. Accuracy is
   informational and never blocks Apply.
+
+## Settings organization — approved S1–S4 extraction (2026-11-12)
+
+The Settings shell keeps the same 200 pt locked sidebar, 720×520 minimum and native grouped
+Forms, but separates the two daily product loops from application-level preferences. Sidebar
+order is **General / Dictation / Text actions / Dynamic Island / Setup / Models / Storage /
+Statistics**. General owns language, theme, app updates and (as its final section) launch at
+login. Dictation owns the existing hotkey/PTT/clipboard controls, the Ready-only formatting
+selector shared with Models, exact rules, model preferences/My Rules and the text trial. Text
+actions owns the existing Translate/Custom binding list. Dynamic Island, Setup, Models, Storage
+and Statistics keep their existing responsibilities, including the Statistics-only typing test.
+
+This is view extraction and navigation only. `AppState`, `ModelManager`, persistence keys and
+saved values are unchanged; there is no new preference copy, automatic model download, engine,
+helper protocol, defaults key or history. The formatting selector still calls the same
+`ModelManager.selectCleanup`/`selectableCleanupModes` path as Models. Empty binding arrays remain
+empty, max five and chord-conflict/capture behavior are preserved. Leaving Dictation or Text
+actions while capturing a chord cancels capture and restores global registration; this is
+`HotkeyService.isRecording` capture, not an active dictation. Leaving Dictation cancels an
+in-flight text trial through the existing task/gate teardown, and unrelated language/theme
+updates do not remount the shell or cancel it. Only the navigation list may scroll; Details,
+version and What’s New stay pinned. No performance improvement is claimed or measured.

@@ -94,7 +94,7 @@ struct DynamicIslandAppChecks {
         )
 
         // Sidebar order and localized titles.
-        precondition(SettingsPane.allCases == [.general, .dynamicIsland, .setup, .models, .storage, .statistics])
+        precondition(SettingsPane.allCases == [.general, .dictation, .textActions, .dynamicIsland, .setup, .models, .storage, .statistics])
         for locale in [Locale(identifier: "ru"), Locale(identifier: "en")] {
             for pane in SettingsPane.allCases { precondition(!pane.title(locale: locale).isEmpty) }
             for mode in DynamicIslandMode.allCases {
@@ -102,7 +102,7 @@ struct DynamicIslandAppChecks {
                 precondition(!mode.detail(locale: locale).isEmpty)
             }
         }
-        print("PASS settings: Dynamic Island directly after General, all six panes localized RU/EN")
+        print("PASS settings: Dynamic Island follows General, Dictation and Text actions; all eight panes localized RU/EN")
 
         // Preference survives reload; the moved live-draft switch keeps its exact key/value.
         state.dynamicIslandMode = .minimal

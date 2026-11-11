@@ -299,3 +299,32 @@ Correction to preparation-era statements: the docs-only `99a7bbc` push automatic
 Coordinator independently checked PR/head/tag/application-source freeze and successful final-head CI, reran authenticated draft signature/identity/version/length/URL gate, merged the exact checked head, and published the already verified draft. Post-publication `verify-update-release.py --published` passed public latest/archive signatures, metadata, URLs and asset digests. Native resolved Sparkle CLI with isolated manual-A build33 identity and production public key probed the live HTTPS latest feed: exit0, update available; probe only, no installation (log `dist/public-native-0.10.0.log`). DMG/ZIP/feed hashes remain those recorded above. Self-signed/unnotarized posture, candidate-code fixture and independent device/IME/VoiceOver/TCC limitations remain. No installed app, user preferences/models/login items or private keys were changed/exported.
 
 Next authorized work: settings reorganization (General, Dictation including formatting, Text actions) on a new branch/worktree from updated main, via **OpenCode 2** under the maintainer’s latest instruction «давай тогда через opencode продолжим». Codex retains design/review. Direct ZCode readiness did not work; do not claim it is executing. No publication authorization for that future version is inferred.
+
+## Settings organization implementation — 2026-11-12
+
+Maintainer approval «ок, мне нравится, тогда после интеграции теста печати, переходим к этому
+изменению» is no longer blocked: typing-speed is integrated and 0.10.0 (34) is published from
+main `22536e7` (PR #31 merge `bd387d8`). Implemented the approved S1–S4 extraction on a fresh
+main-based Orca worktree/branch `kestgalax/settings-organization`, copying the authoritative
+`design/settings-organization` spec commits (`5443d07`, `93b76cd`, `d4583d4`) without applying the
+old roadmap/memory over published release docs. Latest agent choice «давай тогда через opencode
+продолжим» means OpenCode 2; direct ZCode readiness failed and is not claimed.
+
+Sidebar: General / Dictation / Text actions / Dynamic Island / Setup / Models / Storage /
+Statistics. General is app-only (language, theme, updates, launch-at-login last); Dictation owns
+the existing shortcut/PTT/clipboard plus the existing shared Ready-only formatting selector,
+exact rules, model preferences/My Rules and text trial; Text actions owns the unchanged
+Translate/Custom binding editor. No ninth pane, no second preference/model source, no automatic
+download, no engine/prompt/helper/trust/network/default/history change. Sidebar 200 pt, 720×520
+minimum, General-if-ready/Setup-if-not-ready and first-run-to-Setup preserved; only the nav list
+scrolls while Details/version/What's New are pinned. Pane departure cancels chord capture and
+restores registration; leaving Dictation cancels a running trial and waits for the existing
+gate/teardown; theme/language changes do not cancel/remount it.
+
+Verification: before/after control inventory, new actual AppState/pane unmount/hotkey/trial checks,
+native whole-Settings 8 panes × RU/EN × light/dark at 720×520 with Dictation bottom scroll,
+existing setup/formatting/lifecycle/Dynamic Island/typing-speed/launch/catalog regressions, and a
+signed arm64 Debug under `dist/.builds.noindex/Settings-Organization-Debug-2026-11-12`. Evidence:
+`docs/debug-review-settings-organization.md`. Version remains 0.10.0 (34); no merge/push/DMG/
+release/publication or user preferences/models/installed app/login-item changes. Codex review is
+the next gate.

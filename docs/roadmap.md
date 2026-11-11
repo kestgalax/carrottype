@@ -2,7 +2,7 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **release 0.10.0 (34)** with the local typing-speed calibration is prepared as a verified draft/PR for the Codex final gate. **GitHub Release `v0.9.0`**: Dynamic Island Full/default, Minimal and Menu-bar-only modes. **v0.8.2**: cumulative release notes across skipped versions. **v0.8.1**: opt-in launch at macOS sign-in. **v0.8.0**: exact dictation rules including first-sentence lowercase, text trial, two offered cleanup models and System/Light/Dark. **v0.7.0**: native settings, accessibility/confirmation polish and selected carrot-microphone A brand. **v0.6.2**: coordinated dictation lifecycle, awaited teardown and generation-safe live draft; production regressions. **v0.6.1**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
+Milestone 0–2 vertical slice shipped; **release 0.10.0 (34)** with the local typing-speed calibration is published; the approved settings-organization extraction is implemented for review without a version. **GitHub Release `v0.9.0`**: Dynamic Island Full/default, Minimal and Menu-bar-only modes. **v0.8.2**: cumulative release notes across skipped versions. **v0.8.1**: opt-in launch at macOS sign-in. **v0.8.0**: exact dictation rules including first-sentence lowercase, text trial, two offered cleanup models and System/Light/Dark. **v0.7.0**: native settings, accessibility/confirmation polish and selected carrot-microphone A brand. **v0.6.2**: coordinated dictation lifecycle, awaited teardown and generation-safe live draft; production regressions. **v0.6.1**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
 Latest published artifact: `CarrotType-0.9.0.dmg` — SHA-256 `2c51717d4294f41671a554f5e754f2bf76e0ec07166aac2b5671fe5882e2a595`; signed ZIP/feed hashes in [release notes](github-release-notes-v0.9.0.md).
 
@@ -10,7 +10,7 @@ Published 0.9.0 (33) after approved Debug and verified draft. Evidence: [0.9.0 r
 
 **Release acceptance:** maintainer accepted the signed Dynamic Island Debug and authorized publication («можно публиковать»). Stable 0.9.0 (33) published 2026-11-11; individual manual device/TCC/VoiceOver outcomes not enumerated. [Evidence/limits](debug-review-v0.9.0.md).
 
-**Current focus:** the [typing-speed test](specs/tasks/typing-speed-test.md) is implemented and the maintainer authorized publication of 0.10.0 (34): «мне нравится, можем публиковать». Application behavior is frozen at `1736262` (accepted R1/R2). Release metadata/notes, clean Release/DMG, signed ZIP/appcast, isolated A33→B34 staging and a draft/PR are prepared for the Codex final gate; stable/latest remains 0.9.0 (33). Individual device/IME/VoiceOver/TCC results were not enumerated. Collect Dynamic Island 0.9.0 feedback; GigaAM deferred.
+**Current focus:** 0.10.0 (34) is published. The approved settings-organization extraction (General / Dictation / Text actions, with formatting inside Dictation) is implemented on `kestgalax/settings-organization` from published main `22536e7` for Codex review; no version or publication is assigned. Individual device/IME/VoiceOver/TCC results were not enumerated. Collect Dynamic Island 0.9.0 feedback; GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -327,3 +327,29 @@ Correction to preparation-era statements: the docs-only `99a7bbc` push automatic
 Coordinator independently checked PR/head/tag/application-source freeze and successful final-head CI, reran authenticated draft signature/identity/version/length/URL gate, merged the exact checked head, and published the already verified draft. Post-publication `verify-update-release.py --published` passed public latest/archive signatures, metadata, URLs and asset digests. Native resolved Sparkle CLI with isolated manual-A build33 identity and production public key probed the live HTTPS latest feed: exit0, update available; probe only, no installation (log `dist/public-native-0.10.0.log`). DMG/ZIP/feed hashes remain those recorded above. Self-signed/unnotarized posture, candidate-code fixture and independent device/IME/VoiceOver/TCC limitations remain. No installed app, user preferences/models/login items or private keys were changed/exported.
 
 Next authorized work: settings reorganization (General, Dictation including formatting, Text actions) on a new branch/worktree from updated main, via **OpenCode 2** under the maintainer’s latest instruction «давай тогда через opencode продолжим». Codex retains design/review. Direct ZCode readiness did not work; do not claim it is executing. No publication authorization for that future version is inferred.
+
+## Settings organization — implementation for review (no version assigned)
+
+The maintainer had approved the Codex proposal («ок, мне нравится, тогда после интеграции теста
+печати, переходим к этому изменению»); the typing-speed dependency is satisfied by published
+0.10.0. Implemented S1–S4 on a fresh main-based `kestgalax/settings-organization` worktree from
+`origin/main` `22536e7`, preserving the authoritative spec/history from `design/settings-organization`.
+
+Sidebar order is now **General / Dictation / Text actions / Dynamic Island / Setup / Models /
+Storage / Statistics**. General keeps language, theme, updates and launch-at-login (last);
+Dictation keeps the same shortcut/PTT/clipboard controls and the same Ready-only formatting
+selector plus exact rules, model preferences/My Rules and trial; Text actions keeps the same
+Translate/Custom bindings. No ninth pane, no runtime/model/prompt/dictation/transform/statistics/
+updater/trust/network/dependency/default/history change, no new saved values, and no automatic
+download. The 200 pt sidebar, 720×520 minimum and General-if-ready/Setup-if-not-ready default are
+unchanged; only the navigation list can scroll while Details/version/What’s New stay pinned.
+Departing a pane cancels chord capture and restores registration; leaving Dictation cancels an
+in-flight text trial through the existing gate teardown, while language/theme changes do not
+remount or cancel it.
+
+Verification: full before/after control inventory, actual AppState/pane/trial/hotkey checks,
+existing setup/formatting/lifecycle/Dynamic Island/typing-speed/launch/catalog regressions, native
+whole-Settings RU/EN light/dark at 720×520 for all eight panes (including a scrolled Dictation
+bottom), and a signed arm64 Debug app. [Spec](specs/tasks/settings-organization.md),
+[evidence/limits](debug-review-settings-organization.md). Codex review and a separate manual/
+publication gate remain; no merge, push, version bump or release.

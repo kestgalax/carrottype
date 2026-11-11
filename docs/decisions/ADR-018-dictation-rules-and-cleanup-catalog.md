@@ -51,3 +51,12 @@ Actual AppState text-trial evaluation confirmed delivery of rules but inconsiste
 ### First-sentence initial case (maintainer addition)
 
 Add an independent `lowercaseFirstLetter` opt-in (missing saved key defaults false). After model/base/fallback and word removal, lowercase only the first letter, skipping leading punctuation/space/digits/emoji; preserve all remaining case, including names and later sentences. If a protected code/URL/email/technical token leads the text, leave the start unchanged rather than editing data or advancing to a later sentence. Full prose lowercase takes precedence, with the redundant first-letter toggle disabled but its saved value retained. No prompt, model/runtime, transform or default change.
+
+## Settings location (2026-11-12)
+
+The approved settings-organization extraction moves the dictation shortcut and the existing
+formatting selector, exact rules, model preferences/My Rules and text trial into Settings →
+Dictation; General now holds application preferences only. The Ready-only cleanup selection still
+uses the same `ModelManager` path as Models. This is a location/UI change, not a change to the
+decisions above: rules, prompt purpose, persistence keys, models, helper protocol and validation
+are unchanged.
