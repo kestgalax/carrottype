@@ -133,8 +133,8 @@ footer stays pinned. Additional real-view evidence from the existing suites rema
 
 - Approval/spec history: `5443d07`, `93b76cd`, `d4583d4` (preserved, not rewritten).
 - Base: `origin/main` `22536e7`.
-- Application/source implementation commit: `IMPLEMENTATION_COMMIT_PLACEHOLDER`.
-- Final evidence/docs commit: this document’s commit (see `git log -1`).
+- Application/source implementation commit: `6cb6212`.
+- Final evidence/docs commit: the docs-only commit after `6cb6212` that contains this document (see `git log -1`).
 
 ## Honest limitations / manual checks remaining
 
