@@ -34,7 +34,7 @@ Maintainer принял доставленный Debug и разрешил пу�
 
 Draft-релиз v0.9.0 (ID 441884470, tag `v0.9.0`) подготовлен и проверен: `verify-update-release.py --tag v0.9.0 --previous-build 32` подтвердил подписи, identity, версии, длины, URL и историю; скачанные из draft байты совпали с локальными. Stable/latest остаётся 0.8.2 (32); публикация — отдельный финальный gate координатора.
 
-PR: [#30](https://github.com/kestgalax/carrottype/pull/30). Hosted `macOS checks`: [run 43048767504](https://github.com/kestgalax/carrottype/actions/runs/43048767504), success, head `458d9aa`.
+PR: [#30](https://github.com/kestgalax/carrottype/pull/30). Hosted `macOS checks`: [run 43048767504](https://github.com/kestgalax/carrottype/actions/runs/43048767504) passed for release prep `458d9aa`; final docs head `d97f6c2` passed [run 43050922068](https://github.com/kestgalax/carrottype/actions/runs/43050922068). Tag `v0.9.0` points at final source `d97f6c2`.
 
 ## SHA-256
 
