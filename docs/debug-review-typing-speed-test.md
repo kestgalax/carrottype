@@ -95,9 +95,9 @@ Measured data (not a promise of absolute RSS/performance):
 
 - Bundled authored corpus: **15,359 UTF-8 bytes** (RU easy 160 words, EN easy 152; 45 medium and
   42 advanced fragments per language).
-- Production model event benchmark, 650 committed graphemes: **19.22 ms total, 0.030 ms/event**
-  (ran again after final source; earlier runs 11.64–17.54 ms total).
-- Twenty fresh prompt builds: **4.61 ms total, 0.230 ms/build**.
+- Production model event benchmark, 650 committed graphemes: **18.19 ms total, 0.028 ms/event**
+  (ran after the R1/R2 source fix; observed range across runs 11.64–19.22 ms total).
+- Twenty fresh prompt builds: **4.27 ms total, 0.214 ms/build**.
 - App integration: 20 attempt cycles completed with no active timer, install-gate lease or
   hotkey suspension left behind.
 
