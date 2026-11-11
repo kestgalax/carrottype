@@ -1,0 +1,173 @@
+# Измерение скорости печати в Statistics
+
+2026-11-11. **Решение Codex согласовано; реализация разрешена.** Maintainer: «отлично, мне нравится, давай реализовывать» после добавления трёх уровней и локальной вариативности. OpenCode реализует, Codex проверяет; Debug/manual acceptance и публикация отдельно. App-код на этапе согласования не изменён.
+
+## Metadata
+
+- Task ID: typing-speed-test
+- Status: approved for implementation; release version, Debug/manual acceptance and publication pending
+- Roles: Codex researches/designs/reviews; OpenCode implements after maintainer agreement in a separate fresh main-based Orca worktree.
+
+## Traceability
+
+- Product Intent Link: `docs/product-intent.md` — минимальный локальный hotkey→paste, оценка пользы без дополнительной нагрузки.
+- Roadmap Item: `docs/roadmap.md` — parallel planning, typing-speed calibration.
+- Feature Spec: `docs/specs/features/local-usage-stats.md`, `docs/specs/ux-setup-status.md`.
+- Related ADRs: ADR-002 (native), ADR-013 (статистика), ADR-017 (install gate).
+
+## Контекст и доказательства
+
+[StatisticsSettingsPane](../../../macos/CarrotType/Views/Settings/StatisticsSettingsPane.swift) уже содержит отдельную группу скорости с `Stepper`, диапазон 10–200 WPM. [UsageStatsEstimate](../../../macos/CarrotType/Models/UsageStatsEstimate.swift) использует 50 WPM по умолчанию и 5 символов на слово, включая пробелы. `AppState.typingSpeedWPM` сохраняется в `carrottype.typingSpeedWPM`.
+
+Это **настройка оценки**, не уже измеренная скорость. Изменение WPM пересчитывает время из агрегатов за любой выбранный месяц; исходные счётчики не переписываются. Один глобальный WPM, разделения диктовок по языкам в статистике нет. Поэтому тест не должен сам заменять значение или включать сбор статистики.
+
+Референс [Monkeytype](https://monkeytype.com/) просмотрен в реальном Orca browser: типографический фокус на тексте, режим времени, в том числе 30 секунд, выбор языка, обратная связь по символам. [Официальное about](https://monkeytype.com/about) описывает WPM по корректным словам и accuracy по верным нажатиям; [README](https://github.com/monkeytypegame/monkeytype#about) подтверждает in-place prompt/feedback и множество режимов. Для CarrotType берём принцип ненавязчивой проверки, собственные компоненты/тексты и явно определённую ниже методику. Сопоставимость с рейтингом Monkeytype не обещается; его исходники/корпус/бренд не переносятся.
+
+## Сравнение вариантов
+
+| Вариант | Польза | Цена |
+|---|---|---|
+| Открыть Monkeytype снаружи | Почти нет app-кода | Переключение контекста, ручной перенос результата, внешний сайт нужен для калибровки. |
+| Раскрыть тест прямо в Form статистики | Всё рядом | Текст двигает цифры/форму, тесно в detail-колонке, сложнее управлять фокусом и завершением. |
+| **Небольшой нативный sheet из строки скорости** | Понятные начало/конец, место для чтения, остаётся контекст настроек | Небольшой независимый экран и модель теста. Рекомендуется. |
+| WebView с сайтом/клоном | Готовые веб-приёмы | Не соответствует маленькому офлайн-калибратору; внешний сервис добавил бы новый runtime/network scope. |
+
+## Предлагаемый UX
+
+В существующей группе «Скорость печати»: сохранить Stepper, добавить рядом или следующей компактной строкой **«Измерить…»**. Не превращать блок в большую постоянно видимую игру. При узкой колонке кнопка переходит под строку, не вытесняет WPM. Краткая подпись: «Используется для оценки сэкономленного времени».
+
+Кнопка открывает привязанный к Settings нативный sheet около **600 × 390 pt**; подобрать размеры по реальному minimum-size окну, не расширяя минимальную ширину всей Settings. При небольшой доступной высоте разрешить вертикальное прокручивание пояснений. Не создавать отдельный sidebar-пункт, menu-bar item или глобальную горячую клавишу теста.
+
+### Ready
+
+- Заголовок «Скорость печати»; подзаголовок «Короткий тест для более точной оценки времени».
+- Язык текста **Русский / English**, по умолчанию язык интерфейса, можно сменить без смены языка macOS/приложения.
+- Сложность **Лёгкий / Средний / Продвинутый**, по умолчанию Средний. Один режим **30 секунд**. Отсчёт с первого введённого печатного символа; время чтения перед началом не влияет. Никакого автозапуска при открытии.
+- Несколько строк спокойного текста; инструкция «Перепечатайте текст. Ошибки можно исправлять» и кнопка «Начать» для фокусировки области набора. После неё показывать «Начните печатать», без отдельного countdown.
+- Собственные локальные корпуса RU/EN для трёх уровней; новая комбинация на каждую попытку. Это необязательный игровой тест для приблизительной настройки WPM, не сертификация истинной скорости. Подробности ниже.
+
+### Running
+
+- Текст моноширинным системным шрифтом 18–20 pt, 2–3 видимых строки. Введённое обычным foreground, оставшееся secondary, ошибка подчёркнута плюс цвет, текущая позиция с кареткой.
+- Прокрутка по строкам без прыжков окна. В углу — оставшееся время; без прыгающего live WPM, графика, звука или частиц. Скорость/точность показываются по завершении.
+- Escape/«Отмена» закрывает без сохранения. Потеря активного приложения, закрытие Settings, sleep, смена языка/сложности/попытки отменяют измерение, не ставят его на паузу с сохранением преимущества. Повтор начинается заново.
+
+### Result
+
+- Основное число **64 WPM**, вторично **320 зн./мин · точность 98% · 30 с · Русский · Средний** (здесь пример, не результат пользователя).
+- Кнопки **«Повторить»**, **«Использовать 64 WPM»**, **«Закрыть»**. Только Use записывает существующий WPM; нажатие одновременно закрывает sheet. Предыдущее значение сохраняется при любой отмене/закрытии/повторе.
+- Под Apply: «Пересчитает оценку времени для всех периодов. Диктовки и их счётчики не изменятся». Значение применяется независимо от stats collection toggle; toggle не включается.
+- Точность — информация, не допуск к сохранению. Низкая точность не блокирует Use; можно ненавязчиво предложить повторить. Пользователь и так свободно задаёт WPM вручную. Результат любого уровня можно применить, не усредняя и не выбирая лучший автоматически.
+- Результат вне текущего диапазона 10–200 WPM показать честно, не clamp молча: Use недоступна, объяснение о диапазоне ручной настройки. Расширять диапазон без отдельного решения не требуется.
+- Без ленты попыток, среднего по языкам/рекордов, автоприменения, аккаунта или рейтинга. В первой версии сохраняется **только уже существующий WPM после Use**; текст, нажатия, результат/язык/уровень/точность/дата попытки остаются RAM-only до закрытия. Политика очистки статистики не меняется.
+
+## Уровни и новые тексты
+
+| Уровень | Содержимое | Пример характера текста |
+|---|---|---|
+| Лёгкий | Частые короткие слова, нижний регистр, без цифр и пунктуации; последовательность слов, не обязательно связный рассказ | `дом день время город книга рядом свет` |
+| Средний (default) | Обычные законченные фразы, заглавные буквы, точки и запятые | `Утром город просыпается медленно. На столе стоит чашка чая.` |
+| Продвинутый | Более длинные и менее привычные слова, разнообразная пунктуация, умеренно числа; сохраняем осмысленность | `Координатор уточнил конфигурацию: проверка запланирована на 14:30.` |
+
+Это редакционные уровни CarrotType, а не научные частотные ранги или копия баз Monkeytype. Номер уровня не превращать в множитель WPM. На Result оставить язык/уровень, чтобы пользователь понимал контекст; глобальный baseline остаётся один. Для оценки повседневного набора рекомендуем Средний, но другие уровни доступны на тех же правах.
+
+**Тексты заложены, а конкретная попытка собирается заново.** Для Лёгкого — собственная маленькая база частых слов (начальная цель около 150 на язык). Для Среднего/Продвинутого — независимые авторские предложения/фрагменты (начальная цель не менее 40–60 на каждый уровень и язык). Варианты выбираются/перемешиваются локальным PRNG в момент подготовки попытки; слова внутри готового предложения не перемешивать. Получается разная последовательность при сохранении осмысленных фраз. Не использовать одну заучиваемую страницу, не запрашивать сайт и не запускать LLM.
+
+Правила генерации: prompt фиксируется после Ready; новый seed на Repeat/новое открытие/смену языка или уровня. Не повторять предыдущий полный prompt в рамках открытого sheet; внутри набора выбирать предложения без повторов до исчерпания очереди, после — новый проход без одинаковых соседей. Держать только текущую очередь/последний fingerprint в RAM; без persisted истории/seed/keys. Test fixture принимает заданный seed и corpus для воспроизводимости.
+
+Размер корпуса первой версии — ориентир до 100 KB UTF-8 целиком; проверить фактический размер. Сотни/тысячи комбинаций не требуют хранить столько готовых страниц. Подготовка — однократная операция с небольшими строками; при продолжении сверх заранее подготовленного текста добавлять только очередной фрагмент. Не обещать никогда не повторяющиеся фразы: вариативность уменьшает заучивание, а умение быстрее печатать знакомые слова само по себе нормально для этого сценария.
+
+## Методика первой версии
+
+Одна попытка — 30 секунд реального монотонного времени от первого committed grapheme; deadline фиксирован. UI timer лишь отображает остаток, его количество тиков не определяет результат. События после deadline не засчитываются даже при задержке UI/окна. При sleep/deactivation попытку отменить; не делать тест короче или быстрее из-за задержавшегося timer.
+
+Рекомендуемый собственный контракт: текст сравнивается с фиксированным prompt по словам; в итоговую скорость входят символы **полностью верных слов** и их введённые разделители, плюс верный префикс текущего незавершённого слова. Неверные слова и ошибочный хвост не приносят скорости. Backspace может исправлять предыдущий ввод; удалённые/повторно набранные символы не считаются дважды в скорости. Слова/границы/учёт последнего пробела зафиксировать в unit fixtures до реализации UI.
+
+`CPM = creditedCharacters × 60 / 30`, `WPM = CPM / 5`. Пробелы/пунктуация относятся к символам. Для RU/EN сравнивать committed extended graphemes в NFC; сохранять регистр, не приравнивать ё/е. Нельзя считать UTF-16 units как печатные символы.
+
+Accuracy: доля верных попыток вставки committed grapheme в ожидаемую позицию; ошибочная попытка остаётся в denominator после исправления. Backspace/modifiers/navigation не добавляют печатные попытки. IME/dead-key marked text не оценивать до commit. Скорость округляется до целого только при Apply, точность рассчитывается из counters, без порога допуска к сохранению. Нельзя по проценту точности просто умножать «сырую» скорость: это другой контракт.
+
+Вставка из буфера, drag/drop, автокоррекция, автоподстановка, автоматическая капитализация, spellcheck и undo/redo в тестовом поле отключены; clipboard не читать. По возможности использовать существующий native text input и обработку committed edits, а не raw global keycodes, с корректной композицией/Backspace. Не строить дорогое глобальное выравнивание текста на каждом символе: последовательность ограничена, переходы слов и counters локальны. Это локальная калибровка, не антибот-соревнование; не обещать обнаружение внешних макросов/системного voice input.
+
+Prompt должен быть достаточен для 200 WPM × 30 с с запасом (минимум 650 graphemes), но на экране отображать только текущий участок. Если prompt всё же закончился — добавить следующий подготовленный фрагмент в памяти, сохранив deadline; не выдавать 30-секундный результат за короткий тест. Без генерации моделью или сетевого запроса.
+
+## Производительность и совместная работа
+
+- SwiftUI + маленький AppKit input adapter при необходимости; без WebView/JS движка/нового SPM. Это предложение архитектуры в рамках ADR-002, а не уже измеренная нагрузка.
+- Модель теста создаётся при открытии sheet и уничтожается при закрытии. Одна UI-задача обновления времени с частотой до 10 Hz только в Running, отменяется во всех выходах; никакого polling/display-link в idle. Выделение символов обновляется от текстового ввода; Reduce Motion без пульсаций/плавного скролла.
+- Умолчания языка/текста не загружают модели, не требуют microphone/Accessibility и не меняют Ready. Статистика может быть выключена; тест доступен.
+- Не начинать тест, если capture/transform/formatting/maintenance/install уже заняли app-operation gate. Пока running, существующий gate удерживает lease для предотвращения неожиданного relaunch; закончить/отменить перед освобождением. Result/Ready не удерживают долгую операцию. Перед стартом проверить busy/installing/waiting, без await между проверкой и reserve.
+- Пока sheet активно принимает ввод, временно приостановить **только горячие клавиши CarrotType** с явным ownership/token и восстановлением. Не переиспользовать режим записи сочетания клавиш: он сохраняет chords. Не устанавливать глобальный key monitor. При deactivation отменить Running и восстановить обычные global hotkeys; при возвращении повторно подготовить активное sheet ownership без старого теста. Остальные приложения/системные сочетания не блокировать.
+- Независимо от suspend, entry points dictation/transform/setup/formatting должны учитывать активный тест: очередной callback не запускает запись и не вставляет текст в область теста. При старте реальной диктовки из другого допустимого пути тест отменить раньше запуска. Не менять права/TCC и не сбрасывать existing hotkey capture.
+- Закрытие, Escape, app deactivation, Settings исчезновение, Quit/install, ошибка input — один идемпотентный cleanup: остановить timer, снять owned gate/hotkey suppression, очистить RAM. Не оставлять закрытый sheet причиной неработающих hotkeys/обновлений. На результирующем экране глобальные hotkeys можно вернуть после удаления фокуса из input; если возникает реальная операция — закрыть тест без автоприменения.
+
+## План после согласования
+
+Реализует OpenCode в новом worktree от **актуального main после интеграции Dynamic Island**, импортируя только согласованные planning docs. Релиз Dynamic Island 0.9.0 уже опубликован, этот план в него не входит. При одновременной работе пересекутся AppState/hotkeys/roadmap: никакого общего checkout или смены ветки под работающим release-agent. Перед merge rebase/проверить final main и прогнать затронутые регрессии. Публикация будущей версии отдельно.
+
+| Задача | Файлы / scope | Acceptance и проверка |
+|---|---|---|
+| T0 — согласовать | Этот spec, поправка ADR-013 | Sheet, 30 s, RU/EN, три уровня/локальная вариативность, собственная метрика и explicit Use без accuracy gate. Уточнить только необходимые решения до кода. |
+| T1 — чистая модель | Новые `TypingSpeedTest` model/fixtures, bundled small RU/EN prompts | Injected monotonic clock; переходы ready/running/completed/cancelled, exact deadline, Unicode, corrections/words/spaces, IME commits, accuracy denominator, empty/out-of-range/low-accuracy, corpus levels/seed/repeat/no-adjacent-repetition, exhaustion. Прямые тесты production model, без дублирования формулы. |
+| T2 — sheet и ввод | `StatisticsSettingsPane`, новый native view/input adapter, Localizable resources | Кнопка рядом с WPM; minimum Settings bounds; RU/EN/Light/Dark/keyboard/VoiceOver. Не держать глобальные text event hooks. Paste/drop/autocorrect blocked; Close/Repeat не сохраняют; Apply пишет только существующий WPM. |
+| T3 — lifecycle | `AppState`, `HotkeyService` ownership suspension, shared gate; точечные integration fixtures | Нет record/model/paste/stats side effects; close/deactivation/sleep/cancel/quit/install возвращают hotkeys/gate ровно один раз. No-ready/stats-off работает. Callback races и concurrent real operations проверены на настоящих entry points с fakes. |
+| T4 — review/Debug | docs/ADR-013/architecture/feature/roadmap/memory, evidence | Debug build; native whole-window+sheet snapshots при реальных minimum sizes, focus/input/IME/performance smoke. Codex review, подписанный Debug, ручное принятие. |
+
+## Acceptance Criteria
+
+- План содержит исходную интеграцию, варианты, UI-сценарии, явную формулу, performance/lifecycle границы, задачи и вопросы. Это критерий текущего документационного этапа.
+- Будущая реализация содержит три уровня и локальную новую комбинацию на попытку, без LLM/сети; низкая точность не запрещает сохранение. Меняет WPM только по Use, не включает статистику, не пишет attempts/text/keys и не затрагивает диктовку/clipboards/models. Существующий Stepper работает как прежде.
+- Одна попытка 30 s монотонного времени; ошибки/исправления, RU/EN и конечный префикс учтены по спецификации. Никакого silent clamp/псевдоточного сравнения с Monkeytype.
+- Нет новых зависимостей/сетевых обращений; нулевая test-специфичная активность в idle подтверждена контролем живых tasks/monitors, а не только наличием cancel в коде.
+- Производительность не обещается без замера: в реализации измерить event handling на максимальном prompt, число фоновых tasks после закрытия, CPU/память до/после нескольких попыток. Записать метод/данные и ограничения, не требовать идеальных абсолютных RSS цифр.
+
+## Verification
+
+- Check: код Statistics/AppState/UsageStatsEstimate/HotkeyService/UpdateInstallationGate и ADR-013 изучены; Monkeytype home/about просмотрены через реальный browser, README через первичный источник.
+- Check: на этапе планирования — local-link validation, `git diff --check`, AIDOS validate/trace/review. App build не запускать для документа-only changes.
+- Check: реализация — production model tests + actual AppState/input/hotkey/gate fakes; relevant setup/lifecycle/reliability regressions; Swift Debug, native snapshots, real RU/EN layout/dead-key/focus/sleep/close/no-model/no-permission сценарии. Отдельно VoiceOver и реальный idle/process footprint.
+
+## Documentation Updates
+
+- Update: сейчас добавить spec и planning-only roadmap/memory без изменения release chronology.
+- Update: после согласования дополнить ADR-013 ручной калибровкой, неизменной глобальной baseline и отсутствием test history. При реализации — architecture, UX/feature usage-stats, пользовательский путь и Debug evidence.
+
+## ADR Impact
+
+Existing ADR must be superseded or amended: ADR-013 расширяется локальным тестом/explicit Apply и RAM-only attempts, сохраняя opt-in aggregates. ADR-002 native stack и ADR-017 install gate остаются. Внешний Monkeytype/WebView/новый network sink в рекомендованный вариант не входят. Новый ADR о runtime/trust не нужен.
+
+## Решение для согласования
+
+Согласовано: небольшой нативный sheet, 30 s, RU/EN, Лёгкий/Средний(default)/Продвинутый, новая локальная комбинация из встроенных авторских корпусов, сохранение любого результата в пределах существующего WPM-диапазона только по Use, без истории и accuracy gate. Уровни/вариативность добавлены после уточнения maintainer; игровая цель не требует антибот-системы или научной сертификации. T0 завершён; T1–T4 выполняет OpenCode в отдельном worktree от актуального main, результат проверяет Codex. Согласие на реализацию не является согласием на будущую публикацию.
+
+## Implementation status — 2026-11-11
+
+T1–T4 implemented on `kestgalax/typing-speed-test` (fresh main-based Orca worktree from
+`58bdca2`; planning commits `129ae80`, `8b35759`, `53e7890` cherry-picked in order). ADR-013
+amended. Production model/corpus, native sheet/input adapter, AppState ownership and docs are
+in the branch. Verification evidence and the signed Debug path are recorded in
+[debug-review-typing-speed-test.md](../../debug-review-typing-speed-test.md). Codex review and
+maintainer Debug/manual acceptance remain; no version bump, merge, push or publication is
+authorized by this implementation.
+
+### Review R1/R2 — 2026-11-11
+
+Codex requested two focused changes: real mounted-field focus lifecycle for Start (with
+token-safe deferred focus and retryable failed `beginRun`), and readable accessible reference
+text on the custom prompt renderer. Both are implemented and validated in
+[review findings](../reviews/typing-speed-test.md); signed Debug R1R2 is in
+`dist/.builds.noindex/Typing-Speed-Debug-R1R2-2026-11-11/CarrotType.app` with the prior app
+preserved. Codex re-review and maintainer manual acceptance remain; no version/publication.
+
+### Release 0.10.0 (34) — 2026-11-11
+
+After Codex re-review approved R1/R2 and the maintainer accepted the delivered signed Debug,
+publication was authorized: «мне нравится, можем публиковать». Application behavior is frozen
+at `1736262`; only version/build 0.10.0 (34), notes/history and documentation change. The
+published 0.9.0 notes are archived unchanged and RU/EN notes cover the Statistics Measure
+sheet. Dynamic Island remains untranslated; GigaAM and the settings reorganization are not
+included. Clean Release/DMG, signed ZIP/appcast, isolated A33→B34 staging and draft ID
+`442184838` (PR #31, tag `v0.10.0` at `3b14844`) are recorded in
+[release review](../../debug-review-v0.10.0.md); hosted CI stayed queued during the external
+GitHub Actions outage, so no green CI is claimed. Stable/latest remains 0.9.0 (33) pending the
+Codex final gate. Individual device/IME/VoiceOver/TCC results were not enumerated.

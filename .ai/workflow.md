@@ -116,3 +116,19 @@ Maintainer accepted the signed Debug and instructed «можно опублик�
 ## Dynamic Island published — 0.9.0 (2026-11-11)
 
 Maintainer accepted the signed Debug and authorized publication: «можно публиковать». OpenCode implementation `0908750` passed Codex review; metadata `c6f801e`, tagged source `d97f6c2`, PR #30 merged as `8dccb00`. Verified clean Release/DMG/signed ZIP+feed/staging and final-source CI 43052628002 preceded stable publication. No user installation/profile/models/login items changed, no key exported, no GigaAM integration. Individual manual outcomes not enumerated; see `docs/debug-review-v0.9.0.md`. Separate typing-speed test is a Codex proposal awaiting agreement, not authorized implementation or part of this release. Future releases retain independent Debug/publication gates.
+
+## 0.10.0 release authorization — 2026-11-11
+
+Maintainer accepted the delivered signed Debug after the approved R1/R2 fixes and explicitly
+authorized publication: «мне нравится, можем публиковать». Application behavior is frozen at
+`1736262`; release metadata is 0.10.0 (34). The published 0.9.0 notes are archived unchanged
+and RU/EN notes cover only the Statistics **Measure…** calibration (30 s, RU/EN, three levels,
+locally varied original prompts, explicit Use, preserved manual WPM, RAM-only attempts);
+Dynamic Island stays untranslated, and GigaAM/settings reorganization are excluded. Verified
+clean Release/DMG/signed ZIP+appcast and isolated A33→B34 staging are prepared as draft
+release ID `442184838` under PR #31 / tag `v0.10.0` (`3b14844`) and passed
+`verify-update-release.py --previous-build 33`; downloaded draft bytes match. Hosted
+`macOS checks` run 43096217758 stayed queued with zero jobs during the external GitHub Actions
+major outage (incident `dvy0t3mvh1lg`); no green CI is claimed and no duplicate run was
+created. Individual device/IME/VoiceOver/TCC results were not enumerated; those limits remain.
+Stable/latest remains 0.9.0 (33); required hosted CI and publication remain the final gate.

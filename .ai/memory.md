@@ -2,6 +2,10 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## Typing-test implementation authorized — 2026-11-11
+
+Maintainer approved the revised Codex design: «отлично, мне нравится, давай реализовывать». Implement native30s RU/EN test from Statistics WPM, Easy/Medium(default)/Advanced, fresh local combinations from small original bundled corpora, explicit Apply, RAM-only attempts and informational accuracy (no95% gate). T0 complete; OpenCode T1–T4 in a fresh main-based Orca child worktree, Codex review before signed Debug delivery. No future release version/publication authorization; 0.9.0 already published and immutable, GigaAM deferred. Authoritative spec `docs/specs/tasks/typing-speed-test.md` on `design/typing-speed-test`; historical pending entries below retained.
+
 ## Dynamic Island Codex review — 2026-11-11
 
 OpenCode application source `0908750`, evidence `d44e65c` reviewed by Codex. R1 selected-mode shared preview, R2 actual minimum whole-shell layout/scroll evidence, R3 untranslated RU/EN Dynamic Island resolved. No blocking code findings for Debug delivery. Final app `dist/.builds.noindex/Dynamic-Island-Debug-R1R3-2026-11-11/CarrotType.app`, independent deep-strict signature/executable hash and native screenshots checked. Formal review: `docs/specs/reviews/dynamic-island-settings.md`. Next maintainer manual recording/notch/fullscreen/results/VoiceOver evaluation; no version bump, merge, publication or installed app replacement authorized by this review.
@@ -13,6 +17,10 @@ Maintainer approved the Codex proposal: «согласовываю, давай �
 Maintainer clarified roles: Codex researches/designs the solution and agrees it with them; OpenCode implements only afterward in a separate Orca worktree. Earlier research dispatch `ctx_423a01c1cb56` was explicitly stopped (closed agent terminal/ptyKilled confirmed). App tracked files were unchanged in that worktree; an untracked package-lock.json was observed and left untouched. Codex plan on fresh main-based `design/dynamic-island-settings`: `docs/specs/tasks/dynamic-island-settings.md`. Proposed dedicated pane plus full/minimal/menu-bar-only dictation modes, preserved live-draft preference and explicit result/recovery exceptions. Proposal pending user agreement, no implementation/version/release selected. GigaAM remains deferred; prior history below is retained.
 
 Late OpenCode report arrived after stop: documentation commit `17cf2a3` exists on its separate branch; inspected stat confirms four documentation files only. Preserve it as an independent draft, do not merge it over the Codex proposal. Codex planning branch local AIDOS validate/trace/review and diff whitespace checks pass; local spec links resolve. Native indicator geometry remains unverified until an approved implementation prototype.
+
+## Typing-speed calibration proposal — 2026-11-11
+
+Maintainer asked to research a Monkeytype-inspired test near Statistics WPM while the Dynamic Island release agent continues separately. Codex inspected current global manual WPM/estimate path and proposed an offline native 30 s RU/EN sheet, explicit Use, RAM-only attempts, no WebView/models/network, lifecycle-owned hotkey/gate cleanup. Spec: `docs/specs/tasks/typing-speed-test.md`; fresh main-based branch `design/typing-speed-test`. Proposal only, needs agreement; no OpenCode implementation or future release authorization. Preserve Dynamic Island 0.9.0 preparation in its separate worktree; use updated main for any later typing-test implementation. Existing WPM changes recalculate all displayed periods, not stored counts.
 
 ## Canonical sources
 
@@ -193,3 +201,90 @@ Maintainer accepted the delivered signed Debug and authorized publication: «м�
 ## 0.9.0 publication closeout — 2026-11-11
 
 Maintainer accepted signed Debug and instructed «можно публиковать». Stable/latest **0.9.0 (33)** published after Codex final gate. Tag `v0.9.0` / `d97f6c2`, accepted app behavior `0908750`, version/notes metadata `c6f801e`; PR #30 merged as `8dccb00`, final-source CI `43052628002` passed (`4f37b5e`). Clean arm64 Release, checksum-verified 0.8.2 installer-template fallback (Finder -1743), mounted DMG/helper/MLX/no weights, signed ZIP/feed, immutable notes archive, isolated A32→B33 plus negatives, downloaded draft and anonymous public byte/signature/length/identity/URL checks passed. Native isolated build32 Sparkle found the live update without installation. Python public verification used the system CA bundle after its default environment lacked a chain; no TLS bypass. GitHub connector merge403 was handled through authorized gh CLI. No user app/profile/model/login-item replacement or key export. Real-device/TCC/VoiceOver/fullscreen/network limits remain; individual manual results not enumerated. Notes/hashes: `docs/github-release-notes-v0.9.0.md`, evidence `docs/debug-review-v0.9.0.md`. Collect feedback; GigaAM deferred. Separate typing-speed calibration is a Codex proposal pending agreement, not included or implementation-authorized.
+
+
+## Typing-test levels and variation — 2026-11-11
+
+Maintainer asked for Easy/Medium/Advanced and new text per attempt; clarified this is a playful optional test, not authoritative speed certification (WPM stays manually editable). Codex revised `docs/specs/tasks/typing-speed-test.md`: Medium default, easy frequent words, medium everyday sentences, advanced longer vocabulary/punctuation/moderate numbers; original small RU/EN corpora with local PRNG sentence/word assembly, fresh attempt seed, no LLM/network, no immediate whole-prompt repeat within sheet, corpus budget ~100KB. Results include level; baseline remains one explicit Use. Remove proposed 95% hard acceptance gate, accuracy informational. Entire implementation remains pending agreement. Planning branch rebased onto published0.9.0 main58bdca2 with both memory histories preserved.
+
+## Typing-speed calibration implementation — 2026-11-11
+
+Maintainer approved the revised three-level/local-prompt design
+(«отлично, мне нравится, давай реализовывать»); T1–T4 implemented on a fresh main-based Orca
+worktree `kestgalax/typing-speed-test` from 58bdca2 after cherry-picking planning commits
+129ae80, 8b35759, 53e7890. ADR-013 amended for RAM-only attempts and explicit Apply; Dynamic
+Island 0.9.0 behavior is preserved. New production `TypingTestCorpus`/`TypingSpeedTest` model,
+`TypingSpeedTestCoordinator`, native `NSTextView` input adapter/TextKit prompt display and
+Statistics sheet. 30 s starts on the first committed printable grapheme; fixed deadline; exact
+credited-character formula; Accuracy is informational; only Use writes the existing global WPM.
+Gate is held only while Running; only app hotkeys are token-suspended while input owns focus;
+deactivation/sleep/Settings close/quit/install release both exactly once. No stats/model/mic/
+clipboard/network writes or persisted attempt data.
+
+Evidence: `bash scripts/verify-typing-speed-test.sh` PASS (3×2 prompts, metric/deadline/NFC/IME
+fixtures, refill, range, 20 builds); `python3 scripts/verify-typing-speed-app.py` PASS (actual
+AppState/gate/hotkey/fakes, native text input, IME marked-only-on-commit, 20-cycle cleanup);
+existing setup/dynamic-island/formatting-rules/launch/session/reliability/Ultra/updates/notes/
+catalog/brand suites PASS; local AIDOS validate/trace/review PASS. Corpus measured 15,359 UTF-8
+bytes; model event processing 13.88–19.22 ms per 650 committed graphemes (0.021–0.030 ms/event), 20 prompt
+builds 3.89–4.61 ms. Native whole-Settings+sheet snapshots under
+`dist/.builds.noindex/Typing-Speed-Native-Review/native` (36 states plus out-of-range/low
+accuracy); signed arm64 Debug under `dist/.builds.noindex/Typing-Speed-Debug-2026-11-11`
+(executable SHA-256 `e328029d84f7cf2685a7f93b00e9e6e4cb74f57d61b12e01432610d24da95747`).
+Implementation commit `af39ec2`; full evidence/limits in `docs/debug-review-typing-speed-test.md`.
+Manual real typing/focus/IME/VoiceOver/device/performance acceptance remains for Codex/maintainer;
+no merge/push/version/publication authorization.
+
+## Typing-speed R1/R2 review fixes — 2026-11-11
+
+Codex requested changes on the typing-speed Debug. R1: `start()` no longer synchronously calls
+focus before `TypingTestInputView` mounts; a published focus token plus `viewDidMoveToWindow`
+and one deterministic main-loop hop focus the real field after attachment, with stale-token
+cancellation. Focus failure returns to Ready with gate/hotkey release; failed `beginRun` now
+rebuilds a fresh engine/prompt so retry works. R2: `TypingPromptDisplayView` exposes the full
+reference prompt as accessible value and keeps typed/prompt progress in accessibility help.
+New actual `NSHostingView`/`NSWindow` regression hosts the real sheet in Ready, invokes
+production Start without injected focus, asserts native first responder, commits a grapheme,
+verifies Running/gate/timer, and checks Repeat/Cancel restoration. Targeted typing-speed model/app
+checks pass; signed Debug at `dist/.builds.noindex/Typing-Speed-Debug-R1R2-2026-11-11/CarrotType.app`
+(CDHash `911541c5…`, executable SHA-256 `83760a13…`), prior app preserved. Findings/validation:
+`docs/specs/reviews/typing-speed-test.md`, `docs/debug-review-typing-speed-test.md`. Codex
+re-review and manual live typing/IME/VoiceOver/device checks remain; no merge/push/version/
+publication or user installation/preferences/models changes.
+
+Typing-speed Codex re-review closeout (2026-11-11): inspected `1736262` and the actual
+NSHostingView/window regression, approved R1/R2 for Debug delivery. Native mounted-field
+focus, failed-start fresh-engine retry and readable reference prompt resolve the findings.
+Coordinator diff/signature checks pass; targeted model/app/build evidence accepted without
+unnecessary repetition. Maintainer interactive/IME/VoiceOver/device acceptance remains open;
+no merge/push/release or user installation change. After typing-test integration, implement
+the already approved settings reorganization through direct Orca ZCode with configured
+GLM-5.3 (not OpenCode); Codex retains planning/review. Close the completed worker session
+while preserving worktree, commits, evidence and both Debug copies.
+
+## 0.10.0 typing-speed release prep — 2026-11-11
+
+Maintainer accepted the delivered signed Debug and authorized publication:
+«мне нравится, можем публиковать»; individual device/IME/VoiceOver/TCC outcomes were not
+enumerated. Application behavior is frozen at `1736262` (accepted R1/R2), based on fetched main
+`58bdca2`; latest stable is 0.9.0 (33). Metadata commit `7c1dfdc` sets 0.10.0 (34), archives the
+published 0.9.0 `ReleaseNotes.json` unchanged into immutable history (33→27), and authors RU/EN
+notes for the Statistics Measure sheet: 30 seconds, RU/EN, three levels, varied original local
+prompts, explicit Use only, manual WPM preserved, RAM-only attempts, no network/model/
+microphone. Dynamic Island stays untranslated; GigaAM and settings reorganization are excluded.
+
+Clean arm64 Release/`dist/CarrotType-0.10.0.dmg` (SHA-256
+`0313202e7a523095ced62143698e776c1c297f341e6a78967874221aae3d0313`, 23,834,939 bytes), signed
+`dist/updates-0.10.0/CarrotType-0.10.0-34.zip`
+(`70191cdc5370d0bcecae188026bd044571a9a9a5bc11c41e2bcf45082d323e7`, 23,879,143 bytes) and
+signed appcast (`d295a82beb2cc971c1dbe2c87c2bfe9a97e4eb176155344017907905ae4bfd63`, 30,611
+bytes) prepared. Finder automation hit documented `-1743`; checksum-verified published 0.9.0
+DMG template preserved layout/background/.DS_Store/Applications link. Mounted app/helper/MLX/
+identity/no-weights checks passed. Isolated candidate-code staging A33→B34 plus offline/
+tampered-feed/corrupt-archive/no-new-version passed on fresh identity; not historical/TCC proof.
+Typing-speed/notes/regressions and local AIDOS validate/trace/review passed. PR #31 targets
+main; tag `v0.10.0` is `3b14844`; draft release ID `442184838` holds byte-verified DMG/ZIP/
+appcast and `verify-update-release.py --tag v0.10.0 --previous-build 33` passed. Hosted CI run
+43096217758 stayed queued with zero jobs during the external GitHub Actions major outage
+(incident `dvy0t3mvh1lg`); no green CI is claimed and no duplicate run was created. Stable
+remains 0.9.0. No installed app/profile/model/login-item change or key export.

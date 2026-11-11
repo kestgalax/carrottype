@@ -2,7 +2,7 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **GitHub Release `v0.9.0`**: Dynamic Island Full/default, Minimal and Menu-bar-only modes. **v0.8.2**: cumulative release notes across skipped versions. **v0.8.1**: opt-in launch at macOS sign-in. **v0.8.0**: exact dictation rules including first-sentence lowercase, text trial, two offered cleanup models and System/Light/Dark. **v0.7.0**: native settings, accessibility/confirmation polish and selected carrot-microphone A brand. **v0.6.2**: coordinated dictation lifecycle, awaited teardown and generation-safe live draft; production regressions. **v0.6.1**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
+Milestone 0–2 vertical slice shipped; **release 0.10.0 (34)** with the local typing-speed calibration is prepared as a verified draft/PR for the Codex final gate. **GitHub Release `v0.9.0`**: Dynamic Island Full/default, Minimal and Menu-bar-only modes. **v0.8.2**: cumulative release notes across skipped versions. **v0.8.1**: opt-in launch at macOS sign-in. **v0.8.0**: exact dictation rules including first-sentence lowercase, text trial, two offered cleanup models and System/Light/Dark. **v0.7.0**: native settings, accessibility/confirmation polish and selected carrot-microphone A brand. **v0.6.2**: coordinated dictation lifecycle, awaited teardown and generation-safe live draft; production regressions. **v0.6.1**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
 Latest published artifact: `CarrotType-0.9.0.dmg` — SHA-256 `2c51717d4294f41671a554f5e754f2bf76e0ec07166aac2b5671fe5882e2a595`; signed ZIP/feed hashes in [release notes](github-release-notes-v0.9.0.md).
 
@@ -10,9 +10,13 @@ Published 0.9.0 (33) after approved Debug and verified draft. Evidence: [0.9.0 r
 
 **Release acceptance:** maintainer accepted the signed Dynamic Island Debug and authorized publication («можно публиковать»). Stable 0.9.0 (33) published 2026-11-11; individual manual device/TCC/VoiceOver outcomes not enumerated. [Evidence/limits](debug-review-v0.9.0.md).
 
-**Current focus:** collect feedback on Dynamic Island 0.9.0. Separate typing-speed test research/proposal is in progress on `design/typing-speed-test`, pending maintainer agreement; not included in this release. GigaAM remains deferred.
+**Current focus:** the [typing-speed test](specs/tasks/typing-speed-test.md) is implemented and the maintainer authorized publication of 0.10.0 (34): «мне нравится, можем публиковать». Application behavior is frozen at `1736262` (accepted R1/R2). Release metadata/notes, clean Release/DMG, signed ZIP/appcast, isolated A33→B34 staging and a draft/PR are prepared for the Codex final gate; stable/latest remains 0.9.0 (33). Individual device/IME/VoiceOver/TCC results were not enumerated. Collect Dynamic Island 0.9.0 feedback; GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
+
+## Parallel planning — typing-speed calibration (2026-11-11)
+
+Maintainer requested a small typing test beside Statistics WPM, inspired by Monkeytype, with native usability and minimal overhead. [Codex design/tasks](specs/tasks/typing-speed-test.md): optional local 30 s RU/EN sheet, three difficulty levels and locally randomized prompts from small bundled original corpora, explicit application to existing WPM, RAM-only attempts and no new runtime/network. Accuracy is informational; no hard quality gate. Approved for OpenCode implementation: «отлично, мне нравится, давай реализовывать». Planning branch rebased onto published 0.9.0 main `58bdca2`; published Dynamic Island remains unchanged. Release version and future Debug/manual/publication acceptance are not selected.
 
 ## Milestone 0: Product Intent
 
@@ -246,3 +250,69 @@ Maintainer accepted the delivered signed Debug and authorized publication: «м�
 ## 0.9.0 publication closeout — 2026-11-11
 
 Maintainer accepted signed Debug and instructed «можно публиковать». Stable/latest **0.9.0 (33)** published after Codex final gate. Tag `v0.9.0` / `d97f6c2`, accepted app behavior `0908750`, version/notes metadata `c6f801e`; PR #30 merged as `8dccb00`, final-source CI `43052628002` passed (`4f37b5e`). Clean arm64 Release, checksum-verified 0.8.2 installer-template fallback (Finder -1743), mounted DMG/helper/MLX/no weights, signed ZIP/feed, immutable notes archive, isolated A32→B33 plus negatives, downloaded draft and anonymous public byte/signature/length/identity/URL checks passed. Native isolated build32 Sparkle found the live update without installation. Python public verification used the system CA bundle after its default environment lacked a chain; no TLS bypass. GitHub connector merge403 was handled through authorized gh CLI. No user app/profile/model/login-item replacement or key export. Real-device/TCC/VoiceOver/fullscreen/network limits remain; individual manual results not enumerated. Notes/hashes: `docs/github-release-notes-v0.9.0.md`, evidence `docs/debug-review-v0.9.0.md`. Collect feedback; GigaAM deferred. Separate typing-speed calibration is a Codex proposal pending agreement, not included or implementation-authorized.
+
+
+## Typing-speed calibration — implementation for review (no version assigned)
+
+Maintainer approved the revised design with three levels and local prompt variation
+(«отлично, мне нравится, давай реализовывать»). T1–T4 are implemented on a fresh main-based
+`kestgalax/typing-speed-test` Orca worktree, preserving 0.9.0 behavior and the published
+Dynamic Island release. The authoritative spec is
+[docs/specs/tasks/typing-speed-test.md](specs/tasks/typing-speed-test.md); ADR-013 is amended for
+the RAM-only, explicit-Apply calibration.
+
+Delivered: compact **Measure…** beside the existing Statistics WPM Stepper; native 600×390 sheet
+in the real 720×520 Settings shell; RU/EN independent text; Easy/Medium(default)/Advanced
+original local corpora with a seeded injectable PRNG; one 30 s attempt from the first committed
+grapheme; per-character feedback and timed result; explicit **Use N WPM** only; no accuracy
+threshold and no silent clamp; no stats/model/mic/Accessibility/network dependency. The test
+reserves the install gate only while running, suspends only CarrotType hotkeys by token while
+its input owns focus, and releases both exactly once on completion/cancel/close/deactivation/
+sleep/quit/install. No attempt text/keys/result/seed is persisted.
+
+Verification: production model fixtures for all 3×2 modes, metric/deadline/correction/NFC/IME/
+refill/range fixtures, actual AppState/hotkey/gate/native-input fakes, 20-cycle cleanup,
+existing setup/lifecycle/reliability/usage/Dynamic Island regressions, native whole-Settings+
+sheet snapshots, local governance and a signed arm64 Debug app (`af39ec2`). Measured corpus 15,359 UTF-8
+bytes; model event processing 13.88–19.22 ms per 650 committed graphemes (0.021–0.030 ms/event).
+Codex review and maintainer manual acceptance remain; no merge, push, version bump or publication is authorized. Evidence/limits: [debug review](debug-review-typing-speed-test.md).
+
+### Typing-speed R1/R2 review fixes — 2026-11-11
+
+Codex changes requested resolved without redesign. R1: Start no longer calls focus before the
+armed/running branch has mounted `TypingTestInputView`; the model publishes a token, the field
+focuses once after real window attachment (one deterministic main-loop hop, stale-token safe),
+and a failed `beginRun` rebuilds a fresh engine/prompt so Start is retryable. R2: the custom
+prompt view exposes the full reference text as accessible value with separate typed/prompt
+progress. A new actual `NSHostingView`/`NSWindow` regression mounts the real sheet in Ready,
+invokes production Start, asserts native first responder, commits a grapheme and verifies
+Running/gate/timer/hotkey restoration through Repeat/Cancel. Evidence:
+[review findings](specs/reviews/typing-speed-test.md), [Debug review](debug-review-typing-speed-test.md).
+New signed Debug: `dist/.builds.noindex/Typing-Speed-Debug-R1R2-2026-11-11/CarrotType.app`
+(prior app preserved). Codex re-review approved the R1/R2 fixes and real-window regression;
+independent diff/signature checks passed. Next: maintainer live typing/IME/VoiceOver acceptance
+of the delivered Debug, then integration and the already approved settings reorganization
+(direct Orca ZCode/GLM-5.3 implementation, Codex design/review). No merge, push, version bump
+or publication has occurred.
+
+## 0.10.0 — typing-speed release (draft prepared)
+
+Maintainer accepted the delivered Debug and explicitly authorized publication:
+«мне нравится, можем публиковать». Individual device/IME/VoiceOver/TCC results were not
+enumerated; those limits remain. Application behavior/source is frozen at `1736262` (accepted
+R1/R2); only version metadata 0.10.0 (34), notes/history and documentation change. The
+published 0.9.0 `ReleaseNotes.json` was archived unchanged into immutable history (33→27) and
+RU/EN notes were authored from the bundled single source. Dynamic Island remains untranslated;
+GigaAM and the settings reorganization are not part of this release.
+
+Release base is fetched main `58bdca2`; latest stable remains 0.9.0 (33). Clean arm64 Release,
+checksum-verified 0.9.0 installer-template fallback (Finder `-1743`), mounted app/helper/MLX/
+identity/no-weights, signed ZIP/appcast and isolated A33→B34 plus offline/tampered-feed/
+corrupt-archive/no-new-version staging passed. `docs/debug-review-v0.10.0.md` records exact
+hashes and the candidate-code fixture limits; `docs/github-release-notes-v0.10.0.md` is the
+release body. PR [#31](https://github.com/kestgalax/carrottype/pull/31) targets `main`; tag
+`v0.10.0` is `3b14844`; draft release ID `442184838` contains byte-verified DMG/ZIP/appcast.
+Hosted `macOS checks` run `43096217758` remained queued with zero jobs because of the external
+GitHub Actions major outage (incident `dvy0t3mvh1lg`); no green CI is claimed and no duplicate
+run was created. Nothing is merged or published by this preparation; required hosted CI and
+publication remain the coordinator's already granted final gate.

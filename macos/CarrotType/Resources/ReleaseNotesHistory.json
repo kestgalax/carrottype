@@ -1,6 +1,92 @@
 [
   {
     "schemaVersion": 1,
+    "version": "0.9.0",
+    "build": "33",
+    "date": "2026-11-11",
+    "localizations": {
+      "en": {
+        "summary": "Three ways to show dictation status, with a quieter Dynamic Island.",
+        "sections": [
+          {
+            "kind": "new",
+            "items": [
+              {
+                "title": "Dynamic Island settings.",
+                "detail": "Choose Full capsule (default), Minimal indicator, or Menu bar only in a dedicated Dynamic Island pane directly after General. The pane name stays untranslated in both languages."
+              },
+              {
+                "title": "Minimal recording and processing.",
+                "detail": "A thin red recording glow below the notch and three processing dots, or a compact top-center indicator on displays without a notch. No text body; Reduce Motion and Increase Contrast are respected."
+              },
+              {
+                "title": "Menu bar only.",
+                "detail": "Hide the dictation status panel and keep the existing menu bar icon. Transform results and paste-failure recovery still appear with Copy/Close."
+              }
+            ]
+          },
+          {
+            "kind": "improved",
+            "items": [
+              {
+                "title": "Your live-draft choice is preserved.",
+                "detail": "Show text while you speak moved to Dynamic Island with its saved value. It is available only in the Full capsule and returns unchanged when you switch back."
+              },
+              {
+                "title": "Changes apply to the next dictation.",
+                "detail": "The mode is captured when dictation starts, so changing it does not interrupt an active recording or text processing."
+              },
+              {
+                "title": "Fallback stays visible.",
+                "detail": "When the status panel is hidden, a basic-formatting warning remains available in the menu and Details."
+              }
+            ]
+          }
+        ]
+      },
+      "ru": {
+        "summary": "Три способа показывать статус диктовки и более спокойный Dynamic Island.",
+        "sections": [
+          {
+            "kind": "new",
+            "items": [
+              {
+                "title": "Настройки Dynamic Island.",
+                "detail": "Полная капсула (по умолчанию), минимальная индикация или только строка меню — в отдельном разделе Dynamic Island сразу после Основных. Название раздела не переводится."
+              },
+              {
+                "title": "Минимальная индикация.",
+                "detail": "Тонкая красная подсветка записи под вырезом и три точки обработки — или компактный индикатор сверху по центру на экранах без выреза. Без текстового тела; учитываются «Уменьшение движения» и «Повышение контраста»."
+              },
+              {
+                "title": "Только строка меню.",
+                "detail": "Статус диктовки не показывается отдельной панелью, остаётся прежняя иконка в строке меню. Результаты перевода и восстановление после ошибки вставки по-прежнему показываются с «Копировать»/«Закрыть»."
+              }
+            ]
+          },
+          {
+            "kind": "improved",
+            "items": [
+              {
+                "title": "Сохранённый выбор живого текста.",
+                "detail": "Переключатель «Показывать текст, пока говорите» переехал в Dynamic Island со своим прежним значением. Он доступен только в полной капсуле и возвращается без сброса."
+              },
+              {
+                "title": "Изменения — со следующей диктовки.",
+                "detail": "Режим фиксируется при старте диктовки, поэтому его смена не прерывает текущую запись или обработку текста."
+              },
+              {
+                "title": "Предупреждение об оформлении.",
+                "detail": "Если статусная панель скрыта, предупреждение о базовой обработке остаётся в меню и подробностях."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
     "version": "0.8.2",
     "build": "32",
     "date": "2026-11-11",

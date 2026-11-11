@@ -4,6 +4,7 @@ struct StatisticsSettingsPane: View {
     @ObservedObject var appState: AppState
     @ObservedObject var usageStats: UsageStatsStore
     @State private var confirmClear = false
+    @State private var showTypingTest = false
     @State private var selectedMonth: Date = Calendar.current.date(
         from: Calendar.current.dateComponents([.year, .month], from: Date())
     ) ?? Date()
@@ -93,6 +94,21 @@ struct StatisticsSettingsPane: View {
                         }
                     }
                 }
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                    Text(L10n.t("typingtest.measure_hint", locale: locale))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer(minLength: 8)
+                    Button {
+                        if appState.presentTypingSpeedTest() {
+                            showTypingTest = true
+                        }
+                    } label: {
+                        Label(L10n.t("typingtest.measure", locale: locale), systemImage: "timer")
+                    }
+                    .controlSize(.small)
+                    .disabled(!appState.canPresentTypingSpeedTest)
+                }
             } header: {
                 Text(L10n.t("stats.section.speed", locale: locale))
             } footer: {
@@ -142,6 +158,11 @@ struct StatisticsSettingsPane: View {
         }
         .onChange(of: usageStats.days) { _, _ in
             clampSelectedMonth()
+        }
+        .sheet(isPresented: $showTypingTest, onDismiss: {
+            appState.typingSpeedTestSheetDidClose()
+        }) {
+            TypingSpeedTestSheet(appState: appState)
         }
     }
 

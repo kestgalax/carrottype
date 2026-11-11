@@ -54,6 +54,10 @@ final class AppState: ObservableObject {
     /// Live mic level while recording (level decay / future meters).
     @Published private(set) var recorderLiveLevel: Float = 0
     @Published private(set) var settingsVisible = false
+    /// True while the typing-speed sheet is on screen (Ready/Running/Result).
+    @Published private(set) var typingSpeedTestSheetVisible = false
+    /// One-shot request for the sheet to dismiss without applying a result.
+    @Published private(set) var typingSpeedTestDismissRequest: UUID?
     @Published var appLanguage: AppLanguage {
         didSet {
             UserDefaults.standard.set(appLanguage.rawValue, forKey: AppLanguage.defaultsKey)
@@ -164,6 +168,7 @@ final class AppState: ObservableObject {
     let audioLevel: AudioLevelMonitor
     let pipeline: DictationPipeline
     let usageStats: UsageStatsStore
+    let typingSpeedTest: TypingSpeedTestCoordinator
 
     private let statusCapsule = StatusCapsuleController()
     private var cancellables = Set<AnyCancellable>()
@@ -202,6 +207,10 @@ final class AppState: ObservableObject {
         self.audioLevel = audioLevel
         self.pipeline = DictationPipeline(modelManager: modelManager)
         self.usageStats = usageStats ?? UsageStatsStore()
+        self.typingSpeedTest = TypingSpeedTestCoordinator(
+            gate: updates.installationGate,
+            hotkey: hotkey
+        )
         self.setupDefaults = defaults
         self.sessionDependenciesFactory = sessionDependenciesFactory
         self.appTheme = AppTheme.load(defaults: defaults)
@@ -237,6 +246,24 @@ final class AppState: ObservableObject {
         ) { [weak self] _ in
             MainActor.assumeIsolated {
                 self?.restoreMuteOnQuit?()
+            }
+        }
+        NotificationCenter.default.addObserver(
+            forName: NSApplication.didResignActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.typingSpeedTest.invalidate()
+            }
+        }
+        NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.willSleepNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.typingSpeedTest.invalidate()
             }
         }
         modelManager.objectWillChange
@@ -312,6 +339,10 @@ final class AppState: ObservableObject {
         }
         hotkey.setOnEscapeCancel { [weak self] in
             guard let self else { return }
+            if self.typingSpeedTestSheetVisible {
+                self.requestTypingSpeedTestDismiss()
+                return
+            }
             if self.capsulePhase == .transformResult || self.capsulePhase == .dictationRecovery {
                 self.dismissTransformResult()
                 return
@@ -415,8 +446,58 @@ final class AppState: ObservableObject {
         readiness == .ready && !updates.installationGate.isBusy && !updates.installationGate.isInstalling
     }
 
+    var canPresentTypingSpeedTest: Bool {
+        !isTerminating
+            && !typingSpeedTestSheetVisible
+            && !updates.installationGate.isBusy
+            && !updates.installationGate.isInstalling
+            && !updates.installationGate.isWaiting
+            && !session.isActive
+            && !isProcessing
+            && transformTask == nil
+            && formattingTrialTask == nil
+            && !hotkey.isRecording
+    }
+
+    /// Opening the sheet is a text-only action: no model, microphone, Accessibility
+    /// or Readiness requirement. The running lease is reserved on the first grapheme.
+    @discardableResult
+    func presentTypingSpeedTest() -> Bool {
+        guard canPresentTypingSpeedTest else { return false }
+        typingSpeedTestDismissRequest = nil
+        typingSpeedTestSheetVisible = true
+        return true
+    }
+
+    func typingSpeedTestSheetDidClose() {
+        typingSpeedTest.releaseFocus()
+        typingSpeedTestSheetVisible = false
+    }
+
+    /// Real operations win. The sheet dismisses without applying a result.
+    func requestTypingSpeedTestDismiss() {
+        typingSpeedTest.invalidate()
+        guard typingSpeedTestSheetVisible else { return }
+        typingSpeedTestDismissRequest = UUID()
+    }
+
+    /// Only an explicit Use with an in-range value writes the existing global WPM.
+    @discardableResult
+    func applyMeasuredTypingSpeed(_ wpm: Int) -> Bool {
+        guard !isTerminating, !updates.installationGate.isInstalling else { return false }
+        guard (UsageStatsEstimate.minimumWPM...UsageStatsEstimate.maximumWPM).contains(wpm) else {
+            return false
+        }
+        typingSpeedWPM = wpm
+        return true
+    }
+
     func startSetupTrial() {
         guard !isTerminating else { return }
+        guard !typingSpeedTestSheetVisible else {
+            requestTypingSpeedTestDismiss()
+            return
+        }
         guard readiness == .ready else { return }
         _ = session.start(dictationSettings(destination: .setupTrial))
     }
@@ -468,6 +549,7 @@ final class AppState: ObservableObject {
         guard settingsAppearanceCount == 0 else { return }
         settingsVisible = false
         cancelSetupTrial()
+        requestTypingSpeedTestDismiss()
         micMeterEnabled = false
         stopInputMeter()
     }
@@ -500,6 +582,10 @@ final class AppState: ObservableObject {
     /// Walkie-talkie: hold records, release commits; repeat press while holding is ignored.
     private func handleHotkeyPressed() {
         guard !isTerminating else { return }
+        if typingSpeedTestSheetVisible {
+            requestTypingSpeedTestDismiss()
+            return
+        }
         if isSetupTrialActive { session.finish(); return }
         let hold = session.configuration?.holdToTalk ?? pushToTalkEnabled
         if session.isActive {
@@ -520,6 +606,10 @@ final class AppState: ObservableObject {
     /// Shared start path; tests bypass readiness with the same captured settings/coordinator.
     @discardableResult
     func startDictationSession(destination: DictationDelivery) -> Bool {
+        guard !typingSpeedTestSheetVisible else {
+            requestTypingSpeedTestDismiss()
+            return false
+        }
         let settings = dictationSettings(destination: destination)
         dismissAnyResultCapsule()
         pttKeyHeld = settings.holdToTalk
@@ -527,6 +617,7 @@ final class AppState: ObservableObject {
     }
 
     private func handleHotkeyReleased() {
+        guard !typingSpeedTestSheetVisible else { return }
         guard session.configuration?.holdToTalk == true else { return }
         pttKeyHeld = false
         if session.phase == .starting { session.cancel() }
@@ -541,6 +632,10 @@ final class AppState: ObservableObject {
     /// Selection transform (ADR-012): read selection → LLM → show result in Capsule.
     private func handleTransformHotkeyPressed(bindingID: UUID) {
         guard !isTerminating else { return }
+        if typingSpeedTestSheetVisible {
+            requestTypingSpeedTestDismiss()
+            return
+        }
         if isProcessing || menuBarMode == .recording || menuBarMode == .processing || menuBarMode == .cleanup {
             return
         }
@@ -854,6 +949,10 @@ final class AppState: ObservableObject {
 
     /// Text in RAM only. Holds exclusive operation lease through helper teardown.
     func runFormattingTrial(_ input: String) {
+        guard !typingSpeedTestSheetVisible else {
+            requestTypingSpeedTestDismiss()
+            return
+        }
         guard canRunFormattingTrial, !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               input.count <= 6000, let lease = updates.installationGate.beginOperation() else { return }
         let mode = modelManager.cleanupMode
@@ -1073,6 +1172,7 @@ final class AppState: ObservableObject {
     /// Ordinary Quit drains capture/helper/maintenance before replying to AppKit.
     /// Sparkle's existing termination guard runs first and keeps its install policy.
     func prepareForQuit() -> NSApplication.TerminateReply {
+        requestTypingSpeedTestDismiss()
         if terminationTask != nil { return .terminateLater }
         guard updates.installationGate.isBusy else { return .terminateNow }
         isTerminating = true
@@ -1182,6 +1282,10 @@ final class AppState: ObservableObject {
     }
 
     private func performModelMaintenance(_ body: @escaping () -> Void) {
+        guard !typingSpeedTestSheetVisible else {
+            requestTypingSpeedTestDismiss()
+            return
+        }
         guard session.maintain({
             await self.pipeline.unloadAll()
             body()

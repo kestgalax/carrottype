@@ -57,3 +57,34 @@ Users want a private, local sense of how much typing time dictation replaced, wi
 ## 0.3.10 acknowledgement clarification
 
 Completed dictations count after the paste command is dispatched without a known insertion error. CGEvent does not confirm insertion in the receiving app. Existing aggregates remain unchanged and are not retrospectively verified. Recovery/Copy actions are not counted. See ADR-013.
+
+## Typing-speed calibration prototype — 2026-11-11
+
+ADR-013 is amended for a small, optional **Measure…** sheet in Statistics. It is a calibration
+aid for the existing global WPM setting, not a new statistic.
+
+- **Entry:** compact Measure… beside the existing WPM Stepper. It is disabled while a real
+  capture/transform/formatting/maintenance/install operation is busy. Collection may be off;
+  no model, microphone, Accessibility, Ready state or network is required.
+- **Attempt:** RU/EN text independently of the UI language; Easy / Medium (default) / Advanced.
+  One 30-second attempt starts on the first committed printable grapheme, not on opening the
+  sheet or pressing Start. Easy is a shuffled lowercase common-word stream; Medium/Advanced use
+  original authored sentences selected from a small bundled corpus with a fresh seeded order per
+  attempt. A caption shows the remaining time; no live score, chart or sound.
+- **Result:** WPM, CPM, accuracy, 30 s, language and level. Only **Use N WPM** writes the
+  existing `carrottype.typingSpeedWPM` and closes the sheet. Repeat/Close/Cancel never write it.
+  The sheet explains that all period estimates are recalculated while dictation counts do not
+  change. Accuracy is informational; low accuracy never blocks Apply. A result outside the
+  existing 10–200 WPM range is shown honestly with an explanation and Apply disabled.
+- **Not stored:** attempt text, typed keys, accuracy, language, level, seed, result or date.
+  Collection is never enabled and `daily.json` is never touched. There is no history, ranking,
+  account, anti-bot system or comparison with external typing sites.
+- **Metric:** credited characters from fully correct words + their typed separators + the
+  correct prefix of the current unfinished word; corrections do not double count. WPM =
+  credited / 5 × 60 / 30; CPM = credited × 60 / 30. Accuracy = correct committed-grapheme
+  insertions / all committed-grapheme insertions. NFC extended graphemes preserve case and ё;
+  marked IME text counts only on commit.
+- **Lifecycle:** the existing install gate is reserved only while Running. Only CarrotType
+  global hotkeys are temporarily suspended, by token, while test input owns focus. Exit from
+  completion/cancel/close/deactivation/sleep/quit/install releases both exactly once. A real
+  operation wins and dismisses the test without applying.
