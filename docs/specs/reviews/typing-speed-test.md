@@ -1,5 +1,20 @@
 # Typing-speed calibration — Codex review R1/R2
 
+## Metadata
+
+- Review ID: typing-speed-test
+- Outcome: Changes requested resolved; awaiting Codex re-review and maintainer manual acceptance.
+- Scope: implementation `af39ec2`, R1/R2 fix `1736262`, signed Debug `Typing-Speed-Debug-R1R2-2026-11-11`.
+- Date: 2026-11-11
+
+## Traceability Check
+
+- Product Intent Link: `docs/product-intent.md`
+- Roadmap Item: `docs/roadmap.md` — typing-speed calibration implementation/R1-R2
+- Feature Spec: `docs/specs/features/local-usage-stats.md`, `docs/specs/ux-setup-status.md`
+- Task: `docs/specs/tasks/typing-speed-test.md`
+- Related ADRs: ADR-013 (amended), ADR-002, ADR-017
+
 2026-11-11. Status: **review findings resolved in source and signed Debug; awaiting Codex
 re-review and maintainer manual acceptance.** This is implementation/review evidence, not
 publication authorization.
