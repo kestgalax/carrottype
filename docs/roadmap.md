@@ -8,7 +8,7 @@ Latest published artifact: `CarrotType-0.8.2.dmg` — SHA-256 `0d6bb879f769e94e7
 
 **Release acceptance:** 0.8.2 (32) signed Debug accepted for publication («можно опубликовать»); stable published 2026-11-11 after clean Release and local/draft/public signature/digest/native-update verification. Individual manual results not enumerated. [Evidence/limits](debug-review-v0.8.2.md).
 
-**Current focus:** Dynamic Island settings R1–R3 review fixes delivered (mode-specific synthetic previews, whole-shell minimum-size evidence with Dynamic Island selected, approved RU/EN name). D1–D3 complete pending Codex review. Debug acceptance/publication and version selection remain separate. GigaAM deferred.
+**Current focus:** Dynamic Island D1–D3 and R1–R3 fixes passed [Codex review](specs/reviews/dynamic-island-settings.md) for signed Debug delivery: mode-specific previews, true minimum-size layouts and untranslated RU/EN name verified. Next: maintainer manual evaluation of three modes/notch/fullscreen/results. Debug acceptance/publication and version selection remain separate. GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 

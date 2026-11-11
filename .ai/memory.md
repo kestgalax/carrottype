@@ -2,6 +2,10 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## Dynamic Island Codex review — 2026-11-11
+
+OpenCode application source `0908750`, evidence `d44e65c` reviewed by Codex. R1 selected-mode shared preview, R2 actual minimum whole-shell layout/scroll evidence, R3 untranslated RU/EN Dynamic Island resolved. No blocking code findings for Debug delivery. Final app `dist/.builds.noindex/Dynamic-Island-Debug-R1R3-2026-11-11/CarrotType.app`, independent deep-strict signature/executable hash and native screenshots checked. Formal review: `docs/specs/reviews/dynamic-island-settings.md`. Next maintainer manual recording/notch/fullscreen/results/VoiceOver evaluation; no version bump, merge, publication or installed app replacement authorized by this review.
+
 ## Dynamic Island planning — 2026-11-11
 
 Maintainer approved the Codex proposal: «согласовываю, давай делать мне нравится». Full remains default; minimal recording/processing indicator and menu-bar-only status, no hidden preview in either; preserved saved live-draft choice, transform/recovery Copy/Close exceptions. Authorize OpenCode D1–D3 implementation in a new main-based Orca child worktree, then Codex review and signed Debug delivery. Do not treat this as Debug acceptance or publication authorization. This supersedes the pending-decision status below; old worker draft remains independent history.

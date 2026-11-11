@@ -1,6 +1,6 @@
 # Dynamic Island settings — implementation review evidence
 
-Date: 2026-11-11. Status: **implementation delivered for Codex review**; no version
+Date: 2026-11-11. Status: **Codex review passed; ready for maintainer Debug evaluation**; no version
 assignment, publication, tag, feed, DMG or installed-app replacement.
 
 ## Scope and branch
@@ -150,7 +150,6 @@ copy and other older Debug copies were not replaced.
 - Menu-bar-only discoverability is intentionally limited when the system auto-hides menu bar;
   the pane explains this.
 - The fallback warning is a short menu line from RAM and is not a new notification/history.
-- No manual Debug acceptance or publication authorization is claimed. Codex review is the
-  next gate.
+- No manual Debug acceptance or publication authorization is claimed. [Codex review](specs/reviews/dynamic-island-settings.md) passed after R1–R3; maintainer Debug evaluation is next.
 - R2 layout evidence is an offscreen 720×520 whole-shell render with a programmatic
   scroll-to-bottom check; it is not an interactive window-resizing test.
