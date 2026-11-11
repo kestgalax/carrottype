@@ -4246,19 +4246,53 @@
         }
       }
     },
+    "updates.downloads_need_checks": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn on automatic checks first: Sparkle downloads an update only during a scheduled check."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сначала включите автоматическую проверку: Sparkle скачивает обновление только во время плановой проверки."
+          }
+        }
+      }
+    },
+    "updates.install_on_quit_pending": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An update is ready and will install when you quit."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновление готово и установится при выходе."
+          }
+        }
+      }
+    },
     "updates.footer": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Updates download from GitHub and are verified with a digital signature. Audio, text and statistics are never sent. Installation waits for dictation or text processing to finish."
+            "value": "Check for updates only looks for a new version. Automatic checks also run in the background. Download updates stages the archive; with install on quit, CarrotType installs it after you quit instead of restarting while you work. Updates come from GitHub and are verified with a digital signature; audio, text and statistics are never sent."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Обновления загружаются с GitHub и проверяются по цифровой подписи. Аудио, тексты и статистика не отправляются. Установка дождётся завершения диктовки или обработки текста."
+            "value": "«Проверить обновления» только ищет новую версию. Автоматическая проверка делает то же в фоне. «Скачивать обновления» загружает архив заранее; с установкой при выходе CarrotType установит его после вашего выхода, не перезапускаясь во время работы. Обновления загружаются с GitHub и проверяются по цифровой подписи; аудио, тексты и статистика не отправляются."
           }
         }
       }
@@ -4293,23 +4327,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Обновление ожидает завершения работы"
-          }
-        }
-      }
-    },
-    "updates.waiting_detail": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Finish dictation or wait for text processing, then retry installation or quit."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Завершите диктовку или дождитесь обработки текста, затем повторите установку или выход."
           }
         }
       }

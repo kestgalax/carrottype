@@ -31,8 +31,24 @@ struct UpdateInstallationGateChecks {
         precondition(!gate.postponeInstallation { fatalError("idle callback must not be retained") })
         precondition(gate.isInstalling && gate.beginOperation() == nil)
         gate.resetInstallation()
+        // An ordinary quit with no staged install must not lock operations.
+        precondition(gate.prepareForTermination())
+        let afterOrdinaryQuit = gate.beginOperation()!
+        gate.endOperation(afterOrdinaryQuit)
+        precondition(!gate.isInstalling)
+        gate.resetInstallation()
+        // A staged install-on-quit must survive a busy quit long enough to drain,
+        // then allow termination. It must never cancel the user's quit.
+        let quitOperation = gate.beginOperation()!
+        gate.markInstallOnQuitPending()
+        precondition(!gate.prepareForTermination()) // caller drains, then replies
+        gate.endOperation(quitOperation)
+        precondition(gate.hasPendingInstallOnQuit)
         precondition(gate.prepareForTermination())
         precondition(gate.beginOperation() == nil)
+        gate.resetInstallation()
+        precondition(!gate.hasPendingInstallOnQuit)
         print("PASS: queued start, busy install, nested teardown, final termination guard, atomic handoff, abort/retry")
+        print("PASS quit install: busy drain defers termination, then allows Sparkle install-on-quit; abort clears pending state")
     }
 }

@@ -356,3 +356,15 @@ and local AIDOS validate/trace/review passed. PR #32 (head `791603e`) merged as 
 --published` and an isolated native Sparkle probe from build 34 passed (probe only). The closeout
 docs commit used `[skip ci]` and changed no code/assets. No installed app, user preferences/models/
 login items or private keys were changed.
+
+Post-0.11.0 bugfix (`kestgalax/update-locale-quit-fix-2`, main `7c004cd`): the maintainer reported
+that changelog/version descriptions ignored the selected language and that “download and install on
+quit” looked broken. `AppLanguageCode` now normalizes `ru*`/EN for both `L10n` and
+`ReleaseNotes.content`; an explicit in-app language is mirrored into app-domain `AppleLanguages`
+(only while CarrotType owns it) so Sparkle's next-launch labels and `xml:lang` description follow the
+app, not just the system. The download toggle is disabled with a visible checks→download explanation
+while opt-in checks are off; this is Sparkle's `allowsAutomaticUpdates` rule, not self-signing.
+Quit now always drains through `AppState.prepareForQuit` (`.terminateLater`) instead of returning
+`.terminateCancel` when an install-on-quit is staged; the gate tracks the pending state and aborts
+clear it. `willInstallUpdateOnQuit` keeps Sparkle's documented `false` path so the installer completes
+after exit without forcing a relaunch (ADR-017). Debug/evidence only; no publication or version bump.

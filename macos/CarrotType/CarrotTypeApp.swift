@@ -29,7 +29,6 @@ struct CarrotTypeApp: App {
         state = AppState()
         #endif
         _appState = StateObject(wrappedValue: state)
-        applicationDelegate.updates = state.updates
         applicationDelegate.prepareForQuit = { [weak state] in state?.prepareForQuit() ?? .terminateNow }
     }
 

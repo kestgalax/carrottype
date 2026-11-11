@@ -7,6 +7,7 @@ export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Develope
 swiftc -parse-as-library \
   "$TASK_ROOT/macos/Shared/DictationRules.swift" \
   "$TASK_ROOT/macos/Shared/CleanupHelperProtocol.swift" \
+  "$TASK_ROOT/macos/CarrotType/Models/LanguageResolution.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/AppLanguage.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/AppTheme.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/ModelTypes.swift" \

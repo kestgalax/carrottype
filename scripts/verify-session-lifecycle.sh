@@ -19,6 +19,7 @@ swiftc -emit-library -emit-module -module-name FluidAudio \
   "$TASK_ROOT/scripts/tests/fixtures/FluidAudio.swift" -o "$TASK_TMP/libFluidAudio.dylib" \
   -emit-module-path "$TASK_TMP/FluidAudio.swiftmodule"
 swiftc -parse-as-library -I "$TASK_TMP" -L "$TASK_TMP" -lFluidAudio -Xlinker -rpath -Xlinker "$TASK_TMP" \
+  "$TASK_ROOT/macos/CarrotType/Models/LanguageResolution.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/AppLanguage.swift" \
   "$TASK_ROOT/macos/CarrotType/Services/Engines/STTEngineError.swift" \
   "$TASK_ROOT/macos/CarrotType/Services/ConvertedBufferFanout.swift" \

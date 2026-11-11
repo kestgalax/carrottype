@@ -7,4 +7,7 @@ export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Develope
 swiftc -parse-as-library "$TASK_ROOT/macos/CarrotType/Services/UpdateInstallationGate.swift" \
   "$TASK_ROOT/scripts/tests/UpdateInstallationGateChecks.swift" -o "$TASK_TMP/checks"
 "$TASK_TMP/checks"
+swiftc -parse-as-library "$TASK_ROOT/macos/CarrotType/Services/ApplicationTermination.swift" \
+  "$TASK_ROOT/scripts/tests/ApplicationTerminationChecks.swift" -o "$TASK_TMP/termination-checks"
+"$TASK_TMP/termination-checks"
 python3 "$TASK_ROOT/scripts/tests/test_update_assets.py"

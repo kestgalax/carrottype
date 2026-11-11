@@ -9,6 +9,7 @@ swiftc -parse-as-library \
   "$TASK_ROOT/macos/CarrotType/Models/DictationModelPolicy.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/ModelTypes.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/BundledModelCatalog.swift" \
+  "$TASK_ROOT/macos/CarrotType/Models/LanguageResolution.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/AppLanguage.swift" \
   "$TASK_ROOT/scripts/tests/UltraModelChecks.swift" -o "$TASK_TMP/checks"
 "$TASK_TMP/checks" "$TASK_ROOT/macos/CarrotType/Resources/ModelCatalog.json"

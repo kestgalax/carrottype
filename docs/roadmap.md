@@ -10,7 +10,7 @@ Published 0.9.0 (33) after approved Debug and verified draft. Evidence: [0.9.0 r
 
 **Release acceptance:** maintainer accepted the signed Dynamic Island Debug and authorized publication («можно публиковать»). Stable 0.9.0 (33) published 2026-11-11; individual manual device/TCC/VoiceOver outcomes not enumerated. [Evidence/limits](debug-review-v0.9.0.md).
 
-**Current focus:** 0.11.0 (35) is published, packaging the accepted settings-organization extraction (General / Dictation / Text actions, with formatting inside Dictation) from behavior `6cb6212`. Individual device/IME/VoiceOver/TCC results were not enumerated. Collect Dynamic Island 0.9.0 and typing-speed feedback; GigaAM deferred.
+**Current focus:** post-0.11.0 update bugfix on `kestgalax/update-locale-quit-fix-2` from main `7c004cd`: shared RU/EN language resolution for What's New, Sparkle presentation-language bridge for the next launch, a visible explanation for the download toggle while opt-in checks are off, and quit draining instead of cancelling when an install-on-quit is staged. Debug/evidence only; no publication or version bump yet. 0.11.0 (35) remains published with the settings-organization extraction. Individual device/IME/VoiceOver/TCC results were not enumerated. Collect Dynamic Island 0.9.0 and typing-speed feedback; GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -371,3 +371,16 @@ candidate-code fixture limits; `docs/github-release-notes-v0.11.0.md` is the rel
 Hosted `macOS checks` 43112615078 passed on `3b561d9`; PR #32 merged as `b1ba27e`, tag `v0.11.0`
 is `791603e`, and the post-publication public gate plus isolated native probe passed.
 Stable/latest is 0.11.0 (35).
+
+## Post-0.11.0 — update language and quit-install bugfix
+
+Maintainer reported that the changelog/version description ignored the selected language and that
+“download updates and install on quit” looked broken. [Task note](specs/tasks/update-locale-and-quit-install.md)
+scopes a Debug-only fix: shared `AppLanguageCode` resolution for `L10n` and release notes, an
+app-domain `AppleLanguages` bridge so Sparkle's standard window uses the in-app language on the next
+launch (both appcast descriptions preserved, no JS), an explicit explanation for Sparkle's
+checks→download dependency, and a quit path that drains active work instead of cancelling when an
+install-on-quit is staged. Automatic checks/downloads remain opt-in and the standard install-on-quit
+path never forces a relaunch. Evidence: [Debug review](debug-review-update-locale-quit.md). No
+publication, version bump, DMG or GitHub release in this stage; the maintainer's separate
+Debug/publication gate still applies.

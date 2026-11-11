@@ -61,6 +61,7 @@ final class AppState: ObservableObject {
     @Published var appLanguage: AppLanguage {
         didSet {
             UserDefaults.standard.set(appLanguage.rawValue, forKey: AppLanguage.defaultsKey)
+            appLanguage.synchronizeUpdaterPresentationLanguage()
         }
     }
     @Published var appTheme: AppTheme {
@@ -237,6 +238,7 @@ final class AppState: ObservableObject {
         }
 
         NSApplication.shared.appearance = appTheme.appearance
+        appLanguage.synchronizeUpdaterPresentationLanguage()
         _ = session
         statusCapsule.attach(appState: self)
         NotificationCenter.default.addObserver(
@@ -1169,12 +1171,16 @@ final class AppState: ObservableObject {
         else { await presentSuccessCapsuleSequence(usedFormattingFallback: result.formatting.usedFallback) }
     }
 
-    /// Ordinary Quit drains capture/helper/maintenance before replying to AppKit.
-    /// Sparkle's existing termination guard runs first and keeps its install policy.
+    /// Ordinary Quit and a staged update install share this drain. AppKit only
+    /// permits one terminateLater reply, so never cancel here merely because a
+    /// dictation/transform is still active: stop intake, await it, then reply.
     func prepareForQuit() -> NSApplication.TerminateReply {
         requestTypingSpeedTestDismiss()
         if terminationTask != nil { return .terminateLater }
-        guard updates.installationGate.isBusy else { return .terminateNow }
+        guard updates.installationGate.isBusy else {
+            _ = updates.prepareForTermination()
+            return .terminateNow
+        }
         isTerminating = true
         session.stopAcceptingOperations()
         session.cancel()
@@ -1182,11 +1188,13 @@ final class AppState: ObservableObject {
         formattingTrialTask?.cancel()
         let formattingTrial = formattingTrialTask
         let transform = transformTask
-        terminationTask = Task {
+        terminationTask = Task { [weak self] in
             await session.waitUntilIdle()
             await transform?.value
             await formattingTrial?.value
-            NSApp.reply(toApplicationShouldTerminate: updates.installationGate.prepareForTermination())
+            let allowTermination = self?.updates.prepareForTermination() ?? true
+            if !allowTermination { self?.terminationTask = nil }
+            NSApp.reply(toApplicationShouldTerminate: allowTermination)
         }
         return .terminateLater
     }

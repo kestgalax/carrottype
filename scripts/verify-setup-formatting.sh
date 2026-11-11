@@ -6,6 +6,7 @@ trap 'rm -rf "$TASK_TMP"' EXIT
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
 swiftc -parse-as-library \
   "$TASK_ROOT/macos/Shared/DictationRules.swift" \
+  "$TASK_ROOT/macos/CarrotType/Models/LanguageResolution.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/AppLanguage.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/ModelTypes.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/BundledModelCatalog.swift" \
