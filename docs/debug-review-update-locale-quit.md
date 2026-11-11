@@ -3,6 +3,7 @@
 Date: 2026-11-12
 Branch: `kestgalax/update-locale-quit-fix-2`
 Base: `origin/main` `7c004cdf7e972a6ed64d2aed5a32096c40dbb36e` (published 0.11.0)
+Code commit: `f0cff02` (documentation/metadata commits follow on the same branch)
 Spec: [`docs/specs/tasks/update-locale-and-quit-install.md`](specs/tasks/update-locale-and-quit-install.md)
 Scope: Debug-only bugfix. No publication, no version bump, no DMG/GitHub release, no user
 installation/profile/model/Keychain changes.
@@ -58,7 +59,9 @@ Verified mechanism with a standalone app-bundle probe compiled from the producti
 ```
 
 Limitation: Foundation caches process preferred localizations, so the Sparkle window follows the new
-language on the **next launch**. What’s New follows `effectiveLocale` immediately. This is documented
+language on the **next launch**. For someone who selected Russian before installing this fix, the
+first launch after the upgrade can still show the previous system choice while the bridge is written;
+the following launch is correct. What’s New follows `effectiveLocale` immediately. This is documented
 in `docs/architecture.md`; there is no undocumented restart or CLI trick.
 
 ### 3. Download toggle was disabled by a Sparkle dependency, not by self-signing
@@ -122,7 +125,7 @@ export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 cd macos
 xcodebuild -project CarrotType.xcodeproj -scheme CarrotType -configuration Debug \
   -destination 'platform=macOS,arch=arm64' -skipPackagePluginValidation -skipMacroValidation \
-  COMPILER_INDEX_STORE_ENABLE=NO -derivedDataPath .derivedData-update-locale build
+  COMPILER_INDEX_STORE_ENABLE=NO -derivedDataPath .derivedData-final build
 ```
 
 Result: `** BUILD SUCCEEDED **`, arm64.
@@ -140,9 +143,9 @@ Automated checks (all passed):
 | `./scripts/verify-typing-speed-test.sh` | PASS |
 | `bash scripts/verify-ultra-models.sh` | PASS |
 | `bash scripts/verify-dictation-reliability.sh` | PASS |
-| `python3 scripts/verify-settings-organization-app.py --build-log /tmp/update-locale-build.log --products macos/.derivedData-update-locale/Build/Products/Debug` | PASS: 32 pane/language/theme states |
-| `python3 scripts/verify-typing-speed-app.py --build-log /tmp/update-locale-build.log --products macos/.derivedData-update-locale/Build/Products/Debug` | PASS: lifecycle/quit/install gate integration |
-| `python3 scripts/verify-update-staging.py --app macos/.derivedData-update-locale/Build/Products/Debug/CarrotType.app --output-dir /tmp/update-locale-staging --derived-data macos/.derivedData-update-locale` | PASS: real native A34→B35, offline/tampered-feed/corrupt-archive/no-new-version |
+| `python3 scripts/verify-settings-organization-app.py --build-log /tmp/update-locale-build.log --products macos/.derivedData-final/Build/Products/Debug` | PASS: 32 pane/language/theme states |
+| `python3 scripts/verify-typing-speed-app.py --build-log /tmp/update-locale-build.log --products macos/.derivedData-final/Build/Products/Debug` | PASS: lifecycle/quit/install gate integration |
+| `python3 scripts/verify-update-staging.py --app macos/.derivedData-final/Build/Products/Debug/CarrotType.app --output-dir /tmp/update-locale-staging --derived-data macos/.derivedData-final` | PASS: real native A34→B35, offline/tampered-feed/corrupt-archive/no-new-version |
 
 Staging feed inspection: `web/good/appcast.xml` contains both descriptions,
 `xml:lang="en"` (11,819 bytes) and `xml:lang="ru"` (12,064 bytes, includes the RU summary). The
@@ -165,13 +168,13 @@ Path:
 - Bundle: `app.carrottype.macos`; version **0.11.0 (35)**; arm64 Debug.
 - Identity: `CarrotType Development` (self-signed development identity; not notarized).
 - `codesign --verify --deep --strict`: valid.
-- CDHash: `ce00be64f812ce4ff3593d28b28e433c7fb4e9d5`
+- CDHash: `7a21cfe6ba3785ce39782f7ee55d9e7d2482d8e8`
 - Executable SHA-256:
-  `9d374e6aa32cda7b14dfca78cd9596acec0341548465bbfa838953686965170a`
+  `8ee6ca8276881896ce722595e5683e63be1511c4cc67cfa8dfd03d9c2d19acb5`
 - `CarrotType.debug.dylib` SHA-256:
-  `ded0d801295f6676b04555f51f99dba07fc061132ddf66c154811e1a4b1d8abe`
+  `19bac9d285557d7607151f1f54893b4e27438b46e0cc562aa925c1f3f5d6ac44`
 - Helper SHA-256:
-  `149102890d0edfc38e40c435122ded326666920a3724db61c6229bc21c5d7907`
+  `781644732b82e7ae1e8e012ffdede84a6019826cb32a5de1eafd555892c2186b`
 
 ## Limits / not claimed
 
