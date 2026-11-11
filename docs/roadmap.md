@@ -289,5 +289,8 @@ invokes production Start, asserts native first responder, commits a grapheme and
 Running/gate/timer/hotkey restoration through Repeat/Cancel. Evidence:
 [review findings](specs/reviews/typing-speed-test.md), [Debug review](debug-review-typing-speed-test.md).
 New signed Debug: `dist/.builds.noindex/Typing-Speed-Debug-R1R2-2026-11-11/CarrotType.app`
-(prior app preserved). Codex re-review and maintainer manual acceptance remain; no merge, push,
-version bump or publication.
+(prior app preserved). Codex re-review approved the R1/R2 fixes and real-window regression;
+independent diff/signature checks passed. Next: maintainer live typing/IME/VoiceOver acceptance
+of the delivered Debug, then integration and the already approved settings reorganization
+(direct Orca ZCode/GLM-5.3 implementation, Codex design/review). No merge, push, version bump
+or publication has occurred.

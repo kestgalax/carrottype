@@ -3,7 +3,7 @@
 ## Metadata
 
 - Review ID: typing-speed-test
-- Outcome: Changes requested resolved; awaiting Codex re-review and maintainer manual acceptance.
+- Outcome: Approve for Debug review; maintainer manual acceptance remains pending.
 - Scope: implementation `af39ec2`, R1/R2 fix `1736262`, signed Debug `Typing-Speed-Debug-R1R2-2026-11-11`.
 - Date: 2026-11-11
 
@@ -15,8 +15,8 @@
 - Task: `docs/specs/tasks/typing-speed-test.md`
 - Related ADRs: ADR-013 (amended), ADR-002, ADR-017
 
-2026-11-11. Status: **review findings resolved in source and signed Debug; awaiting Codex
-re-review and maintainer manual acceptance.** This is implementation/review evidence, not
+2026-11-11. Status: **Codex re-review approved; awaiting maintainer manual acceptance.**
+This is implementation/review evidence, not
 publication authorization.
 
 ## Scope
@@ -92,6 +92,22 @@ Executed in the worktree after the fix:
   `109effd2da669ca201764cb6bdd8825558d80deeef70b83d0552cd7dac07731c`
 
 ## Remaining manual checks
+
+### Codex re-review — 2026-11-11
+
+Reviewed the final R1/R2 diff at `1736262` and the native-window regression. The production
+Start path now waits for field attachment with a cancellable focus token; the regression
+uses the real representable and first responder instead of an injected successful focus.
+Failed-start retry builds a fresh engine. Accessible prompt content now contains the full
+reference text. Both requested changes are resolved. Reported targeted model/app checks
+and arm64 Debug build pass; no contradictory evidence requires repeating those suites.
+Coordinator independently ran `git diff --check` and `codesign --verify --deep --strict`
+on the delivered R1/R2 app: both passed. Ready-state RU/light minimum-window snapshot
+was inspected; this remains offscreen evidence, not interactive or VoiceOver acceptance.
+No new runtime, network sink, dependency, model or trust-policy change was introduced;
+the implementation is consistent with the amended ADR-013 and existing ADR-002/017.
+
+### Maintainer acceptance still pending
 
 Physical keyboard input in a live sheet, actual third-party IME/dead-key composition,
 VoiceOver reading order/announcements, real app deactivation/sleep, and real updater

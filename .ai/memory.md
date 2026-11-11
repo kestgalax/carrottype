@@ -251,3 +251,13 @@ checks pass; signed Debug at `dist/.builds.noindex/Typing-Speed-Debug-R1R2-2026-
 `docs/specs/reviews/typing-speed-test.md`, `docs/debug-review-typing-speed-test.md`. Codex
 re-review and manual live typing/IME/VoiceOver/device checks remain; no merge/push/version/
 publication or user installation/preferences/models changes.
+
+Typing-speed Codex re-review closeout (2026-11-11): inspected `1736262` and the actual
+NSHostingView/window regression, approved R1/R2 for Debug delivery. Native mounted-field
+focus, failed-start fresh-engine retry and readable reference prompt resolve the findings.
+Coordinator diff/signature checks pass; targeted model/app/build evidence accepted without
+unnecessary repetition. Maintainer interactive/IME/VoiceOver/device acceptance remains open;
+no merge/push/release or user installation change. After typing-test integration, implement
+the already approved settings reorganization through direct Orca ZCode with configured
+GLM-5.3 (not OpenCode); Codex retains planning/review. Close the completed worker session
+while preserving worktree, commits, evidence and both Debug copies.
