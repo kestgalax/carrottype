@@ -8,7 +8,7 @@ Latest published artifact: `CarrotType-0.8.1.dmg` — SHA-256 `d0735b47d6eaa7981
 
 **Release acceptance:** 0.8.1 (31) revised signed Debug accepted and publication explicitly authorized; stable published 2026-11-11 after clean Release and local/draft/public signature/digest/native-update checks. Individual reboot/approval results not enumerated. [Evidence/limits](debug-review-v0.8.1.md).
 
-**Current focus:** 0.8.2 (32) cumulative notes implemented on `feat/cumulative-release-notes-0.8.2`, fresh from main d4136d4. Signed Debug/manual review and separate publication remain required. Stable 0.8.1; GigaAM deferred.
+**Current focus:** 0.8.2 (32) cumulative notes implemented on `feat/cumulative-release-notes-0.8.2`, fresh from main d4136d4. Maintainer accepted signed Debug for publication («можно опубликовать»); clean Release and artifact gates in progress. Stable 0.8.1; GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 

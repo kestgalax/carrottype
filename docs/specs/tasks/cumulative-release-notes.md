@@ -3,7 +3,7 @@
 ## Metadata
 
 - Task ID: cumulative-release-notes
-- Status: implementation / signed Debug review required
+- Status: signed Debug accepted for publication / Release verification
 
 ## Traceability
 
