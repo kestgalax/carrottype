@@ -4,7 +4,7 @@
 Idea -> Product Intent -> ADR Gate -> Feature/Tasks -> Implementation -> Review -> Release
 ```
 
-## Current phase (after v0.8.2)
+## Current phase (after v0.9.0)
 
 Self-signed/unnotarized DMG on GitHub Releases; source under MIT (ADR-011). Repository is **public**; preflight found private visibility on 2026-11-10, then the maintainer explicitly authorized public code/history and the change was applied/verified. v0.3.9 parallel unmute + live-draft hygiene; Storage download-cache clear in v0.3.8; security hardening (ADR-015) in v0.3.7; live draft (ADR-014) through v0.3.4–v0.3.6.
 
@@ -111,3 +111,8 @@ Maintainer accepted the revised signed Debug and instructed «публикуй»
 ## 0.8.2 published — 2026-11-11
 
 Maintainer accepted the signed Debug and instructed «можно опубликовать». Stable/latest **0.8.2 (32)** published on 2026-11-11, tag/source `v0.8.2` / `62082f6` (application code `4f85180`), PR #29. All skipped structured release notes (history since 0.6.1) are grouped by release offline and in signed inline Sparkle HTML, using its native installed-build CSS marker; unknown/incomplete coverage is explicit. Clean Release arm64, inside-out signed host/helper/Sparkle, final read-only mounted DMG/resources/current+history/no weights and signed ZIP/feed passed. Finder layout automation denied (-1743); checksum-verified 0.8.1 installer filesystem reused with unchanged layout/background. Signed archive and both feed locales contain the same six release records; actual native pinned WK on signed-feed HTML filters builds 31/27/26/unknown with content JS disabled. Local governance and hosted final-app regressions/Debug/native checks passed (42995366888, 42995404697); private hosted AIDOS explicitly skipped. Isolated candidate-code A31→B32 install and negative checks passed, not historical-binary or TCC proof. Downloaded draft/public assets match local digests/signatures/length/identity/URLs; anonymous latest feed/archive match. Native isolated build-31 Sparkle probe finds the live update without installation. No user installation/profile/model/login-item edits or private-key export. Temporary indexed packaging copies removed after verification; retained app is noindex. Individual manual results not enumerated; full independent interactive/device/TCC/VoiceOver/network verification remains limited. Hashes: `docs/github-release-notes-v0.8.2.md`; evidence: `docs/debug-review-v0.8.2.md`. Collect feedback; no next stage selected, GigaAM deferred. Later releases retain separate Debug/manual/publication acceptance.
+
+
+## Dynamic Island published — 0.9.0 (2026-11-11)
+
+Maintainer accepted the signed Debug and authorized publication: «можно публиковать». OpenCode implementation `0908750` passed Codex review; metadata `c6f801e`, tagged source `d97f6c2`, PR #30 merged as `8dccb00`. Verified clean Release/DMG/signed ZIP+feed/staging and final-source CI 43052628002 preceded stable publication. No user installation/profile/models/login items changed, no key exported, no GigaAM integration. Individual manual outcomes not enumerated; see `docs/debug-review-v0.9.0.md`. Separate typing-speed test is a Codex proposal awaiting agreement, not authorized implementation or part of this release. Future releases retain independent Debug/publication gates.

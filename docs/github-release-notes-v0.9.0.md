@@ -32,7 +32,7 @@ Maintainer принял доставленный Debug и разрешил пу�
 
 Локальные проверки: `verify-release-notes.sh` и Python-тесты истории/рендеринга; чистая arm64 Release-сборка; Finder layout вернул `-1743`, поэтому использован checksum-verified DMG-шаблон 0.8.2 с сохранёнными `.DS_Store`, background, layout и Applications-ссылкой. Финальный DMG прошёл `hdiutil verify`, mounted app/helper/MLX/identity проверены, весов моделей нет. ZIP/appcast подписаны и проверены; RU/EN описания содержат текущий релиз и шесть исторических записей. Изолированная нативная установка A32→B33 и негативные сценарии (offline/tampered feed/corrupt archive) прошли; это candidate-code fixture, не исторический бинарник и не TCC.
 
-Draft-релиз v0.9.0 (ID 441884470, tag `v0.9.0`) подготовлен и проверен: `verify-update-release.py --tag v0.9.0 --previous-build 32` подтвердил подписи, identity, версии, длины, URL и историю; скачанные из draft байты совпали с локальными. Stable/latest остаётся 0.8.2 (32); публикация — отдельный финальный gate координатора.
+Stable/latest [v0.9.0](https://github.com/kestgalax/carrottype/releases/tag/v0.9.0) (ID 441884470) опубликован 2026-11-11 после проверки черновика. Подписи, identity, версии, длины, URL, история и скачанные файлы совпали с локальными. После публикации повторная проверка публичного latest/feed/archive прошла; изолированный нативный Sparkle с build32 обнаружил обновление без установки. Подробности и ограничения: `docs/debug-review-v0.9.0.md`.
 
 PR: [#30](https://github.com/kestgalax/carrottype/pull/30). Hosted `macOS checks`: [run 43048767504](https://github.com/kestgalax/carrottype/actions/runs/43048767504) passed for release prep `458d9aa`; final docs head `d97f6c2` passed [run 43050922068](https://github.com/kestgalax/carrottype/actions/runs/43050922068). Tag `v0.9.0` points at final source `d97f6c2`.
 
@@ -45,3 +45,6 @@ PR: [#30](https://github.com/kestgalax/carrottype/pull/30). Hosted `macOS checks
 | `appcast.xml` | 25523 | `bd382832fe95d601fde9015325522009384f00bde708e56d9522e13de95c588a` |
 
 SHA-256 исполняемого файла `CarrotType.app/Contents/MacOS/CarrotType`: `7f3d9d3a3591cdf8582757ca485c298489424d3b844c50318417575318b082a6`.
+
+
+PR #30 объединён как `8dccb00`; финальный head `4f37b5e` прошёл [CI 43052628002](https://github.com/kestgalax/carrottype/actions/runs/43052628002). Тег/подписанные ресурсы не изменялись после проверки. Приватный hosted AIDOS явно пропущен; локальный governance прошёл. Тест скорости печати и GigaAM в этот выпуск не входят.

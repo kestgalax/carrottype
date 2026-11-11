@@ -1,7 +1,6 @@
 # CarrotType 0.9.0 — release review evidence
 
-Date: 2026-11-11. Status: **release candidate prepared as a verified draft; not published.**
-Stable/latest remains 0.8.2 (32). Publication is the coordinator's final gate.
+Date: 2026-11-11. Status: **published stable/latest 0.9.0 (33)** after maintainer authorization and Codex final release verification. Previous stable was 0.8.2 (32).
 
 ## Acceptance and authorization
 
@@ -65,3 +64,14 @@ record does not claim that every device/TCC/VoiceOver/fullscreen check passed.
   Tag `v0.9.0` points at final source `d97f6c2`. No public latest/live release was
   mutated by this preparation; stable/latest remains 0.8.2 (32).
 - No private updater key was exported; no published artifact/release history was rewritten.
+
+
+## Codex publication closeout
+
+- Final pre-publication draft gate independently rerun: signatures, identity, versions, lengths, URLs and downloaded bytes passed. Local DMG/ZIP/feed digests matched the worker report; signed Release app passed deep-strict verification. Diff from accepted app source `0908750` contains no Swift changes. Archived 0.8.2 JSON equals the published tag record and history is contiguous 32→27.
+- Final PR head `4f37b5e` passed [43052628002](https://github.com/kestgalax/carrottype/actions/runs/43052628002). PR #30 merged as `8dccb00` on 2026-11-11. Immutable tag `v0.9.0` remains `d97f6c2` (the later commit only aligns evidence). Hosted private AIDOS is explicitly skipped; local governance passed.
+- GitHub connector merge returned 403 (integration scope); authorized GitHub CLI merged the exact verified head. No extra privilege or publication approval was inferred.
+- Release ID 441884470 published at 2026-11-11T16:04:12Z as stable/latest, non-draft/non-prerelease: https://github.com/kestgalax/carrottype/releases/tag/v0.9.0 . Assets remain unchanged from verified draft. Public-facing body uses generated feature notes, install/trust statement and checksums.
+- `SSL_CERT_FILE=/etc/ssl/cert.pem python3 macos/scripts/verify-update-release.py --tag v0.9.0 --previous-build 32 --sparkle-bin macos/.derivedData/SourcePackages/artifacts/sparkle/Sparkle/bin --published` passed authenticated and anonymous latest/feed/archive signatures, byte lengths/digests and identity/URL checks. The first Python invocation lacked a local CA chain; rerun uses the system CA bundle with certificate verification enabled (no TLS bypass).
+- Native resolved Sparkle CLI with the isolated `manual-A` update-test identity, actual production public key and build32 metadata probed the live HTTPS latest feed: exit0, “Update available!”. Log: `dist/public-native-0.9.0.log`. Probe only, no installation/real profile or TCC change.
+- No independent real-device/fullscreen/VoiceOver/network audit claimed. Published code and signed assets are frozen; typing-speed calibration remains a separate unapproved implementation proposal.
