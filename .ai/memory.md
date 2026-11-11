@@ -226,9 +226,11 @@ fixtures, refill, range, 20 builds); `python3 scripts/verify-typing-speed-app.py
 AppState/gate/hotkey/fakes, native text input, IME marked-only-on-commit, 20-cycle cleanup);
 existing setup/dynamic-island/formatting-rules/launch/session/reliability/Ultra/updates/notes/
 catalog/brand suites PASS; local AIDOS validate/trace/review PASS. Corpus measured 15,359 UTF-8
-bytes; model event processing 13.88 ms per 650 committed graphemes (0.021 ms/event), 20 prompt
-builds 3.89 ms. Native whole-Settings+sheet snapshots under
+bytes; model event processing 13.88–19.22 ms per 650 committed graphemes (0.021–0.030 ms/event), 20 prompt
+builds 3.89–4.61 ms. Native whole-Settings+sheet snapshots under
 `dist/.builds.noindex/Typing-Speed-Native-Review/native` (36 states plus out-of-range/low
-accuracy); signed arm64 Debug under `dist/.builds.noindex/Typing-Speed-Debug-2026-11-11`.
+accuracy); signed arm64 Debug under `dist/.builds.noindex/Typing-Speed-Debug-2026-11-11`
+(executable SHA-256 `8cd1b431c79368f6cbb6a04744fa5141e6c52be71f2e7f305b79f8a5cf6c34bd`).
+Implementation commit `af39ec2`; full evidence/limits in `docs/debug-review-typing-speed-test.md`.
 Manual real typing/focus/IME/VoiceOver/device/performance acceptance remains for Codex/maintainer;
 no merge/push/version/publication authorization.

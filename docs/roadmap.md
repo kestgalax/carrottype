@@ -273,6 +273,6 @@ sleep/quit/install. No attempt text/keys/result/seed is persisted.
 Verification: production model fixtures for all 3×2 modes, metric/deadline/correction/NFC/IME/
 refill/range fixtures, actual AppState/hotkey/gate/native-input fakes, 20-cycle cleanup,
 existing setup/lifecycle/reliability/usage/Dynamic Island regressions, native whole-Settings+
-sheet snapshots, local governance and a signed arm64 Debug app. Measured corpus 15,359 UTF-8
-bytes; model event processing 13.88 ms per 650 committed graphemes (0.021 ms/event). Codex review and maintainer
-manual acceptance remain; no merge, push, version bump or publication is authorized.
+sheet snapshots, local governance and a signed arm64 Debug app (`af39ec2`). Measured corpus 15,359 UTF-8
+bytes; model event processing 13.88–19.22 ms per 650 committed graphemes (0.021–0.030 ms/event).
+Codex review and maintainer manual acceptance remain; no merge, push, version bump or publication is authorized. Evidence/limits: [debug review](debug-review-typing-speed-test.md).
