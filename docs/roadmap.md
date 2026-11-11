@@ -310,5 +310,9 @@ checksum-verified 0.9.0 installer-template fallback (Finder `-1743`), mounted ap
 identity/no-weights, signed ZIP/appcast and isolated A33→B34 plus offline/tampered-feed/
 corrupt-archive/no-new-version staging passed. `docs/debug-review-v0.10.0.md` records exact
 hashes and the candidate-code fixture limits; `docs/github-release-notes-v0.10.0.md` is the
-release body. PR/CI/draft ID/head evidence is added by the closeout commit. Nothing is merged
-or published by this preparation; the coordinator holds the already granted final gate.
+release body. PR [#31](https://github.com/kestgalax/carrottype/pull/31) targets `main`; tag
+`v0.10.0` is `3b14844`; draft release ID `442184838` contains byte-verified DMG/ZIP/appcast.
+Hosted `macOS checks` run `43096217758` remained queued with zero jobs because of the external
+GitHub Actions major outage (incident `dvy0t3mvh1lg`); no green CI is claimed and no duplicate
+run was created. Nothing is merged or published by this preparation; required hosted CI and
+publication remain the coordinator's already granted final gate.

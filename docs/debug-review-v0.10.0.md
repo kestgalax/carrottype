@@ -92,4 +92,23 @@ results were not enumerated; this record does not claim that those checks passed
 
 ## Draft, PR and CI
 
-Pending at documentation commit; final IDs/heads are recorded by the closeout commit.
+- PR [#31](https://github.com/kestgalax/carrottype/pull/31) targets `main` from
+  `kestgalax/typing-speed-test`.
+- Tag `v0.10.0` points at `3b1484414ea57f29ab69e10daeb60ff9671e696d` (this release-evidence
+  commit); app/artifact source is behavior `1736262` plus metadata `7c1dfdc`.
+- Draft release ID `442184838` (`https://github.com/kestgalax/carrottype/releases/tag/v0.10.0`,
+  drafts render as an untagged placeholder) contains `CarrotType-0.10.0.dmg`
+  (asset 736895572), `CarrotType-0.10.0-34.zip` (asset 736895569) and `appcast.xml`
+  (asset 736895571).
+- `python3 macos/scripts/verify-update-release.py --tag v0.10.0 --previous-build 33
+  --sparkle-bin macos/.derivedData/SourcePackages/artifacts/sparkle/Sparkle/bin` passed
+  authenticated draft signatures, identity, version, lengths, URLs and GitHub asset digests.
+- Downloaded draft assets are byte-equal to the local files above (DMG 23,834,939;
+  ZIP 23,879,143; appcast 30,611 bytes) with identical SHA-256 values.
+- Hosted `macOS checks` run [43096217758](https://github.com/kestgalax/carrottype/actions/runs/43096217758)
+  was created for PR head `3b14844` but remained **queued with zero jobs** because of the
+  external GitHub Actions major outage (incident `dvy0t3mvh1lg`, status update
+  2026-11-11T20:48:25Z). No hosted result exists: this is not a code-test failure and is not
+  claimed as green CI. No duplicate run was created and the workflow/runner was not changed to
+  evade the outage. Required hosted CI remains the coordinator's final gate before merge or
+  publication; stable/latest remains 0.9.0 (33).

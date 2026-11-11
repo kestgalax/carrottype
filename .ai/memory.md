@@ -282,5 +282,9 @@ bytes) prepared. Finder automation hit documented `-1743`; checksum-verified pub
 DMG template preserved layout/background/.DS_Store/Applications link. Mounted app/helper/MLX/
 identity/no-weights checks passed. Isolated candidate-code staging A33→B34 plus offline/
 tampered-feed/corrupt-archive/no-new-version passed on fresh identity; not historical/TCC proof.
-Typing-speed/notes/regressions and local AIDOS validate/trace/review passed. Draft/PR pending
-Codex gate; stable remains 0.9.0. No installed app/profile/model/login-item change or key export.
+Typing-speed/notes/regressions and local AIDOS validate/trace/review passed. PR #31 targets
+main; tag `v0.10.0` is `3b14844`; draft release ID `442184838` holds byte-verified DMG/ZIP/
+appcast and `verify-update-release.py --tag v0.10.0 --previous-build 33` passed. Hosted CI run
+43096217758 stayed queued with zero jobs during the external GitHub Actions major outage
+(incident `dvy0t3mvh1lg`); no green CI is claimed and no duplicate run was created. Stable
+remains 0.9.0. No installed app/profile/model/login-item change or key export.

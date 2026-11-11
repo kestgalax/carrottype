@@ -166,6 +166,8 @@ publication was authorized: «мне нравится, можем публико
 at `1736262`; only version/build 0.10.0 (34), notes/history and documentation change. The
 published 0.9.0 notes are archived unchanged and RU/EN notes cover the Statistics Measure
 sheet. Dynamic Island remains untranslated; GigaAM and the settings reorganization are not
-included. Clean Release/DMG, signed ZIP/appcast, isolated A33→B34 staging and the draft/PR are
-recorded in [release review](../../debug-review-v0.10.0.md); stable/latest remains 0.9.0 (33)
-pending the Codex final gate. Individual device/IME/VoiceOver/TCC results were not enumerated.
+included. Clean Release/DMG, signed ZIP/appcast, isolated A33→B34 staging and draft ID
+`442184838` (PR #31, tag `v0.10.0` at `3b14844`) are recorded in
+[release review](../../debug-review-v0.10.0.md); hosted CI stayed queued during the external
+GitHub Actions outage, so no green CI is claimed. Stable/latest remains 0.9.0 (33) pending the
+Codex final gate. Individual device/IME/VoiceOver/TCC results were not enumerated.

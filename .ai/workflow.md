@@ -125,6 +125,10 @@ authorized publication: «мне нравится, можем публикова
 and RU/EN notes cover only the Statistics **Measure…** calibration (30 s, RU/EN, three levels,
 locally varied original prompts, explicit Use, preserved manual WPM, RAM-only attempts);
 Dynamic Island stays untranslated, and GigaAM/settings reorganization are excluded. Verified
-clean Release/DMG/signed ZIP+appcast and isolated A33→B34 staging are prepared as a draft/PR
-for the Codex final gate. Individual device/IME/VoiceOver/TCC results were not enumerated;
-those limits remain. Stable/latest remains 0.9.0 (33); no later publication is inferred.
+clean Release/DMG/signed ZIP+appcast and isolated A33→B34 staging are prepared as draft
+release ID `442184838` under PR #31 / tag `v0.10.0` (`3b14844`) and passed
+`verify-update-release.py --previous-build 33`; downloaded draft bytes match. Hosted
+`macOS checks` run 43096217758 stayed queued with zero jobs during the external GitHub Actions
+major outage (incident `dvy0t3mvh1lg`); no green CI is claimed and no duplicate run was
+created. Individual device/IME/VoiceOver/TCC results were not enumerated; those limits remain.
+Stable/latest remains 0.9.0 (33); required hosted CI and publication remain the final gate.
