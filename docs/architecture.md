@@ -142,3 +142,8 @@ The optional `lowercaseFirstLetter` control is another final exact operation: on
 ## Launch at login — 0.8.1 (ADR-019)
 
 `LaunchAtLoginService` wraps native `SMAppService.mainApp` through an injected adapter. Only explicit General toggle calls register/unregister; init, launch, refresh and updates never mutate startup state. macOS status owns the source of truth, refreshed on view appearance/app activation; no UserDefaults desired-state mirror. Pending approval is displayed distinctly with native System Settings navigation; failures retain real OS state. Registration requires resolved installed Applications location, while an existing requested item remains explicitly removable from a moved copy. No helper, LaunchAgent/plist, daemon, extra recording or third-party package. Tests use fakes; actual self-signed installation/relogin behavior is a manual Debug gate.
+
+
+### Cumulative release notes (0.8.2)
+
+Immutable `ReleaseNotesHistory.json` bundles published structured records from 0.6.1 (build 27); `ReleaseNotes.json` remains current and the authoring source for the next archived record. History is contiguous/descending and excludes current/future/duplicate builds. `ReleaseNotesStore` preserves the previous observed identity as an upgrade baseline across relaunch/read, filters the offline interval, and falls back to current notes on unknown/downgrade/malformed history. Incomplete coverage is explicit. Signed inline HTML uses the stock Sparkle installed-build marker and CSS sibling filtering; no authored JavaScript, remote resources or custom updater/network/trust changes (ADR-017). Unknown markers show available history with a start-version label. GitHub Markdown remains current-only.

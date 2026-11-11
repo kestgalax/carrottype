@@ -62,6 +62,61 @@ struct Checks {
         precondition(!ReleaseNotesStore(bundle: current, defaults: defaults).hasUnreadChanges)
         let broken = ReleaseNotesStore(bundle: try bundle("28", corrupt: true), defaults: defaults)
         precondition(broken.notes == nil && broken.version == "0.6.1")
+        // Real bundled archive: five skipped builds, baseline persistence and safe fallbacks.
+        let historySource = try Data(contentsOf: root.appendingPathComponent("macos/CarrotType/Resources/ReleaseNotesHistory.json"))
+        let history = try ReleaseNotes.decodeHistory(historySource, current: notes)
+        let currentBuild = Int(build)!
+        precondition(history.map(\.build) == stride(from: currentBuild - 1, through: 27, by: -1).map(String.init))
+        let shippingURL = temp.appendingPathComponent("shipping.bundle")
+        try FileManager.default.createDirectory(at: shippingURL, withIntermediateDirectories: true)
+        try PropertyListSerialization.data(fromPropertyList: ["CFBundleIdentifier": "carrottype.tests.shipping", "CFBundleShortVersionString": version, "CFBundleVersion": build], format: .xml, options: 0).write(to: shippingURL.appendingPathComponent("Info.plist"))
+        try source.write(to: shippingURL.appendingPathComponent("ReleaseNotes.json"))
+        let historyURL = shippingURL.appendingPathComponent("ReleaseNotesHistory.json")
+        try historySource.write(to: historyURL)
+        let shipping = Bundle(url: shippingURL)!
+        func setPrevious(_ value: String?) {
+            defaults.removePersistentDomain(forName: suite)
+            if let value { defaults.set(value, forKey: "carrottype.releaseNotes.observedVersion") }
+        }
+        setPrevious("0.6.1 (\(currentBuild - 5))")
+        let skipped = ReleaseNotesStore(bundle: shipping, defaults: defaults)
+        precondition(skipped.releases.map(\.build) == stride(from: currentBuild, through: currentBuild - 4, by: -1).map(String.init))
+        precondition(skipped.previousVersion == "0.6.1" && skipped.limitedHistorySince == nil && skipped.hasUnreadChanges)
+        precondition(ReleaseNotesStore(bundle: shipping, defaults: defaults).releases.map(\.build) == skipped.releases.map(\.build))
+        skipped.markRead()
+        let reopened = ReleaseNotesStore(bundle: shipping, defaults: defaults)
+        precondition(!reopened.hasUnreadChanges && reopened.releases.map(\.build) == skipped.releases.map(\.build))
+        setPrevious("0.8.1 (\(currentBuild - 1))")
+        precondition(ReleaseNotesStore(bundle: shipping, defaults: defaults).releases.map(\.build) == [build])
+        setPrevious("0.5.0 (25)")
+        let partial = ReleaseNotesStore(bundle: shipping, defaults: defaults)
+        precondition(partial.releases.count == currentBuild - 26 && partial.limitedHistorySince == "0.6.1")
+        for value in [nil, "invalid", "0.9.0 (\(currentBuild + 1))", "0.1.0 (99999999999999999999999)"] as [String?] {
+            setPrevious(value)
+            let safe = ReleaseNotesStore(bundle: shipping, defaults: defaults)
+            precondition(safe.releases.map(\.build) == [build] && safe.previousVersion == nil)
+            if value == nil { precondition(!safe.hasUnreadChanges) }
+        }
+        // A later actual upgrade replaces the saved range instead of keeping an older baseline.
+        setPrevious("0.6.1 (\(currentBuild - 5))")
+        _ = ReleaseNotesStore(bundle: shipping, defaults: defaults)
+        let nextBundle = try bundle(String(currentBuild + 1))
+        let next = ReleaseNotesStore(bundle: nextBundle, defaults: defaults)
+        precondition(next.previousVersion == version && next.releases.map(\.build) == [String(currentBuild + 1)])
+        var entries = try JSONSerialization.jsonObject(with: historySource) as! [[String: Any]]
+        entries[1]["build"] = String(currentBuild - 1) // duplicate/gap must reject the entire archive
+        do {
+            _ = try ReleaseNotes.decodeHistory(JSONSerialization.data(withJSONObject: entries), current: notes)
+            fatalError("Invalid history accepted")
+        } catch {}
+        try Data("broken".utf8).write(to: historyURL)
+        setPrevious("0.6.1 (\(currentBuild - 5))")
+        let damaged = ReleaseNotesStore(bundle: shipping, defaults: defaults)
+        precondition(damaged.releases.map(\.build) == [build] && damaged.limitedHistorySince == version)
+        try FileManager.default.removeItem(at: historyURL)
+        setPrevious("0.8.1 (\(currentBuild - 1))")
+        precondition(ReleaseNotesStore(bundle: shipping, defaults: defaults).releases.map(\.build) == [build])
+        print("PASS cumulative history: skip five, one-step, persistent range/read, fresh/unknown/downgrade/overflow, coverage and corrupt/missing archive fallback")
         print("PASS production release notes: matching metadata, language fallback, hidden empty sections, invalid dates, fresh/upgrade/relaunch/read tracking and safe corrupt-resource fallback")
     }
 }

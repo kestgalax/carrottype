@@ -33,6 +33,12 @@ struct ReleaseNotes: Decodable {
 
     static func decode(_ data: Data, version: String, build: String) throws -> ReleaseNotes {
         let notes = try JSONDecoder().decode(Self.self, from: data)
+        try notes.validate(version: version, build: build)
+        return notes
+    }
+
+    private func validate(version: String, build: String) throws {
+        let notes = self
         let validText: (String) -> Bool = { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -41,7 +47,7 @@ struct ReleaseNotes: Decodable {
         formatter.isLenient = false
         guard notes.schemaVersion == 1, notes.version == version, notes.build == build,
               version.range(of: #"^\d+\.\d+\.\d+$"#, options: .regularExpression) != nil,
-              build.range(of: #"^[1-9]\d*$"#, options: .regularExpression) != nil,
+              build.range(of: #"^[1-9]\d*$"#, options: .regularExpression) != nil, Int(build) != nil,
               let date = formatter.date(from: notes.date), formatter.string(from: date) == notes.date,
               notes.localizations["en"] != nil, !notes.localizations.isEmpty,
               notes.localizations.values.allSatisfy({ content in
@@ -51,7 +57,18 @@ struct ReleaseNotes: Decodable {
                       section.items.allSatisfy { validText($0.title) && ($0.detail.map(validText) ?? true) }
                   }
               }) else { throw CocoaError(.coderReadCorrupt) }
-        return notes
+    }
+
+    /// Immutable history is optional at runtime; reject gaps/duplicates/future entries as a unit.
+    static func decodeHistory(_ data: Data, current: ReleaseNotes) throws -> [ReleaseNotes] {
+        let history = try JSONDecoder().decode([ReleaseNotes].self, from: data)
+        var expected = Int(current.build)! - 1
+        for note in history {
+            try note.validate(version: note.version, build: note.build)
+            guard Int(note.build) == expected else { throw CocoaError(.coderReadCorrupt) }
+            expected -= 1
+        }
+        return history
     }
 }
 
@@ -60,10 +77,14 @@ final class ReleaseNotesStore: ObservableObject {
     let notes: ReleaseNotes?
     let version: String
     let build: String
+    let releases: [ReleaseNotes]
+    let previousVersion: String?
+    let limitedHistorySince: String?
     @Published private(set) var hasUnreadChanges: Bool
     private let defaults: UserDefaults
     private let identity: String
     private static let observedKey = "carrottype.releaseNotes.observedVersion"
+    private static let baselineKey = "carrottype.releaseNotes.upgradeBaseline"
     private static let readKey = "carrottype.releaseNotes.readVersion"
 
     init(bundle: Bundle = .main, defaults: UserDefaults = .standard) {
@@ -72,7 +93,8 @@ final class ReleaseNotesStore: ObservableObject {
         let data = bundle.url(forResource: "ReleaseNotes", withExtension: "json").flatMap { try? Data(contentsOf: $0) }
         self.version = version
         self.build = build
-        self.notes = data.flatMap { try? ReleaseNotes.decode($0, version: version, build: build) }
+        let notes = data.flatMap { try? ReleaseNotes.decode($0, version: version, build: build) }
+        self.notes = notes
         self.defaults = defaults
         self.identity = "\(version) (\(build))"
         let previous = defaults.string(forKey: Self.observedKey)
@@ -80,6 +102,25 @@ final class ReleaseNotesStore: ObservableObject {
         // change is called Updated; do not infer an upgrade from onboarding progress.
         if previous == nil {
             defaults.set(identity, forKey: Self.readKey)
+            defaults.removeObject(forKey: Self.baselineKey)
+        } else if previous != identity {
+            defaults.set(previous, forKey: Self.baselineKey)
+        }
+        let baseline = defaults.string(forKey: Self.baselineKey)
+        let parts = baseline?.components(separatedBy: " (") ?? []
+        let priorBuild = parts.count == 2 && parts[1].hasSuffix(")") ? Int(parts[1].dropLast()) : nil
+        let validBaseline = baseline?.range(of: #"^\d+\.\d+\.\d+ \([1-9]\d*\)$"#, options: .regularExpression) != nil
+        let historyData = bundle.url(forResource: "ReleaseNotesHistory", withExtension: "json").flatMap { try? Data(contentsOf: $0) }
+        let history = notes.flatMap { current in historyData.flatMap { try? ReleaseNotes.decodeHistory($0, current: current) } } ?? []
+        if let notes, validBaseline, let priorBuild, let currentBuild = Int(build), priorBuild < currentBuild {
+            self.releases = ([notes] + history).filter { Int($0.build)! > priorBuild }
+            self.previousVersion = parts[0]
+            let oldest = history.last ?? notes
+            self.limitedHistorySince = priorBuild < Int(oldest.build)! - 1 ? oldest.version : nil
+        } else {
+            self.releases = notes.map { [$0] } ?? []
+            self.previousVersion = nil
+            self.limitedHistorySince = nil
         }
         defaults.set(identity, forKey: Self.observedKey)
         self.hasUnreadChanges = previous != nil && defaults.string(forKey: Self.readKey) != identity

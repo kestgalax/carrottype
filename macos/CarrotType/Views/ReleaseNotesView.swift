@@ -27,38 +27,32 @@ struct ReleaseNotesView: View {
     let locale: Locale
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
-    private var content: ReleaseNotes.Content? { store.notes?.content(locale: locale) }
 
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 26) {
                     header
-                    if let content {
-                        Text(content.summary).font(.body).foregroundStyle(.secondary)
-                        ForEach(content.visibleSections) { section in
-                            VStack(alignment: .leading, spacing: 16) {
-                                HStack(spacing: 8) {
-                                    Text(L10n.t("release_notes.\(section.kind.rawValue)", locale: locale))
-                                        .font(.headline).foregroundStyle(sectionColor(section.kind))
-                                    Text("\(section.items.count)")
-                                        .font(.caption).foregroundStyle(.secondary)
+                    if let previous = store.previousVersion {
+                        Text(String(format: L10n.t("release_notes.since", locale: locale), previous))
+                            .font(.callout).foregroundStyle(.secondary)
+                    }
+                    if let earliest = store.limitedHistorySince {
+                        Text(String(format: L10n.t("release_notes.history_start", locale: locale), earliest))
+                            .font(.callout).foregroundStyle(.secondary)
+                    }
+                    if !store.releases.isEmpty {
+                        ForEach(store.releases, id: \.identity) { release in
+                            VStack(alignment: .leading, spacing: 20) {
+                                if store.releases.count > 1 {
+                                    Text("v\(release.version)")
+                                        .font(.title3).fontWeight(.semibold)
                                 }
-                                ForEach(Array(section.items.enumerated()), id: \.offset) { _, item in
-                                    HStack(alignment: .top, spacing: 12) {
-                                        RoundedRectangle(cornerRadius: 2)
-                                            .fill(sectionColor(section.kind)).frame(width: 4, height: 16).padding(.top, 3)
-                                            .accessibilityHidden(true)
-                                        VStack(alignment: .leading, spacing: 5) {
-                                            Text(item.title).font(.body).fixedSize(horizontal: false, vertical: true)
-                                            if let detail = item.detail {
-                                                Text(detail).font(.callout).foregroundStyle(.secondary)
-                                                    .fixedSize(horizontal: false, vertical: true)
-                                            }
-                                        }
-                                    }
+                                if let content = release.content(locale: locale) {
+                                    releaseContent(content)
                                 }
                             }
+                            if release.identity != store.releases.last?.identity { Divider() }
                         }
                     } else {
                         Text(L10n.t("release_notes.unavailable", locale: locale)).foregroundStyle(.secondary)
@@ -83,6 +77,36 @@ struct ReleaseNotesView: View {
         .frame(minWidth: 460, idealWidth: 540, maxWidth: 640, minHeight: 360, idealHeight: 560, maxHeight: 640)
         .background(Color(nsColor: .windowBackgroundColor))
         .onExitCommand { dismiss() }
+    }
+
+    private func releaseContent(_ content: ReleaseNotes.Content) -> some View {
+        VStack(alignment: .leading, spacing: 26) {
+            Text(content.summary).font(.body).foregroundStyle(.secondary)
+            ForEach(content.visibleSections) { section in
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack(spacing: 8) {
+                        Text(L10n.t("release_notes.\(section.kind.rawValue)", locale: locale))
+                            .font(.headline).foregroundStyle(sectionColor(section.kind))
+                        Text("\(section.items.count)")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                    ForEach(Array(section.items.enumerated()), id: \.offset) { _, item in
+                        HStack(alignment: .top, spacing: 12) {
+                            RoundedRectangle(cornerRadius: 2)
+                                .fill(sectionColor(section.kind)).frame(width: 4, height: 16).padding(.top, 3)
+                                .accessibilityHidden(true)
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(item.title).font(.body).fixedSize(horizontal: false, vertical: true)
+                                if let detail = item.detail {
+                                    Text(detail).font(.callout).foregroundStyle(.secondary)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private var header: some View {

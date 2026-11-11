@@ -1,32 +1,32 @@
 {
   "schemaVersion": 1,
-  "version": "0.8.1",
-  "build": "31",
+  "version": "0.8.2",
+  "build": "32",
   "date": "2026-11-11",
   "localizations": {
     "en": {
-      "summary": "CarrotType ready when you sign in.",
+      "summary": "Catch up on the releases you skipped.",
       "sections": [
         {
-          "kind": "new",
+          "kind": "improved",
           "items": [
             {
-              "title": "Launch at login.",
-              "detail": "Enable startup in General. After restarting or powering on your Mac, CarrotType opens in the menu bar when you sign in. macOS approval and errors are shown explicitly."
+              "title": "All skipped changes.",
+              "detail": "The update window and What’s New show changes between your previous and new version, grouped by release. After installation the history is available offline."
             }
           ]
         }
       ]
     },
     "ru": {
-      "summary": "CarrotType под рукой после включения Mac.",
+      "summary": "Что нового за все пропущенные версии.",
       "sections": [
         {
-          "kind": "new",
+          "kind": "improved",
           "items": [
             {
-              "title": "Запуск при входе в macOS.",
-              "detail": "Включите автозапуск в Основных. После перезагрузки или включения Mac приложение появится в строке меню при входе в систему. Необходимость разрешения macOS и ошибки показываются явно."
+              "title": "Все пропущенные изменения.",
+              "detail": "Окно обновления и «Что нового» показывают изменения между прежней и новой версией, сгруппированные по релизам. История после установки доступна без интернета."
             }
           ]
         }

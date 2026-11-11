@@ -71,6 +71,10 @@ def main():
         notes_data['build'] = build
         notes_data['version'] = info['CFBundleShortVersionString']
         fixture_notes.write_text(json.dumps(notes_data, ensure_ascii=False, indent=2) + '\n')
+        history = app / 'Contents/Resources/ReleaseNotesHistory.json'
+        if history.is_file():
+            entries = [n for n in json.loads(history.read_text()) if int(n['build']) < int(build)]
+            history.write_text(json.dumps(entries, ensure_ascii=False, indent=2) + '\n')
         run([ROOT / 'macos/scripts/sign-app.sh', app])
     web = out / 'web'
     run(['python3', ROOT / 'macos/scripts/prepare-update.py', '--app', out / 'B/CarrotType.app',
@@ -175,6 +179,10 @@ def main():
     notes_data['build'] = previous_build
     notes_data['version'] = previous_version
     fixture_notes.write_text(json.dumps(notes_data, ensure_ascii=False, indent=2) + '\n')
+    history = manual / 'Contents/Resources/ReleaseNotesHistory.json'
+    if history.is_file():
+        entries = [n for n in json.loads(history.read_text()) if int(n['build']) < int(previous_build)]
+        history.write_text(json.dumps(entries, ensure_ascii=False, indent=2) + '\n')
     run([ROOT / 'macos/scripts/sign-app.sh', manual])
     (out / 'staging-identity.txt').write_text(staging_id + '\n')
     (out / 'start-server.command').write_text('#!/bin/bash\nexec python3 -m http.server ' + str(args.port)

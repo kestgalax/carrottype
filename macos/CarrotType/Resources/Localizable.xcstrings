@@ -6241,6 +6241,38 @@
           }
         }
       }
+    },
+    "release_notes.since": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Изменения после версии %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changes since version %@"
+          }
+        }
+      }
+    },
+    "release_notes.history_start": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "История доступна с версии %@. Более ранние изменения — в полном списке."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "History is available from version %@. Earlier changes are in the full changelog."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

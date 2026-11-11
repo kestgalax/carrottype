@@ -210,3 +210,8 @@ First-letter opt-in: “Первое предложение со строчно�
 ### Launch at login — 0.8.1
 
 General ends with an opt-in “Запускать при входе в macOS” switch, without persistent descriptive hints. Current OS status determines the switch; pending approval carries an orange explanation and button opening native Login Items settings. Errors remain visible without pretending the switch changed successfully. Returning from System Settings refreshes status. A non-installed review/DMG copy explains “move to Applications and open there” in contextual help on the disabled toggle; it cannot register a temporary path, but an existing requested item can be explicitly removed. No automatic startup enrollment, view remount or hidden preference mirror.
+
+
+### Cumulative changes — 0.8.2
+
+What’s New groups bundled changes by release in descending build order between the previous observed installed build (exclusive) and this app (inclusive). Preserve that baseline on relaunch/read, replace only after another version change. Fresh tracking/unknown baseline/downgrade shows current only; incomplete pre-0.6.1 coverage is labelled. Invalid history falls back to current. Sparkle inline signed HTML uses its native installed-build marker plus CSS sibling filtering to show the same interval before installation, including existing clients. Unknown markers show available history and its start instead. No authored JavaScript/network/automatic popup; existing current-version metadata, unread badge and Full changelog remain.

@@ -122,8 +122,8 @@ targets:
         CFBundleName: CarrotType
         CFBundleDisplayName: CarrotType
         CFBundleIconName: AppIcon
-        CFBundleShortVersionString: "0.8.1"
-        CFBundleVersion: "31"
+        CFBundleShortVersionString: "0.8.2"
+        CFBundleVersion: "32"
         SUFeedURL: https://github.com/kestgalax/carrottype/releases/latest/download/appcast.xml
         SUPublicEDKey: kyWmWPcxx2NbRMhm2mAHgI58bk92VuFyPLd9wG/kaLc=
         SUEnableAutomaticChecks: false
