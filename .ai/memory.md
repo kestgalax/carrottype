@@ -350,5 +350,9 @@ Final DMG `dist/CarrotType-0.11.0.dmg` (23,830,560 bytes, `f231d29d…`), signed
 `CarrotType-0.11.0-35.zip` (23,890,373, `4b9d8a1d…`) and appcast (36,309, `93ae4893…`). Isolated
 candidate-code staging A34→B35 and negative cases passed; not historical/TCC proof. Notes,
 settings-organization/typing-speed/formatting/Dynamic Island actual checks, production regressions
-and local AIDOS validate/trace/review passed. Draft/PR/CI and publication follow. No installed app,
-user preferences/models/login items or private keys were changed.
+and local AIDOS validate/trace/review passed. PR #32 (head `791603e`) merged as `b1ba27e`; hosted
+`macOS checks` 43112615078 passed on `3b561d9`; draft release 442261291 published stable/latest at
+2026-11-11T22:41:15Z, tag `v0.11.0` = `791603e`. Post-publication `verify-update-release.py
+--published` and an isolated native Sparkle probe from build 34 passed (probe only). The closeout
+docs commit used `[skip ci]` and changed no code/assets. No installed app, user preferences/models/
+login items or private keys were changed.

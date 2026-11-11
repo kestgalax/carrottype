@@ -130,5 +130,6 @@ Text actions owns the unchanged Translate/Custom bindings.
 Window size, the 720×520 minimum, saved values and defaults are unchanged; only the navigation
 list scrolls while Details, version and What’s New stay pinned. No runtime, engine, model, prompt,
 helper, dictation/transform, statistics, updater, trust, network, dependency or history change.
-GigaAM is excluded. Individual device/IME/VoiceOver/TCC outcomes were not enumerated. The verified
-draft/PR awaits publication; stable/latest remains 0.10.0 (34) until then.
+GigaAM is excluded. Individual device/IME/VoiceOver/TCC outcomes were not enumerated. Published
+stable/latest as 0.11.0 (35) on 2026-11-12 after the verified draft, hosted CI and public gate;
+tag `v0.11.0` is `791603e`, PR #32 merged as `b1ba27e`.

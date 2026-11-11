@@ -45,3 +45,5 @@ SHA-256 исполняемого файла `CarrotType.app/Contents/MacOS/Carro
 SHA-256 helper `CarrotType.app/Contents/MacOS/CarrotTypeCleanupHelper`: `167f4b70648d350487c14c35a15cbed4774a3dfefb2b9fa81f8ea274fe7f1c52`.
 
 CDHash приложения: `522d1daa5a9e5f0be2da2a678a6ef697078f1da5`; helper: `7ccad29c13292a714e408ac87d19c69b9f0fc999`.
+
+Опубликовано stable/latest 2026-11-11T22:41:15Z (01:41 МСК, 12 ноября). Тег `v0.11.0` — `791603e`; PR [#32](https://github.com/kestgalax/carrottype/pull/32) слит как `b1ba27e`. Post-publication проверка подписей, URL и файлов обновления через публичный latest endpoint прошла; нативный Sparkle probe из изолированной сборки 34 обнаружил обновление без установки.

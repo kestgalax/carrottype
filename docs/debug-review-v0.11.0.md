@@ -114,3 +114,24 @@ claim that those checks passed.
 - Hosted `macOS checks` run [43112615078](https://github.com/kestgalax/carrottype/actions/runs/43112615078)
   passed for PR head `3b561d9` (7m49s); private hosted AIDOS was explicitly skipped because the
   read token is unavailable, while local validate/trace/review passed.
+
+## 0.11.0 publication closeout — 2026-11-12 (Moscow)
+
+Maintainer accepted the delivered Debug and explicitly authorized publication («все ок, можно
+публиковать»), correcting the version to 0.11.0 (35) because 0.10.0 (34) is already stable.
+Stable/latest **0.11.0 (35)** published at 2026-11-11T22:41:15Z (01:41 Moscow, November 12).
+Accepted application code `6cb6212`, release metadata `a78d549`, tag `v0.11.0` /
+`791603eaf4596c2fcac18781c2f1b3e52bf4e9ea`; PR [#32](https://github.com/kestgalax/carrottype/pull/32)
+merged as `b1ba27e`. Hosted `macOS checks` **43112615078 passed** on the checked head `3b561d9`
+(7m49s); private hosted AIDOS explicitly skipped, local validate/trace/review passed. The
+post-CI closeout commit `791603e` is documentation-only and was pushed with `[skip ci]`; it does
+not change application code, metadata or release assets.
+
+Published draft assets were byte-identical to the local files. Post-publication
+`verify-update-release.py --published` passed public latest/archive signatures, metadata, URLs and
+asset digests. Native resolved Sparkle CLI with the isolated `manual-A` build-34 identity and
+production public key probed the live HTTPS latest feed: exit0, “Update available!”; probe only, no
+installation (log `dist/public-native-0.11.0.log`). DMG/ZIP/feed hashes remain those recorded
+above. Self-signed/unnotarized posture, candidate-code fixture and independent
+device/IME/VoiceOver/TCC limitations remain. No installed app, user preferences/models/login items
+or private keys were changed/exported.
