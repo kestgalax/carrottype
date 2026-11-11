@@ -3,7 +3,7 @@
 ## Metadata
 
 - Task ID: launch-at-login
-- Status: implementation / Debug review; no publication authorization
+- Status: signed Debug accepted for publication; release verification in progress
 
 ## Traceability
 

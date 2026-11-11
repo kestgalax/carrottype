@@ -21,3 +21,11 @@ App: `dist/.builds.noindex/CarrotType-0.8.1-UI-Review/CarrotType.app`. No ZIP ne
 ## UI feedback revision
 
 Moved startup to the very bottom of General and removed persistent explanatory hints at the maintainer’s request. Installation guidance is available on hover for a non-installed review copy; conditional approval/errors and the native settings action remain. Service/registration behavior is unchanged. Refreshed arm64 Debug build: `/tmp/ct081-ui-build.log`; copied to the UI-Review path above and signed/deep-strict verified (`/tmp/ct081-ui-sign.log`). Local validate/trace/review passed. No new tests for this presentation-only change; initial startup fake-policy checks remain applicable. Visual placement and actual login behavior await manual confirmation. No publication authorization.
+
+## Publication authorization
+
+After the revised signed Debug was delivered, maintainer instructed «публикуй». This accepts the candidate for publication; individual reboot/approval results were not enumerated. App source is `fe2e9bc`; clean Release/DMG and local/draft/public update verification follow. No authorization for future versions or automatic user-app/login-item replacement.
+
+## Release preflight
+
+Clean Release arm64 BUILD SUCCEEDED (`/tmp/ct081-release-build.log`), inside-out signed. Default DMG creation failed with Resource busy; checksum-verified 0.8.0 installer filesystem was cloned and only the app replaced (`/tmp/ct081-package.log`). Final mounted app/version/helper/shaders/notes/deep signature/no bundled weights and matching ZIP verified. Layout `.DS_Store` SHA256 168249954ca4048d6c8970609563ddb655cc62c7c3ff2189ddc8fb4bce55ed84 and background SHA256 80495495b97af5f0b3dd8312a15a72f7c849f7c16c81d71ad0a4a22b62f8d64c unchanged. Local update signatures passed (`/tmp/ct081-assets.log`); no key export. Isolated candidate-code A30→B31 native install and negative cases passed (`dist/.builds.noindex/updates-0.8.1/results.txt`), not historical-binary/TCC evidence. Hosted final-app CI passed (42983616038, 42983623123); local login/update/notes/governance checks passed, hosted private AIDOS explicitly skipped. Draft/public download gates remain before publication closeout. [Hashes/notes](github-release-notes-v0.8.1.md).

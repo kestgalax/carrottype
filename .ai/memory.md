@@ -138,3 +138,6 @@ User requested optional startup after restart/power-on. New branch `feat/launch-
 
 
 0.8.1 UI feedback: maintainer asked to move startup to the bottom of settings and remove hints. Last section in General now contains the toggle without routine explanatory paragraphs; installation restriction remains in contextual help, approval/errors stay conditional. Service/policy unchanged. Refreshed signed Debug `dist/.builds.noindex/CarrotType-0.8.1-UI-Review/CarrotType.app`; previous potentially running copy untouched. Debug/deep-strict signature and local governance passed; initial-source hosted checks passed (42977909726, 42977969226). Actual startup/manual acceptance and publication remain pending; stable 0.8.0.
+
+
+0.8.1 release authorization: following the startup-at-bottom/no-hints signed Debug delivery, maintainer said «публикуй». Publication authorized for 0.8.1(31), app source fe2e9bc; individual manual startup results not enumerated. Freeze app, clean Release and signed draft/public checks before stable publication; do not modify actual user installation/login items. Later releases retain separate acceptance.
