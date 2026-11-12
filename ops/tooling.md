@@ -1,20 +1,22 @@
 # AIDOS tooling pin
 
-CarrotType runs AIDOS as external governance tooling. The product repository does not require a sibling `../AIDOS` checkout.
+CarrotType runs AIDOS as **private maintainer** governance tooling. It is not part of the product surface and is not advertised to end users. The product repository does not require a sibling `../AIDOS` checkout.
 
 ## Pinned revision
 
 | Field | Value |
 | --- | --- |
-| Repository | `kestgalax/AIDOS` |
+| Repository | `kestgalax/AIDOS` (private) |
 | Pin | `be33ba2829793479f8df80842051b35e6a8f413c` |
 | Note | Merge of PR [#2](https://github.com/kestgalax/AIDOS/pull/2) on `main` (Milestone 8 + ADR-008 tip `74a4d8b`) |
 | Contract defaults | No `schema` / no `contractVersion` in this repo yet (legacy-compatible). Opt-in later is a separate decision. |
 
 ## Local setup
 
+Requires read access to the private AIDOS repository (SSH or authenticated HTTPS).
+
 ```bash
-git clone https://github.com/kestgalax/AIDOS.git ~/src/AIDOS
+git clone git@github.com:kestgalax/AIDOS.git ~/src/AIDOS
 cd ~/src/AIDOS
 git checkout be33ba2829793479f8df80842051b35e6a8f413c
 npm install

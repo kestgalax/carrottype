@@ -2,6 +2,10 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## AIDOS private, no public promo — 2026-11-12
+
+Maintainer decided AIDOS is private maintainer tooling only, not a product to advertise through CarrotType. Public README cross-promo removed; schema/domains/`contractVersion: 2` stay skipped for now. Internal `.aidos` / `AIDOS_ROOT` / `ops/tooling.md` pin remain for local governance. Product focus resumes on CarrotType.
+
 ## AIDOS tooling pin — 2026-11-12
 
 After AIDOS PR #2 landed on `main` (`be33ba2`) and CarrotType pilot PR #35 merged, maintainer authorized a tooling pin: CI checks out that AIDOS commit into `.aidos` and runs `npm install`; local launcher uses `AIDOS_ROOT` or `aidos` on PATH and no longer defaults to sibling `../AIDOS`. Pin and upgrade steps live in `ops/tooling.md`. No Swift/version/DMG/feed change; `schema` / `contractVersion: 2` remain deferred.
