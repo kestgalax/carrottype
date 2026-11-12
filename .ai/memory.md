@@ -2,6 +2,10 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## 0.11.1 release preparation — 2026-11-12
+
+Maintainer asked to review the locale/quit-install Debug fix and publish if acceptable. Coordinator accepted Debug `f0cff02` / evidence `7633120` and authorized **0.11.1 (36)** because stable is already 0.11.0 (35). Application behavior stays frozen at `f0cff02`; the release commit `d719170` changes only version/build, `ReleaseNotes.json`/`ReleaseNotesHistory.json` (published 0.11.0 archived unchanged, contiguous history 35→27) and documentation. Known accepted design notes are not defects: the Sparkle language bridge applies on the next launch, the download toggle depends on automatic checks, and `willInstallUpdateOnQuit` returns `false` (ADR-017, no forced relaunch). DMG/ZIP/appcast hashes and the isolated A35→B36 staging result are recorded in `docs/debug-review-v0.11.1.md` and `docs/github-release-notes-v0.11.1.md`. No user app/profile/model/Keychain/login item or published asset was changed; no key export.
+
 ## Typing-test implementation authorized — 2026-11-11
 
 Maintainer approved the revised Codex design: «отлично, мне нравится, давай реализовывать». Implement native30s RU/EN test from Statistics WPM, Easy/Medium(default)/Advanced, fresh local combinations from small original bundled corpora, explicit Apply, RAM-only attempts and informational accuracy (no95% gate). T0 complete; OpenCode T1–T4 in a fresh main-based Orca child worktree, Codex review before signed Debug delivery. No future release version/publication authorization; 0.9.0 already published and immutable, GigaAM deferred. Authoritative spec `docs/specs/tasks/typing-speed-test.md` on `design/typing-speed-test`; historical pending entries below retained.
