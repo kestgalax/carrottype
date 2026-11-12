@@ -18,11 +18,8 @@ macos/.derivedData/
 
 # Release artifacts
 dist/
-macos/.derivedData-release/
-macos/.derivedData-speech/
-macos/.derivedData-oop/
-macos/.derivedData-transform/
-macos/.derivedData-gigaam/
+# Local Xcode DerivedData variants (verify, unmute-verify, release, speech, …)
+macos/.derivedData-*
 
 # Brainstorm / visual companion sessions
 .superpowers/
