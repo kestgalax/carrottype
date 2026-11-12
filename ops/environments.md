@@ -14,8 +14,8 @@ xcodegen generate
 open CarrotType.xcodeproj
 ```
 
-- Tooling clone: sibling `../AIDOS` (see `aidos.config.json`)
-- Governance validation (from project root):
+- AIDOS tooling: pinned checkout via `AIDOS_ROOT` (see `ops/tooling.md`); sibling `../AIDOS` is not required
+- Governance validation (from project root, after `export AIDOS_ROOT=...`):
 
 ```bash
 npm run aidos:validate

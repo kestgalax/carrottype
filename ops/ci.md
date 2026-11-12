@@ -1,10 +1,11 @@
 # CI Governance
 
-This project uses AIDOS governance checks through the cloned AIDOS tooling repository.
+This project uses AIDOS governance checks through a **pinned** AIDOS tooling checkout. See `ops/tooling.md` for the commit pin, local setup, and upgrade steps.
 
 ## Prerequisites
 
-- `AIDOS_ROOT` points to the cloned AIDOS repository, or `aidos.config.json` sets `toolingRoot`.
+- `AIDOS_ROOT` points to the pinned AIDOS checkout (with `npm install` completed there), or `aidos` is on `PATH`.
+- Sibling `../AIDOS` is no longer the default; do not rely on a stale adjacent clone.
 - Node.js is available in the CI environment.
 
 ## Minimum Pipeline
@@ -54,7 +55,7 @@ Compiles production catalog/default-selection/legacy-storage code with temporary
 
 ## 0.6.2 production lifecycle checks and Actions
 
-`.github/workflows/macos.yml` now runs governance, actual production lifecycle/preview/port-order and existing reliability/setup/Ultra/update/notes/catalog regressions, followed by unsigned arm64 Debug compilation. No microphone permission, models, distribution identity, Keychain export or publication is used. `actions/checkout` and AIDOS are pinned to commits; permissions are contents-read and credentials are not persisted. GitHub's [official runner matrix](https://github.com/actions/runner-images#available-images), checked 2026-11-10, lists `xcode-27`; this is selected because the resolved MLX manifest requires Swift 6.3 with experimentalCGen. Runner-selected `DEVELOPER_DIR` is passed to scripts. The Metal component is downloaded only on the disposable CI runner if absent. Local Debug still requires full Xcode/Metal.
+`.github/workflows/macos.yml` now runs governance, actual production lifecycle/preview/port-order and existing reliability/setup/Ultra/update/notes/catalog regressions, followed by unsigned arm64 Debug compilation. No microphone permission, models, distribution identity, Keychain export or publication is used. `actions/checkout` and AIDOS are pinned to commits (AIDOS pin recorded in `ops/tooling.md`); after checkout CI runs `npm install` in `.aidos`. Permissions are contents-read and credentials are not persisted. GitHub's [official runner matrix](https://github.com/actions/runner-images#available-images), checked 2026-11-10, lists `xcode-27`; this is selected because the resolved MLX manifest requires Swift 6.3 with experimentalCGen. Runner-selected `DEVELOPER_DIR` is passed to scripts. The Metal component is downloaded only on the disposable CI runner if absent. Local Debug still requires full Xcode/Metal.
 
 ```bash
 bash scripts/verify-session-lifecycle.sh
