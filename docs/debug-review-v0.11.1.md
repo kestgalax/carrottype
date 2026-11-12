@@ -1,7 +1,6 @@
 # CarrotType 0.11.1 — release review evidence
 
-Date: 2026-11-12. Status: **release 0.11.1 (36) prepared as a verified draft/PR; not merged or
-published at the time of writing.** Stable/latest remains 0.11.0 (35) until publication. This
+Date: 2026-11-12. Status: **published stable/latest as 0.11.1 (36) on 2026-11-12T00:10:38Z.** This
 record extends the accepted Debug evidence; it is not a new manual acceptance of changed app
 behavior.
 
@@ -106,4 +105,30 @@ version/build metadata, bundled release notes/history and documentation.
 
 ## Draft, PR and CI
 
-To be completed after creating the draft release and hosted checks.
+- PR [#33](https://github.com/kestgalax/carrottype/pull/33) targets `main` from
+  `kestgalax/update-locale-quit-fix-2`; checked head `5bc877b`.
+- Hosted `macOS checks` run
+  [43124371738](https://github.com/kestgalax/carrottype/actions/runs/43124371738) passed for the
+  exact checked head `5bc877b` (production regressions, Debug arm64 compile and isolated app
+  checks). Private hosted AIDOS was explicitly skipped because the read token is unavailable; no
+  hosted governance success is claimed.
+- Draft release (`v0.11.1`, tag created on publication) contained `CarrotType-0.11.1.dmg`
+  (asset `RA_kwDOThgsOs4r81Le`), `CarrotType-0.11.1-36.zip` (`RA_kwDOThgsOs4r81Lb`) and
+  `appcast.xml` (`RA_kwDOThgsOs4r81LZ`).
+- `python3 macos/scripts/verify-update-release.py --tag v0.11.1 --previous-build 35
+  --sparkle-bin macos/.derivedData-release/SourcePackages/artifacts/sparkle/Sparkle/bin` passed
+  authenticated draft signatures, identity, version, lengths, URLs and GitHub asset digests
+  (`/tmp/verify-draft-0111.log`). Uploaded asset digests matched the local SHA-256 values above.
+
+## Publication closeout — 2026-11-12
+
+- Stable/latest **0.11.1 (36)** published at 2026-11-12T00:10:38Z; tag `v0.11.1` /
+  `5bc877b97fea7d624860a022288d326b1adc5595`. PR #33 merged as
+  `17ab70d1b19364e163557b4a6224669636bc3725`.
+- Post-publication `verify-update-release.py --published` passed public latest/feed/archive
+  signatures, metadata, URLs and digests (`/tmp/verify-published-0111.log`).
+- Native resolved Sparkle CLI with the isolated `manual-A` build-35 update-test identity and the
+  production public key probed the live HTTPS latest feed: **exit 0, “Update available!”**, probe
+  only, no installation (`dist/public-native-0.11.1.log`).
+- Published assets are immutable and remain the byte-identical files recorded above. No installed
+  app, user preferences/models/login items or private keys were changed or exported.
