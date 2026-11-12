@@ -65,4 +65,4 @@
 
 ## ADR Impact
 
-No new ADR. Follows ADR-017: checks stay off by default, background download/install-on-quit stays a separate opt-in, no forced silent restart, standard Sparkle UI/installer and signed feed retained.
+No ADR impact. Follows ADR-017: checks stay off by default, background download/install-on-quit stays a separate opt-in, no forced silent restart, standard Sparkle UI/installer and signed feed retained.

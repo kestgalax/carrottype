@@ -2,6 +2,10 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## AIDOS pilot migration — 2026-11-12
+
+Maintainer authorized a reversible AIDOS governance/template pilot on the separate branch `kestgalax/aidos-pilot-migration` from published `origin/main` `c26fc7f` (0.11.1/36). Only future-artifact templates and additive guidance were refreshed; `.ai/memory.md`, custom privacy/trust/release gates and all ADR/feature/review history were kept, `contractVersion` stays 1, and no Swift, version, DMG, feed or publication change exists. Tooling for the pilot is `AIDOS_ROOT=/Users/kestgalax/orca/workspaces/AIDOS/aidos-adr008-evidence-guidance` (tip `74a4d8b`); sibling `Projects/2026/AIDOS` is stale, and a permanent pin plus schema 2/domain specs remain deferred. This is not a release claim and nothing is merged or published; evidence: `docs/debug-review-aidos-pilot-migration.md`.
+
 ## 0.11.1 published — 2026-11-12
 
 Maintainer asked to review the locale/quit-install Debug fix and publish if acceptable. Coordinator accepted Debug `f0cff02` / evidence `7633120` and authorized **0.11.1 (36)** because stable was already 0.11.0 (35). Application behavior stayed frozen at `f0cff02`; release metadata `d719170` and evidence `5bc877b` change only version/build, `ReleaseNotes.json`/`ReleaseNotesHistory.json` (published 0.11.0 archived unchanged, contiguous history 35→27) and documentation. Stable/latest 0.11.1 (36) published 2026-11-12T00:10:38Z; tag `v0.11.1` / `5bc877b`, PR [#33](https://github.com/kestgalax/carrottype/pull/33) merged as `17ab70d` after hosted `macOS checks` 43124371738 passed. DMG/ZIP/appcast hashes, isolated A35→B36 staging, draft/public gates and the native public probe are recorded in `docs/debug-review-v0.11.1.md` and `docs/github-release-notes-v0.11.1.md`. Known accepted design notes are not defects: the Sparkle language bridge applies on the next launch, the download toggle depends on automatic checks, and `willInstallUpdateOnQuit` returns `false` (ADR-017, no forced relaunch). No user app/profile/model/Keychain/login item or published asset was changed; no key export. Next: collect feedback; no further stage selected.
