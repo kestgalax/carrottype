@@ -4,7 +4,7 @@
 
 - Task ID: 2026-11-12-aidos-pilot-migration
 - Title: Безопасный AIDOS-пилот для CarrotType на отдельной ветке
-- Status: In progress — docs/governance only, no application or release change
+- Status: Complete — pilot delivered for maintainer review; not merged, not published
 - Created: 2026-11-12
 - Consumer base: `origin/main` `c26fc7f` — published **0.11.1 (36)**, accepted behavior `f0cff02`
 - Branch: `kestgalax/aidos-pilot-migration` (separate; no merge to `main`, no push required)
@@ -50,6 +50,17 @@ Baseline governance results (full output and limits in the evidence doc):
 | `aidos review` | 1 | Outcome `Block`: `update-locale-and-quit-install` `ADR Impact` wording is not an allowed outcome; all other findings advisory |
 
 The noisy baseline is recorded, not hidden. No product code is changed to silence it. One docs-only artifact-shape correction (`ADR Impact` wording in the 0.11.1 bugfix task, meaning preserved) is applied to remove the only blocking review finding.
+
+### Baseline → result
+
+| Check | Baseline | After the pilot |
+| --- | --- | --- |
+| `validate` | 0 | 0 |
+| `trace` | 1 — one historical missing `Feature Spec` link | 1 — same single link; no new missing links, no stale ADRs |
+| `review` | 1 — `Block` on `ADR Impact` wording | 0 — `Approve`; blockers none, same advisory set |
+| `closure aidos-pilot-migration-hygiene` | not applicable | 0 — this flow `closable`, all 10 checks pass |
+
+Full commands, outputs and limits: [evidence doc](../../debug-review-aidos-pilot-migration.md#6-verification-phase-4).
 
 ## Plan / classification
 

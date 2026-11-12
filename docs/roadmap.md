@@ -2,6 +2,18 @@
 
 ## Current Status
 
+- Status as of: 2026-11-12 (Europe/Moscow).
+- Released: **0.11.1 (36)**, tag `v0.11.1` / `5bc877b`, published 2026-11-12T00:10:38Z; accepted application behavior stays frozen at `f0cff02`.
+- Active work: **AIDOS pilot migration (separate branch)** — `kestgalax/aidos-pilot-migration` from `origin/main` `c26fc7f`; docs/governance only, no app behavior, version, DMG, feed, publication or merge.
+- Authorized: maintainer approved this pilot on a separate branch until an explicit proper merge.
+- Blocked: none for the pilot; one historical `aidos trace` missing `Feature Spec` link is documented, not silenced with a false link.
+- Last verified: [AIDOS pilot evidence](debug-review-aidos-pilot-migration.md) — `validate`/`trace`/`review`/`closure` outcomes from AIDOS `74a4d8b` via `AIDOS_ROOT`.
+- Next action: maintainer reviews the pilot branch/draft PR. Merge, tooling pin, schema 2 adoption and domain specs are separate decisions.
+
+Everything below is retained historical release history unless it explicitly refers to this block.
+
+## Historical status — 0.11.1 closeout (retained)
+
 Milestone 0–2 vertical slice shipped; **release 0.11.1 (36)** is published stable/latest as a metadata-only bugfix for update-note language alignment, the explained download-toggle dependency and quit draining for install-on-quit; accepted application behavior stays frozen at `f0cff02`. **Release 0.11.0 (35)** with the Settings organization (General / Dictation / Text actions) remains the prior release. **GitHub Release `v0.9.0`**: Dynamic Island Full/default, Minimal and Menu-bar-only modes. **v0.8.2**: cumulative release notes across skipped versions. **v0.8.1**: opt-in launch at macOS sign-in. **v0.8.0**: exact dictation rules including first-sentence lowercase, text trial, two offered cleanup models and System/Light/Dark. **v0.7.0**: native settings, accessibility/confirmation polish and selected carrot-microphone A brand. **v0.6.2**: coordinated dictation lifecycle, awaited teardown and generation-safe live draft; production regressions. **v0.6.1**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
 Latest published artifact: `CarrotType-0.11.1.dmg` — SHA-256 `11de7b60656b6f90773743e22f055ee3dfedc7dd7f8b4e8111e29a2f9e5df4bf`; signed ZIP/feed hashes in [release notes](github-release-notes-v0.11.1.md).

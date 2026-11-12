@@ -135,7 +135,29 @@ review slug only.
 
 ## 6. Verification (Phase 4)
 
-<!-- FILLED_AFTER_VERIFICATION -->
+All commands were run from the repository root with the same `AIDOS_ROOT` tip `74a4d8b`.
+
+| Check | Command | Exit / result |
+| --- | --- | --- |
+| Repository structure | `node "$AIDOS_ROOT/bin/aidos.js" validate` | **0** — `AIDOS validation passed` |
+| Traceability | `node "$AIDOS_ROOT/bin/aidos.js" trace` | **1** — 5 features / 17 tasks / 6 reviews / 19 ADRs; only missing link is the documented historical `update-locale-and-quit-install -> Feature Spec`; no stale ADR links; ADR-001 architecture-link advisory unchanged |
+| Artifact review | `node "$AIDOS_ROOT/bin/aidos.js" review` | **0** — `Outcome: Approve`; blocking findings none; advisory notes are the pre-existing ADR-001 architecture link, 4 legacy features without `Behavior Delta`, 2 legacy reviews without Schema 2 |
+| One-flow closure | `node "$AIDOS_ROOT/bin/aidos.js" closure aidos-pilot-migration-hygiene` | **0** — `Closure: closable`; all 10 checks pass; the other 5 flows are listed as out of scope, not failed |
+| Whitespace / conflict markers | `git diff --check` | **0** — clean |
+| App source untouched | `git diff --name-only origin/main -- macos` | **empty** |
+| Protected files | `git diff --quiet origin/main --` `.ai/{constraints,workflow,planner,developer,reviewer,constitution}.md` `aidos.config.json` `scripts/run-aidos.mjs` | **unchanged** for every path |
+| Applied templates | `cmp` against the `--confirm-overwrite` render in the disposable copy | **match** for all 9 applied files |
+| Memory | `git diff origin/main -- .ai/memory.md` | one additive note only; all existing content retained |
+| Scope | `git diff --stat` | 6 modified tracked files (+70/−3) and 9 added pilot docs; no `macos/`, `.github/`, `declarations`, `dist/` or release assets |
+
+The only baseline blocking finding is resolved by a docs-only `ADR Impact` wording correction, so
+`review` moved from `Block` to `Approve`. The `trace` exit remains 1 for a current-task missing
+`Feature Spec` link; this is recorded as a residual risk rather than patched with an invented link.
+`closure` covers only the new pilot flow; it does not claim anything about historical flows,
+application code or release readiness.
+
+Pre-existing repository noise: an untracked root `package-lock.json` was present before the pilot
+and is left untouched; it is not part of this change.
 
 ## 7. Residual risks and intentionally not done
 
