@@ -18,14 +18,39 @@ enum AppLanguage: String, CaseIterable, Identifiable, Hashable {
     var effectiveLanguageCode: String {
         switch self {
         case .russian:
-            return "ru"
+            return AppLanguageCode.russian
         case .english:
-            return "en"
+            return AppLanguageCode.english
         case .system:
-            if Locale.autoupdatingCurrent.language.languageCode?.identifier == "ru" {
-                return "ru"
-            }
-            return "en"
+            return AppLanguageCode.resolve(
+                Locale.autoupdatingCurrent.language.languageCode?.identifier,
+                fallback: AppLanguageCode.english
+            )
+        }
+    }
+
+    /// Sparkle selects its own UI and localized appcast `<description>` from the
+    /// process preferred localizations, which only read the app-domain
+    /// `AppleLanguages` key when a process starts. Mirroring an explicit in-app
+    /// language there keeps the next launch's standard update window consistent
+    /// with What's New (which follows `effectiveLocale` immediately).
+    /// Only remove the key when this bridge created it, so a user's own per-app
+    /// language choice is never overwritten.
+    static let appleLanguagesKey = "AppleLanguages"
+    static let updaterBridgeMarkerKey = "carrottype.updaterLanguageBridge"
+
+    func synchronizeUpdaterPresentationLanguage(defaults: UserDefaults = .standard) {
+        switch self {
+        case .system:
+            guard defaults.bool(forKey: Self.updaterBridgeMarkerKey) else { return }
+            defaults.removeObject(forKey: Self.appleLanguagesKey)
+            defaults.removeObject(forKey: Self.updaterBridgeMarkerKey)
+        case .russian:
+            defaults.set([AppLanguageCode.russian], forKey: Self.appleLanguagesKey)
+            defaults.set(true, forKey: Self.updaterBridgeMarkerKey)
+        case .english:
+            defaults.set([AppLanguageCode.english], forKey: Self.appleLanguagesKey)
+            defaults.set(true, forKey: Self.updaterBridgeMarkerKey)
         }
     }
 
@@ -58,9 +83,10 @@ enum L10n {
     }
 
     static func t(_ key: String, locale: Locale? = nil) -> String {
-        let code = (locale ?? preferredLocale).language.languageCode?.identifier
-            ?? preferredLanguageCode
-        let lang = code.hasPrefix("ru") ? "ru" : "en"
+        let lang = AppLanguageCode.resolve(
+            (locale ?? preferredLocale).language.languageCode?.identifier,
+            fallback: preferredLanguageCode
+        )
         guard let path = Bundle.main.path(forResource: lang, ofType: "lproj"),
               let bundle = Bundle(path: path)
         else {

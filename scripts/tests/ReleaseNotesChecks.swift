@@ -11,6 +11,39 @@ struct Checks {
         let version = info["CFBundleShortVersionString"] as! String
         let build = info["CFBundleVersion"] as! String
         let notes = try ReleaseNotes.decode(source, version: version, build: build)
+        // Shared language resolution: any ru* variant picks RU, unknown/system
+        // locales keep the English fallback used by L10n.
+        precondition(AppLanguageCode.resolve("ru", fallback: "en") == "ru")
+        precondition(AppLanguageCode.resolve("ru_RU", fallback: "en") == "ru")
+        precondition(AppLanguageCode.resolve("ru-RU", fallback: "en") == "ru")
+        precondition(AppLanguageCode.resolve("en_GB", fallback: "ru") == "en")
+        precondition(AppLanguageCode.resolve("de", fallback: "ru") == "en")
+        precondition(AppLanguageCode.resolve(nil, fallback: "ru") == "ru")
+        precondition(AppLanguageCode.resolve(nil, fallback: nil) == "en")
+        precondition(AppLanguage.russian.effectiveLocale.language.languageCode?.identifier == "ru")
+        precondition(AppLanguage.english.effectiveLocale.language.languageCode?.identifier == "en")
+        precondition(notes.content(locale: AppLanguage.russian.effectiveLocale)?.summary == notes.localizations["ru"]?.summary)
+        precondition(notes.content(locale: AppLanguage.english.effectiveLocale)?.summary == notes.localizations["en"]?.summary)
+        precondition(notes.content(locale: Locale(identifier: "ru_RU"))?.summary == notes.localizations["ru"]?.summary)
+        precondition(notes.content(locale: Locale(identifier: "de_DE"))?.summary == notes.localizations["en"]?.summary)
+        precondition(notes.content(locale: Locale(identifier: "de_DE"), preferredLanguageCode: "ru")?.summary == notes.localizations["en"]?.summary)
+        precondition(notes.content(locale: Locale(identifier: ""), preferredLanguageCode: "ru")?.summary == notes.localizations["ru"]?.summary)
+        // Sparkle's preferred-localization bridge: only manage AppleLanguages
+        // when CarrotType wrote it, and restore system behavior afterwards.
+        let languageSuite = "carrottype-language-checks-" + UUID().uuidString
+        let languageDefaults = UserDefaults(suiteName: languageSuite)!
+        defer { languageDefaults.removePersistentDomain(forName: languageSuite) }
+        languageDefaults.set(["fr"], forKey: AppLanguage.appleLanguagesKey)
+        AppLanguage.system.synchronizeUpdaterPresentationLanguage(defaults: languageDefaults)
+        precondition(languageDefaults.stringArray(forKey: AppLanguage.appleLanguagesKey) == ["fr"]) // user-owned override untouched
+        AppLanguage.russian.synchronizeUpdaterPresentationLanguage(defaults: languageDefaults)
+        precondition(languageDefaults.stringArray(forKey: AppLanguage.appleLanguagesKey) == ["ru"])
+        precondition(languageDefaults.bool(forKey: AppLanguage.updaterBridgeMarkerKey))
+        AppLanguage.english.synchronizeUpdaterPresentationLanguage(defaults: languageDefaults)
+        precondition(languageDefaults.stringArray(forKey: AppLanguage.appleLanguagesKey) == ["en"])
+        AppLanguage.system.synchronizeUpdaterPresentationLanguage(defaults: languageDefaults)
+        precondition(languageDefaults.persistentDomain(forName: languageSuite)?[AppLanguage.appleLanguagesKey] == nil)
+        precondition(!languageDefaults.bool(forKey: AppLanguage.updaterBridgeMarkerKey))
         precondition(notes.content(locale: Locale(identifier: "de"))?.summary == notes.localizations["en"]?.summary)
         precondition(notes.content(locale: Locale(identifier: "ru")) != nil)
         do {

@@ -31,6 +31,18 @@ struct AppUpdateSettingsSection: View {
                 get: { updates.automaticallyDownloads }, set: updates.setAutomaticallyDownloads
             ))
             .disabled(!updates.allowsAutomaticDownloads)
+            if !updates.allowsAutomaticDownloads {
+                // Sparkle only downloads in the background during a scheduled
+                // check, so this is a real dependency, not a broken toggle.
+                Text(L10n.t("updates.downloads_need_checks", locale: locale))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            if updates.installsOnQuit {
+                Text(L10n.t("updates.install_on_quit_pending", locale: locale))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             CheckForAppUpdatesButton(updates: updates, locale: locale)
             if updates.isWaitingForOperation {
                 Text(L10n.t("updates.waiting", locale: locale))

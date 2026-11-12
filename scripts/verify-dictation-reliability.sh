@@ -9,6 +9,7 @@ swiftc -parse-as-library \
   "$TASK_ROOT/macos/Shared/DictationRules.swift" \
   "$TASK_ROOT/macos/CarrotType/Services/ClipboardSnapshot.swift" \
   "$TASK_ROOT/macos/CarrotType/Services/SelectionTextService.swift" \
+  "$TASK_ROOT/macos/CarrotType/Models/LanguageResolution.swift" \
   "$TASK_ROOT/macos/CarrotType/Models/AppLanguage.swift" \
   "$TASK_ROOT/macos/CarrotType/Services/CleanupHelperTransport.swift" \
   "$TASK_ROOT/macos/Shared/CleanupHelperProtocol.swift" \

@@ -2,7 +2,7 @@
 
 ## Current Status
 
-Milestone 0–2 vertical slice shipped; **release 0.11.0 (35)** with the Settings organization (General / Dictation / Text actions) is published stable/latest after maintainer acceptance and version correction. **GitHub Release `v0.9.0`**: Dynamic Island Full/default, Minimal and Menu-bar-only modes. **v0.8.2**: cumulative release notes across skipped versions. **v0.8.1**: opt-in launch at macOS sign-in. **v0.8.0**: exact dictation rules including first-sentence lowercase, text trial, two offered cleanup models and System/Light/Dark. **v0.7.0**: native settings, accessibility/confirmation polish and selected carrot-microphone A brand. **v0.6.2**: coordinated dictation lifecycle, awaited teardown and generation-safe live draft; production regressions. **v0.6.1**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
+Milestone 0–2 vertical slice shipped; **release 0.11.0 (35)** with the Settings organization (General / Dictation / Text actions) is published stable/latest after maintainer acceptance and version correction. **Release 0.11.1 (36)** is prepared as a verified draft/PR: metadata-only bugfix for update-note language alignment, the explained download-toggle dependency and quit draining for install-on-quit; application behavior stays frozen at `f0cff02`. **GitHub Release `v0.9.0`**: Dynamic Island Full/default, Minimal and Menu-bar-only modes. **v0.8.2**: cumulative release notes across skipped versions. **v0.8.1**: opt-in launch at macOS sign-in. **v0.8.0**: exact dictation rules including first-sentence lowercase, text trial, two offered cleanup models and System/Light/Dark. **v0.7.0**: native settings, accessibility/confirmation polish and selected carrot-microphone A brand. **v0.6.2**: coordinated dictation lifecycle, awaited teardown and generation-safe live draft; production regressions. **v0.6.1**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
 Latest published artifact: `CarrotType-0.11.0.dmg` — SHA-256 `f231d29d906309ba5a42fd3f43d87f3c77a84c85d8e89294f012a13d3b3c2b9a`; signed ZIP/feed hashes in [release notes](github-release-notes-v0.11.0.md).
 
@@ -10,7 +10,7 @@ Published 0.9.0 (33) after approved Debug and verified draft. Evidence: [0.9.0 r
 
 **Release acceptance:** maintainer accepted the signed Dynamic Island Debug and authorized publication («можно публиковать»). Stable 0.9.0 (33) published 2026-11-11; individual manual device/TCC/VoiceOver outcomes not enumerated. [Evidence/limits](debug-review-v0.9.0.md).
 
-**Current focus:** 0.11.0 (35) is published, packaging the accepted settings-organization extraction (General / Dictation / Text actions, with formatting inside Dictation) from behavior `6cb6212`. Individual device/IME/VoiceOver/TCC results were not enumerated. Collect Dynamic Island 0.9.0 and typing-speed feedback; GigaAM deferred.
+**Current focus:** publish 0.11.1 (36) from `kestgalax/update-locale-quit-fix-2` after coordinator acceptance of the Debug fix: shared RU/EN language resolution for What's New, a Sparkle presentation-language bridge for the next launch, an honest explanation for the download toggle while opt-in checks are off, and quit draining instead of cancelling when an install-on-quit is staged. Release work is metadata/docs only; accepted app behavior is frozen at `f0cff02`. 0.11.0 (35) remains published until the new draft passes verification and is published. Individual device/IME/VoiceOver/TCC results were not enumerated. Collect Dynamic Island 0.9.0 and typing-speed feedback; GigaAM deferred.
 
 Privacy / supply-chain governance: `.ai/constraints.md` + `docs/security/`. Full offline network audit (Little Snitch / airplane) remains deferred.
 
@@ -371,3 +371,16 @@ candidate-code fixture limits; `docs/github-release-notes-v0.11.0.md` is the rel
 Hosted `macOS checks` 43112615078 passed on `3b561d9`; PR #32 merged as `b1ba27e`, tag `v0.11.0`
 is `791603e`, and the post-publication public gate plus isolated native probe passed.
 Stable/latest is 0.11.0 (35).
+
+## Post-0.11.0 — update language and quit-install bugfix
+
+Maintainer reported that the changelog/version description ignored the selected language and that
+“download updates and install on quit” looked broken. [Task note](specs/tasks/update-locale-and-quit-install.md)
+scopes a Debug-only fix: shared `AppLanguageCode` resolution for `L10n` and release notes, an
+app-domain `AppleLanguages` bridge so Sparkle's standard window uses the in-app language on the next
+launch (both appcast descriptions preserved, no JS), an explicit explanation for Sparkle's
+checks→download dependency, and a quit path that drains active work instead of cancelling when an
+install-on-quit is staged. Automatic checks/downloads remain opt-in and the standard install-on-quit
+path never forces a relaunch. Evidence: [Debug review](debug-review-update-locale-quit.md). No
+publication, version bump, DMG or GitHub release in this stage; the maintainer's separate
+Debug/publication gate still applies.

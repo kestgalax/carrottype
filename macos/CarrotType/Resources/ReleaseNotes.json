@@ -1,82 +1,48 @@
 {
   "schemaVersion": 1,
-  "version": "0.11.0",
-  "build": "35",
+  "version": "0.11.1",
+  "build": "36",
   "date": "2026-11-12",
   "localizations": {
     "en": {
-      "summary": "Settings are grouped by what you do: General, Dictation and Text actions.",
+      "summary": "Update notes and the standard update window now follow the chosen language, the background-download toggle explains its dependency, and quitting during dictation no longer cancels a staged update.",
       "sections": [
         {
-          "kind": "new",
+          "kind": "fixed",
           "items": [
             {
-              "title": "General is about the app itself.",
-              "detail": "Updates, version and What's New, theme, interface language and launch at macOS sign-in now live in General. They are no longer mixed with dictation controls."
+              "title": "What's New and the update window use the same language.",
+              "detail": "Russian and English notes now resolve through one shared rule, so What's New matches the interface immediately. The standard Sparkle update window picks up the selected language on the next launch, because macOS caches an app's preferred languages at process start. Choosing System removes only the language override CarrotType wrote and leaves your own per-app choice untouched."
             },
             {
-              "title": "Dictation keeps its own settings.",
-              "detail": "The dictation shortcut, Walkie-talkie hold mode, clipboard preference, formatting mode and rules, My Rules and the text trial are together in Dictation. Formatting is only selectable when the app is ready, exactly as before."
+              "title": "The download toggle states its dependency.",
+              "detail": "Sparkle allows background download only while automatic checks are on. With checks off, as by default, the toggle stays disabled and now says why instead of appearing broken. Manual Check for updates and install-on-quit remain available."
             },
             {
-              "title": "Text actions has the bindings.",
-              "detail": "Translate and Custom transform bindings, including their model, language and instruction editors, moved to Text actions. The existing limits and conflict checks are unchanged."
-            }
-          ]
-        },
-        {
-          "kind": "improved",
-          "items": [
-            {
-              "title": "Eight panes in a clearer order.",
-              "detail": "The sidebar now lists General, Dictation, Text actions, Dynamic Island, Setup, Models, Storage and Statistics. The Dynamic Island pane name remains untranslated in both languages."
-            },
-            {
-              "title": "Nothing saved is reset.",
-              "detail": "Window size, the 720×520 minimum, the readiness-based starting pane and every saved preference and binding keep their previous values. Only the navigation list scrolls; Details, version and What's New stay pinned."
-            },
-            {
-              "title": "Leaving a pane stays clean.",
-              "detail": "Leaving Dictation or Text actions cancels shortcut capture and restores the registered hotkey. Leaving Dictation also cancels a running text trial; changing language or theme does not remount Settings or stop a finished trial."
+              "title": "Quitting during dictation no longer blocks a staged update.",
+              "detail": "If an update is downloaded and install-on-quit is chosen, the app finishes the current dictation, text action or formatting instead of cancelling the quit, then lets Sparkle's installer apply the update after the app exits. There is no forced relaunch; the hand-off stays on Sparkle's documented install-on-quit path."
             }
           ]
         }
       ]
     },
     "ru": {
-      "summary": "Настройки собраны по сценариям: «Основные», «Диктовка» и «Преобразования».",
+      "summary": "Заметки обновления и стандартное окно обновления теперь следуют выбранному языку, переключатель фоновой загрузки объясняет свою зависимость, а выход во время диктовки больше не отменяет установку.",
       "sections": [
         {
-          "kind": "new",
+          "kind": "fixed",
           "items": [
             {
-              "title": "«Основные» — только о приложении.",
-              "detail": "Обновления, версия и «Что нового», тема, язык интерфейса и запуск при входе в macOS теперь находятся в «Основных» и больше не смешиваются с настройками диктовки."
+              "title": "«Что нового» и окно обновления говорят на одном языке.",
+              "detail": "Русские и английские заметки теперь выбираются по одному общему правилу, поэтому «Что нового» сразу совпадает с интерфейсом. Стандартное окно Sparkle подхватывает выбранный язык при следующем запуске: macOS кэширует предпочитаемые языки приложения при старте процесса. Выбор «Системный» удаляет только переопределение, записанное CarrotType, и не трогает ваш собственный выбор языка для приложения."
             },
             {
-              "title": "У «Диктовки» свои настройки.",
-              "detail": "Сочетание клавиш диктовки, режим рации, сохранение результата в буфере, режим и правила оформления, «Мои правила» и пробный текст собраны в «Диктовке». Оформление по-прежнему доступно только в состоянии Ready."
+              "title": "Переключатель загрузки объясняет зависимость.",
+              "detail": "Sparkle разрешает фоновую загрузку только при включённых автоматических проверках. Пока проверки выключены, как по умолчанию, переключатель остаётся неактивным и теперь объясняет причину, а не выглядит сломанным. Ручная проверка обновлений и установка при выходе по-прежнему доступны."
             },
             {
-              "title": "«Преобразования» — для связок.",
-              "detail": "Связки Translate и Custom вместе с выбором модели, языка и инструкции переехали в «Преобразования». Ограничения и проверка конфликтов не изменились."
-            }
-          ]
-        },
-        {
-          "kind": "improved",
-          "items": [
-            {
-              "title": "Восемь разделов в понятном порядке.",
-              "detail": "В боковом списке теперь: «Основные», «Диктовка», «Преобразования», Dynamic Island, «Настройка», «Модели», «Хранилище» и «Статистика». Название раздела Dynamic Island по-прежнему не переводится."
-            },
-            {
-              "title": "Сохранённое не сбрасывается.",
-              "detail": "Размер окна, минимум 720×520, стартовый раздел по состоянию Ready, все сохранённые значения и связки остаются прежними. Прокручивается только список разделов; Details, версия и «Что нового» остаются на месте."
-            },
-            {
-              "title": "Уход из раздела ничего не ломает.",
-              "detail": "При уходе из «Диктовки» или «Преобразований» захват сочетания отменяется, а горячая клавиша снова регистрируется. Уход из «Диктовки» также отменяет идущую пробу текста; смена языка или темы не пересоздаёт настройки и не останавливает завершённую пробу."
+              "title": "Выход во время диктовки не блокирует установку.",
+              "detail": "Если обновление уже скачано и выбрана установка при выходе, приложение сначала завершает текущую диктовку, преобразование или оформление текста, а не отменяет выход, и затем передаёт установку Sparkle. Принудительной перезагрузки нет: установка идёт по документированному пути Sparkle после закрытия приложения."
             }
           ]
         }

@@ -1,6 +1,92 @@
 [
   {
     "schemaVersion": 1,
+    "version": "0.11.0",
+    "build": "35",
+    "date": "2026-11-12",
+    "localizations": {
+      "en": {
+        "summary": "Settings are grouped by what you do: General, Dictation and Text actions.",
+        "sections": [
+          {
+            "kind": "new",
+            "items": [
+              {
+                "title": "General is about the app itself.",
+                "detail": "Updates, version and What's New, theme, interface language and launch at macOS sign-in now live in General. They are no longer mixed with dictation controls."
+              },
+              {
+                "title": "Dictation keeps its own settings.",
+                "detail": "The dictation shortcut, Walkie-talkie hold mode, clipboard preference, formatting mode and rules, My Rules and the text trial are together in Dictation. Formatting is only selectable when the app is ready, exactly as before."
+              },
+              {
+                "title": "Text actions has the bindings.",
+                "detail": "Translate and Custom transform bindings, including their model, language and instruction editors, moved to Text actions. The existing limits and conflict checks are unchanged."
+              }
+            ]
+          },
+          {
+            "kind": "improved",
+            "items": [
+              {
+                "title": "Eight panes in a clearer order.",
+                "detail": "The sidebar now lists General, Dictation, Text actions, Dynamic Island, Setup, Models, Storage and Statistics. The Dynamic Island pane name remains untranslated in both languages."
+              },
+              {
+                "title": "Nothing saved is reset.",
+                "detail": "Window size, the 720×520 minimum, the readiness-based starting pane and every saved preference and binding keep their previous values. Only the navigation list scrolls; Details, version and What's New stay pinned."
+              },
+              {
+                "title": "Leaving a pane stays clean.",
+                "detail": "Leaving Dictation or Text actions cancels shortcut capture and restores the registered hotkey. Leaving Dictation also cancels a running text trial; changing language or theme does not remount Settings or stop a finished trial."
+              }
+            ]
+          }
+        ]
+      },
+      "ru": {
+        "summary": "Настройки собраны по сценариям: «Основные», «Диктовка» и «Преобразования».",
+        "sections": [
+          {
+            "kind": "new",
+            "items": [
+              {
+                "title": "«Основные» — только о приложении.",
+                "detail": "Обновления, версия и «Что нового», тема, язык интерфейса и запуск при входе в macOS теперь находятся в «Основных» и больше не смешиваются с настройками диктовки."
+              },
+              {
+                "title": "У «Диктовки» свои настройки.",
+                "detail": "Сочетание клавиш диктовки, режим рации, сохранение результата в буфере, режим и правила оформления, «Мои правила» и пробный текст собраны в «Диктовке». Оформление по-прежнему доступно только в состоянии Ready."
+              },
+              {
+                "title": "«Преобразования» — для связок.",
+                "detail": "Связки Translate и Custom вместе с выбором модели, языка и инструкции переехали в «Преобразования». Ограничения и проверка конфликтов не изменились."
+              }
+            ]
+          },
+          {
+            "kind": "improved",
+            "items": [
+              {
+                "title": "Восемь разделов в понятном порядке.",
+                "detail": "В боковом списке теперь: «Основные», «Диктовка», «Преобразования», Dynamic Island, «Настройка», «Модели», «Хранилище» и «Статистика». Название раздела Dynamic Island по-прежнему не переводится."
+              },
+              {
+                "title": "Сохранённое не сбрасывается.",
+                "detail": "Размер окна, минимум 720×520, стартовый раздел по состоянию Ready, все сохранённые значения и связки остаются прежними. Прокручивается только список разделов; Details, версия и «Что нового» остаются на месте."
+              },
+              {
+                "title": "Уход из раздела ничего не ломает.",
+                "detail": "При уходе из «Диктовки» или «Преобразований» захват сочетания отменяется, а горячая клавиша снова регистрируется. Уход из «Диктовки» также отменяет идущую пробу текста; смена языка или темы не пересоздаёт настройки и не останавливает завершённую пробу."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
     "version": "0.10.0",
     "build": "34",
     "date": "2026-11-11",

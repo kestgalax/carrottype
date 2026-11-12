@@ -2,6 +2,10 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## 0.11.1 release preparation — 2026-11-12
+
+Maintainer asked to review the locale/quit-install Debug fix and publish if acceptable. Coordinator accepted Debug `f0cff02` / evidence `7633120` and authorized **0.11.1 (36)** because stable is already 0.11.0 (35). Application behavior stays frozen at `f0cff02`; the release commit `d719170` changes only version/build, `ReleaseNotes.json`/`ReleaseNotesHistory.json` (published 0.11.0 archived unchanged, contiguous history 35→27) and documentation. Known accepted design notes are not defects: the Sparkle language bridge applies on the next launch, the download toggle depends on automatic checks, and `willInstallUpdateOnQuit` returns `false` (ADR-017, no forced relaunch). DMG/ZIP/appcast hashes and the isolated A35→B36 staging result are recorded in `docs/debug-review-v0.11.1.md` and `docs/github-release-notes-v0.11.1.md`. No user app/profile/model/Keychain/login item or published asset was changed; no key export.
+
 ## Typing-test implementation authorized — 2026-11-11
 
 Maintainer approved the revised Codex design: «отлично, мне нравится, давай реализовывать». Implement native30s RU/EN test from Statistics WPM, Easy/Medium(default)/Advanced, fresh local combinations from small original bundled corpora, explicit Apply, RAM-only attempts and informational accuracy (no95% gate). T0 complete; OpenCode T1–T4 in a fresh main-based Orca child worktree, Codex review before signed Debug delivery. No future release version/publication authorization; 0.9.0 already published and immutable, GigaAM deferred. Authoritative spec `docs/specs/tasks/typing-speed-test.md` on `design/typing-speed-test`; historical pending entries below retained.
@@ -356,3 +360,15 @@ and local AIDOS validate/trace/review passed. PR #32 (head `791603e`) merged as 
 --published` and an isolated native Sparkle probe from build 34 passed (probe only). The closeout
 docs commit used `[skip ci]` and changed no code/assets. No installed app, user preferences/models/
 login items or private keys were changed.
+
+Post-0.11.0 bugfix (`kestgalax/update-locale-quit-fix-2`, main `7c004cd`): the maintainer reported
+that changelog/version descriptions ignored the selected language and that “download and install on
+quit” looked broken. `AppLanguageCode` now normalizes `ru*`/EN for both `L10n` and
+`ReleaseNotes.content`; an explicit in-app language is mirrored into app-domain `AppleLanguages`
+(only while CarrotType owns it) so Sparkle's next-launch labels and `xml:lang` description follow the
+app, not just the system. The download toggle is disabled with a visible checks→download explanation
+while opt-in checks are off; this is Sparkle's `allowsAutomaticUpdates` rule, not self-signing.
+Quit now always drains through `AppState.prepareForQuit` (`.terminateLater`) instead of returning
+`.terminateCancel` when an install-on-quit is staged; the gate tracks the pending state and aborts
+clear it. `willInstallUpdateOnQuit` keeps Sparkle's documented `false` path so the installer completes
+after exit without forcing a relaunch (ADR-017). Debug/evidence only; no publication or version bump.

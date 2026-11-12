@@ -27,8 +27,14 @@ struct ReleaseNotes: Decodable {
     var identity: String { "\(version) (\(build))" }
     var changelogURL: URL? { URL(string: "https://github.com/kestgalax/carrottype/releases") }
 
-    func content(locale: Locale) -> Content? {
-        localizations[locale.language.languageCode?.identifier ?? "en"] ?? localizations["en"]
+    /// Resolves notes with the same language rules as `L10n`: explicit `ru*`
+    /// variants win, otherwise the in-app preference, otherwise English.
+    func content(locale: Locale, preferredLanguageCode: String? = nil) -> Content? {
+        let code = AppLanguageCode.resolve(
+            locale.language.languageCode?.identifier,
+            fallback: preferredLanguageCode ?? L10n.preferredLanguageCode
+        )
+        return localizations[code] ?? localizations["en"]
     }
 
     static func decode(_ data: Data, version: String, build: String) throws -> ReleaseNotes {

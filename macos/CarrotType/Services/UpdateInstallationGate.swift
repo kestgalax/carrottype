@@ -7,6 +7,8 @@ final class UpdateInstallationGate {
     private var operations = Set<UUID>()
     private var postponedInstall: (() -> Void)?
     private(set) var isInstalling = false
+    /// True after Sparkle prepared a background update for silent installation on quit.
+    private(set) var hasPendingInstallOnQuit = false
     var onChange: (() -> Void)?
 
     var isBusy: Bool { !operations.isEmpty }
@@ -18,6 +20,11 @@ final class UpdateInstallationGate {
         operations.insert(token)
         onChange?()
         return token
+    }
+
+    func markInstallOnQuitPending() {
+        hasPendingInstallOnQuit = true
+        onChange?()
     }
 
     func endOperation(_ token: UUID) {
@@ -46,15 +53,24 @@ final class UpdateInstallationGate {
     }
 
     /// Final synchronous check, including install-on-quit/resumed installer paths.
+    /// Returning false means the caller must drain active operations first; it must
+    /// never cancel the user's quit on our behalf.
     func prepareForTermination() -> Bool {
         guard !isBusy else { return false }
-        isInstalling = true
+        postponedInstall = nil // a quit is not a relaunch request; do not force one
+        // Lock new operations only when an install is actually staged; an
+        // ordinary quit must not leave the gate permanently locked if AppKit
+        // or a test inspects it afterwards.
+        if hasPendingInstallOnQuit || isInstalling {
+            isInstalling = true
+        }
         onChange?()
         return true
     }
 
     func resetInstallation() {
         postponedInstall = nil
+        hasPendingInstallOnQuit = false
         isInstalling = false
         onChange?()
     }

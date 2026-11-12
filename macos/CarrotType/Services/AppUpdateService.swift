@@ -11,8 +11,8 @@ final class AppUpdateService: NSObject, ObservableObject, SPUUpdaterDelegate {
     @Published private(set) var automaticallyDownloads = false
     @Published private(set) var allowsAutomaticDownloads = false
     @Published private(set) var isWaitingForOperation = false
+    @Published private(set) var installsOnQuit = false
     private var controller: SPUStandardUpdaterController!
-    private var installsOnQuit = false
 
     override init() {
         super.init()
@@ -54,12 +54,17 @@ final class AppUpdateService: NSObject, ObservableObject, SPUUpdaterDelegate {
     func updater(_ updater: SPUUpdater, willInstallUpdateOnQuit item: SUAppcastItem,
                  immediateInstallationBlock immediateInstallHandler: @escaping () -> Void) -> Bool {
         installsOnQuit = true
-        // Keep Sparkle's standard install-on-quit behavior; never force a background restart.
+        installationGate.markInstallOnQuitPending()
+        // Returning false is Sparkle's documented install-on-quit path: the
+        // installer tool stays alive and applies the staged update after this
+        // process exits, without relaunching the app. Returning true and
+        // invoking the handler would force an immediate relaunch (ADR-017).
         return false
     }
 
     func updater(_ updater: SPUUpdater, willInstallUpdate item: SUAppcastItem) {
         installsOnQuit = true
+        installationGate.markInstallOnQuitPending()
     }
 
     func updater(_ updater: SPUUpdater, didAbortWithError error: Error) {
@@ -67,32 +72,10 @@ final class AppUpdateService: NSObject, ObservableObject, SPUUpdaterDelegate {
         installationGate.resetInstallation()
     }
 
-    /// Sparkle may skip the postponement delegate when resuming an earlier installer.
-    /// NSApplication asks here immediately before termination, after any new operation.
-    func shouldTerminate() -> NSApplication.TerminateReply {
-        guard installsOnQuit || installationGate.isWaiting || installationGate.isInstalling else {
-            return .terminateNow
-        }
-        guard installationGate.prepareForTermination() else {
-            NSApp.activate(ignoringOtherApps: true)
-            let alert = NSAlert()
-            alert.messageText = L10n.t("updates.waiting", locale: L10n.preferredLocale)
-            alert.informativeText = L10n.t("updates.waiting_detail", locale: L10n.preferredLocale)
-            alert.runModal()
-            return .terminateCancel
-        }
-        return .terminateNow
-    }
-}
-
-@MainActor
-final class CarrotTypeApplicationDelegate: NSObject, NSApplicationDelegate {
-    weak var updates: AppUpdateService?
-    var prepareForQuit: (() -> NSApplication.TerminateReply)?
-
-    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        let reply = updates?.shouldTerminate() ?? .terminateNow
-        guard reply == .terminateNow else { return reply }
-        return prepareForQuit?() ?? .terminateNow
+    /// Called by `AppState.prepareForQuit` after any active operation has been
+    /// drained. It must never cancel a quit: AppKit's terminateLater reply is
+    /// owned by the caller, so busy work is drained rather than refused.
+    func prepareForTermination() -> Bool {
+        installationGate.prepareForTermination()
     }
 }
