@@ -4,11 +4,11 @@
 
 - Status as of: 2026-11-12 (Europe/Moscow).
 - Released: **0.11.1 (36)**, tag `v0.11.1` / `5bc877b`, published 2026-11-12T00:10:38Z; accepted application behavior stays frozen at `f0cff02`.
-- Active work: **AIDOS tooling pin** — branch `kestgalax/aidos-tooling-pin`; pin `be33ba2` (AIDOS `main` after PR #2), launcher no longer defaults to sibling `../AIDOS`.
-- Authorized: maintainer approved AIDOS `main` merge, CarrotType pilot PR #35 merge, and this tooling-pin step; no app/version/publish.
-- Blocked: none for the pin. Schema 2 / `contractVersion: 2` / domain specs remain separate opt-in decisions.
-- Last verified: pilot evidence [debug-review-aidos-pilot-migration.md](debug-review-aidos-pilot-migration.md); pin docs in [ops/tooling.md](../ops/tooling.md).
-- Next action: merge tooling-pin PR after checks; then focus product work (schema/domains only if separately authorized).
+- Active work: **product focus** after AIDOS governance story closed (pilot #35 + tooling pin #36 on `main`).
+- Authorized: maintainer decided AIDOS stays **private maintainer tooling** — no public cross-promo from CarrotType; README promo link removed; schema 2 / `contractVersion: 2` / domain specs remain deferred opt-in.
+- Blocked: none.
+- Last verified: pin docs in [ops/tooling.md](../ops/tooling.md); pilot evidence [debug-review-aidos-pilot-migration.md](debug-review-aidos-pilot-migration.md).
+- Next action: product features/bugs for CarrotType; touch AIDOS only if tooling breaks or maintainer asks.
 
 Everything below is retained historical release history unless it explicitly refers to this block.
 
