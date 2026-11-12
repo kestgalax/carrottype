@@ -4,11 +4,11 @@
 
 - Status as of: 2026-11-12 (Europe/Moscow).
 - Released: **0.11.1 (36)**, tag `v0.11.1` / `5bc877b`, published 2026-11-12T00:10:38Z; accepted application behavior stays frozen at `f0cff02`.
-- Active work: **AIDOS pilot migration (separate branch)** — `kestgalax/aidos-pilot-migration` from `origin/main` `c26fc7f`; docs/governance only, no app behavior, version, DMG, feed, publication or merge.
-- Authorized: maintainer approved this pilot on a separate branch until an explicit proper merge.
-- Blocked: none for the pilot; one historical `aidos trace` missing `Feature Spec` link is documented, not silenced with a false link.
-- Last verified: [AIDOS pilot evidence](debug-review-aidos-pilot-migration.md) — `validate`/`trace`/`review`/`closure` outcomes from AIDOS `74a4d8b` via `AIDOS_ROOT`.
-- Next action: maintainer reviews the pilot branch/draft PR. Merge, tooling pin, schema 2 adoption and domain specs are separate decisions.
+- Active work: **AIDOS tooling pin** — branch `kestgalax/aidos-tooling-pin`; pin `be33ba2` (AIDOS `main` after PR #2), launcher no longer defaults to sibling `../AIDOS`.
+- Authorized: maintainer approved AIDOS `main` merge, CarrotType pilot PR #35 merge, and this tooling-pin step; no app/version/publish.
+- Blocked: none for the pin. Schema 2 / `contractVersion: 2` / domain specs remain separate opt-in decisions.
+- Last verified: pilot evidence [debug-review-aidos-pilot-migration.md](debug-review-aidos-pilot-migration.md); pin docs in [ops/tooling.md](../ops/tooling.md).
+- Next action: merge tooling-pin PR after checks; then focus product work (schema/domains only if separately authorized).
 
 Everything below is retained historical release history unless it explicitly refers to this block.
 

@@ -2,9 +2,13 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## AIDOS tooling pin — 2026-11-12
+
+After AIDOS PR #2 landed on `main` (`be33ba2`) and CarrotType pilot PR #35 merged, maintainer authorized a tooling pin: CI checks out that AIDOS commit into `.aidos` and runs `npm install`; local launcher uses `AIDOS_ROOT` or `aidos` on PATH and no longer defaults to sibling `../AIDOS`. Pin and upgrade steps live in `ops/tooling.md`. No Swift/version/DMG/feed change; `schema` / `contractVersion: 2` remain deferred.
+
 ## AIDOS pilot migration — 2026-11-12
 
-Maintainer authorized a reversible AIDOS governance/template pilot on the separate branch `kestgalax/aidos-pilot-migration` from published `origin/main` `c26fc7f` (0.11.1/36). Only future-artifact templates and additive guidance were refreshed; `.ai/memory.md`, custom privacy/trust/release gates and all ADR/feature/review history were kept, `contractVersion` stays 1, and no Swift, version, DMG, feed or publication change exists. Tooling for the pilot is `AIDOS_ROOT=/Users/kestgalax/orca/workspaces/AIDOS/aidos-adr008-evidence-guidance` (tip `74a4d8b`); sibling `Projects/2026/AIDOS` is stale, and a permanent pin plus schema 2/domain specs remain deferred. This is not a release claim and nothing is merged or published; evidence: `docs/debug-review-aidos-pilot-migration.md`.
+Maintainer authorized a reversible AIDOS governance/template pilot on the separate branch `kestgalax/aidos-pilot-migration` from published `origin/main` `c26fc7f` (0.11.1/36). Only future-artifact templates and additive guidance were refreshed; `.ai/memory.md`, custom privacy/trust/release gates and all ADR/feature/review history were kept, `contractVersion` stays 1, and no Swift, version, DMG, feed or publication change exists. The pilot used `AIDOS_ROOT` against AIDOS tip `74a4d8b`; permanent pin followed in a separate PR. Evidence: `docs/debug-review-aidos-pilot-migration.md`. Merged as PR #35.
 
 ## 0.11.1 published — 2026-11-12
 

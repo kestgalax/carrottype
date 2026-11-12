@@ -36,9 +36,14 @@ jobs:
         with:
           repository: kestgalax/AIDOS
           token: ${{ secrets.AIDOS_READ_TOKEN }}
-          ref: 832909433d28a2e080be6d7e405475d3d08dc009
+          # Keep in sync with ops/tooling.md
+          ref: be33ba2829793479f8df80842051b35e6a8f413c
           path: .aidos
           persist-credentials: false
+      - name: Install pinned AIDOS tooling
+        if: steps.governance-access.outputs.available == 'true'
+        working-directory: .aidos
+        run: npm install --ignore-scripts
       - name: Select runner Xcode
         run: printf 'DEVELOPER_DIR=%s\n' "$(xcode-select -p)" >> "$GITHUB_ENV"
       - name: Governance
