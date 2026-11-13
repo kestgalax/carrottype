@@ -30,9 +30,10 @@ Rules:
 2. Debug or diagnostic build delivered.
 3. Maintainer accepted.
 4. Publication authorized.
-5. Draft verified.
-6. Published.
-7. Public verified.
+5. **Motion companion decided** — follow `ops/release-motion.md` (required film for visible UI changes, or explicit N/A / waiver).
+6. Draft verified (DMG/ZIP/appcast **and** motion mp4 asset when required).
+7. Published.
+8. Public verified.
 
 Rules:
 
@@ -43,6 +44,7 @@ Rules:
 - An external CI outage is recorded as `blocked`. Independent preparation may continue. Do not claim that local checks are equivalent to the full CI suite.
 - Bypassing a release gate is an explicit maintainer decision with written reasons, never an automatic fallback.
 - Distinguish "build succeeded" from "release verified". Publication is not complete until the public asset and feed are checked.
+- Do not treat a GitHub Release as complete for a **visible UI** version if the motion companion was required and neither the mp4 asset nor a written N/A/waiver exists (`ops/release-motion.md`).
 
 After the first MVP or release, continue with `docs/post-mvp-consumer-playbook.md` in the AIDOS clone: quality and feedback gate, experimental-to-recommended flips, optional signing/notarization guidance, and the spike backlog.
 

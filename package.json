@@ -4,6 +4,7 @@
   "scripts": {
     "aidos:validate": "node scripts/run-aidos.mjs validate",
     "aidos:trace": "node scripts/run-aidos.mjs trace",
-    "aidos:review": "node scripts/run-aidos.mjs review"
+    "aidos:review": "node scripts/run-aidos.mjs review",
+    "motion": "node scripts/run-motion.mjs"
   }
 }

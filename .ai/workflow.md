@@ -44,6 +44,7 @@ Next ordered focus:
 - For every version, prepare and verify a Debug build first, provide it to the user for manual testing, and wait for their explicit confirmation before publishing. A successful automated build does not substitute for this user gate (maintainer instruction, 2026-11-09).
 - Build via `macos/scripts/build-release-dmg.sh`; notes in `docs/github-release-notes-v0.1.0.md`.
 - Attach DMG to GitHub Release; do not commit `dist/` to git.
+- **Motion companion:** before draft/publish of a version with visible UI/Settings/Capsule changes, follow `ops/release-motion.md` (short silent mp4 as a Release asset, or record N/A/waiver). Tooling pin: `ops/motion-tooling.md`. Lifecycle stage list: `ops/agent-release-lifecycle.md`.
 
 ## Planned UI/UX and logo stage — 2026-11-10
 
