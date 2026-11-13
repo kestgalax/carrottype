@@ -12,7 +12,7 @@
 
 ## Motion OS consumer (2026-11-14)
 
-CarrotType is the first Motion OS dogfood consumer. Motion OS stays **private maintainer tooling** (like AIDOS): no npm dependency; use `MOTION_OS_ROOT` + `npm run motion` (`scripts/run-motion.mjs`, pin in [ops/motion-tooling.md](../ops/motion-tooling.md)). `motion.config.json` selects `settings-toggle-payoff`, silent audio, capture optional. `motion/skin` exports a ~23 s `beats` map (System → Light → Dark). This does not change the dictation runtime.
+CarrotType is the first Motion OS dogfood consumer. Motion OS stays **private maintainer tooling** (like AIDOS): no npm dependency; use `MOTION_OS_ROOT` + `npm run motion` (`scripts/run-motion.mjs`, pin in [ops/motion-tooling.md](../ops/motion-tooling.md)). `motion.config.json` selects `settings-toggle-payoff`, silent audio, capture optional. `motion/skin` exports a ~23 s `beats` map (System → Light → Dark). Release companions (GitHub Release mp4 assets for visible UI changes) are locked in [ops/release-motion.md](../ops/release-motion.md) and gated in the release lifecycle. This does not change the dictation runtime.
 
 Everything below is retained historical release history unless it explicitly refers to this block.
 

@@ -19,6 +19,8 @@ Before planning or changing anything, read these files in order:
 
 Also respect `.ai/constraints.md`, `.ai/workflow.md`, and `.ai/memory.md`.
 
+When preparing a **GitHub Release** / publication package, also read `ops/release-motion.md` (and `ops/motion-tooling.md` if a film is required).
+
 ## Global Rules
 
 - Preserve product intent and architecture before optimizing local details.
