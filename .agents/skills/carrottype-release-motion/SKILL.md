@@ -9,6 +9,8 @@ description: >-
 
 # CarrotType release motion
 
+Shared project skill (canonical path: `.agents/skills/carrottype-release-motion/`). Cursor/Claude entrypoints are symlinks to this folder.
+
 ## Authority
 
 Follow **`ops/release-motion.md`** (when required + locked filename/format) and **`ops/motion-tooling.md`** (`MOTION_OS_ROOT` pin). Do not invent a parallel process.
