@@ -1,5 +1,9 @@
 .DS_Store
 node_modules/
+
+# Motion OS consumer renders (local)
+motion/out/
+motion/.render/
 .env
 .env.*
 !.env*.example
@@ -23,3 +27,6 @@ macos/.derivedData-*
 
 # Brainstorm / visual companion sessions
 .superpowers/
+
+# Motion pilot film trees (local; inventory preserved under docs/motion-pilot/)
+artifacts/motion-pilot/

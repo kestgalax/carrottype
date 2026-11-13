@@ -1,0 +1,6 @@
+{
+  "core": "motion-os@0.0.0-local",
+  "template": "settings-toggle-payoff",
+  "audio": "silent",
+  "capture": "optional"
+}

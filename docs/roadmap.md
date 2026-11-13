@@ -10,6 +10,10 @@
 - Last verified: pin docs in [ops/tooling.md](../ops/tooling.md); pilot evidence [debug-review-aidos-pilot-migration.md](debug-review-aidos-pilot-migration.md).
 - Next action: product features/bugs for CarrotType; touch AIDOS only if tooling breaks or maintainer asks.
 
+## Motion OS consumer (2026-11-14)
+
+CarrotType is the first Motion OS dogfood consumer. `motion.config.json` selects `settings-toggle-payoff`, silent audio, capture optional. `motion/skin` stages the theme story (System → Light) without a capture clip and exports `iris` at the Theme control centre so the shell reveal starts on that ring. `motion/briefs/theme.md` is the Remotion-only pass. The package depends on local `motion-os` (`file:../motion-os`). This does not change the dictation runtime.
+
 Everything below is retained historical release history unless it explicitly refers to this block.
 
 ## Historical status — 0.11.1 closeout (retained)
