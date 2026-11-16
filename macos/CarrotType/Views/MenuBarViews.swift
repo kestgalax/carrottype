@@ -176,9 +176,10 @@ struct MenuBarContentView: View {
     }
 
     /// Priority order first, so quick-select promotion is visible on the next menu open.
+    /// Orphan Wave Link virtual mixes stay out of the menu until hardware is present.
     private var menuDevices: [AudioInputDevice] {
         let order = appState.audioInput.priorityUIDs
-        return appState.audioInput.devices.sorted { lhs, rhs in
+        return appState.audioInput.devices.filter(\.isUsable).sorted { lhs, rhs in
             let left = order.firstIndex(of: lhs.id) ?? Int.max
             let right = order.firstIndex(of: rhs.id) ?? Int.max
             if left != right { return left < right }
@@ -204,7 +205,12 @@ struct MenuBarContentView: View {
 
     private func openSettingsAndRefresh() {
         appState.refreshPermissions()
+        // Join the normal activation cycle before the Settings scene attaches (LSUIElement).
+        if NSApp.activationPolicy() != .regular {
+            NSApp.setActivationPolicy(.regular)
+        }
         openSettings()
         NSApp.activate(ignoringOtherApps: true)
+        PermissionService.scheduleSettingsFocusRestore()
     }
 }

@@ -542,6 +542,9 @@ final class AppState: ObservableObject {
     func settingsDidAppear() {
         settingsAppearanceCount += 1
         settingsVisible = true
+        // LSUIElement (menu-bar) apps do not reliably regain key focus after TCC sheets
+        // unless they temporarily join the normal activation cycle while Settings is open.
+        presentAsRegularAppForSettings()
         refreshPermissions()
         permissions.startMonitoring()
         if permissions.microphoneGranted {
@@ -564,6 +567,27 @@ final class AppState: ObservableObject {
         requestTypingSpeedTestDismiss()
         micMeterEnabled = false
         stopInputMeter()
+        resignToAccessoryAppIfSettingsClosed()
+    }
+
+    /// Show a Dock presence while Settings is open so permission sheets can return focus.
+    private func presentAsRegularAppForSettings() {
+        if NSApp.activationPolicy() != .regular {
+            NSApp.setActivationPolicy(.regular)
+        }
+        PermissionService.scheduleSettingsFocusRestore()
+    }
+
+    /// Return to menu-bar-only activation after the last Settings appearance ends.
+    private func resignToAccessoryAppIfSettingsClosed() {
+        let settingsStillOpen = NSApp.windows.contains {
+            $0.isVisible && !$0.isSheet
+                && ($0.frameAutosaveName == "carrottype.settings" || $0.title == "carrottype")
+        }
+        guard !settingsStillOpen else { return }
+        if NSApp.activationPolicy() != .accessory {
+            NSApp.setActivationPolicy(.accessory)
+        }
     }
 
     func startInputMeterIfPossible() {
