@@ -2,6 +2,20 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## Smart microphone priority — implementation for review — 2026-11-16
+
+Coordinator approved ordered microphone failover; OpenCode implemented it on the main-based
+`feat/smart-mic-priority` worktree from `027dd52`. `carrottype.audioInputPriorityUIDs` is the ordered
+preference (first connected UID wins, disconnected UIDs stay for reconnect); the legacy
+`carrottype.selectedAudioInputID` migrates once into a one-entry list and keeps receiving the
+resolved active UID. An empty preference is seeded once with the resolved default. Core Audio
+device/default-input listeners re-resolve only while idle; `AppState` suspends auto-switch for the
+whole session, preserving the frozen `DictationSessionSettings.deviceUID` for capture, live draft
+and Wave Link unmute (ADR-007). Setup shows ordered rows with explicit up/down reordering and RU/EN
+copy; the menu promotes the chosen mic. No new ADR, engine, dependency, network sink, version bump
+or publication; real hot-plug/VoiceOver remains a manual Debug check.
+[Spec](docs/specs/tasks/smart-mic-priority.md).
+
 ## AIDOS private, no public promo — 2026-11-12
 
 Maintainer decided AIDOS is private maintainer tooling only, not a product to advertise through CarrotType. Public README cross-promo removed; schema/domains/`contractVersion: 2` stay skipped for now. Internal `.aidos` / `AIDOS_ROOT` / `ops/tooling.md` pin remain for local governance. Product focus resumes on CarrotType.

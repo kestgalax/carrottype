@@ -11,6 +11,26 @@ struct SetupSettingsPane: View {
             Section {
                 SetupProgressView(appState: appState)
             }
+            if permissions.microphoneGranted, !appState.audioInput.devices.isEmpty {
+                Section {
+                    Text(L10n.t("permissions.input_priority_hint", locale: locale))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    let entries = appState.audioInput.priorityEntries
+                    ForEach(Array(entries.enumerated()), id: \.element.id) { index, entry in
+                        AudioInputPriorityRow(
+                            entry: entry,
+                            canMoveUp: index > 0,
+                            canMoveDown: index < entries.count - 1,
+                            locale: locale,
+                            moveUp: { appState.audioInput.movePriorityEntry(entry.id, by: -1) },
+                            moveDown: { appState.audioInput.movePriorityEntry(entry.id, by: 1) }
+                        )
+                    }
+                } header: {
+                    Text(L10n.t("permissions.input_priority", locale: locale))
+                }
+            }
             Section {
                 LabeledContent {
                     switch permissions.microphoneAuthorization {
@@ -37,20 +57,6 @@ struct SetupSettingsPane: View {
                         Text(L10n.t("permissions.no_devices", locale: locale))
                             .foregroundStyle(.secondary)
                     } else {
-                        Picker(L10n.t("permissions.input_device", locale: locale), selection: audioInputBinding) {
-                            ForEach(appState.audioInput.devices) { device in
-                                Text(
-                                    device.isDefault
-                                        ? String(
-                                            format: L10n.t("permissions.default_suffix", locale: locale),
-                                            device.name
-                                        )
-                                        : device.name
-                                )
-                                .tag(device.id)
-                            }
-                        }
-
                         Toggle(
                             L10n.t("permissions.meter_toggle", locale: locale),
                             isOn: $appState.micMeterEnabled
@@ -148,6 +154,63 @@ struct SetupSettingsPane: View {
             get: { appState.audioInput.selectedDeviceID },
             set: { appState.selectAudioInput($0) }
         )
+    }
+}
+
+/// One row of the ordered failover list: availability/active state and explicit reordering.
+/// Buttons (instead of drag) keep the native Form usable with keyboard and VoiceOver.
+struct AudioInputPriorityRow: View {
+    let entry: AudioInputPriorityEntry
+    let canMoveUp: Bool
+    let canMoveDown: Bool
+    let locale: Locale
+    let moveUp: () -> Void
+    let moveDown: () -> Void
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: entry.isActive ? "mic.fill" : "mic")
+                .foregroundStyle(entry.isActive ? Color.accentColor : Color.secondary)
+                .frame(width: 18)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(entry.name ?? L10n.t("permissions.input_unknown", locale: locale))
+
+                HStack(spacing: 8) {
+                    if entry.isActive {
+                        Label(L10n.t("permissions.input_active", locale: locale), systemImage: "checkmark.circle.fill")
+                    }
+                    if entry.isDefault {
+                        Text(L10n.t("permissions.input_system_default", locale: locale))
+                    }
+                    if !entry.isAvailable {
+                        Label(L10n.t("permissions.input_unavailable", locale: locale), systemImage: "bolt.horizontal.circle")
+                    }
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
+            Spacer(minLength: 8)
+
+            HStack(spacing: 2) {
+                Button(action: moveUp) {
+                    Image(systemName: "chevron.up")
+                }
+                .disabled(!canMoveUp)
+                .help(L10n.t("permissions.input_move_up", locale: locale))
+                .accessibilityLabel(Text(L10n.t("permissions.input_move_up", locale: locale)))
+
+                Button(action: moveDown) {
+                    Image(systemName: "chevron.down")
+                }
+                .disabled(!canMoveDown)
+                .help(L10n.t("permissions.input_move_down", locale: locale))
+                .accessibilityLabel(Text(L10n.t("permissions.input_move_down", locale: locale)))
+            }
+            .buttonStyle(.borderless)
+        }
+        .padding(.vertical, 1)
     }
 }
 

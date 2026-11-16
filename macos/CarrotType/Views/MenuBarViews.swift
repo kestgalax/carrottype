@@ -158,7 +158,7 @@ struct MenuBarContentView: View {
                 .foregroundStyle(.secondary)
         } else {
             Picker(selection: microphoneBinding) {
-                ForEach(audio.devices) { device in
+                ForEach(menuDevices) { device in
                     Text(
                         device.isDefault
                             ? String(
@@ -172,6 +172,17 @@ struct MenuBarContentView: View {
             } label: {
                 Text(microphoneTitle)
             }
+        }
+    }
+
+    /// Priority order first, so quick-select promotion is visible on the next menu open.
+    private var menuDevices: [AudioInputDevice] {
+        let order = appState.audioInput.priorityUIDs
+        return appState.audioInput.devices.sorted { lhs, rhs in
+            let left = order.firstIndex(of: lhs.id) ?? Int.max
+            let right = order.firstIndex(of: rhs.id) ?? Int.max
+            if left != right { return left < right }
+            return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
         }
     }
 

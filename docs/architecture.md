@@ -28,7 +28,7 @@ Transform hotkey (default ⌥')
 |-----------|----------------|
 | App shell (Swift / SwiftUI) | Lifecycle, menu bar status, Dynamic Island status capsule/minimal indicator (session chrome near notch), Setup/Status UI, permission prompts, RU/EN locale |
 | Hotkey service | Register and handle global dictation + N transform binding hotkeys; dictation is toggle (default) or hold-to-talk only (Settings Walkie-talkie) |
-| Audio capture | Record microphone audio for the active session; optional experimental temporary unmute via Wave Link (ADR-007) |
+| Audio capture | Record microphone audio for the active session from the resolved priority input (frozen at session start); optional experimental temporary unmute via Wave Link (ADR-007) |
 | Model Manager | Catalog, download, verify, activate STT/cleanup packages (ADR-003) |
 | STT runtime | Parakeet Ultra only (ADR-016, 0.4.0); optional live draft via `StreamingSTTEngine` (ADR-014) |
 | Cleanup runtime | `off` / `light` heuristics / Qwen3 MLX Smart modes via session-scoped helper process (ADR-009; UI: post-dictation formatting); same helper for selection transform with custom instructions (ADR-012) |
@@ -234,3 +234,24 @@ actions while capturing a chord cancels capture and restores global registration
 in-flight text trial through the existing task/gate teardown, and unrelated language/theme
 updates do not remount the shell or cancel it. Only the navigation list may scroll; Details,
 version and What’s New stay pinned. No performance improvement is claimed or measured.
+
+## Smart microphone priority — pre-release prototype (2026-11-16)
+
+`AudioInputPriorityList` (pure Swift) is the ordered preference behind
+`carrottype.audioInputPriorityUIDs`. Resolution is deterministic: first preferred UID that is
+connected, then the macOS default input, then discovery order. UIDs are never pruned: a disconnected
+microphone stays for reconnect. An empty preference is seeded once with the resolved device so the
+first entry matches the active input; later fallbacks are used without becoming preferences, and
+connected unlisted devices appear at the end of Setup. A pre-priority
+`carrottype.selectedAudioInputID` migrates once into a one-entry list, and the resolved active UID
+keeps being written there for compatibility.
+
+`AudioInputService` still owns `AVCaptureDevice` discovery and publishes the resolved
+`selectedDeviceID`. A small Core Audio listener (`kAudioHardwarePropertyDevices` and
+`kAudioHardwarePropertyDefaultInputDevice` blocks, coalesced on the main actor) refreshes the list
+and re-resolves while idle. `AppState` suspends resolution on the session `.starting` phase and
+resumes on `.idle`, so the already-captured `DictationSessionSettings.deviceUID` is the only device
+the recorder, live draft and Wave Link mute controller can use for that session. Nothing changes the
+system-default-input contract: capture still selects the frozen session device. Setup renders the
+order with native rows and explicit up/down reordering; the menu picker promotes the chosen device
+to the front. No new engine, helper protocol, dependency, network sink or ADR.

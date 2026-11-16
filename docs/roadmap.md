@@ -402,3 +402,27 @@ install-on-quit is staged. Automatic checks/downloads remain opt-in and the stan
 path never forces a relaunch. Evidence: [Debug review](debug-review-update-locale-quit.md). No
 publication, version bump, DMG or GitHub release in this stage; the maintainer's separate
 Debug/publication gate still applies.
+
+## Smart microphone priority — implementation for review (2026-11-16, no version assigned)
+
+The coordinator approved smart microphone failover; OpenCode implemented it on the fresh
+main-based `feat/smart-mic-priority` worktree from `027dd52` (published 0.11.1). The single-mic
+mental model is replaced by an ordered priority list (`carrottype.audioInputPriorityUIDs`): the
+active input is the first connected preferred UID, disconnected UIDs stay for reconnect, and the
+resolved device keeps writing `carrottype.selectedAudioInputID`. An existing single selection
+migrates once into a one-entry list; normalized duplicates/empty values are ignored.
+
+Core Audio device/default-input listeners refresh and re-resolve only while idle. A dictation or
+setup trial freezes the device captured at start (`DictationSessionSettings.deviceUID`), so no
+hot-plug can switch the microphone under recording, live draft, the optional meter or Wave Link
+unmute (ADR-007 unchanged). Setup shows a native **Microphone priority** list with availability,
+active/default state, up/down reordering and a short RU/EN explanation; the menu picker promotes the
+chosen mic to the front. No new engine, dependency, network sink, system-default-input change or
+ADR; no publication, version bump, DMG or PR.
+
+Verification: `scripts/verify-smart-mic-priority.sh` (normalization, migration, ordered failover,
+retention, promote, bounded move, defaults round-trip), the existing no-device regression scripts,
+local governance where available, and an arm64 Debug build. Real USB hot-plug, Setup reorder by
+mouse/VoiceOver and menu behavior remain a manual Debug check; the priority list can accumulate
+stale UIDs by design because nothing is pruned automatically.
+[Spec](specs/tasks/smart-mic-priority.md).
