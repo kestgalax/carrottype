@@ -5,9 +5,9 @@
 Микрофоны теперь собраны в список приоритета: диктовка переходит на следующий рабочий микрофон,
 когда интерфейс отключён, и возвращается к нему после подключения.
 
-> Статус: **черновик подготовки выпуска**. Версия 0.12.0 (37) подготовлена в ветке
-> `feat/smart-mic-priority`; публикация в stable/latest не выполнена. SHA-256 ролика записан ниже;
-> SHA-256 DMG/ZIP/appcast и ссылка на демо заполняются после сборки DMG и загрузки ассетов.
+> Статус: **релиз 0.12.0 (37)**. Release-сборка arm64, DMG и подписанные ZIP/appcast собраны из
+> ветки `feat/smart-mic-priority`; ассеты проходят проверку черновика перед публикацией в
+> stable/latest. SHA-256 DMG/ZIP/appcast записаны ниже. Motion companion не входит в выпуск.
 
 ## Новое
 
@@ -71,17 +71,18 @@ N/A — maintainer отказался от motion companion для 0.12.0 («б�
 
 ## Проверка выпуска
 
-Ветка `feat/smart-mic-priority` от опубликованной `main` (`027dd52`, 0.11.1). Это подготовка
-релиза: версия/сборка **0.12.0 (37)**, `ReleaseNotes.json`/`ReleaseNotesHistory.json`, project
-metadata, заметки и документация меняются; приложение уже принято maintainer’ом по поведению
-(«отлично, теперь все работает»). Публикация в stable/latest — отдельный гейт координатора.
+Ветка `feat/smart-mic-priority` от опубликованной `main` (`027dd52`, 0.11.1). Версия/сборка
+**0.12.0 (37)**, `ReleaseNotes.json`/`ReleaseNotesHistory.json`, project metadata, заметки и
+документация меняются; поведение приложения принято maintainer’ом («отлично, теперь все работает»).
 
 Локальные проверки: `scripts/verify-smart-mic-priority.sh` (нормализация, миграция, упорядоченное
 переключение, сохранение недоступных записей, promote, bounded move, round-trip defaults,
 Wave Link usability) и `scripts/verify-release-notes.sh` (непрерывная история 37→27, RU/EN и
-безопасный рендер) — PASS. Подписанная Debug-сборка 0.12.0 (37) для ручной приёмки ещё не
-доставлена: локальный артефакт в `dist/debug-smart-mic-priority/` собран до смены версии
-(0.11.1 (36), ad-hoc подпись), его нужно пересобрать после релизного коммита.
+безопасный рендер) — PASS. Чистая arm64 Release-сборка; Finder layout вернул `-1743`, поэтому
+использован checksum-verified DMG-шаблон 0.11.1 (`11de7b60…`, 23 830 560 байт) с сохранёнными
+`.DS_Store`, background, layout и Applications-ссылкой. Финальный DMG прошёл `hdiutil verify`,
+mounted app/helper/MLX/identity проверены, весов моделей нет. ZIP и appcast подписаны и проверены
+`prepare-update.py --previous-build 36`.
 
 Не входит в этот выпуск: новые движки/модели, сетевые адресаты, нотаризация, GigaAM. ADR не
 требуется: граф захвата, поведение системного устройства ввода по умолчанию и модель
@@ -89,13 +90,15 @@ Wave Link usability) и `scripts/verify-release-notes.sh` (непрерывна�
 
 ## SHA-256
 
-Заполняется после сборки Release DMG и загрузки ассетов черновика.
-
 | Файл | Байт | SHA-256 |
 |---|---:|---|
-| `CarrotType-0.12.0.dmg` | TBD | TBD |
-| `CarrotType-0.12.0-37.zip` | TBD | TBD |
-| `appcast.xml` | TBD | TBD |
+| `CarrotType-0.12.0.dmg` | 23861036 | `f943164101df9045e4e9646dd67799f38e21b0bdf35e5e18d16d0d88970f4497` |
+| `CarrotType-0.12.0-37.zip` | 23942520 | `28424c9acfbcb16a13914427cf89a2c4aefb82f4a74e4518066327ab6559c864` |
+| `appcast.xml` | 48636 | `7d6a2570f8615df76939073b26bb39083b09fbda14beebaa7a8cd999b471a026` |
+
+SHA-256 `CarrotType.app/Contents/MacOS/CarrotType`: `74e9d79658a5a56c38777750dfc9ae747441f729be6dea96ff3922467de51a35`.
+SHA-256 helper `CarrotType.app/Contents/MacOS/CarrotTypeCleanupHelper`: `3d06fa96e3ba42f959569757464c24e5ae47839a74be6c9f94794f55b5b04944`.
+CDHash приложения: `33dd3d7f0d503073b9f94d62a9ed39561bf57bf2`.
 
 ---
 
@@ -106,9 +109,10 @@ Wave Link usability) и `scripts/verify-release-notes.sh` (непрерывна�
 Microphones now form an ordered priority list: dictation fails over to the next usable mic when your
 interface is unplugged and returns to it when it reconnects.
 
-> Status: **release preparation draft**. Version 0.12.0 (37) is prepared on
-> `feat/smart-mic-priority`; nothing is published to stable/latest. The clip hash is recorded below;
-> DMG/ZIP/appcast hashes and the demo link are filled in after the DMG and release assets exist.
+> Status: **release 0.12.0 (37)**. The arm64 Release build, DMG and signed ZIP/appcast are built
+> from `feat/smart-mic-priority`; the assets pass the draft gate before stable/latest publication.
+> DMG/ZIP/appcast SHA-256 values are recorded above. The motion companion is not part of this
+> release.
 
 ## New
 
@@ -161,18 +165,19 @@ Format/gate: `ops/release-motion.md` (waiver).
 
 ## Release verification
 
-Branch `feat/smart-mic-priority` from published `main` (`027dd52`, 0.11.1). This is release
-preparation: version/build **0.12.0 (37)**, `ReleaseNotes.json`/`ReleaseNotesHistory.json`, project
-metadata, notes and documentation change; the application behavior was already accepted by the
-maintainer («отлично, теперь все работает»). Publication to stable/latest is a separate coordinator
-gate.
+Branch `feat/smart-mic-priority` from published `main` (`027dd52`, 0.11.1). Version/build
+**0.12.0 (37)**, `ReleaseNotes.json`/`ReleaseNotesHistory.json`, project metadata, notes and
+documentation change; the application behavior was accepted by the maintainer («отлично, теперь
+все работает»).
 
 Local checks: `scripts/verify-smart-mic-priority.sh` (normalization, migration, ordered failover,
 retention, promote, bounded move, defaults round-trip, Wave Link usability) and
-`scripts/verify-release-notes.sh` (contiguous history 37→27, RU/EN, safe rendering) — PASS. The
-signed Debug 0.12.0 (37) build for manual acceptance has not been delivered yet: the local artifact
-in `dist/debug-smart-mic-priority/` predates the version bump (0.11.1 (36), ad-hoc signature) and
-must be rebuilt from the release commit.
+`scripts/verify-release-notes.sh` (contiguous history 37→27, RU/EN, safe rendering) — PASS. Clean
+arm64 Release build; Finder layout returned `-1743`, so the checksum-verified 0.11.1 DMG
+(`11de7b60…`, 23,830,560 bytes) was reused as the installer filesystem template with unchanged
+`.DS_Store`, background, layout and Applications link. The final DMG passed `hdiutil verify`, the
+mounted app/helper/MLX/identity checks, and contains no model weights. The ZIP and appcast are
+signed and verified by `prepare-update.py --previous-build 36`.
 
 Not part of this release: new engines/models, network sinks, notarization, GigaAM. No ADR is
 required: the capture graph, system default input behavior and distribution trust model are
