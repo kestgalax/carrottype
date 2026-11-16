@@ -9,6 +9,7 @@ import {
   sheetColors,
   sheetRows,
 } from "./micPriority";
+import { appStyle } from "./theme";
 
 type Props = {
   fontFamily: string;
@@ -34,33 +35,68 @@ export const sheetTimeline = {
   exit: [252, 276],
 } as const;
 
-const MicGlyph: FC<{ color: string }> = ({ color }) => (
-  <svg width={22} height={26} viewBox="0 0 22 26" fill="none" aria-hidden>
-    <rect x="8" y="2" width="6" height="12" rx="3" stroke={color} strokeWidth="1.7" />
-    <path d="M4.5 12v1.5a6.5 6.5 0 0 0 13 0V12" stroke={color} strokeWidth="1.7" strokeLinecap="round" />
-    <path d="M11 20v3.5M7.5 23.5h7" stroke={color} strokeWidth="1.7" strokeLinecap="round" />
-  </svg>
-);
+const MicGlyph: FC<{ color: string; filled?: boolean }> = ({ color, filled }) =>
+  filled ? (
+    <svg width={18} height={22} viewBox="0 0 18 22" fill="none" aria-hidden>
+      <rect x="5.5" y="1.5" width="7" height="11" rx="3.5" fill={color} />
+      <path
+        d="M2.5 10.5v1a6.5 6.5 0 0 0 13 0v-1"
+        stroke={color}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path d="M9 17v3M5.5 20h7" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  ) : (
+    <svg width={18} height={22} viewBox="0 0 18 22" fill="none" aria-hidden>
+      <rect x="5.5" y="1.5" width="7" height="11" rx="3.5" stroke={color} strokeWidth="1.6" />
+      <path
+        d="M2.5 10.5v1a6.5 6.5 0 0 0 13 0v-1"
+        stroke={color}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path d="M9 17v3M5.5 20h7" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
 
-const Chevron: FC<{ direction: "up" | "down"; color: string; opacity: number }> = ({
-  direction,
-  color,
-  opacity,
-}) => (
-  <svg width={22} height={22} viewBox="0 0 22 22" fill="none" style={{ opacity }} aria-hidden>
+const CheckGlyph: FC<{ color: string }> = ({ color }) => (
+  <svg width={12} height={12} viewBox="0 0 12 12" fill="none" aria-hidden>
+    <circle cx="6" cy="6" r="5.1" fill={color} />
     <path
-      d={direction === "up" ? "M5.5 13.5l5.5-5.5 5.5 5.5" : "M5.5 8.5l5.5 5.5 5.5-5.5"}
-      stroke={color}
-      strokeWidth="2"
+      d="M3.6 6.1l1.6 1.6 3.2-3.2"
+      stroke="#1C1C1E"
+      strokeWidth="1.4"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
   </svg>
 );
 
+const BoltGlyph: FC<{ color: string }> = ({ color }) => (
+  <svg width={12} height={12} viewBox="0 0 12 12" fill="none" aria-hidden>
+    <circle cx="6" cy="6" r="5.1" stroke={color} strokeWidth="1.2" />
+    <path d="M7.2 2.8L4.4 6.6h1.7L4.8 9.2 7.8 5.4H6.1L7.2 2.8z" fill={color} />
+  </svg>
+);
+
+const DragGrabber: FC<{ color: string; opacity: number }> = ({ color, opacity }) => (
+  <svg width={14} height={22} viewBox="0 0 14 22" fill="none" style={{ opacity }} aria-hidden>
+    {[5, 11, 17].map((y) => (
+      <g key={y}>
+        <circle cx="4" cy={y} r="1.35" fill={color} />
+        <circle cx="10" cy={y} r="1.35" fill={color} />
+      </g>
+    ))}
+  </svg>
+);
+
 const slotY = (index: number): number => sheetRows.top + index * sheetRows.height;
 
-/** Sheet act: drag the promoted mic from slot 3 to slot 1, then Готово. */
+/**
+ * Sheet act matched to shipped `MicrophonePrioritySheet` + `AppStyle` tint
+ * (carrot accent — not System Settings blue).
+ */
 export const MicPrioritySheet: FC<Props> = ({ fontFamily, accent, frame }) => {
   const enter = interpolate(frame, [sheetTimeline.enter[0], sheetTimeline.enter[1]], [0, 1], clamp);
   const exit = interpolate(frame, [sheetTimeline.exit[0], sheetTimeline.exit[1]], [0, 1], {
@@ -95,13 +131,15 @@ export const MicPrioritySheet: FC<Props> = ({ fontFamily, accent, frame }) => {
     const lifted = row.name === "kest Microphone";
     const promoted = row.name === "kest Microphone";
     const macDefault = row.name === "MacBook Pro Microphone";
-    const status = macDefault || promoted ? copy.statusActive : row.status;
+    const unavailable = row.name === "Elgato Wave Link Voice";
+    const showActive = promoted ? badgeIn > 0.05 : macDefault ? badgeOut > 0.05 : false;
     const activeFade = promoted ? badgeIn : macDefault ? badgeOut : 1;
-    return { row, y, lifted, status, activeFade };
+    return { row, y, lifted, unavailable, showActive, activeFade, promoted };
   });
 
   const sheetScale = (0.975 + 0.025 * enter) * (1 - 0.035 * exit);
   const sheetOpacity = enter * (1 - exit);
+  const tint = appStyle.darkAccent;
 
   return (
     <div
@@ -127,23 +165,59 @@ export const MicPrioritySheet: FC<Props> = ({ fontFamily, accent, frame }) => {
         style={{
           position: "absolute",
           left: sheetBox.padding,
-          top: 28,
-          fontSize: 27,
-          fontWeight: 650,
-          letterSpacing: "-0.02em",
+          right: sheetBox.padding,
+          top: 20,
+          height: 32,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
-        {copy.sheetTitle}
+        <div style={{ fontSize: 17, fontWeight: 650, letterSpacing: "-0.02em" }}>{copy.sheetTitle}</div>
+        <div
+          style={{
+            position: "relative",
+            minWidth: doneButton.width,
+            height: doneButton.height,
+            padding: "0 14px",
+            borderRadius: 6,
+            background: tint,
+            color: "#1C1C1E",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 13,
+            fontWeight: 650,
+            transform: `scale(${1 - 0.03 * press})`,
+            boxShadow: `0 0 0 ${ringOpacity * 3}px ${accentAlpha(accent, 0.12 * ringOpacity)}`,
+          }}
+        >
+          {copy.done}
+          <div
+            style={{
+              position: "absolute",
+              inset: -4,
+              borderRadius: 9,
+              border: `2px solid ${accent}`,
+              boxShadow: `0 0 0 1px ${accentAlpha(accent, 0.18)}, 0 0 26px ${accentAlpha(
+                accent,
+                0.25 + 0.3 * press,
+              )}`,
+              opacity: ringOpacity,
+              pointerEvents: "none",
+            }}
+          />
+        </div>
       </div>
 
       <div
         style={{
           position: "absolute",
           left: sheetBox.padding,
-          top: 72,
+          top: 60,
           width: sheetBox.width - sheetBox.padding * 2,
-          fontSize: 15.5,
-          lineHeight: 1.5,
+          fontSize: 12.5,
+          lineHeight: 1.45,
           color: sheetColors.textMuted,
         }}
       >
@@ -153,128 +227,151 @@ export const MicPrioritySheet: FC<Props> = ({ fontFamily, accent, frame }) => {
       <div
         style={{
           position: "absolute",
-          left: 24,
-          right: 24,
-          top: 156,
+          left: 0,
+          right: 0,
+          top: 142,
           height: 1,
           background: sheetColors.border,
         }}
       />
 
-      {rows.map(({ row, y, lifted, status, activeFade }) => {
-        const active = Boolean(status);
+      <div
+        style={{
+          position: "absolute",
+          left: 14,
+          right: 14,
+          top: 154,
+          bottom: 16,
+          borderRadius: 10,
+          background: "rgba(255,255,255,0.03)",
+          border: `1px solid ${sheetColors.border}`,
+          overflow: "hidden",
+        }}
+      />
+
+      {rows.map(({ row, y, lifted, unavailable, showActive, activeFade, promoted }, index) => {
+        const isActive =
+          promoted ? badgeIn > 0.5 : row.name === "MacBook Pro Microphone" && badgeOut > 0.5;
+        const micColor = isActive ? tint : sheetColors.textMuted;
         return (
           <div
             key={row.name}
             style={{
               position: "absolute",
-              left: 12,
-              right: 12,
+              left: 18,
+              right: 18,
               top: y,
               height: sheetRows.height,
-              borderRadius: 10,
-              background: lifted ? `rgba(46, 47, 54, ${0.97 * lift})` : "transparent",
-              border: lifted ? `1px solid ${accentAlpha(accent, 0.5 * lift)}` : "1px solid transparent",
-              boxShadow: lifted ? `0 20px 44px rgba(0, 0, 0, ${0.32 * lift})` : "none",
-              transform: `scale(${1 + 0.014 * lift})`,
+              borderRadius: 8,
+              background: lifted ? `rgba(58, 58, 60, ${0.97 * lift})` : "transparent",
+              border: lifted ? `1px solid ${accentAlpha(accent, 0.45 * lift)}` : "1px solid transparent",
+              boxShadow: lifted ? `0 18px 40px rgba(0, 0, 0, ${0.3 * lift})` : "none",
+              transform: `scale(${1 + 0.012 * lift})`,
               zIndex: lifted ? 2 : 1,
               display: "flex",
               alignItems: "center",
             }}
           >
-            <div style={{ position: "absolute", left: sheetRows.iconX - 12, top: 0, height: "100%", display: "flex", alignItems: "center" }}>
-              <MicGlyph color={sheetColors.textMuted} />
-            </div>
+            {index > 0 ? (
+              <div
+                style={{
+                  position: "absolute",
+                  left: 44,
+                  right: 40,
+                  top: 0,
+                  height: 1,
+                  background: sheetColors.border,
+                  opacity: lifted ? 0 : 0.85,
+                }}
+              />
+            ) : null}
+
             <div
               style={{
                 position: "absolute",
-                left: sheetRows.textX - 12,
+                left: sheetRows.iconX - 10,
+                top: 0,
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <MicGlyph color={micColor} filled={isActive} />
+            </div>
+
+            <div
+              style={{
+                position: "absolute",
+                left: sheetRows.textX - 10,
                 top: 0,
                 bottom: 0,
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                gap: 4,
+                gap: 3,
               }}
             >
-              <div style={{ fontSize: 18, fontWeight: 450, letterSpacing: "-0.01em" }}>{row.name}</div>
-              {active ? (
-                <div style={{ fontSize: 14, color: sheetColors.textMuted, opacity: activeFade }}>
-                  {status}
-                </div>
-              ) : null}
+              <div
+                style={{
+                  fontSize: 15,
+                  fontWeight: 450,
+                  letterSpacing: "-0.01em",
+                  color: unavailable ? sheetColors.textMuted : sheetColors.text,
+                }}
+              >
+                {row.name}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  fontSize: 12,
+                  color: sheetColors.textMuted,
+                  minHeight: 16,
+                }}
+              >
+                {showActive ? (
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 5,
+                      opacity: activeFade,
+                    }}
+                  >
+                    <CheckGlyph color={tint} />
+                    {copy.statusActive}
+                  </span>
+                ) : null}
+                {unavailable ? (
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                    <BoltGlyph color={sheetColors.textMuted} />
+                    {copy.statusUnavailable}
+                  </span>
+                ) : null}
+              </div>
             </div>
+
             <div
               style={{
                 position: "absolute",
-                right: 22,
+                right: 16,
                 top: 0,
                 bottom: 0,
                 display: "flex",
                 alignItems: "center",
-                gap: 14,
-                color: accent,
-                opacity: 0.55 + 0.45 * (lifted ? lift : 0),
+                color: sheetColors.textMuted,
               }}
             >
-              <Chevron direction="up" color={accent} opacity={0.8} />
-              <Chevron direction="down" color={accent} opacity={0.55} />
+              <DragGrabber
+                color={sheetColors.textMuted}
+                opacity={0.35 + 0.55 * (lifted ? lift : 0.25)}
+              />
             </div>
           </div>
         );
       })}
-
-      <div
-        style={{
-          position: "absolute",
-          left: 24,
-          right: 24,
-          top: sheetBox.height - 78,
-          height: 1,
-          background: sheetColors.border,
-        }}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          right: doneButton.right,
-          bottom: doneButton.bottom,
-          width: doneButton.width,
-          height: doneButton.height,
-          borderRadius: 9,
-          background: "#2F6BE8",
-          color: "#FFFFFF",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 17,
-          fontWeight: 600,
-          transform: `scale(${1 - 0.03 * press})`,
-          boxShadow: `0 0 0 ${ringOpacity * 3}px ${accentAlpha(accent, 0.10 * ringOpacity)}`,
-        }}
-      >
-        {copy.done}
-      </div>
-
-      {/* Effect click ring on Готово — no cursor */}
-      <div
-        style={{
-          position: "absolute",
-          right: doneButton.right - 4,
-          bottom: doneButton.bottom - 4,
-          width: doneButton.width + 8,
-          height: doneButton.height + 8,
-          borderRadius: 11,
-          border: `2px solid ${accent}`,
-          boxShadow: `0 0 0 1px ${accentAlpha(accent, 0.18)}, 0 0 26px ${accentAlpha(
-            accent,
-            0.25 + 0.3 * press,
-          )}`,
-          opacity: ringOpacity,
-          pointerEvents: "none",
-        }}
-      />
     </div>
   );
 };

@@ -1,11 +1,13 @@
 ---
 slug: mic-priority
 headline: Приоритет микрофонов
-subline: Dictation → «Настроить…» → drag reorder → Готово
+subline: Диктовка → «Настроить…» → перетащите в списке → Готово
 template: settings-toggle-payoff
 ---
 
-Staged remake (~25 s) of the 0.12.0 mic priority film. Skin beat map: Establish (0.12.0) →
-Dictation compact row with the active mic → effect click on «Настроить…» → iris into the
-priority sheet → drag «kest Microphone» from slot 3 to slot 1 (active badge moves) → Готово →
-compact row shows the promoted device → end card. Capture off; effect clicks only, no cursor.
+AppStyle fidelity remake (~25 s). Chrome from shipped SwiftUI (`AppStyle`,
+`CarrotTypeSettingsView`, `MicrophonePrioritySheet`) — carrot tint, sidebar CarrotMark +
+symbol rows, pane title+subtitle, header «Готово», drag grabber. Not mockup A / not system
+blue. Beat map: Establish → Dictation compact row → effect click «Настроить…» → sheet drag
+«kest Microphone» 3→1 → Готово → compact row payoff → end card. Capture off; effect clicks
+only, no cursor.

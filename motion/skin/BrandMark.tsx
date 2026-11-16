@@ -6,35 +6,32 @@ type Props = {
   size?: number;
 };
 
-/** Wordmark from the theme pilot `BrandMark` (dot + carrottype). */
+/** Shipped CarrotMark + product name (template tint), for establish/end cards. */
 export const BrandMark: FC<Props> = ({ accent, label, size = 30 }) => {
+  const mark = Math.round(size * 0.95);
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
-        gap: size * 0.42,
+        gap: size * 0.36,
       }}
     >
-      <div
-        style={{
-          width: size * 0.34,
-          height: size * 0.34,
-          borderRadius: "50%",
-          background: accent,
-          boxShadow: `0 0 ${size * 0.5}px rgba(240, 135, 60, 0.45)`,
-        }}
-      />
+      <svg width={mark} height={mark} viewBox="0 0 64 64" fill={accent} aria-hidden>
+        <path d="M30 18C23 18 20 13 21 9C27 9 31 12 32 16C32 10 36 6 41 7C42 12 38 17 34 19Z" />
+        <path d="M27 20H37C41 20 43 23 42 27L36 43C35 47 29 47 28 43L22 27C21 23 23 20 27 20Z" />
+        <path d="M15 33C15 45.621008 21.456618 53 32 53C42.543382 53 49 45.621008 49 33C49 31.895431 48.104569 31 47 31C45.895431 31 45 31.895431 45 33C45 43.521849 40.206618 49 32 49C23.793382 49 19 43.521849 19 33C19 31.895431 18.104569 31 17 31C15.895431 31 15 31.895431 15 33ZM30 51L30 58C30 59.104569 30.895431 60 32 60C33.104569 60 34 59.104569 34 58L34 51C34 49.895431 33.104569 49 32 49C30.895431 49 30 49.895431 30 51ZM26 60L38 60C39.104569 60 40 59.104569 40 58C40 56.895431 39.104569 56 38 56L26 56C24.895431 56 24 56.895431 24 58C24 59.104569 24.895431 60 26 60Z" />
+      </svg>
       <span
         style={{
           fontSize: size,
-          fontWeight: 500,
-          letterSpacing: "-0.01em",
+          fontWeight: 600,
+          letterSpacing: "-0.02em",
           color: label,
           lineHeight: 1,
         }}
       >
-        carrottype
+        CarrotType
       </span>
     </div>
   );

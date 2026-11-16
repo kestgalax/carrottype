@@ -37,6 +37,16 @@ If unsure, prefer **one** Remotion-only film over skipping a visible feature.
 5. Copy/rename to `dist/CarrotType-{version}-{slug}-demo.mp4` for upload with the draft release.
 6. After the asset exists on the GitHub Release, add the Demo link + optional hash in the notes file.
 
+## Visual fidelity (Settings / sheet / Capsule)
+
+Format checks alone are not enough when the film shows product chrome.
+
+- **Source of truth:** shipped SwiftUI (`AppStyle`, `CarrotTypeSettingsView`, the hero pane/sheet) and `Localizable.xcstrings`. Mockups in `docs/mockups/` are storyboards only.
+- **Accent:** CarrotType carrot tint (`AppStyle.controlAccent` / dark accent). Do not paint System Settings blue on selection, toggles, Done, or active rows.
+- **Sidebar:** CarrotMark + wordmark, SF Symbol rows, warm selection fill — not a blue text-only list.
+- **Sheets:** Match shipped layout (header vs footer actions, drag affordance, status Labels).
+- Skill checklist: `.agents/skills/carrottype-release-motion/SKILL.md` → «Visual fidelity».
+
 ## Out of scope
 
 - Embedding video inside the in-app What’s New / Sparkle HTML (separate decision).

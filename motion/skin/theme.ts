@@ -1,10 +1,18 @@
 import type { StageTokens } from "motion-os/core";
 
 /**
- * Palette sampled from the theme pilot (`lib/theme.ts`): stage stays Island-dark;
- * the Settings pane flips light/dark. Layout metrics that only served capture
- * clips stay out of this skin.
+ * Stage + pane tokens. Settings chrome must track shipped `AppStyle`
+ * (`macos/CarrotType/Views/AppStyle.swift`) — not System Settings blue.
  */
+export const appStyle = {
+  /** `AppStyle.controlAccent` */
+  controlAccent: "#A3471E",
+  /** `AppStyle.accent(.dark)` */
+  darkAccent: "#FFB589",
+  /** Effect-click ring: between light/dark accents, still carrot family */
+  effectAccent: "#F0873C",
+} as const;
+
 export const lightPane = {
   window: "#FDFCFB",
   sidebar: "#F8F5F2",
@@ -16,15 +24,16 @@ export const lightPane = {
   rowActive: "#F0E4DA",
 } as const;
 
+/** Dark Settings surface approximating `windowBackgroundColor` / grouped Form. */
 export const darkPane = {
-  window: "#1E1F24",
-  sidebar: "#1D1D1F",
-  card: "#26272C",
-  text: "#F2F2F3",
-  textMuted: "rgba(242, 242, 243, 0.55)",
-  textFaint: "rgba(242, 242, 243, 0.32)",
-  border: "#32333A",
-  rowActive: "#3A2C22",
+  window: "#1C1C1E",
+  sidebar: "#2C2C2E",
+  card: "#2C2C2E",
+  text: "#F2F2F7",
+  textMuted: "rgba(235, 235, 245, 0.60)",
+  textFaint: "rgba(235, 235, 245, 0.30)",
+  border: "rgba(84, 84, 88, 0.65)",
+  rowActive: "rgba(255, 181, 137, 0.14)",
 } as const;
 
 export type PaneColors = {
@@ -45,7 +54,7 @@ export const tokens: StageTokens = {
   label: "#F2F2F3",
   labelMuted: "rgba(242, 242, 243, 0.55)",
   labelFaint: "rgba(242, 242, 243, 0.32)",
-  accent: "#F0873C",
+  accent: appStyle.effectAccent,
   fontFamily:
     '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif',
   orbWarm: "rgba(240, 135, 60, 0.20)",

@@ -58,15 +58,9 @@ Dynamic Island сохраняются. Приоритет микрофонов �
 
 ## Демо
 
-Короткий беззвучный ролик (H.264, 1920×1080, 30 fps) о приоритете микрофонов и окне с
-перетаскиванием: `CarrotType-0.12.0-mic-priority-demo.mp4`.
+N/A — maintainer отказался от motion companion для 0.12.0 («без демо»).
+Формат/гейт: `ops/release-motion.md` (waiver).
 
-- Локальный файл: `dist/CarrotType-0.12.0-mic-priority-demo.mp4` (25,2 с, 2 093 415 байт,
-  без звуковой дорожки).
-- SHA-256: `26f90411f3aba84244dc1d7a67469c695f1c92ea038feb6300aab632e26da022` (строка в таблице
-  ниже).
-- Ссылка: **TBD — добавляется после загрузки ассета в GitHub Release.**
-- Формат и гейт: `ops/release-motion.md`; бриф `motion/briefs/mic-priority.md`.
 
 ## История изменений
 
@@ -102,7 +96,6 @@ Wave Link usability) и `scripts/verify-release-notes.sh` (непрерывна�
 | `CarrotType-0.12.0.dmg` | TBD | TBD |
 | `CarrotType-0.12.0-37.zip` | TBD | TBD |
 | `appcast.xml` | TBD | TBD |
-| `CarrotType-0.12.0-mic-priority-demo.mp4` | 2093415 | `26f90411f3aba84244dc1d7a67469c695f1c92ea038feb6300aab632e26da022` |
 
 ---
 
@@ -162,15 +155,9 @@ launch macOS may ask you to open it from System Settings → Privacy & Security 
 
 ## Demo
 
-Short silent clip (H.264, 1920×1080, 30 fps) covering microphone priority and the drag-reorder
-sheet: `CarrotType-0.12.0-mic-priority-demo.mp4`.
+N/A — maintainer waived the motion companion for 0.12.0 (“без демо”).
+Format/gate: `ops/release-motion.md` (waiver).
 
-- Local file: `dist/CarrotType-0.12.0-mic-priority-demo.mp4` (25.2 s, 2,093,415 bytes, no audio
-  stream).
-- SHA-256: `26f90411f3aba84244dc1d7a67469c695f1c92ea038feb6300aab632e26da022` (row in the table
-  below).
-- Link: **TBD — added after the asset is uploaded to the GitHub Release.**
-- Format/gate: `ops/release-motion.md`; brief `motion/briefs/mic-priority.md`.
 
 ## Release verification
 
