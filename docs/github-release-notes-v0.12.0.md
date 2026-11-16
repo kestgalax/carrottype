@@ -5,9 +5,9 @@
 Микрофоны теперь собраны в список приоритета: диктовка переходит на следующий рабочий микрофон,
 когда интерфейс отключён, и возвращается к нему после подключения.
 
-> Статус: **релиз 0.12.0 (37)**. Release-сборка arm64, DMG и подписанные ZIP/appcast собраны из
-> ветки `feat/smart-mic-priority`; ассеты проходят проверку черновика перед публикацией в
-> stable/latest. SHA-256 DMG/ZIP/appcast записаны ниже. Motion companion не входит в выпуск.
+> Статус: **опубликован stable/latest 2026-11-16T21:06:13Z**. Release-сборка arm64, DMG и
+> подписанные ZIP/appcast собраны из ветки `feat/smart-mic-priority` и проверены до публикации.
+> SHA-256 DMG/ZIP/appcast записаны ниже. Motion companion не входит в выпуск («без демо»).
 
 ## Новое
 
@@ -100,6 +100,12 @@ SHA-256 `CarrotType.app/Contents/MacOS/CarrotType`: `74e9d79658a5a56c38777750dfc
 SHA-256 helper `CarrotType.app/Contents/MacOS/CarrotTypeCleanupHelper`: `3d06fa96e3ba42f959569757464c24e5ae47839a74be6c9f94794f55b5b04944`.
 CDHash приложения: `33dd3d7f0d503073b9f94d62a9ed39561bf57bf2`.
 
+Draft-гейт `verify-update-release.py --tag v0.12.0 --previous-build 36` прошёл; скачанные из
+черновика DMG/ZIP/appcast совпали по SHA-256 с локальными. Опубликовано stable/latest
+2026-11-16T21:06:13Z (не prerelease), тег `v0.12.0` — `023242b` (tag-объект `763622b`); повторная
+проверка `--published` и анонимные HTTPS-запросы latest endpoint/ассетов прошли с теми же хешами.
+Motion mp4 не прикладывался.
+
 ---
 
 # CarrotType 0.12.0 (English)
@@ -109,10 +115,10 @@ CDHash приложения: `33dd3d7f0d503073b9f94d62a9ed39561bf57bf2`.
 Microphones now form an ordered priority list: dictation fails over to the next usable mic when your
 interface is unplugged and returns to it when it reconnects.
 
-> Status: **release 0.12.0 (37)**. The arm64 Release build, DMG and signed ZIP/appcast are built
-> from `feat/smart-mic-priority`; the assets pass the draft gate before stable/latest publication.
+> Status: **published to stable/latest at 2026-11-16T21:06:13Z**. The arm64 Release build, DMG and
+> signed ZIP/appcast were built from `feat/smart-mic-priority` and verified before publication.
 > DMG/ZIP/appcast SHA-256 values are recorded above. The motion companion is not part of this
-> release.
+> release (waived).
 
 ## New
 
@@ -182,3 +188,9 @@ signed and verified by `prepare-update.py --previous-build 36`.
 Not part of this release: new engines/models, network sinks, notarization, GigaAM. No ADR is
 required: the capture graph, system default input behavior and distribution trust model are
 unchanged (ADR-007 unaffected).
+
+The draft gate `verify-update-release.py --tag v0.12.0 --previous-build 36` passed; the draft
+DMG/ZIP/appcast bytes matched the local SHA-256 values. Published to stable/latest at
+2026-11-16T21:06:13Z (not a prerelease); tag `v0.12.0` is `023242b` (tag object `763622b`). The
+`--published` re-verification and anonymous HTTPS checks of the latest endpoint and assets returned
+the same hashes. No motion mp4 was attached.

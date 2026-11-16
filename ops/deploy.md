@@ -272,6 +272,33 @@ Coordinator independently checked PR/head/tag/application-source freeze and succ
 Next authorized work: settings reorganization (General, Dictation including formatting, Text actions) on a new branch/worktree from updated main, via **OpenCode 2** under the maintainer’s latest instruction «давай тогда через opencode продолжим». Codex retains design/review. Direct ZCode readiness did not work; do not claim it is executing. No publication authorization for that future version is inferred.
 
 
+## 0.12.0 publication closeout — 2026-11-17 (Moscow)
+
+Maintainer accepted the microphone-priority behavior («отлично, теперь все работает») and explicitly
+authorized publication («публикой») on 2026-11-16, with the motion companion waived («без демо»).
+Stable/latest **0.12.0 (37)** published 2026-11-16T21:06:13Z; tag `v0.12.0` / `023242b` (tag object
+`763622b`), PR [#41](https://github.com/kestgalax/carrottype/pull/41). Final-head hosted `macOS
+checks` passed for `023242b` ([43954394447](https://github.com/kestgalax/carrottype/actions/runs/43954394447)
+push, [43954405819](https://github.com/kestgalax/carrottype/actions/runs/43954405819) pull_request);
+private hosted AIDOS explicitly skipped, no hosted governance success claimed.
+
+Clean arm64 Release build. Finder layout again returned `-1743`, so the checksum-verified 0.11.1 DMG
+(`11de7b60…`, 23,830,560 bytes) was reused as the installer filesystem template: `CarrotType.app`
+replaced with `ditto`, `.DS_Store`/`.background` hashes unchanged, transient `.fseventsd` removed.
+Final DMG `hdiutil verify` VALID; mounted app reports 0.12.0 (37), deep/strict signature valid,
+host + `CarrotTypeCleanupHelper` + `mlx-swift_Cmlx.bundle` present, no model weights. Signed ZIP
+`CarrotType-0.12.0-37.zip` and RU/EN inline `appcast.xml` prepared with
+`prepare-update.py --previous-build 36` (key stayed in Keychain).
+
+Draft gate `verify-update-release.py --tag v0.12.0 --previous-build 36` passed
+(`dist/verify-draft-0.12.0.log`); downloaded draft DMG/ZIP/appcast matched local SHA-256. Release
+published as stable/latest (not prerelease) with only the three assets — **no motion mp4**. The
+`--published` re-verification passed (`dist/verify-published-0.12.0.log`), and anonymous HTTPS
+requests to the latest appcast/DMG/ZIP returned the same digests and lengths. Hashes:
+`docs/github-release-notes-v0.12.0.md`. Self-signed/unnotarized posture (ADR-011) unchanged;
+independent device/TCC/IME/VoiceOver/network checks and a native Sparkle probe were not run for this
+release. No published asset, installed app, user data or private key was modified or exported.
+
 ## 0.11.1 publication closeout — 2026-11-12 (Moscow)
 
 Maintainer asked to review the locale/quit-install Debug fix and publish if acceptable. Coordinator reviewed and accepted Debug `f0cff02` (evidence `7633120`) on `kestgalax/update-locale-quit-fix-2`, authorized **0.11.1 (36)** because stable was already 0.11.0 (35). Application behavior remained frozen; release metadata `d719170` and release evidence `5bc877b` change only version/build, release notes/history and documentation. Stable/latest **0.11.1 (36)** published 2026-11-12T00:10:38Z; tag `v0.11.1` / `5bc877b`, PR [#33](https://github.com/kestgalax/carrottype/pull/33) merged as `17ab70d`. Hosted `macOS checks` **43124371738 passed** on the checked head `5bc877b`; private hosted AIDOS was explicitly skipped, no hosted governance success claimed.
