@@ -3,16 +3,16 @@
 ## Current Status
 
 - Status as of: 2026-11-17 (Europe/Moscow).
-- Released: **0.12.0 (37)**, tag `v0.12.0` / `023242b`, published stable/latest 2026-11-16T21:06:13Z; previous stable **0.11.1 (36)** / `5bc877b`. Accepted application behavior for 0.11.1 stays frozen at `f0cff02`.
-- Active work: **0.12.0 (37) published** — smart microphone priority/failover, Dictation microphone sheet with drag reorder, first-run usable-mic seed, Settings focus after TCC. Maintenance accepted the behavior («отлично, теперь все работает») and authorized publication («публикой») with the motion companion waived («без демо»).
-- Authorized: release build, draft verification and stable/latest publication of 0.12.0 (37) with no demo asset — done. AIDOS stays **private maintainer tooling** — no public cross-promo from CarrotType; schema 2 / `contractVersion: 2` / domain specs remain deferred opt-in.
+- Released: **0.12.0 (37)**, tag `v0.12.0` / `023242b`, published stable/latest 2026-11-16T21:06:13Z; previous stable **0.11.1 (36)** / `5bc877b`. Accepted application behavior for 0.11.1 stays frozen at `f0cff02`. PR [#41](https://github.com/kestgalax/carrottype/pull/41) merged as `f70a976`.
+- Active work: remove unused Motion OS consumer tooling and refresh the public README / product-intent status for published **0.12.0** (mic priority sheet, typing-speed, live draft). Motion OS is no longer a release gate or dogfood target here.
+- Authorized: none for a new app version. AIDOS stays **private maintainer tooling** — no public cross-promo from CarrotType; schema 2 / `contractVersion: 2` / domain specs remain deferred opt-in.
 - Blocked: none.
-- Last verified: `scripts/verify-smart-mic-priority.sh` and `scripts/verify-release-notes.sh` PASS for 0.12.0 (37); clean arm64 Release + DMG `f9431641…0f4497` (23,861,036 bytes, `hdiutil verify` VALID) via the checksum-verified 0.11.1 filesystem template (Finder `-1743`), signed `CarrotType-0.12.0-37.zip` `28424c9a…b6559c864` and `appcast.xml` `7d6a2570…b471a026` prepared with `--previous-build 36`; hashes in the [notes](github-release-notes-v0.12.0.md). Draft and post-publication gates (`verify-update-release.py --tag v0.12.0 --previous-build 36`, then `--published`) PASS; draft and anonymous public assets matched local hashes. Evidence: `dist/verify-draft-0.12.0.log`, `dist/verify-published-0.12.0.log`, [release](https://github.com/kestgalax/carrottype/releases/tag/v0.12.0).
-- Next action: collect feedback on microphone priority/failover and the priority sheet; no further implementation stage or version is selected. PR [#41](https://github.com/kestgalax/carrottype/pull/41) carries the release. [Spec](specs/tasks/smart-mic-priority.md), [sheet design](superpowers/specs/2026-11-16-mic-priority-sheet-design.md).
+- Last verified: published 0.12.0 evidence remains as recorded below; this change is docs/tooling removal only (no Swift).
+- Next action: land the Motion OS removal; then collect feedback on microphone priority/failover. No further implementation stage or version is selected. [Spec](specs/tasks/smart-mic-priority.md), [sheet design](superpowers/specs/2026-11-16-mic-priority-sheet-design.md).
 
-## Motion OS consumer (2026-11-14)
+## Motion OS removed (2026-11-17)
 
-CarrotType is the first Motion OS dogfood consumer. Motion OS stays **private maintainer tooling** (like AIDOS): no npm dependency; use `MOTION_OS_ROOT` + `npm run motion` (`scripts/run-motion.mjs`, pin in [ops/motion-tooling.md](../ops/motion-tooling.md)). `motion.config.json` selects `settings-toggle-payoff`, silent audio, capture optional. **One active skin per consumer root** (motion-os pin `557ec2c`): `motion/skin/index.tsx` currently stages the 0.12.0 mic priority film (~25 s: Dictation compact row → sheet → drag reorder → Готово); the shipped 0.8.0 theme film wiring is preserved in `motion/skin/themeFilm.tsx` and can own `index.tsx` again for theme re-runs. Release companions (GitHub Release mp4 assets for visible UI changes) are locked in [ops/release-motion.md](../ops/release-motion.md) and gated in the release lifecycle. This does not change the dictation runtime.
+Motion OS dogfood (`motion/`, `motion.config.json`, `scripts/run-motion.mjs`, `ops/release-motion.md`, `ops/motion-tooling.md`, `.agents/skills/carrottype-release-motion/`) is removed from this repository. Release assets stay DMG / signed ZIP / `appcast.xml` only. Historical release notes that mention a waived 0.12.0 demo remain factual; do not restore the consumer without a new maintainer decision.
 
 Everything below is retained historical release history unless it explicitly refers to this block.
 
@@ -430,8 +430,9 @@ stale UIDs by design because nothing is pruned automatically.
 ## 0.12.0 — smart microphone priority (release preparation, 2026-11-16)
 
 Maintainer accepted the working behavior («отлично, теперь все работает») and authorized **release
-preparation** for **0.12.0 (37)**, including a Motion companion film. This is not publication:
-stable/latest and GitHub Release assets remain a later coordinator gate.
+preparation** for **0.12.0 (37)**. (A Motion companion was planned then waived at publish; Motion OS
+tooling was later removed from the repo on 2026-11-17.) This stage was not publication:
+stable/latest and GitHub Release assets remained a later coordinator gate.
 
 Follow-ups committed on top of `ec05e11` before the version bump:
 
@@ -453,15 +454,10 @@ Follow-ups committed on top of `ec05e11` before the version bump:
 - **Metadata.** `CFBundleShortVersionString`/`CFBundleVersion` 0.12.0 (37) in `project.yml` and
   `Info.plist`; `ReleaseNotes.json` rewritten for 0.12.0 with 0.11.1 archived unchanged into
   `ReleaseNotesHistory.json` (contiguous 37→27); [release notes](github-release-notes-v0.12.0.md)
-  with a **Демо** placeholder for `CarrotType-0.12.0-mic-priority-demo.mp4`.
-- **Motion companion.** `motion/briefs/mic-priority.md` + the active skin stage the Dictation
-  compact row → priority sheet → drag reorder → Готово (~25 s, silent 1920×1080, effect clicks
-  only). Rendered locally to `dist/CarrotType-0.12.0-mic-priority-demo.mp4` (`motion run` +
-  `motion check` pass); the mp4 stays out of git and is uploaded with the draft release assets.
+  with a **Демо** placeholder that was later waived at publish («без демо»).
 
 Verification for this stage: `verify-smart-mic-priority.sh` (adds Wave Link usability, seed
 preference and the unusable-default failover case), `verify-release-notes.sh` (37→27 history,
 RU/EN, safe render), arm64 Debug build, and the existing setup/lifecycle regressions. Real USB
 hot-plug, sheet drag by mouse, VoiceOver and TCC focus outcomes remain a manual Debug check; the
-DMG, staged update, GitHub Release assets (including the Motion mp4) and publication are not done
-in this stage.
+DMG, staged update, GitHub Release assets and publication were not done in this stage.

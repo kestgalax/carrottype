@@ -2,18 +2,25 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## Motion OS consumer removed — 2026-11-17
+
+Maintainer asked to drop Motion OS from the CarrotType repo after 0.12.0 shipped without a demo
+(«без демо»). Removed `motion/`, `motion.config.json`, `scripts/run-motion.mjs`,
+`ops/release-motion.md`, `ops/motion-tooling.md`, the release-motion skill/symlinks, and related
+pilot/design specs. Release lifecycle assets are DMG/ZIP/appcast only. No Swift/runtime change.
+
 ## 0.12.0 mic priority release preparation — 2026-11-16
 
 Maintainer accepted the working smart-mic behavior («отлично, теперь все работает») and authorized
-release preparation (not publication) with a Motion companion. Follow-ups on
-`feat/smart-mic-priority`: Core Audio transport/manufacturer enumeration, Wave Link virtual mixes
-usable only with physical Wave hardware, first-run seed preferring the built-in mic, the priority
-editor moved into a Dictation/Setup compact row + native drag-reorder sheet, and Settings focus
-restored after the microphone TCC sheet (LSUIElement → regular while Settings is open). Bumped to
-**0.12.0 (37)** in `project.yml`/`Info.plist`; `ReleaseNotes.json` rewritten, published 0.11.1
-archived unchanged into `ReleaseNotesHistory.json` (contiguous 37→27). PR to `main` opened for
-review; clean Release/DMG, motion film upload, staged update and stable/latest publication remain
-separate gates. No new ADR/engine/dependency/network sink.
+release preparation (not publication); a Motion companion was planned then waived at publish.
+Follow-ups on `feat/smart-mic-priority`: Core Audio transport/manufacturer enumeration, Wave Link
+virtual mixes usable only with physical Wave hardware, first-run seed preferring the built-in mic,
+the priority editor moved into a Dictation/Setup compact row + native drag-reorder sheet, and
+Settings focus restored after the microphone TCC sheet (LSUIElement → regular while Settings is
+open). Bumped to **0.12.0 (37)** in `project.yml`/`Info.plist`; `ReleaseNotes.json` rewritten,
+published 0.11.1 archived unchanged into `ReleaseNotesHistory.json` (contiguous 37→27). PR #41
+merged; 0.12.0 published stable/latest without a demo mp4. No new ADR/engine/dependency/network
+sink.
 
 ## Smart microphone priority — implementation for review — 2026-11-16
 
