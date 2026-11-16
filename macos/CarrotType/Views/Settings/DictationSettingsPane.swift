@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Settings → Dictation: the recording shortcut and everything that shapes the inserted text.
+/// Settings → Dictation: the recording shortcut, mic priority and everything that shapes inserted text.
 struct DictationSettingsPane: View {
     @ObservedObject var appState: AppState
     @ObservedObject var hotkey: HotkeyService
@@ -32,12 +32,24 @@ struct DictationSettingsPane: View {
                 Text(L10n.t("hotkey.section", locale: locale))
             }
 
+            // Compact active-mic summary; full ordered list lives in a sheet.
+            MicrophonePrioritySettingsSection(
+                appState: appState,
+                permissions: appState.permissions,
+                locale: locale
+            )
+
             DictationFormattingSection(models: appState.modelManager, locale: locale, onOpenModels: onOpenModels)
 
             FormattingRulesSection(appState: appState, locale: locale)
         }
         .formStyle(.grouped)
         .scrollIndicators(.never)
+        .onAppear {
+            if appState.permissions.microphoneGranted {
+                appState.audioInput.refreshDevices()
+            }
+        }
         .onDisappear {
             // Leaving the pane must cancel chord capture and restore global registration.
             // This is the hotkey editor's capture flag, not an active dictation session.

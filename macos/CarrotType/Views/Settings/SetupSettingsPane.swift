@@ -11,26 +11,6 @@ struct SetupSettingsPane: View {
             Section {
                 SetupProgressView(appState: appState)
             }
-            if permissions.microphoneGranted, !appState.audioInput.devices.isEmpty {
-                Section {
-                    Text(L10n.t("permissions.input_priority_hint", locale: locale))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    let entries = appState.audioInput.priorityEntries
-                    ForEach(Array(entries.enumerated()), id: \.element.id) { index, entry in
-                        AudioInputPriorityRow(
-                            entry: entry,
-                            canMoveUp: index > 0,
-                            canMoveDown: index < entries.count - 1,
-                            locale: locale,
-                            moveUp: { appState.audioInput.movePriorityEntry(entry.id, by: -1) },
-                            moveDown: { appState.audioInput.movePriorityEntry(entry.id, by: 1) }
-                        )
-                    }
-                } header: {
-                    Text(L10n.t("permissions.input_priority", locale: locale))
-                }
-            }
             Section {
                 LabeledContent {
                     switch permissions.microphoneAuthorization {
@@ -128,6 +108,12 @@ struct SetupSettingsPane: View {
             } header: {
                 Text(L10n.t("permissions.section", locale: locale))
             }
+            // Show which mic will be used before the local trial — same compact editor as Dictation.
+            MicrophonePrioritySettingsSection(
+                appState: appState,
+                permissions: permissions,
+                locale: locale
+            )
             Section {
                 if let package = appState.modelManager.sttPackages.first {
                     LabeledContent(package.displayName) {
@@ -148,24 +134,117 @@ struct SetupSettingsPane: View {
         .scrollIndicators(.never)
         .onDisappear { appState.cancelSetupTrial() }
     }
+}
 
-    private var audioInputBinding: Binding<String> {
-        Binding(
-            get: { appState.audioInput.selectedDeviceID },
-            set: { appState.selectAudioInput($0) }
-        )
+/// Dictation compact summary: active mic + sheet editor (full list is rare to edit).
+struct MicrophonePrioritySettingsSection: View {
+    @ObservedObject var appState: AppState
+    @ObservedObject var permissions: PermissionService
+    let locale: Locale
+    @State private var showEditor = false
+
+    var body: some View {
+        Section {
+            if !permissions.microphoneGranted {
+                Text(L10n.t("permissions.input_priority_needs_mic", locale: locale))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } else if appState.audioInput.devices.isEmpty {
+                Text(L10n.t("permissions.no_devices", locale: locale))
+                    .foregroundStyle(.secondary)
+            } else {
+                LabeledContent {
+                    HStack(spacing: 10) {
+                        Text(activeMicrophoneName)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                        Button(L10n.t("permissions.input_priority_configure", locale: locale)) {
+                            appState.audioInput.refreshDevices()
+                            showEditor = true
+                        }
+                        .controlSize(.small)
+                    }
+                } label: {
+                    Text(L10n.t("permissions.input_active_microphone", locale: locale))
+                }
+            }
+        } header: {
+            Text(L10n.t("permissions.input_priority", locale: locale))
+        }
+        .sheet(isPresented: $showEditor) {
+            MicrophonePrioritySheet(appState: appState, locale: locale)
+        }
+    }
+
+    private var activeMicrophoneName: String {
+        if let name = appState.audioInput.selectedDevice?.name, !name.isEmpty {
+            return name
+        }
+        return L10n.t("permissions.input_unknown", locale: locale)
     }
 }
 
-/// One row of the ordered failover list: availability/active state and explicit reordering.
-/// Buttons (instead of drag) keep the native Form usable with keyboard and VoiceOver.
+/// Full ordered failover editor shown from Dictation → «Настроить…».
+struct MicrophonePrioritySheet: View {
+    @ObservedObject var appState: AppState
+    let locale: Locale
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Text(L10n.t("permissions.input_priority", locale: locale))
+                    .font(.headline)
+                Spacer()
+                Button(L10n.t("permissions.input_priority_done", locale: locale)) {
+                    dismiss()
+                }
+                .keyboardShortcut(.defaultAction)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 18)
+            .padding(.bottom, 10)
+
+            Text(L10n.t("permissions.input_priority_hint", locale: locale))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 12)
+
+            Divider()
+
+            if appState.audioInput.priorityEntries.isEmpty {
+                Text(L10n.t("permissions.no_devices", locale: locale))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .padding(20)
+            } else {
+                List {
+                    ForEach(appState.audioInput.priorityEntries) { entry in
+                        AudioInputPriorityRow(entry: entry, locale: locale)
+                    }
+                    .onMove { source, destination in
+                        appState.audioInput.movePriorityEntries(from: source, to: destination)
+                    }
+                }
+                .listStyle(.inset)
+                // `onMove` enables native macOS row dragging (editMode is iOS-only).
+                .environment(\.defaultMinListRowHeight, 36)
+            }
+        }
+        .frame(minWidth: 480, idealWidth: 520, minHeight: 360, idealHeight: 420)
+        .onAppear {
+            appState.audioInput.refreshDevices()
+        }
+    }
+}
+
+/// One row of the ordered failover list. Sheet reorder uses native List drag (`onMove`).
 struct AudioInputPriorityRow: View {
     let entry: AudioInputPriorityEntry
-    let canMoveUp: Bool
-    let canMoveDown: Bool
     let locale: Locale
-    let moveUp: () -> Void
-    let moveDown: () -> Void
 
     var body: some View {
         HStack(spacing: 10) {
@@ -175,6 +254,7 @@ struct AudioInputPriorityRow: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(entry.name ?? L10n.t("permissions.input_unknown", locale: locale))
+                    .foregroundStyle(entry.isAvailable ? Color.primary : Color.secondary)
 
                 HStack(spacing: 8) {
                     if entry.isActive {
@@ -192,25 +272,9 @@ struct AudioInputPriorityRow: View {
             }
 
             Spacer(minLength: 8)
-
-            HStack(spacing: 2) {
-                Button(action: moveUp) {
-                    Image(systemName: "chevron.up")
-                }
-                .disabled(!canMoveUp)
-                .help(L10n.t("permissions.input_move_up", locale: locale))
-                .accessibilityLabel(Text(L10n.t("permissions.input_move_up", locale: locale)))
-
-                Button(action: moveDown) {
-                    Image(systemName: "chevron.down")
-                }
-                .disabled(!canMoveDown)
-                .help(L10n.t("permissions.input_move_down", locale: locale))
-                .accessibilityLabel(Text(L10n.t("permissions.input_move_down", locale: locale)))
-            }
-            .buttonStyle(.borderless)
         }
         .padding(.vertical, 1)
+        .accessibilityHint(Text(L10n.t("permissions.input_priority_drag_hint", locale: locale)))
     }
 }
 

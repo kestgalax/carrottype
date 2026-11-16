@@ -4973,13 +4973,13 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Сочетание клавиш, оформление и правила"
+            "value": "Сочетание, микрофон, оформление и правила"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shortcut, formatting and rules"
+            "value": "Shortcut, microphone, formatting and rules"
           }
         }
       }
@@ -5007,13 +5007,13 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Микрофон, разрешения и пробная диктовка"
+            "value": "Разрешения, уровень микрофона и пробная диктовка"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Microphone, permissions and a local trial"
+            "value": "Permissions, mic meter and a local trial"
           }
         }
       }
@@ -7243,19 +7243,104 @@
         }
       }
     },
+    "permissions.input_active_microphone": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active microphone"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Активный микрофон"
+          }
+        }
+      }
+    },
+    "permissions.input_priority_configure": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configure…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настроить…"
+          }
+        }
+      }
+    },
+    "permissions.input_priority_done": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Готово"
+          }
+        }
+      }
+    },
+    "permissions.input_priority_needs_mic": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grant Microphone access in Setup to choose a priority order."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрешите доступ к микрофону в Setup, чтобы настроить порядок."
+          }
+        }
+      }
+    },
+    "permissions.input_priority_drag_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag to change priority order"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перетащите, чтобы изменить порядок"
+          }
+        }
+      }
+    },
     "permissions.input_priority_hint": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "CarrotType uses the first connected microphone in this list; if none of them is connected, it uses the macOS default input. Disconnected mics stay here and are used again when reconnected; a dictation never switches microphone mid-session."
+            "value": "CarrotType uses the first available microphone in this list; if none is available — the system default. Unavailable mics stay in the list and come back after reconnect; during dictation the microphone does not change. Drag rows to reorder."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "CarrotType использует первый подключённый микрофон из списка; если ни один из них не подключён — системный микрофон по умолчанию. Отключённые остаются и снова используются после подключения; во время диктовки микрофон не меняется."
+            "value": "CarrotType использует первый доступный микрофон из списка; если ни один не доступен — системный по умолчанию. Недоступные остаются в списке и снова включаются после подключения; во время диктовки микрофон не меняется. Порядок меняется перетаскиванием."
           }
         }
       }
@@ -7300,13 +7385,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Not connected"
+            "value": "Unavailable"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Не подключён"
+            "value": "Недоступен"
           }
         }
       }
