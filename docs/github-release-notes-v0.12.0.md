@@ -5,9 +5,9 @@
 Микрофоны теперь собраны в список приоритета: диктовка переходит на следующий рабочий микрофон,
 когда интерфейс отключён, и возвращается к нему после подключения.
 
-> Статус: **черновик подготовки выпуска**. Версия 0.12.0 (37) собрана в ветке
-> `feat/smart-mic-priority`; публикация в stable/latest не выполнена. SHA-256 и ссылка на демо
-> заполняются после сборки DMG и загрузки ассетов.
+> Статус: **черновик подготовки выпуска**. Версия 0.12.0 (37) подготовлена в ветке
+> `feat/smart-mic-priority`; публикация в stable/latest не выполнена. SHA-256 ролика записан ниже;
+> SHA-256 DMG/ZIP/appcast и ссылка на демо заполняются после сборки DMG и загрузки ассетов.
 
 ## Новое
 
@@ -61,9 +61,12 @@ Dynamic Island сохраняются. Приоритет микрофонов �
 Короткий беззвучный ролик (H.264, 1920×1080, 30 fps) о приоритете микрофонов и окне с
 перетаскиванием: `CarrotType-0.12.0-mic-priority-demo.mp4`.
 
+- Локальный файл: `dist/CarrotType-0.12.0-mic-priority-demo.mp4` (25,2 с, 2 093 415 байт,
+  без звуковой дорожки).
+- SHA-256: `26f90411f3aba84244dc1d7a67469c695f1c92ea038feb6300aab632e26da022` (строка в таблице
+  ниже).
 - Ссылка: **TBD — добавляется после загрузки ассета в GitHub Release.**
 - Формат и гейт: `ops/release-motion.md`; бриф `motion/briefs/mic-priority.md`.
-- SHA-256 ролика добавляется в таблицу ниже после загрузки.
 
 ## История изменений
 
@@ -82,7 +85,9 @@ metadata, заметки и документация меняются; прил�
 Локальные проверки: `scripts/verify-smart-mic-priority.sh` (нормализация, миграция, упорядоченное
 переключение, сохранение недоступных записей, promote, bounded move, round-trip defaults,
 Wave Link usability) и `scripts/verify-release-notes.sh` (непрерывная история 37→27, RU/EN и
-безопасный рендер) — PASS. Debug arm64 сборка — см. отчёт подготовки.
+безопасный рендер) — PASS. Подписанная Debug-сборка 0.12.0 (37) для ручной приёмки ещё не
+доставлена: локальный артефакт в `dist/debug-smart-mic-priority/` собран до смены версии
+(0.11.1 (36), ad-hoc подпись), его нужно пересобрать после релизного коммита.
 
 Не входит в этот выпуск: новые движки/модели, сетевые адресаты, нотаризация, GigaAM. ADR не
 требуется: граф захвата, поведение системного устройства ввода по умолчанию и модель
@@ -97,7 +102,7 @@ Wave Link usability) и `scripts/verify-release-notes.sh` (непрерывна�
 | `CarrotType-0.12.0.dmg` | TBD | TBD |
 | `CarrotType-0.12.0-37.zip` | TBD | TBD |
 | `appcast.xml` | TBD | TBD |
-| `CarrotType-0.12.0-mic-priority-demo.mp4` | TBD | TBD |
+| `CarrotType-0.12.0-mic-priority-demo.mp4` | 2093415 | `26f90411f3aba84244dc1d7a67469c695f1c92ea038feb6300aab632e26da022` |
 
 ---
 
@@ -109,8 +114,8 @@ Microphones now form an ordered priority list: dictation fails over to the next 
 interface is unplugged and returns to it when it reconnects.
 
 > Status: **release preparation draft**. Version 0.12.0 (37) is prepared on
-> `feat/smart-mic-priority`; nothing is published to stable/latest. Hashes and the demo link are
-> filled in after the DMG and release assets exist.
+> `feat/smart-mic-priority`; nothing is published to stable/latest. The clip hash is recorded below;
+> DMG/ZIP/appcast hashes and the demo link are filled in after the DMG and release assets exist.
 
 ## New
 
@@ -160,9 +165,12 @@ launch macOS may ask you to open it from System Settings → Privacy & Security 
 Short silent clip (H.264, 1920×1080, 30 fps) covering microphone priority and the drag-reorder
 sheet: `CarrotType-0.12.0-mic-priority-demo.mp4`.
 
+- Local file: `dist/CarrotType-0.12.0-mic-priority-demo.mp4` (25.2 s, 2,093,415 bytes, no audio
+  stream).
+- SHA-256: `26f90411f3aba84244dc1d7a67469c695f1c92ea038feb6300aab632e26da022` (row in the table
+  below).
 - Link: **TBD — added after the asset is uploaded to the GitHub Release.**
 - Format/gate: `ops/release-motion.md`; brief `motion/briefs/mic-priority.md`.
-- Clip SHA-256 is added to the table after upload.
 
 ## Release verification
 
@@ -174,8 +182,10 @@ gate.
 
 Local checks: `scripts/verify-smart-mic-priority.sh` (normalization, migration, ordered failover,
 retention, promote, bounded move, defaults round-trip, Wave Link usability) and
-`scripts/verify-release-notes.sh` (contiguous history 37→27, RU/EN, safe rendering) — PASS. Debug
-arm64 build is recorded in the preparation report.
+`scripts/verify-release-notes.sh` (contiguous history 37→27, RU/EN, safe rendering) — PASS. The
+signed Debug 0.12.0 (37) build for manual acceptance has not been delivered yet: the local artifact
+in `dist/debug-smart-mic-priority/` predates the version bump (0.11.1 (36), ad-hoc signature) and
+must be rebuilt from the release commit.
 
 Not part of this release: new engines/models, network sinks, notarization, GigaAM. No ADR is
 required: the capture graph, system default input behavior and distribution trust model are

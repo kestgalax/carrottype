@@ -7,8 +7,8 @@
 - Active work: **0.12.0 (37) release preparation** on `feat/smart-mic-priority` — smart microphone priority/failover, Dictation microphone sheet with drag reorder, first-run usable-mic seed, Settings focus after TCC. Maintenance accepted the behavior («отлично, теперь все работает»).
 - Authorized: maintainer authorized **release preparation** (version/notes/docs/PR) with a Motion companion; stable/latest publication is a **later** coordinator gate. AIDOS stays **private maintainer tooling** — no public cross-promo from CarrotType; schema 2 / `contractVersion: 2` / domain specs remain deferred opt-in.
 - Blocked: none.
-- Last verified: `scripts/verify-smart-mic-priority.sh` and `scripts/verify-release-notes.sh` PASS for 0.12.0 (37); Motion companion rendered + `motion check` PASS (`dist/CarrotType-0.12.0-mic-priority-demo.mp4`); [notes draft](github-release-notes-v0.12.0.md), [spec](specs/tasks/smart-mic-priority.md), [sheet design](superpowers/specs/2026-11-16-mic-priority-sheet-design.md).
-- Next action: review PR on `main`; clean Release/DMG, Motion demo upload and publication remain separate gates. Touch AIDOS only if tooling breaks or maintainer asks.
+- Last verified: `scripts/verify-smart-mic-priority.sh` and `scripts/verify-release-notes.sh` PASS for 0.12.0 (37); Motion companion `motion check` PASS and clip SHA-256 `26f90411…26da022` recorded in the [notes draft](github-release-notes-v0.12.0.md) Demo subsection and hash table; PR [#41](https://github.com/kestgalax/carrottype/pull/41) open on head `9ec2134` (CI in progress). `dist/debug-smart-mic-priority/` still holds 0.11.1 (36) with an ad-hoc signature — the signed 0.12.0 (37) Debug delivery is pending. [Spec](specs/tasks/smart-mic-priority.md), [sheet design](superpowers/specs/2026-11-16-mic-priority-sheet-design.md).
+- Next action: rebuild and deliver the signed 0.12.0 (37) Debug for maintainer acceptance; after written acceptance and explicit publication authorization, build clean Release/DMG/ZIP/appcast, verify the draft (including attaching the demo mp4) and publish — each remains a separate coordinator gate.
 
 ## Motion OS consumer (2026-11-14)
 
