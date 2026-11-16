@@ -2,13 +2,13 @@
 
 ## Current Status
 
-- Status as of: 2026-11-12 (Europe/Moscow).
+- Status as of: 2026-11-16 (Europe/Moscow).
 - Released: **0.11.1 (36)**, tag `v0.11.1` / `5bc877b`, published 2026-11-12T00:10:38Z; accepted application behavior stays frozen at `f0cff02`.
-- Active work: **product focus** after AIDOS governance story closed (pilot #35 + tooling pin #36 on `main`).
-- Authorized: maintainer decided AIDOS stays **private maintainer tooling** — no public cross-promo from CarrotType; README promo link removed; schema 2 / `contractVersion: 2` / domain specs remain deferred opt-in.
+- Active work: **0.12.0 (37) release preparation** on `feat/smart-mic-priority` — smart microphone priority/failover, Dictation microphone sheet with drag reorder, first-run usable-mic seed, Settings focus after TCC. Maintenance accepted the behavior («отлично, теперь все работает»).
+- Authorized: maintainer authorized **release preparation** (version/notes/docs/PR) with a Motion companion; stable/latest publication is a **later** coordinator gate. AIDOS stays **private maintainer tooling** — no public cross-promo from CarrotType; schema 2 / `contractVersion: 2` / domain specs remain deferred opt-in.
 - Blocked: none.
-- Last verified: pin docs in [ops/tooling.md](../ops/tooling.md); pilot evidence [debug-review-aidos-pilot-migration.md](debug-review-aidos-pilot-migration.md).
-- Next action: product features/bugs for CarrotType; touch AIDOS only if tooling breaks or maintainer asks.
+- Last verified: `scripts/verify-smart-mic-priority.sh` and `scripts/verify-release-notes.sh` PASS for 0.12.0 (37); [notes draft](github-release-notes-v0.12.0.md), [spec](specs/tasks/smart-mic-priority.md), [sheet design](superpowers/specs/2026-11-16-mic-priority-sheet-design.md).
+- Next action: review PR on `main`; clean Release/DMG, Motion demo upload and publication remain separate gates. Touch AIDOS only if tooling breaks or maintainer asks.
 
 ## Motion OS consumer (2026-11-14)
 
@@ -426,3 +426,37 @@ local governance where available, and an arm64 Debug build. Real USB hot-plug, S
 mouse/VoiceOver and menu behavior remain a manual Debug check; the priority list can accumulate
 stale UIDs by design because nothing is pruned automatically.
 [Spec](specs/tasks/smart-mic-priority.md).
+
+## 0.12.0 — smart microphone priority (release preparation, 2026-11-16)
+
+Maintainer accepted the working behavior («отлично, теперь все работает») and authorized **release
+preparation** for **0.12.0 (37)**, including a Motion companion film. This is not publication:
+stable/latest and GitHub Release assets remain a later coordinator gate.
+
+Follow-ups committed on top of `ec05e11` before the version bump:
+
+- **Usable-microphone model.** Core Audio enumeration now carries transport type, manufacturer and
+  input channels. Wave Link virtual mixes count as usable only while physical Wave hardware is
+  present, so an orphan `Voice`/`Stream` endpoint cannot pin failover or own the first dictation.
+  An empty priority list is seeded once with the built-in mic by preference (built-in > USB >
+  Bluetooth > other > virtual > aggregate, Continuity/iPhone demoted).
+- **Dictation sheet.** The full ordered list moved out of the Setup form into
+  `MicrophonePrioritySettingsSection` + `MicrophonePrioritySheet` (native `.sheet`, `List` +
+  `onMove` drag reorder, RU/EN caption, Done). Dictation and Setup show only the active microphone
+  and **Настроить…**; Setup keeps permissions, meter and Wave Link unmute. Design/mockups:
+  [sheet design](superpowers/specs/2026-11-16-mic-priority-sheet-design.md),
+  `docs/mockups/mic-priority-mockup-a-*.jpg`.
+- **Settings focus after TCC.** While Settings is open the app joins the regular activation cycle
+  (LSUIElement → regular) and retries a bounded focus restore after the microphone sheet; it
+  returns to accessory activation when the last Settings window closes. No polling loop and no new
+  permission.
+- **Metadata.** `CFBundleShortVersionString`/`CFBundleVersion` 0.12.0 (37) in `project.yml` and
+  `Info.plist`; `ReleaseNotes.json` rewritten for 0.12.0 with 0.11.1 archived unchanged into
+  `ReleaseNotesHistory.json` (contiguous 37→27); [release notes](github-release-notes-v0.12.0.md)
+  with a **Демо** placeholder for `CarrotType-0.12.0-mic-priority-demo.mp4`.
+
+Verification for this stage: `verify-smart-mic-priority.sh` (adds Wave Link usability, seed
+preference and the unusable-default failover case), `verify-release-notes.sh` (37→27 history,
+RU/EN, safe render), arm64 Debug build, and the existing setup/lifecycle regressions. Real USB
+hot-plug, sheet drag by mouse, VoiceOver and TCC focus outcomes remain a manual Debug check; the
+Motion film, DMG, staged update and publication are not done in this stage.

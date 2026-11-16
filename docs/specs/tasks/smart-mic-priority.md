@@ -1,13 +1,14 @@
 # Smart microphone priority / failover
 
 2026-11-16. Coordinator-approved plan, implemented by the OpenCode worker on
-`feat/smart-mic-priority`. No version bump, publication, DMG or PR is authorized by this
-implementation.
+`feat/smart-mic-priority`. The maintainer accepted the working behavior («отлично, теперь все
+работает») and authorized **release preparation** for 0.12.0 (37) — version metadata, notes, PR
+and a Motion companion. Publication (DMG/Release assets, stable/latest) is still a separate gate.
 
 ## Metadata
 
 - Task ID: smart-mic-priority
-- Status: implemented for review (code + docs + verification evidence in the worker report).
+- Status: implemented, accepted by maintainer, in 0.12.0 (37) release preparation; not published.
 - Branch: `feat/smart-mic-priority` from `main` (`027dd52`, published 0.11.1).
 - Roles: Codex/coordinator design and review; OpenCode implementation.
 
@@ -35,7 +36,9 @@ controller. Smart failover must not weaken that.
    active input while the app is idle.
 6. **Never switch microphones mid-recording.** The session device UID is frozen at dictation
    start; hot-plug resolution is suspended for the whole session.
-7. Setup shows a small, ordered, reorderable priority list with a one-line RU/EN explanation.
+7. Dictation shows a compact active-microphone row whose **Настроить…** button opens a native sheet
+   with the ordered priority list, a one-line RU/EN explanation and drag reorder; Setup shows the
+   same compact row before the model/trial steps.
 8. Menu quick-select **promotes** the chosen microphone to the front of the priority list.
 9. The optional mic meter and the experimental Wave Link unmute keep using the resolved/session
    device (ADR-007 unchanged).
@@ -96,20 +99,26 @@ A small `AudioInputDeviceListener` registers `AudioObjectAddPropertyListenerBloc
 (250 ms) and calls `refreshDevices()` on the main actor. Listeners are removed in `deinit`.
 No polling, no new permission, no network.
 
-### Setup UI
+### Setup / Dictation UI
 
-Setup gets a **Microphone priority** section above the permissions section (only when microphone
-access is granted and devices exist):
+Dictation and Setup share `MicrophonePrioritySettingsSection`: a compact **Microphone priority**
+section showing the active microphone name and a **Настроить…** button (only when microphone access
+is granted and devices exist; otherwise a short hint or “no devices”). Setup places it before the
+model/trial steps and does not repeat the full list.
 
-- one row per priority entry: order, mic glyph, name, badges for active/default/not connected;
-- up/down buttons reorder the entry (disabled at the ends, labeled for accessibility);
-- a caption explains RU/EN: the first connected microphone in the list is used, disconnected ones
-  stay for reconnect, and dictation never switches device mid-session;
-- connected devices that are not yet in the list appear after the preferred ones so they can be
-  promoted; reordering materializes them into the saved list;
-- the meter toggle, unmute toggle and their hints remain in the permissions section unchanged.
+**Настроить…** opens `MicrophonePrioritySheet`, a native Settings `.sheet` (~520×420) attached to
+the pane:
 
+- one row per priority entry: order, mic glyph, name, badges for active/default/unavailable;
+- native `List` + `onMove` drag reorder of the displayed list (including devices that are not
+  preferred yet, which materializes them into the saved order); accessibility hint explains drag;
+- a caption explains RU/EN: the first usable microphone in the list is used, disconnected ones stay
+  for reconnect, and dictation never switches device mid-session;
+- **Готово** dismisses; edits apply live, no separate Save.
+
+The meter toggle, unmute toggle and their hints remain in the Setup permissions section unchanged.
 The old single-device picker is removed; the same selection action is available from the menu.
+Mockups/design: [sheet design](../../superpowers/specs/2026-11-16-mic-priority-sheet-design.md).
 
 ### Menu
 
@@ -131,6 +140,7 @@ active microphone.
 - `macos/CarrotType/Services/AudioInputService.swift`
 - `macos/CarrotType/AppState.swift`
 - `macos/CarrotType/Views/Settings/SetupSettingsPane.swift`
+- `macos/CarrotType/Views/Settings/DictationSettingsPane.swift`
 - `macos/CarrotType/Views/MenuBarViews.swift`
 - `macos/CarrotType/Resources/Localizable.xcstrings`
 - `scripts/verify-smart-mic-priority.sh`, `scripts/tests/AudioInputPriorityChecks.swift`
@@ -139,16 +149,22 @@ active microphone.
 
 ## Acceptance criteria
 
-- [x] Ordered priority list is the source of truth; active = first connected preferred UID.
-- [x] Unavailable UIDs are retained across refreshes and app relaunches; fallback resolution never
-  appends or prunes entries, and an empty list is seeded once with the resolved default.
+- [x] Ordered priority list is the source of truth; active = first **usable** preferred UID.
+- [x] Unavailable / unusable UIDs are retained across refreshes and app relaunches; fallback
+  resolution never appends or prunes entries, and an empty list is seeded once with a first-run
+  friendly usable device (built-in preferred over Wave Link virtual / Continuity / system default).
 - [x] Legacy single selection migrates exactly once to an initial one-entry list; absent, invalid
   and duplicate values normalize safely; `selectedAudioInputID` still holds the resolved UID.
 - [x] Hot-plug/default-input changes refresh the list and re-resolve only while idle.
 - [x] No resolution or microphone change can happen between dictation start and teardown; the
   session uses the UID captured at start.
-- [x] Setup has a reorderable RU/EN priority list with an explanation and availability/active
-  state; the meter still follows the resolved device.
+- [x] Wave Link virtual mixes count as usable only while physical Wave hardware is present, and the
+  menu hides orphan virtual endpoints.
+- [x] Dictation and Setup show a compact active-microphone row; the full reorderable RU/EN priority
+  list with availability/active state lives in a native sheet with drag reorder. The meter still
+  follows the resolved device.
+- [x] Settings regains focus after the microphone permission sheet while it is open, and returns to
+  menu-bar-only activation when it closes.
 - [x] Menu selection promotes to the front instead of replacing a single value.
 - [x] Wave Link unmute keeps receiving the session device UID/name (ADR-007 unchanged).
 - [x] No new ADR: capture graph, system-default-input behavior, engines, dependencies, network
@@ -159,11 +175,15 @@ active microphone.
 - `scripts/verify-smart-mic-priority.sh` — normalization, migration (legacy/absent/existing/empty/
   duplicates), resolution (preferred available, skip disconnected, system-default fallback,
   discovery fallback, none), retention of unavailable UIDs, promote, bounded move, defaults
-  round-trip. No hardware, models or permissions.
+  round-trip, Wave Link virtual/hardware usability, first-seed preference and the unusable
+  system-default case. No hardware, models or permissions.
+- `scripts/verify-release-notes.sh` — 0.12.0 (37) metadata and contiguous 37→27 history.
 - Debug arm64 build of the app target.
 - Existing regression scripts and local governance where available.
-- Real hot-plug, Setup drag/buttons, menu and VoiceOver behavior remain a manual Debug check:
+- Real hot-plug, sheet drag by mouse, menu and VoiceOver behavior remain a manual Debug check:
   connecting/disconnecting a USB microphone while idle and during dictation is not covered by CI.
+  The TCC focus restore is best-effort over six bounded retries and is not proven on every macOS
+  permission flow.
 
 ## Residual risks
 
@@ -174,5 +194,8 @@ active microphone.
   the same UID shows the remembered name until it reconnects.
 - The priority list can accumulate stale UIDs. There is no automatic pruning (by design, for
   reconnect); a future explicit “remove from list” action would need its own UX decision.
+- Wave Link usability and the first-run seed are heuristic: virtual endpoints are recognised by
+  transport type plus name/manufacturer text, so a renamed third-party mix could be classified
+  differently. The list can be reordered manually, which is the escape hatch.
 - A failed system-default switch is still reported through the existing recorder error path; smart
   failover does not add a retry.

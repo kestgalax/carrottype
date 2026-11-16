@@ -1,6 +1,58 @@
 [
   {
     "schemaVersion": 1,
+    "version": "0.11.1",
+    "build": "36",
+    "date": "2026-11-12",
+    "localizations": {
+      "en": {
+        "summary": "Update notes and the standard update window now follow the chosen language, the background-download toggle explains its dependency, and quitting during dictation no longer cancels a staged update.",
+        "sections": [
+          {
+            "kind": "fixed",
+            "items": [
+              {
+                "title": "What's New and the update window use the same language.",
+                "detail": "Russian and English notes now resolve through one shared rule, so What's New matches the interface immediately. The standard Sparkle update window picks up the selected language on the next launch, because macOS caches an app's preferred languages at process start. Choosing System removes only the language override CarrotType wrote and leaves your own per-app choice untouched."
+              },
+              {
+                "title": "The download toggle states its dependency.",
+                "detail": "Sparkle allows background download only while automatic checks are on. With checks off, as by default, the toggle stays disabled and now says why instead of appearing broken. Manual Check for updates and install-on-quit remain available."
+              },
+              {
+                "title": "Quitting during dictation no longer blocks a staged update.",
+                "detail": "If an update is downloaded and install-on-quit is chosen, the app finishes the current dictation, text action or formatting instead of cancelling the quit, then lets Sparkle's installer apply the update after the app exits. There is no forced relaunch; the hand-off stays on Sparkle's documented install-on-quit path."
+              }
+            ]
+          }
+        ]
+      },
+      "ru": {
+        "summary": "Заметки обновления и стандартное окно обновления теперь следуют выбранному языку, переключатель фоновой загрузки объясняет свою зависимость, а выход во время диктовки больше не отменяет установку.",
+        "sections": [
+          {
+            "kind": "fixed",
+            "items": [
+              {
+                "title": "«Что нового» и окно обновления говорят на одном языке.",
+                "detail": "Русские и английские заметки теперь выбираются по одному общему правилу, поэтому «Что нового» сразу совпадает с интерфейсом. Стандартное окно Sparkle подхватывает выбранный язык при следующем запуске: macOS кэширует предпочитаемые языки приложения при старте процесса. Выбор «Системный» удаляет только переопределение, записанное CarrotType, и не трогает ваш собственный выбор языка для приложения."
+              },
+              {
+                "title": "Переключатель загрузки объясняет зависимость.",
+                "detail": "Sparkle разрешает фоновую загрузку только при включённых автоматических проверках. Пока проверки выключены, как по умолчанию, переключатель остаётся неактивным и теперь объясняет причину, а не выглядит сломанным. Ручная проверка обновлений и установка при выходе по-прежнему доступны."
+              },
+              {
+                "title": "Выход во время диктовки не блокирует установку.",
+                "detail": "Если обновление уже скачано и выбрана установка при выходе, приложение сначала завершает текущую диктовку, преобразование или оформление текста, а не отменяет выход, и затем передаёт установку Sparkle. Принудительной перезагрузки нет: установка идёт по документированному пути Sparkle после закрытия приложения."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
     "version": "0.11.0",
     "build": "35",
     "date": "2026-11-12",
