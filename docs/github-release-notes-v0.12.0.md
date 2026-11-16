@@ -59,7 +59,7 @@ Dynamic Island сохраняются. Приоритет микрофонов �
 ## Демо
 
 N/A — maintainer отказался от motion companion для 0.12.0 («без демо»).
-Формат/гейт: `ops/release-motion.md` (waiver).
+Motion OS consumer tooling later removed from the repo (2026-11-17).
 
 
 ## История изменений
@@ -166,7 +166,7 @@ launch macOS may ask you to open it from System Settings → Privacy & Security 
 ## Demo
 
 N/A — maintainer waived the motion companion for 0.12.0 (“без демо”).
-Format/gate: `ops/release-motion.md` (waiver).
+Motion OS consumer tooling later removed from the repo (2026-11-17).
 
 
 ## Release verification

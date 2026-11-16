@@ -13,11 +13,13 @@ Worktree: current (smart-mic-priority). Branch already has commit `ec05e11` plus
 - Generalized priority hint (no Wave copy)
 - docs/mockups + sheet design spec
 
-Maintainer accepted behavior («отлично, теперь все работает») and authorized **release preparation** with a Motion companion film. Publication to stable/latest is a **later** gate — do not publish GitHub Release assets unless the coordinator later authorizes.
+Maintainer accepted behavior («отлично, теперь все работает») and authorized **release preparation**.
+A Motion companion was planned then waived at publish; Motion OS tooling was later removed from the
+repo. Publication to stable/latest was a **later** gate.
 
 ## Required reading
 
-`AGENTS.md` order: README, product-intent, roadmap, architecture, ADRs, `.ai/constitution.md`, `.ai/developer.md`, `.ai/constraints.md`, `ops/deploy.md`, `ops/release-motion.md`.
+`AGENTS.md` order: README, product-intent, roadmap, architecture, ADRs, `.ai/constitution.md`, `.ai/developer.md`, `.ai/constraints.md`, `ops/deploy.md`.
 
 ## Tasks
 
@@ -28,7 +30,7 @@ Maintainer accepted behavior («отлично, теперь все работа
    - Smart mic priority / failover
    - Sheet UI + drag reorder
    - First-run built-in seed
-   - Placeholder **Демо** subsection for motion asset (URL TBD after upload)
+   - **Демо** subsection (later waived — no mp4)
 5. Update task/spec status docs as needed (`smart-mic-priority.md`, sheet design).
 6. Push `-u` and open PR to `main` with summary + test plan. Do **not** merge unless coordinator asks.
 7. Report: branch, commits, PR URL, version/build, residual risks.
