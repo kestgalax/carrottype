@@ -60,6 +60,7 @@ jobs:
           bash scripts/verify-typing-speed-test.sh
           bash scripts/verify-formatting-rules.sh
           bash scripts/verify-launch-at-login.sh
+          bash scripts/verify-smart-mic-priority.sh
           bash scripts/verify-ultra-models.sh
           bash scripts/verify-app-updates.sh
           bash scripts/verify-release-notes.sh

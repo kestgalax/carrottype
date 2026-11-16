@@ -53,6 +53,18 @@ python3 scripts/verify-model-catalog-streaming.py
 
 Compiles production catalog/default-selection/legacy-storage code with temporary UserDefaults suites and model directory fixtures. Covers catalog/fallback consistency, retired/default/unknown preference migration, preserved cleanup choices, legacy inventory, grouped optional deletion and path/symlink safety. Never deletes installed user models.
 
+### Smart microphone priority checks (macOS)
+
+```bash
+bash scripts/verify-smart-mic-priority.sh
+```
+
+Compiles the pure `AudioInputPriorityList` with temporary UserDefaults suites. Covers order
+normalization, one-time legacy migration, absent/empty/corrupt preference handling, preferred →
+system-default → discovery resolution, retention of disconnected UIDs, promote-to-front, bounded
+reordering and defaults round-trip. Does not access real devices, permissions, models or the
+microphone; Core Audio hot-plug and the Setup/menu UI remain manual Debug checks.
+
 ## 0.6.2 production lifecycle checks and Actions
 
 `.github/workflows/macos.yml` now runs governance, actual production lifecycle/preview/port-order and existing reliability/setup/Ultra/update/notes/catalog regressions, followed by unsigned arm64 Debug compilation. No microphone permission, models, distribution identity, Keychain export or publication is used. `actions/checkout` and AIDOS are pinned to commits (AIDOS pin recorded in `ops/tooling.md`); after checkout CI runs `npm install` in `.aidos`. Permissions are contents-read and credentials are not persisted. GitHub's [official runner matrix](https://github.com/actions/runner-images#available-images), checked 2026-11-10, lists `xcode-27`; this is selected because the resolved MLX manifest requires Swift 6.3 with experimentalCGen. Runner-selected `DEVELOPER_DIR` is passed to scripts. The Metal component is downloaded only on the disposable CI runner if absent. Local Debug still requires full Xcode/Metal.

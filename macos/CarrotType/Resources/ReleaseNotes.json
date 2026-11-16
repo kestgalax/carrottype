@@ -1,48 +1,74 @@
 {
   "schemaVersion": 1,
-  "version": "0.11.1",
-  "build": "36",
-  "date": "2026-11-12",
+  "version": "0.12.0",
+  "build": "37",
+  "date": "2026-11-16",
   "localizations": {
     "en": {
-      "summary": "Update notes and the standard update window now follow the chosen language, the background-download toggle explains its dependency, and quitting during dictation no longer cancels a staged update.",
+      "summary": "Microphones now form an ordered priority list: dictation fails over to the next usable mic when your interface is unplugged and returns to it when it reconnects.",
       "sections": [
         {
-          "kind": "fixed",
+          "kind": "new",
           "items": [
             {
-              "title": "What's New and the update window use the same language.",
-              "detail": "Russian and English notes now resolve through one shared rule, so What's New matches the interface immediately. The standard Sparkle update window picks up the selected language on the next launch, because macOS caches an app's preferred languages at process start. Choosing System removes only the language override CarrotType wrote and leaves your own per-app choice untouched."
+              "title": "Ordered microphone priority with automatic failover.",
+              "detail": "Every microphone you keep in the list stays there in order. Dictation uses the first usable entry, so a disconnected USB interface or headset keeps its place and becomes active again when it reconnects. The menu microphone picker moves the chosen device to the front instead of overwriting a single saved value. An existing single-microphone choice migrates once into a one-entry list."
             },
             {
-              "title": "The download toggle states its dependency.",
-              "detail": "Sparkle allows background download only while automatic checks are on. With checks off, as by default, the toggle stays disabled and now says why instead of appearing broken. Manual Check for updates and install-on-quit remain available."
+              "title": "A compact microphone row and a priority sheet.",
+              "detail": "Dictation and Setup show only the active microphone plus Configure…; the full ordered list opens in a native Settings sheet where rows are dragged into a new order. Each row shows whether the device is active, the system default or unavailable, and edits apply immediately without a separate Save. Setup keeps permissions, the optional meter and the experimental unmute switch."
+            }
+          ]
+        },
+        {
+          "kind": "improved",
+          "items": [
+            {
+              "title": "First run chooses a microphone that actually captures.",
+              "detail": "When no priority is saved yet, the first entry is seeded with the built-in microphone instead of a virtual or Continuity device, so the first dictation is not routed to a silent input. Wave Link virtual mixes count as usable only while physical Wave hardware is present, and disconnected entries keep their remembered names."
             },
             {
-              "title": "Quitting during dictation no longer blocks a staged update.",
-              "detail": "If an update is downloaded and install-on-quit is chosen, the app finishes the current dictation, text action or formatting instead of cancelling the quit, then lets Sparkle's installer apply the update after the app exits. There is no forced relaunch; the hand-off stays on Sparkle's documented install-on-quit path."
+              "title": "Settings keeps focus after a microphone permission prompt.",
+              "detail": "While Settings is open, CarrotType temporarily joins the normal app activation cycle, so the microphone permission sheet returns focus to the window instead of leaving it behind other apps. The app returns to menu-bar-only activation when Settings closes."
+            },
+            {
+              "title": "A microphone change never interrupts dictation.",
+              "detail": "Plugging or unplugging a device re-resolves the active microphone only while CarrotType is idle. A dictation or setup trial keeps the device captured at start for the recorder, live draft, meter and Wave Link unmute, and the new preference applies from the next session."
             }
           ]
         }
       ]
     },
     "ru": {
-      "summary": "Заметки обновления и стандартное окно обновления теперь следуют выбранному языку, переключатель фоновой загрузки объясняет свою зависимость, а выход во время диктовки больше не отменяет установку.",
+      "summary": "Микрофоны теперь собраны в список приоритета: диктовка переходит на следующий рабочий микрофон, когда интерфейс отключён, и возвращается к нему после подключения.",
       "sections": [
         {
-          "kind": "fixed",
+          "kind": "new",
           "items": [
             {
-              "title": "«Что нового» и окно обновления говорят на одном языке.",
-              "detail": "Русские и английские заметки теперь выбираются по одному общему правилу, поэтому «Что нового» сразу совпадает с интерфейсом. Стандартное окно Sparkle подхватывает выбранный язык при следующем запуске: macOS кэширует предпочитаемые языки приложения при старте процесса. Выбор «Системный» удаляет только переопределение, записанное CarrotType, и не трогает ваш собственный выбор языка для приложения."
+              "title": "Приоритет микрофонов с автоматическим переключением.",
+              "detail": "Каждый микрофон, добавленный в список, остаётся в нём на своём месте. Диктовка использует первую рабочую запись, поэтому отключённый USB-интерфейс или гарнитура сохраняют место и снова становятся активными после подключения. Выбор микрофона в меню перемещает устройство в начало списка, а не перезаписывает единственное сохранённое значение. Прежний одиночный выбор один раз переносится в список из одной записи."
             },
             {
-              "title": "Переключатель загрузки объясняет зависимость.",
-              "detail": "Sparkle разрешает фоновую загрузку только при включённых автоматических проверках. Пока проверки выключены, как по умолчанию, переключатель остаётся неактивным и теперь объясняет причину, а не выглядит сломанным. Ручная проверка обновлений и установка при выходе по-прежнему доступны."
+              "title": "Компактная строка микрофона и окно приоритета.",
+              "detail": "В «Диктовке» и «Настройке» виден только активный микрофон и кнопка «Настроить…»; полный упорядоченный список открывается в нативном окне настроек, где строки перетаскиваются в нужном порядке. Для каждой строки показано, активна ли она, является ли устройством по умолчанию или недоступна, а изменения применяются сразу, без отдельного сохранения. В «Настройке» остаются разрешения, необязательный индикатор и экспериментальное снятие mute."
+            }
+          ]
+        },
+        {
+          "kind": "improved",
+          "items": [
+            {
+              "title": "При первом запуске выбирается микрофон, который действительно пишет.",
+              "detail": "Если приоритет ещё не сохранён, первой записью становится встроенный микрофон, а не виртуальное устройство или микрофон Continuity, поэтому первая диктовка не уходит в тишину. Виртуальные микширования Wave Link считаются рабочими только при подключённом физическом оборудовании Wave, а отключённые записи сохраняют запомненные названия."
             },
             {
-              "title": "Выход во время диктовки не блокирует установку.",
-              "detail": "Если обновление уже скачано и выбрана установка при выходе, приложение сначала завершает текущую диктовку, преобразование или оформление текста, а не отменяет выход, и затем передаёт установку Sparkle. Принудительной перезагрузки нет: установка идёт по документированному пути Sparkle после закрытия приложения."
+              "title": "Настройки сохраняют фокус после запроса доступа к микрофону.",
+              "detail": "Пока настройки открыты, CarrotType временно входит в обычный цикл активации приложений, поэтому системное окно доступа к микрофону возвращает фокус окну приложения, а не оставляет его позади других программ. После закрытия настроек приложение снова работает только в строке меню."
+            },
+            {
+              "title": "Смена микрофона не прерывает диктовку.",
+              "detail": "Подключение и отключение устройств пересчитывает активный микрофон только когда CarrotType не занят. Диктовка или пробная запись используют устройство, зафиксированное при старте, для записи, живого черновика, индикатора и снятия mute Wave Link, а новый приоритет применяется со следующей сессии."
             }
           ]
         }

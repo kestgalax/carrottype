@@ -2,17 +2,17 @@
 
 ## Current Status
 
-- Status as of: 2026-11-12 (Europe/Moscow).
-- Released: **0.11.1 (36)**, tag `v0.11.1` / `5bc877b`, published 2026-11-12T00:10:38Z; accepted application behavior stays frozen at `f0cff02`.
-- Active work: **product focus** after AIDOS governance story closed (pilot #35 + tooling pin #36 on `main`).
-- Authorized: maintainer decided AIDOS stays **private maintainer tooling** — no public cross-promo from CarrotType; README promo link removed; schema 2 / `contractVersion: 2` / domain specs remain deferred opt-in.
+- Status as of: 2026-11-17 (Europe/Moscow).
+- Released: **0.12.0 (37)**, tag `v0.12.0` / `023242b`, published stable/latest 2026-11-16T21:06:13Z; previous stable **0.11.1 (36)** / `5bc877b`. Accepted application behavior for 0.11.1 stays frozen at `f0cff02`.
+- Active work: **0.12.0 (37) published** — smart microphone priority/failover, Dictation microphone sheet with drag reorder, first-run usable-mic seed, Settings focus after TCC. Maintenance accepted the behavior («отлично, теперь все работает») and authorized publication («публикой») with the motion companion waived («без демо»).
+- Authorized: release build, draft verification and stable/latest publication of 0.12.0 (37) with no demo asset — done. AIDOS stays **private maintainer tooling** — no public cross-promo from CarrotType; schema 2 / `contractVersion: 2` / domain specs remain deferred opt-in.
 - Blocked: none.
-- Last verified: pin docs in [ops/tooling.md](../ops/tooling.md); pilot evidence [debug-review-aidos-pilot-migration.md](debug-review-aidos-pilot-migration.md).
-- Next action: product features/bugs for CarrotType; touch AIDOS only if tooling breaks or maintainer asks.
+- Last verified: `scripts/verify-smart-mic-priority.sh` and `scripts/verify-release-notes.sh` PASS for 0.12.0 (37); clean arm64 Release + DMG `f9431641…0f4497` (23,861,036 bytes, `hdiutil verify` VALID) via the checksum-verified 0.11.1 filesystem template (Finder `-1743`), signed `CarrotType-0.12.0-37.zip` `28424c9a…b6559c864` and `appcast.xml` `7d6a2570…b471a026` prepared with `--previous-build 36`; hashes in the [notes](github-release-notes-v0.12.0.md). Draft and post-publication gates (`verify-update-release.py --tag v0.12.0 --previous-build 36`, then `--published`) PASS; draft and anonymous public assets matched local hashes. Evidence: `dist/verify-draft-0.12.0.log`, `dist/verify-published-0.12.0.log`, [release](https://github.com/kestgalax/carrottype/releases/tag/v0.12.0).
+- Next action: collect feedback on microphone priority/failover and the priority sheet; no further implementation stage or version is selected. PR [#41](https://github.com/kestgalax/carrottype/pull/41) carries the release. [Spec](specs/tasks/smart-mic-priority.md), [sheet design](superpowers/specs/2026-11-16-mic-priority-sheet-design.md).
 
 ## Motion OS consumer (2026-11-14)
 
-CarrotType is the first Motion OS dogfood consumer. Motion OS stays **private maintainer tooling** (like AIDOS): no npm dependency; use `MOTION_OS_ROOT` + `npm run motion` (`scripts/run-motion.mjs`, pin in [ops/motion-tooling.md](../ops/motion-tooling.md)). `motion.config.json` selects `settings-toggle-payoff`, silent audio, capture optional. `motion/skin` exports a ~23 s `beats` map (System → Light → Dark). Release companions (GitHub Release mp4 assets for visible UI changes) are locked in [ops/release-motion.md](../ops/release-motion.md) and gated in the release lifecycle. This does not change the dictation runtime.
+CarrotType is the first Motion OS dogfood consumer. Motion OS stays **private maintainer tooling** (like AIDOS): no npm dependency; use `MOTION_OS_ROOT` + `npm run motion` (`scripts/run-motion.mjs`, pin in [ops/motion-tooling.md](../ops/motion-tooling.md)). `motion.config.json` selects `settings-toggle-payoff`, silent audio, capture optional. **One active skin per consumer root** (motion-os pin `557ec2c`): `motion/skin/index.tsx` currently stages the 0.12.0 mic priority film (~25 s: Dictation compact row → sheet → drag reorder → Готово); the shipped 0.8.0 theme film wiring is preserved in `motion/skin/themeFilm.tsx` and can own `index.tsx` again for theme re-runs. Release companions (GitHub Release mp4 assets for visible UI changes) are locked in [ops/release-motion.md](../ops/release-motion.md) and gated in the release lifecycle. This does not change the dictation runtime.
 
 Everything below is retained historical release history unless it explicitly refers to this block.
 
@@ -20,7 +20,7 @@ Everything below is retained historical release history unless it explicitly ref
 
 Milestone 0–2 vertical slice shipped; **release 0.11.1 (36)** is published stable/latest as a metadata-only bugfix for update-note language alignment, the explained download-toggle dependency and quit draining for install-on-quit; accepted application behavior stays frozen at `f0cff02`. **Release 0.11.0 (35)** with the Settings organization (General / Dictation / Text actions) remains the prior release. **GitHub Release `v0.9.0`**: Dynamic Island Full/default, Minimal and Menu-bar-only modes. **v0.8.2**: cumulative release notes across skipped versions. **v0.8.1**: opt-in launch at macOS sign-in. **v0.8.0**: exact dictation rules including first-sentence lowercase, text trial, two offered cleanup models and System/Light/Dark. **v0.7.0**: native settings, accessibility/confirmation polish and selected carrot-microphone A brand. **v0.6.2**: coordinated dictation lifecycle, awaited teardown and generation-safe live draft; production regressions. **v0.6.1**: offline What’s New, structured localized signed update notes and persistent version access. **v0.6.0**: guided setup/local trial, compact bindings and formatting feedback. **v0.5.0**: signed in-app GitHub updates (ADR-017). **v0.4.0**: Ultra-only dictation, explicit migration and optional legacy-model cleanup (ADR-016). **v0.3.10**: dictation recovery, clipboard safety, visible errors and helper IPC reliability. **v0.3.9**: parallel Wave Link unmute + live-draft auto language / silence hygiene. **v0.3.8**: Storage UX — installed packages + catalog-scoped HF download cache clear. **v0.3.7**: Secure Coding hardening (ADR-015). **v0.3.6**: recorder-first live draft. **v0.3.5**: Escape cancel Copy capsule. **v0.3.4** live draft (ADR-014). **v0.3.3** Parakeet Ultra. **v0.3.2** Statistics characters + WPM. **v0.3.1** hid DMG folders. **v0.3.0** usage stats (ADR-013). **v0.2.2** Walkie-talkie. **v0.2.1** custom DMG window. **v0.2.0** Selection Transform (ADR-012).
 
-Latest published artifact: `CarrotType-0.11.1.dmg` — SHA-256 `11de7b60656b6f90773743e22f055ee3dfedc7dd7f8b4e8111e29a2f9e5df4bf`; signed ZIP/feed hashes in [release notes](github-release-notes-v0.11.1.md).
+Latest published artifact: `CarrotType-0.12.0.dmg` — SHA-256 `f943164101df9045e4e9646dd67799f38e21b0bdf35e5e18d16d0d88970f4497`; signed ZIP/feed hashes in [release notes](github-release-notes-v0.12.0.md). Previous: `CarrotType-0.11.1.dmg` — SHA-256 `11de7b60656b6f90773743e22f055ee3dfedc7dd7f8b4e8111e29a2f9e5df4bf`.
 
 **Release acceptance:** maintainer asked to review the locale/quit-install Debug fix and publish if acceptable; coordinator accepted Debug `f0cff02` / evidence `7633120` and authorized 0.11.1 (36). Stable/latest 0.11.1 (36) published 2026-11-12T00:10:38Z from tag `v0.11.1` / `5bc877b`; PR [#33](https://github.com/kestgalax/carrottype/pull/33) merged as `17ab70d` after hosted `macOS checks` [43124371738](https://github.com/kestgalax/carrottype/actions/runs/43124371738) passed. Individual manual device/TCC/VoiceOver outcomes were not enumerated. [Evidence/limits](debug-review-v0.11.1.md).
 
@@ -402,3 +402,66 @@ install-on-quit is staged. Automatic checks/downloads remain opt-in and the stan
 path never forces a relaunch. Evidence: [Debug review](debug-review-update-locale-quit.md). No
 publication, version bump, DMG or GitHub release in this stage; the maintainer's separate
 Debug/publication gate still applies.
+
+## Smart microphone priority — implementation for review (2026-11-16, no version assigned)
+
+The coordinator approved smart microphone failover; OpenCode implemented it on the fresh
+main-based `feat/smart-mic-priority` worktree from `027dd52` (published 0.11.1). The single-mic
+mental model is replaced by an ordered priority list (`carrottype.audioInputPriorityUIDs`): the
+active input is the first connected preferred UID, disconnected UIDs stay for reconnect, and the
+resolved device keeps writing `carrottype.selectedAudioInputID`. An existing single selection
+migrates once into a one-entry list; normalized duplicates/empty values are ignored.
+
+Core Audio device/default-input listeners refresh and re-resolve only while idle. A dictation or
+setup trial freezes the device captured at start (`DictationSessionSettings.deviceUID`), so no
+hot-plug can switch the microphone under recording, live draft, the optional meter or Wave Link
+unmute (ADR-007 unchanged). Setup shows a native **Microphone priority** list with availability,
+active/default state, up/down reordering and a short RU/EN explanation; the menu picker promotes the
+chosen mic to the front. No new engine, dependency, network sink, system-default-input change or
+ADR; no publication, version bump, DMG or PR.
+
+Verification: `scripts/verify-smart-mic-priority.sh` (normalization, migration, ordered failover,
+retention, promote, bounded move, defaults round-trip), the existing no-device regression scripts,
+local governance where available, and an arm64 Debug build. Real USB hot-plug, Setup reorder by
+mouse/VoiceOver and menu behavior remain a manual Debug check; the priority list can accumulate
+stale UIDs by design because nothing is pruned automatically.
+[Spec](specs/tasks/smart-mic-priority.md).
+
+## 0.12.0 — smart microphone priority (release preparation, 2026-11-16)
+
+Maintainer accepted the working behavior («отлично, теперь все работает») and authorized **release
+preparation** for **0.12.0 (37)**, including a Motion companion film. This is not publication:
+stable/latest and GitHub Release assets remain a later coordinator gate.
+
+Follow-ups committed on top of `ec05e11` before the version bump:
+
+- **Usable-microphone model.** Core Audio enumeration now carries transport type, manufacturer and
+  input channels. Wave Link virtual mixes count as usable only while physical Wave hardware is
+  present, so an orphan `Voice`/`Stream` endpoint cannot pin failover or own the first dictation.
+  An empty priority list is seeded once with the built-in mic by preference (built-in > USB >
+  Bluetooth > other > virtual > aggregate, Continuity/iPhone demoted).
+- **Dictation sheet.** The full ordered list moved out of the Setup form into
+  `MicrophonePrioritySettingsSection` + `MicrophonePrioritySheet` (native `.sheet`, `List` +
+  `onMove` drag reorder, RU/EN caption, Done). Dictation and Setup show only the active microphone
+  and **Настроить…**; Setup keeps permissions, meter and Wave Link unmute. Design/mockups:
+  [sheet design](superpowers/specs/2026-11-16-mic-priority-sheet-design.md),
+  `docs/mockups/mic-priority-mockup-a-*.jpg`.
+- **Settings focus after TCC.** While Settings is open the app joins the regular activation cycle
+  (LSUIElement → regular) and retries a bounded focus restore after the microphone sheet; it
+  returns to accessory activation when the last Settings window closes. No polling loop and no new
+  permission.
+- **Metadata.** `CFBundleShortVersionString`/`CFBundleVersion` 0.12.0 (37) in `project.yml` and
+  `Info.plist`; `ReleaseNotes.json` rewritten for 0.12.0 with 0.11.1 archived unchanged into
+  `ReleaseNotesHistory.json` (contiguous 37→27); [release notes](github-release-notes-v0.12.0.md)
+  with a **Демо** placeholder for `CarrotType-0.12.0-mic-priority-demo.mp4`.
+- **Motion companion.** `motion/briefs/mic-priority.md` + the active skin stage the Dictation
+  compact row → priority sheet → drag reorder → Готово (~25 s, silent 1920×1080, effect clicks
+  only). Rendered locally to `dist/CarrotType-0.12.0-mic-priority-demo.mp4` (`motion run` +
+  `motion check` pass); the mp4 stays out of git and is uploaded with the draft release assets.
+
+Verification for this stage: `verify-smart-mic-priority.sh` (adds Wave Link usability, seed
+preference and the unusable-default failover case), `verify-release-notes.sh` (37→27 history,
+RU/EN, safe render), arm64 Debug build, and the existing setup/lifecycle regressions. Real USB
+hot-plug, sheet drag by mouse, VoiceOver and TCC focus outcomes remain a manual Debug check; the
+DMG, staged update, GitHub Release assets (including the Motion mp4) and publication are not done
+in this stage.

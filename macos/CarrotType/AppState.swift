@@ -305,6 +305,16 @@ final class AppState: ObservableObject {
             .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
 
+        // Hot-plug failover may resolve a different active mic while idle; follow it in the meter.
+        audioInput.$selectedDeviceID
+            .dropFirst()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                guard let self, self.settingsVisible, self.micMeterEnabled else { return }
+                self.startInputMeterIfPossible()
+            }
+            .store(in: &cancellables)
+
         // Do NOT forward audioLevel.objectWillChange → AppState: the meter runs at ~30 Hz
         // and would keep MenuBarExtra / Settings recomputing while Settings is open.
         // Settings observes AudioLevelMonitor directly.
@@ -532,6 +542,9 @@ final class AppState: ObservableObject {
     func settingsDidAppear() {
         settingsAppearanceCount += 1
         settingsVisible = true
+        // LSUIElement (menu-bar) apps do not reliably regain key focus after TCC sheets
+        // unless they temporarily join the normal activation cycle while Settings is open.
+        presentAsRegularAppForSettings()
         refreshPermissions()
         permissions.startMonitoring()
         if permissions.microphoneGranted {
@@ -554,6 +567,27 @@ final class AppState: ObservableObject {
         requestTypingSpeedTestDismiss()
         micMeterEnabled = false
         stopInputMeter()
+        resignToAccessoryAppIfSettingsClosed()
+    }
+
+    /// Show a Dock presence while Settings is open so permission sheets can return focus.
+    private func presentAsRegularAppForSettings() {
+        if NSApp.activationPolicy() != .regular {
+            NSApp.setActivationPolicy(.regular)
+        }
+        PermissionService.scheduleSettingsFocusRestore()
+    }
+
+    /// Return to menu-bar-only activation after the last Settings appearance ends.
+    private func resignToAccessoryAppIfSettingsClosed() {
+        let settingsStillOpen = NSApp.windows.contains {
+            $0.isVisible && !$0.isSheet
+                && ($0.frameAutosaveName == "carrottype.settings" || $0.title == "carrottype")
+        }
+        guard !settingsStillOpen else { return }
+        if NSApp.activationPolicy() != .accessory {
+            NSApp.setActivationPolicy(.accessory)
+        }
     }
 
     func startInputMeterIfPossible() {
@@ -574,7 +608,9 @@ final class AppState: ObservableObject {
     }
 
     func selectAudioInput(_ id: String) {
-        audioInput.selectDevice(id)
+        // Menu quick-select promotes the mic to the front of the ordered priority list.
+        // During a session the active device stays frozen; the new order applies to the next one.
+        audioInput.promoteDevice(id)
         if settingsVisible, micMeterEnabled {
             startInputMeterIfPossible()
         }
@@ -1071,6 +1107,8 @@ final class AppState: ObservableObject {
     private func sessionPhaseChanged(_ phase: DictationSessionPhase) {
         switch phase {
         case .starting:
+            // Freeze the resolved mic: hot-plug failover must never switch under a recording.
+            audioInput.suspendAutoSwitch()
             if let configuration = session.configuration {
                 activeDictationMode = configuration.islandMode
                 capsuleOperation = .dictation
@@ -1111,8 +1149,10 @@ final class AppState: ObservableObject {
             pttKeyHeld = false
             recorderLiveLevel = 0
             hotkey.stopPushToTalkReleaseMonitor()
-            if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
+            // The session is over: re-resolve the priority list (a preferred mic may be back).
+            audioInput.resumeAutoSwitch()
             refreshMenuBarMode()
+            if settingsVisible, micMeterEnabled { startInputMeterIfPossible() }
         }
     }
 

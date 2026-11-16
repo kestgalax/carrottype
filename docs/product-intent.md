@@ -133,3 +133,19 @@ helper, dictation/transform, statistics, updater, trust, network, dependency or 
 GigaAM is excluded. Individual device/IME/VoiceOver/TCC outcomes were not enumerated. Published
 stable/latest as 0.11.0 (35) on 2026-11-12 after the verified draft, hosted CI and public gate;
 tag `v0.11.0` is `791603e`, PR #32 merged as `b1ba27e`.
+
+## Smart microphone priority — 0.12.0 (authorized, release preparation)
+
+Dictation no longer depends on one remembered microphone. The maintainer accepted the working
+behavior («отлично, теперь все работает») and authorized release preparation for **0.12.0 (37)**:
+an ordered priority list where the first **usable** device is used, disconnected devices keep their
+place for reconnect, and the menu picker promotes instead of overwriting. Usability excludes orphan
+Wave Link virtual mixes, and a first run with no saved preference seeds the built-in microphone so
+the first dictation is not routed to a silent input.
+
+The editor moved out of the Setup form into a compact active-microphone row plus a native
+**Настроить…** sheet with drag reorder; Setup keeps permissions, the optional meter and the
+experimental Wave Link unmute (ADR-007 unchanged). A dictation or setup trial keeps the device
+captured at start, so hot-plug never switches the microphone mid-session. No new engine, model,
+dependency, network sink or distribution change is introduced. Publication to stable/latest remains
+a separate gate.

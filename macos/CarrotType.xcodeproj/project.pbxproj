@@ -37,6 +37,7 @@
 		4C159DD2BA0E6085710CBD2D /* DynamicIslandIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB424BA73140FD09F7B4C67F /* DynamicIslandIndicators.swift */; };
 		4CD5D01CA1E2291B4136CDD6 /* ModelCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 483744F178A17C48BF392DE8 /* ModelCatalog.json */; };
 		4F23139483EA3C30C4F53B76 /* DictationRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59F17E9DF9ACC0B04D93189 /* DictationRules.swift */; };
+		4FE6D943B17E2A80940D6F20 /* AudioInputPriority.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A23DC3902FD88049F8CC89 /* AudioInputPriority.swift */; };
 		54D6AE6E6EBE7236D03B0218 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1100C490D0C239D082EF6C60 /* InfoPlist.strings */; };
 		556FFCBB0314251DFFA2812F /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = 699639FF1FE81CD3DEAE7DD7 /* MLXLLM */; };
 		55E68B4BCBFEC16567620F70 /* DictationRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59F17E9DF9ACC0B04D93189 /* DictationRules.swift */; };
@@ -215,6 +216,7 @@
 		AD23B7D3784693FB5A2848F2 /* TextInsertionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInsertionService.swift; sourceTree = "<group>"; };
 		AED039DEB5A476336B2DF807 /* TextActionsSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextActionsSettingsPane.swift; sourceTree = "<group>"; };
 		B0D40E1D3CA1524781D9C600 /* QwenCleanupPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QwenCleanupPackage.swift; sourceTree = "<group>"; };
+		B2A23DC3902FD88049F8CC89 /* AudioInputPriority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputPriority.swift; sourceTree = "<group>"; };
 		B396B01E431F6442D30B243E /* ClipboardSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardSnapshot.swift; sourceTree = "<group>"; };
 		B7AB7C3BBBAC0A34FBB80EB5 /* SelectionTextService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionTextService.swift; sourceTree = "<group>"; };
 		BC0A761468F99C6F1AE0BEF5 /* TypingSpeedTestCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingSpeedTestCoordinator.swift; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 			children = (
 				51A9ABFD1DB632CF6287C1EF /* ApplicationTermination.swift */,
 				E943EB9B0D4CC5DA19517B9A /* AppUpdateService.swift */,
+				B2A23DC3902FD88049F8CC89 /* AudioInputPriority.swift */,
 				1C308C7819FB980179CA944D /* AudioInputService.swift */,
 				46B50E12D241D4FD62DF4339 /* AudioLevelMonitor.swift */,
 				2E4AB7FFAD8131E11A68A11E /* AudioRecorder.swift */,
@@ -605,6 +608,7 @@
 				6F476E571A06131EDA8BCE2F /* AppUpdateService.swift in Sources */,
 				FA26E7EBC78606A27CCD04BA /* AppUpdateViews.swift in Sources */,
 				2A0FF8784ED3C9857028D151 /* ApplicationTermination.swift in Sources */,
+				4FE6D943B17E2A80940D6F20 /* AudioInputPriority.swift in Sources */,
 				1424691E8C5507CB87824295 /* AudioInputService.swift in Sources */,
 				2E15B15907D6FB83AF3C5FF1 /* AudioLevelMonitor.swift in Sources */,
 				FE1A7CCA62C8799042615C53 /* AudioRecorder.swift in Sources */,

@@ -45,6 +45,7 @@ final class PermissionService: ObservableObject {
 
     /// Re-read TCC. Publishes only when values change (or after an explicit bump need).
     func refresh() {
+        let previousMic = microphoneAuthorization
         let mic = Self.currentMicrophoneAuthorization()
         let ax = Self.currentAccessibilityGranted()
         let changed = mic != microphoneAuthorization || ax != accessibilityGranted
@@ -69,6 +70,11 @@ final class PermissionService: ObservableObject {
             permissionCheckTick &+= 1
             objectWillChange.send()
         }
+        // LSUIElement apps often lose key status after the mic TCC sheet. Re-key Settings
+        // unless System Settings is still frontmost (user may still be granting AX there).
+        if mic.isGranted, previousMic != .authorized, !Self.frontmostIsSystemSettings {
+            Self.scheduleSettingsFocusRestore()
+        }
         adjustPolling()
     }
 
@@ -90,7 +96,12 @@ final class PermissionService: ObservableObject {
                 object: nil,
                 queue: .main
             ) { [weak self] _ in
-                Task { @MainActor in self?.refresh() }
+                Task { @MainActor in
+                    self?.refresh()
+                    // Returning from the TCC sheet / System Settings often leaves Settings
+                    // visible but not key; bring it forward when it is already open.
+                    Self.scheduleSettingsFocusRestore()
+                }
             }
         }
 
@@ -136,12 +147,64 @@ final class PermissionService: ObservableObject {
                 Task { @MainActor in
                     self?.microphoneAuthorization = granted ? .authorized : .denied
                     self?.refresh()
+                    if granted {
+                        // Focus often drops *after* the completion callback on LSUIElement apps.
+                        Self.scheduleSettingsFocusRestore()
+                    }
                 }
             }
         case .denied, .restricted:
             openMicrophoneSettings()
         case .authorized:
             refresh()
+        }
+    }
+
+    /// LSUIElement + SwiftUI Settings: system permission UI frequently leaves the window
+    /// visible but not key, and a single activate call is not enough. Retry briefly.
+    nonisolated static func scheduleSettingsFocusRestore() {
+        let delays: [TimeInterval] = [0, 0.05, 0.15, 0.35, 0.7, 1.2]
+        for delay in delays {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                restoreSettingsFocusIfNeeded()
+            }
+        }
+    }
+
+    /// Puts the CarrotType Settings window back in front after a system permission UI steals key status.
+    nonisolated static func restoreSettingsFocusIfNeeded() {
+        DispatchQueue.main.async {
+            guard let window = settingsWindow() else { return }
+            // While Settings is open, behave like a normal app so TCC sheets can return focus.
+            if NSApp.activationPolicy() != .regular {
+                NSApp.setActivationPolicy(.regular)
+            }
+            NSApp.activate(ignoringOtherApps: true)
+            window.makeKeyAndOrderFront(nil)
+            window.orderFrontRegardless()
+        }
+    }
+
+    /// Prefer the chrome-fixed Settings window; fall back to any titled carrottype window.
+    nonisolated private static func settingsWindow() -> NSWindow? {
+        let visible = NSApp.windows.filter { $0.isVisible && !$0.isSheet }
+        if let named = visible.first(where: {
+            $0.frameAutosaveName == "carrottype.settings" || $0.title == "carrottype"
+        }) {
+            return named
+        }
+        return nil
+    }
+
+    nonisolated private static var frontmostIsSystemSettings: Bool {
+        switch NSWorkspace.shared.frontmostApplication?.bundleIdentifier {
+        case "com.apple.systempreferences",
+             "com.apple.PreferencePanels",
+             "com.apple.Settings",
+             "com.apple.systempreferences.AppleIDSettings":
+            return true
+        default:
+            return false
         }
     }
 

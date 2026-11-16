@@ -2,6 +2,34 @@
 
 Project memory lives in repository artifacts — not in chat transcripts.
 
+## 0.12.0 mic priority release preparation — 2026-11-16
+
+Maintainer accepted the working smart-mic behavior («отлично, теперь все работает») and authorized
+release preparation (not publication) with a Motion companion. Follow-ups on
+`feat/smart-mic-priority`: Core Audio transport/manufacturer enumeration, Wave Link virtual mixes
+usable only with physical Wave hardware, first-run seed preferring the built-in mic, the priority
+editor moved into a Dictation/Setup compact row + native drag-reorder sheet, and Settings focus
+restored after the microphone TCC sheet (LSUIElement → regular while Settings is open). Bumped to
+**0.12.0 (37)** in `project.yml`/`Info.plist`; `ReleaseNotes.json` rewritten, published 0.11.1
+archived unchanged into `ReleaseNotesHistory.json` (contiguous 37→27). PR to `main` opened for
+review; clean Release/DMG, motion film upload, staged update and stable/latest publication remain
+separate gates. No new ADR/engine/dependency/network sink.
+
+## Smart microphone priority — implementation for review — 2026-11-16
+
+Coordinator approved ordered microphone failover; OpenCode implemented it on the main-based
+`feat/smart-mic-priority` worktree from `027dd52`. `carrottype.audioInputPriorityUIDs` is the ordered
+preference (first connected UID wins, disconnected UIDs stay for reconnect); the legacy
+`carrottype.selectedAudioInputID` migrates once into a one-entry list and keeps receiving the
+resolved active UID. An empty preference is seeded once with the resolved default. Core Audio
+device/default-input listeners re-resolve only while idle; `AppState` suspends auto-switch for the
+whole session, preserving the frozen `DictationSessionSettings.deviceUID` for capture, live draft
+and Wave Link unmute (ADR-007). Setup originally showed ordered rows with explicit up/down
+reordering and RU/EN copy (later superseded by the 0.12.0 compact row + drag-reorder sheet); the
+menu promotes the chosen mic. No new ADR, engine, dependency, network sink or publication; real
+hot-plug/VoiceOver remains a manual Debug check.
+[Spec](docs/specs/tasks/smart-mic-priority.md).
+
 ## AIDOS private, no public promo — 2026-11-12
 
 Maintainer decided AIDOS is private maintainer tooling only, not a product to advertise through CarrotType. Public README cross-promo removed; schema/domains/`contractVersion: 2` stay skipped for now. Internal `.aidos` / `AIDOS_ROOT` / `ops/tooling.md` pin remain for local governance. Product focus resumes on CarrotType.
