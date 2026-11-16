@@ -4,7 +4,7 @@
 
 - Status as of: 2026-11-17 (Europe/Moscow).
 - Released: **0.12.0 (37)**, tag `v0.12.0` / `023242b`, published stable/latest 2026-11-16T21:06:13Z; previous stable **0.11.1 (36)** / `5bc877b`. Accepted application behavior for 0.11.1 stays frozen at `f0cff02`. PR [#41](https://github.com/kestgalax/carrottype/pull/41) merged as `f70a976`.
-- Active work: remove unused Motion OS consumer tooling from the repo (skins, `npm run motion`, release-motion skill/ops). 0.12.0 shipped without a demo asset; Motion OS is no longer a release gate or dogfood target here.
+- Active work: remove unused Motion OS consumer tooling and refresh the public README / product-intent status for published **0.12.0** (mic priority sheet, typing-speed, live draft). Motion OS is no longer a release gate or dogfood target here.
 - Authorized: none for a new app version. AIDOS stays **private maintainer tooling** — no public cross-promo from CarrotType; schema 2 / `contractVersion: 2` / domain specs remain deferred opt-in.
 - Blocked: none.
 - Last verified: published 0.12.0 evidence remains as recorded below; this change is docs/tooling removal only (no Swift).
