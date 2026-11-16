@@ -7,12 +7,12 @@
 - Active work: **0.12.0 (37) release preparation** on `feat/smart-mic-priority` — smart microphone priority/failover, Dictation microphone sheet with drag reorder, first-run usable-mic seed, Settings focus after TCC. Maintenance accepted the behavior («отлично, теперь все работает»).
 - Authorized: maintainer authorized **release preparation** (version/notes/docs/PR) with a Motion companion; stable/latest publication is a **later** coordinator gate. AIDOS stays **private maintainer tooling** — no public cross-promo from CarrotType; schema 2 / `contractVersion: 2` / domain specs remain deferred opt-in.
 - Blocked: none.
-- Last verified: `scripts/verify-smart-mic-priority.sh` and `scripts/verify-release-notes.sh` PASS for 0.12.0 (37); [notes draft](github-release-notes-v0.12.0.md), [spec](specs/tasks/smart-mic-priority.md), [sheet design](superpowers/specs/2026-11-16-mic-priority-sheet-design.md).
+- Last verified: `scripts/verify-smart-mic-priority.sh` and `scripts/verify-release-notes.sh` PASS for 0.12.0 (37); Motion companion rendered + `motion check` PASS (`dist/CarrotType-0.12.0-mic-priority-demo.mp4`); [notes draft](github-release-notes-v0.12.0.md), [spec](specs/tasks/smart-mic-priority.md), [sheet design](superpowers/specs/2026-11-16-mic-priority-sheet-design.md).
 - Next action: review PR on `main`; clean Release/DMG, Motion demo upload and publication remain separate gates. Touch AIDOS only if tooling breaks or maintainer asks.
 
 ## Motion OS consumer (2026-11-14)
 
-CarrotType is the first Motion OS dogfood consumer. Motion OS stays **private maintainer tooling** (like AIDOS): no npm dependency; use `MOTION_OS_ROOT` + `npm run motion` (`scripts/run-motion.mjs`, pin in [ops/motion-tooling.md](../ops/motion-tooling.md)). `motion.config.json` selects `settings-toggle-payoff`, silent audio, capture optional. `motion/skin` exports a ~23 s `beats` map (System → Light → Dark). Release companions (GitHub Release mp4 assets for visible UI changes) are locked in [ops/release-motion.md](../ops/release-motion.md) and gated in the release lifecycle. This does not change the dictation runtime.
+CarrotType is the first Motion OS dogfood consumer. Motion OS stays **private maintainer tooling** (like AIDOS): no npm dependency; use `MOTION_OS_ROOT` + `npm run motion` (`scripts/run-motion.mjs`, pin in [ops/motion-tooling.md](../ops/motion-tooling.md)). `motion.config.json` selects `settings-toggle-payoff`, silent audio, capture optional. **One active skin per consumer root** (motion-os pin `557ec2c`): `motion/skin/index.tsx` currently stages the 0.12.0 mic priority film (~25 s: Dictation compact row → sheet → drag reorder → Готово); the shipped 0.8.0 theme film wiring is preserved in `motion/skin/themeFilm.tsx` and can own `index.tsx` again for theme re-runs. Release companions (GitHub Release mp4 assets for visible UI changes) are locked in [ops/release-motion.md](../ops/release-motion.md) and gated in the release lifecycle. This does not change the dictation runtime.
 
 Everything below is retained historical release history unless it explicitly refers to this block.
 
@@ -454,9 +454,14 @@ Follow-ups committed on top of `ec05e11` before the version bump:
   `Info.plist`; `ReleaseNotes.json` rewritten for 0.12.0 with 0.11.1 archived unchanged into
   `ReleaseNotesHistory.json` (contiguous 37→27); [release notes](github-release-notes-v0.12.0.md)
   with a **Демо** placeholder for `CarrotType-0.12.0-mic-priority-demo.mp4`.
+- **Motion companion.** `motion/briefs/mic-priority.md` + the active skin stage the Dictation
+  compact row → priority sheet → drag reorder → Готово (~25 s, silent 1920×1080, effect clicks
+  only). Rendered locally to `dist/CarrotType-0.12.0-mic-priority-demo.mp4` (`motion run` +
+  `motion check` pass); the mp4 stays out of git and is uploaded with the draft release assets.
 
 Verification for this stage: `verify-smart-mic-priority.sh` (adds Wave Link usability, seed
 preference and the unusable-default failover case), `verify-release-notes.sh` (37→27 history,
 RU/EN, safe render), arm64 Debug build, and the existing setup/lifecycle regressions. Real USB
 hot-plug, sheet drag by mouse, VoiceOver and TCC focus outcomes remain a manual Debug check; the
-Motion film, DMG, staged update and publication are not done in this stage.
+DMG, staged update, GitHub Release assets (including the Motion mp4) and publication are not done
+in this stage.
