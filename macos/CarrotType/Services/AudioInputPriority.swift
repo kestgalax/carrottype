@@ -1,8 +1,110 @@
 import Foundation
 
+/// Capture usability beyond “shows up in the device list”.
+///
+/// Elgato Wave Link keeps virtual mix devices (Voice / Stream / Main / …) present and `alive`
+/// even when the physical Wave mic is unplugged. Counting those as connected would pin failover
+/// on a silent virtual path. Virtual Wave Link targets are usable only while real Wave hardware
+/// is also present in Core Audio.
+enum AudioInputTransport: Equatable {
+    case builtIn
+    case usb
+    case bluetooth
+    case virtual
+    case aggregate
+    case other
+}
+
+enum AudioInputUsability {
+    /// Wave Link software mix / FX / stream endpoints (not the USB Wave:3 itself).
+    static func looksLikeWaveLinkVirtual(name: String, transport: AudioInputTransport) -> Bool {
+        guard transport == .virtual else { return false }
+        let n = name.lowercased()
+        return n.contains("wave link") || n.contains("wavelink")
+    }
+
+    /// Physical Elgato Wave hardware (Wave:1 / Wave:3 / …), never a Wave Link virtual mix.
+    static func looksLikePhysicalWaveHardware(
+        name: String,
+        manufacturer: String,
+        transport: AudioInputTransport
+    ) -> Bool {
+        switch transport {
+        case .virtual, .aggregate:
+            return false
+        case .builtIn, .usb, .bluetooth, .other:
+            break
+        }
+        let n = name.lowercased()
+        let m = manufacturer.lowercased()
+        if n.range(of: #"wave:\d"#, options: .regularExpression) != nil { return true }
+        let elgatoFamily = m.contains("elgato") || m.contains("corsair")
+        return elgatoFamily && n.contains("wave") && !n.contains("wave link") && !n.contains("wavelink")
+    }
+
+    /// Present inputs are usable unless they are orphan Wave Link virtual mixes.
+    static func isUsable(
+        name: String,
+        manufacturer: String,
+        transport: AudioInputTransport,
+        physicalWaveHardwarePresent: Bool
+    ) -> Bool {
+        if looksLikeWaveLinkVirtual(name: name, transport: transport) {
+            return physicalWaveHardwarePresent
+        }
+        return true
+    }
+
+    static func physicalWaveHardwarePresent(
+        in devices: [(name: String, manufacturer: String, transport: AudioInputTransport)]
+    ) -> Bool {
+        devices.contains {
+            looksLikePhysicalWaveHardware(name: $0.name, manufacturer: $0.manufacturer, transport: $0.transport)
+        }
+    }
+
+    /// Continuity / iPhone-as-mic style inputs — often present but poor first-run defaults.
+    static func looksLikeContinuityOrRemoteMic(name: String, transport: AudioInputTransport) -> Bool {
+        let n = name.lowercased()
+        if n.contains("iphone") || n.contains("ipad") || n.contains("continuity") { return true }
+        // Continuity Capture often reports a non-standard transport (not built-in/USB/BT/virtual).
+        if transport == .other, n.contains("microphone"), !n.contains("macbook"), !n.contains("imac") {
+            return true
+        }
+        return false
+    }
+
+    /// Higher is better for the one-time empty-priority seed (first launch / no preference yet).
+    /// Prefer built-in over USB/BT; deprioritize Continuity and virtual mixes so a silent Wave Link
+    /// default does not own the first dictation.
+    static func firstSeedScore(name: String, transport: AudioInputTransport) -> Int {
+        if looksLikeContinuityOrRemoteMic(name: name, transport: transport) { return 20 }
+        switch transport {
+        case .builtIn: return 100
+        case .usb: return 80
+        case .bluetooth: return 45
+        case .other: return 35
+        case .virtual: return 15
+        case .aggregate: return 10
+        }
+    }
+
+    /// Best UID for seeding an empty priority list. `candidates` must already be usable.
+    static func preferredFirstSeedUID(
+        in candidates: [(uid: String, name: String, transport: AudioInputTransport)]
+    ) -> String? {
+        candidates.max { lhs, rhs in
+            let left = firstSeedScore(name: lhs.name, transport: lhs.transport)
+            let right = firstSeedScore(name: rhs.name, transport: rhs.transport)
+            if left != right { return left < right }
+            return lhs.uid > rhs.uid
+        }?.uid
+    }
+}
+
 /// Ordered microphone preference for smart failover.
 ///
-/// The active input is the first UID in this list that is currently connected. UIDs stay in the
+/// The active input is the first UID in this list that is currently **usable**. UIDs stay in the
 /// list while their device is unavailable so reconnecting restores the preferred microphone.
 /// Nothing is pruned automatically: the system default and the first discovered device are only
 /// fallbacks. The service seeds an empty list once with the resolved default; it never appends

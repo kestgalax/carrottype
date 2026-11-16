@@ -6,6 +6,23 @@ struct AudioInputDevice: Identifiable, Hashable {
     let id: String
     let name: String
     let isDefault: Bool
+    /// Present in Core Audio but not a usable capture target (e.g. orphan Wave Link virtual mix).
+    let isUsable: Bool
+    let transport: AudioInputTransport
+
+    init(
+        id: String,
+        name: String,
+        isDefault: Bool,
+        isUsable: Bool = true,
+        transport: AudioInputTransport = .other
+    ) {
+        self.id = id
+        self.name = name
+        self.isDefault = isDefault
+        self.isUsable = isUsable
+        self.transport = transport
+    }
 }
 
 /// One row of the Setup priority list. `name` is `nil` only for a UID never seen connected.
@@ -63,17 +80,18 @@ final class AudioInputService: ObservableObject {
         devices.first { $0.id == selectedDeviceID }
     }
 
-    /// Preferred order first, then other connected devices that are not in the list yet, so the
-    /// user can promote them. Disconnected preferences keep their cached names.
+    /// Preferred order first, then other present devices that are not in the list yet, so the
+    /// user can promote them. Disconnected / orphan-virtual preferences keep their cached names.
     var priorityEntries: [AudioInputPriorityEntry] {
         var entries = priorityUIDs.map { uid -> AudioInputPriorityEntry in
             let device = devices.first { $0.id == uid }
+            let usable = device?.isUsable == true
             return AudioInputPriorityEntry(
                 id: uid,
                 name: device?.name ?? knownNames[uid],
-                isAvailable: device != nil,
+                isAvailable: usable,
                 isDefault: device?.isDefault ?? false,
-                isActive: device != nil && uid == selectedDeviceID
+                isActive: usable && uid == selectedDeviceID
             )
         }
         let listed = Set(entries.map(\.id))
@@ -82,9 +100,9 @@ final class AudioInputService: ObservableObject {
                 AudioInputPriorityEntry(
                     id: device.id,
                     name: device.name,
-                    isAvailable: true,
+                    isAvailable: device.isUsable,
                     isDefault: device.isDefault,
-                    isActive: device.id == selectedDeviceID
+                    isActive: device.isUsable && device.id == selectedDeviceID
                 )
             )
         }
@@ -96,19 +114,28 @@ final class AudioInputService: ObservableObject {
     /// Refreshes the connected devices and, while idle, re-resolves the active input.
     /// The published device list always updates; only the active selection is frozen in a session.
     func refreshDevices() {
-        let discovery = AVCaptureDevice.DiscoverySession(
-            deviceTypes: [.microphone, .external],
-            mediaType: .audio,
-            position: .unspecified
+        let enumerated = Self.enumerateInputDevices()
+        let defaultID = enumerated.first(where: \.isDefaultSystemInput)?.uid
+            ?? AVCaptureDevice.default(for: .audio)?.uniqueID
+        systemDefaultDeviceID = defaultID
+
+        let physicalWave = AudioInputUsability.physicalWaveHardwarePresent(
+            in: enumerated.map { ($0.name, $0.manufacturer, $0.transport) }
         )
 
-        let defaultID = AVCaptureDevice.default(for: .audio)?.uniqueID
-        systemDefaultDeviceID = defaultID
-        let mapped = discovery.devices.map { device in
-            AudioInputDevice(
-                id: device.uniqueID,
-                name: device.localizedName,
-                isDefault: device.uniqueID == defaultID
+        let mapped = enumerated.map { device in
+            let usable = AudioInputUsability.isUsable(
+                name: device.name,
+                manufacturer: device.manufacturer,
+                transport: device.transport,
+                physicalWaveHardwarePresent: physicalWave
+            )
+            return AudioInputDevice(
+                id: device.uid,
+                name: device.name,
+                isDefault: device.uid == defaultID,
+                isUsable: usable,
+                transport: device.transport
             )
         }
 
@@ -129,23 +156,33 @@ final class AudioInputService: ObservableObject {
         }
     }
 
-    /// Preferred connected UID → macOS default → first discovered. An empty preference is seeded
-    /// once with the resolved device so “first entry wins” always matches the UI; later fallbacks
-    /// are used without being appended, and nothing is ever pruned.
+    /// Preferred usable UID → usable macOS default → first usable discovered. An empty preference
+    /// is seeded once with a **first-run friendly** mic (built-in preferred over Wave Link /
+    /// Continuity system defaults) so the first dictation is unlikely to be silent; later
+    /// fallbacks are used without being appended, and nothing is ever pruned.
     private func resolveActiveDevice() {
-        guard !devices.isEmpty else {
+        let usable = devices.filter(\.isUsable)
+        guard !usable.isEmpty else {
             selectedDeviceID = ""
             return
         }
-        guard let resolved = priority.resolveActiveUID(
-            discoveredUIDs: devices.map(\.id),
-            systemDefaultUID: systemDefaultDeviceID
-        ) else { return }
 
         if priority.uids.isEmpty {
-            priority.promote(resolved)
-            publishPriority()
+            let seed = AudioInputUsability.preferredFirstSeedUID(
+                in: usable.map { ($0.id, $0.name, $0.transport) }
+            ) ?? usable.first?.id
+            if let seed {
+                priority.promote(seed)
+                publishPriority()
+            }
         }
+
+        let usableDefault = usable.first(where: { $0.id == systemDefaultDeviceID })?.id
+        guard let resolved = priority.resolveActiveUID(
+            discoveredUIDs: usable.map(\.id),
+            systemDefaultUID: usableDefault
+        ) else { return }
+
         if selectedDeviceID != resolved || defaults.string(forKey: selectedKey) != resolved {
             selectedDeviceID = resolved
             defaults.set(resolved, forKey: selectedKey)
@@ -187,6 +224,13 @@ final class AudioInputService: ObservableObject {
         return true
     }
 
+    /// Drag-and-drop reorder of the displayed priority list (including not-yet-preferred devices).
+    func movePriorityEntries(from source: IndexSet, to destination: Int) {
+        var order = priorityEntries.map(\.id)
+        order.move(fromOffsets: source, toOffset: destination)
+        applyPriorityOrder(order)
+    }
+
     private func applyPriorityOrder(_ order: [String]) {
         priority.reorder(order)
         publishPriority()
@@ -213,6 +257,141 @@ final class AudioInputService: ObservableObject {
     }
 
     // MARK: - System default input
+
+    // MARK: - Core Audio enumeration
+
+    private struct EnumeratedInput {
+        let uid: String
+        let name: String
+        let manufacturer: String
+        let transport: AudioInputTransport
+        let isDefaultSystemInput: Bool
+    }
+
+    /// All Core Audio inputs with channels; includes orphan Wave Link virtual mixes for the UI.
+    private nonisolated static func enumerateInputDevices() -> [EnumeratedInput] {
+        let defaultID = defaultSystemInputDeviceID()
+        return audioDeviceIDs().compactMap { deviceID in
+            guard inputChannelCount(deviceID) > 0 else { return nil }
+            guard let uid = stringProperty(deviceID, kAudioDevicePropertyDeviceUID) else { return nil }
+            let name = stringProperty(deviceID, kAudioDevicePropertyDeviceNameCFString) ?? uid
+            let manufacturer = stringProperty(deviceID, kAudioObjectPropertyManufacturer) ?? ""
+            return EnumeratedInput(
+                uid: uid,
+                name: name,
+                manufacturer: manufacturer,
+                transport: transport(of: deviceID),
+                isDefaultSystemInput: deviceID == defaultID
+            )
+        }
+    }
+
+    private nonisolated static func defaultSystemInputDeviceID() -> AudioDeviceID? {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDefaultInputDevice,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var deviceID = AudioDeviceID(0)
+        var size = UInt32(MemoryLayout<AudioDeviceID>.size)
+        guard AudioObjectGetPropertyData(
+            AudioObjectID(kAudioObjectSystemObject),
+            &address,
+            0,
+            nil,
+            &size,
+            &deviceID
+        ) == noErr, deviceID != 0 else { return nil }
+        return deviceID
+    }
+
+    private nonisolated static func audioDeviceIDs() -> [AudioDeviceID] {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDevices,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var dataSize: UInt32 = 0
+        guard AudioObjectGetPropertyDataSize(
+            AudioObjectID(kAudioObjectSystemObject),
+            &address,
+            0,
+            nil,
+            &dataSize
+        ) == noErr else { return [] }
+
+        let count = Int(dataSize) / MemoryLayout<AudioDeviceID>.size
+        var devices = [AudioDeviceID](repeating: 0, count: count)
+        guard AudioObjectGetPropertyData(
+            AudioObjectID(kAudioObjectSystemObject),
+            &address,
+            0,
+            nil,
+            &dataSize,
+            &devices
+        ) == noErr else { return [] }
+        return devices
+    }
+
+    private nonisolated static func transport(of deviceID: AudioDeviceID) -> AudioInputTransport {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyTransportType,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var value: UInt32 = 0
+        var size = UInt32(MemoryLayout<UInt32>.size)
+        guard AudioObjectGetPropertyData(deviceID, &address, 0, nil, &size, &value) == noErr else {
+            return .other
+        }
+        switch value {
+        case kAudioDeviceTransportTypeBuiltIn: return .builtIn
+        case kAudioDeviceTransportTypeUSB: return .usb
+        case kAudioDeviceTransportTypeBluetooth, kAudioDeviceTransportTypeBluetoothLE: return .bluetooth
+        case kAudioDeviceTransportTypeVirtual: return .virtual
+        case kAudioDeviceTransportTypeAggregate: return .aggregate
+        default: return .other
+        }
+    }
+
+    private nonisolated static func stringProperty(
+        _ deviceID: AudioDeviceID,
+        _ selector: AudioObjectPropertySelector
+    ) -> String? {
+        var address = AudioObjectPropertyAddress(
+            mSelector: selector,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var cfValue: CFString? = nil
+        var size = UInt32(MemoryLayout<CFString?>.size)
+        let status = withUnsafeMutablePointer(to: &cfValue) { ptr in
+            AudioObjectGetPropertyData(deviceID, &address, 0, nil, &size, ptr)
+        }
+        guard status == noErr else { return nil }
+        return cfValue as String?
+    }
+
+    private nonisolated static func inputChannelCount(_ deviceID: AudioDeviceID) -> Int {
+        var streamAddress = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyStreamConfiguration,
+            mScope: kAudioDevicePropertyScopeInput,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var streamSize: UInt32 = 0
+        guard AudioObjectGetPropertyDataSize(deviceID, &streamAddress, 0, nil, &streamSize) == noErr,
+              streamSize > 0 else { return 0 }
+        let raw = UnsafeMutableRawPointer.allocate(
+            byteCount: Int(streamSize),
+            alignment: MemoryLayout<AudioBufferList>.alignment
+        )
+        defer { raw.deallocate() }
+        guard AudioObjectGetPropertyData(deviceID, &streamAddress, 0, nil, &streamSize, raw) == noErr else {
+            return 0
+        }
+        let list = raw.assumingMemoryBound(to: AudioBufferList.self)
+        return UnsafeMutableAudioBufferListPointer(list).reduce(0) { $0 + Int($1.mNumberChannels) }
+    }
 
     /// Sets the system default input device so AVAudioEngine uses the chosen mic.
     nonisolated static func selectSystemInputDevice(uid: String) throws {
@@ -241,65 +420,9 @@ final class AudioInputService: ObservableObject {
     }
 
     private nonisolated static func audioDeviceID(forUID uid: String) -> AudioDeviceID? {
-        var address = AudioObjectPropertyAddress(
-            mSelector: kAudioHardwarePropertyDevices,
-            mScope: kAudioObjectPropertyScopeGlobal,
-            mElement: kAudioObjectPropertyElementMain
-        )
-        var dataSize: UInt32 = 0
-        guard AudioObjectGetPropertyDataSize(
-            AudioObjectID(kAudioObjectSystemObject),
-            &address,
-            0,
-            nil,
-            &dataSize
-        ) == noErr else { return nil }
-
-        let count = Int(dataSize) / MemoryLayout<AudioDeviceID>.size
-        var devices = [AudioDeviceID](repeating: 0, count: count)
-        guard AudioObjectGetPropertyData(
-            AudioObjectID(kAudioObjectSystemObject),
-            &address,
-            0,
-            nil,
-            &dataSize,
-            &devices
-        ) == noErr else { return nil }
-
-        for device in devices {
-            var uidAddress = AudioObjectPropertyAddress(
-                mSelector: kAudioDevicePropertyDeviceUID,
-                mScope: kAudioObjectPropertyScopeGlobal,
-                mElement: kAudioObjectPropertyElementMain
-            )
-            var cfUID: CFString? = nil as CFString?
-            var uidSize = UInt32(MemoryLayout<CFString?>.size)
-            let status = withUnsafeMutablePointer(to: &cfUID) { ptr in
-                AudioObjectGetPropertyData(device, &uidAddress, 0, nil, &uidSize, ptr)
-            }
-            if status == noErr, let cfUID, (cfUID as String) == uid {
-                // Prefer devices that have input channels.
-                var streamAddress = AudioObjectPropertyAddress(
-                    mSelector: kAudioDevicePropertyStreamConfiguration,
-                    mScope: kAudioDevicePropertyScopeInput,
-                    mElement: kAudioObjectPropertyElementMain
-                )
-                var streamSize: UInt32 = 0
-                if AudioObjectGetPropertyDataSize(device, &streamAddress, 0, nil, &streamSize) == noErr,
-                   streamSize > 0 {
-                    let raw = UnsafeMutableRawPointer.allocate(
-                        byteCount: Int(streamSize),
-                        alignment: MemoryLayout<AudioBufferList>.alignment
-                    )
-                    defer { raw.deallocate() }
-                    if AudioObjectGetPropertyData(device, &streamAddress, 0, nil, &streamSize, raw) == noErr {
-                        let list = raw.assumingMemoryBound(to: AudioBufferList.self)
-                        let buffers = UnsafeMutableAudioBufferListPointer(list)
-                        let channels = buffers.reduce(0) { $0 + Int($1.mNumberChannels) }
-                        if channels > 0 { return device }
-                    }
-                }
-            }
+        for device in audioDeviceIDs() {
+            guard stringProperty(device, kAudioDevicePropertyDeviceUID) == uid else { continue }
+            if inputChannelCount(device) > 0 { return device }
         }
         return nil
     }

@@ -28,11 +28,12 @@ private func makeDefaults() -> UserDefaults {
         promotion()
         moving()
         persistence()
+        usability()
         guard failures == 0 else {
             print("FAILED \(failures) smart-mic-priority check(s)")
             exit(1)
         }
-        print("PASS smart mic priority: normalization, migration, ordered failover, retention, promote, bounded move, defaults round-trip")
+        print("PASS smart mic priority: normalization, migration, ordered failover, retention, promote, bounded move, defaults round-trip, Wave Link usability")
     }
 
     private static func normalization() {
@@ -179,5 +180,111 @@ private func makeDefaults() -> UserDefaults {
         defaults.set("builtin", forKey: AudioInputPriorityList.legacySelectedKey)
         check(AudioInputPriorityList.load(defaults: defaults).uids == ["usb", "builtin"],
               "writing the resolved value does not overwrite the priority list")
+    }
+
+    private static func usability() {
+        check(
+            AudioInputUsability.looksLikeWaveLinkVirtual(name: "Elgato Wave Link Voice", transport: .virtual),
+            "Wave Link Voice is a virtual mix"
+        )
+        check(
+            !AudioInputUsability.looksLikeWaveLinkVirtual(name: "MacBook Pro Microphone", transport: .builtIn),
+            "built-in mic is not a Wave Link virtual mix"
+        )
+        check(
+            AudioInputUsability.looksLikePhysicalWaveHardware(
+                name: "Wave:3",
+                manufacturer: "Elgato",
+                transport: .usb
+            ),
+            "USB Wave:3 counts as physical hardware"
+        )
+        check(
+            !AudioInputUsability.looksLikePhysicalWaveHardware(
+                name: "Elgato Wave Link Voice",
+                manufacturer: "Corsair Memory, Inc.",
+                transport: .virtual
+            ),
+            "Wave Link Voice is never treated as physical hardware"
+        )
+
+        check(
+            !AudioInputUsability.isUsable(
+                name: "Elgato Wave Link Voice",
+                manufacturer: "Corsair Memory, Inc.",
+                transport: .virtual,
+                physicalWaveHardwarePresent: false
+            ),
+            "orphan Wave Link Voice is unusable without hardware"
+        )
+        check(
+            AudioInputUsability.isUsable(
+                name: "Elgato Wave Link Voice",
+                manufacturer: "Corsair Memory, Inc.",
+                transport: .virtual,
+                physicalWaveHardwarePresent: true
+            ),
+            "Wave Link Voice is usable when Wave hardware is present"
+        )
+        check(
+            AudioInputUsability.isUsable(
+                name: "MacBook Pro Microphone",
+                manufacturer: "Apple Inc.",
+                transport: .builtIn,
+                physicalWaveHardwarePresent: false
+            ),
+            "built-in stays usable without Wave hardware"
+        )
+
+        let withoutHardware: [(String, String, AudioInputTransport)] = [
+            ("Elgato Wave Link Voice", "Corsair Memory, Inc.", .virtual),
+            ("MacBook Pro Microphone", "Apple Inc.", .builtIn),
+        ]
+        check(
+            !AudioInputUsability.physicalWaveHardwarePresent(in: withoutHardware),
+            "virtual-only Wave Link set has no physical hardware"
+        )
+
+        let withHardware = withoutHardware + [("Wave:3", "Elgato", .usb)]
+        check(
+            AudioInputUsability.physicalWaveHardwarePresent(in: withHardware),
+            "USB Wave:3 makes physical hardware present"
+        )
+
+        // Failover against usable IDs only: Wave Link Voice is present but excluded.
+        let list = AudioInputPriorityList(["wave-voice", "builtin"])
+        expect(
+            list.resolveActiveUID(discoveredUIDs: ["builtin"], systemDefaultUID: "wave-voice"),
+            "builtin",
+            "unusable system-default Wave Link is skipped; next preferred usable wins"
+        )
+
+        check(
+            AudioInputUsability.firstSeedScore(name: "MacBook Pro Microphone", transport: .builtIn)
+                > AudioInputUsability.firstSeedScore(name: "Elgato Wave Link Voice", transport: .virtual),
+            "built-in outranks Wave Link virtual for first-run seed"
+        )
+        check(
+            AudioInputUsability.firstSeedScore(name: "MacBook Pro Microphone", transport: .builtIn)
+                > AudioInputUsability.firstSeedScore(name: "kest Microphone", transport: .other),
+            "built-in outranks Continuity-style remote mic for first-run seed"
+        )
+        expect(
+            AudioInputUsability.preferredFirstSeedUID(in: [
+                (uid: "wave", name: "Elgato Wave Link Voice", transport: .virtual),
+                (uid: "phone", name: "kest Microphone", transport: .other),
+                (uid: "builtin", name: "MacBook Pro Microphone", transport: .builtIn),
+            ]),
+            "builtin",
+            "empty-priority seed prefers built-in over Wave Link and Continuity"
+        )
+        expect(
+            AudioInputUsability.preferredFirstSeedUID(in: [
+                (uid: "wave3", name: "Wave:3", transport: .usb),
+                (uid: "builtin", name: "MacBook Pro Microphone", transport: .builtIn),
+            ]),
+            "builtin",
+            "built-in still wins over USB when both are usable for first seed"
+        )
     }
 }
